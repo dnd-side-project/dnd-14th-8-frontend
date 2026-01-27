@@ -1,0 +1,7 @@
+minimumReleaseAge: 1440
+onlyBuiltDependencies:
+  - "@swc/core"
+  - "esbuild"
+  - "simple-git-hooks"
+strictDepBuilds: true
+trustPolicy: no-downgrade

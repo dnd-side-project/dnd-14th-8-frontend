@@ -1,29 +1,48 @@
 {
   "name": "dnd-14th-8-frontend",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=24.0.0"
-  },
   "scripts": {
-    "dev": "vite",
     "build": "tsc -b && vite build",
+    "check": "biome check .",
+    "dev": "vite",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "prepare": "simple-git-hooks",
     "preview": "vite preview"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "package.json": [
+      "sort-package-json"
+    ],
+    "**/*.{css,js,json,jsx,ts,tsx,html}": [
+      "biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
   },
   "dependencies": {
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.2",
+    "lint-staged": "^16.2.7",
+    "simple-git-hooks": "^2.13.1",
+    "sort-package-json": "^3.6.0",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
   },
-  "packageManager": "pnpm@10.17.0"
+  "packageManager": "pnpm@10.17.0",
+  "engines": {
+    "node": ">=24.0.0"
+  }
 }

@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!**/dist", "!**/.direnv"]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": true,
+    "indentStyle": "space"
+  },
+  "linter": {
+    "domains": {
+      "react": "recommended"
+    },
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "error"
+      },
+      "style": {
+        "useSelfClosingElements": "error"
+      },
+      "suspicious": {
+        "noVar": "error"
+      }
+    }
+  }
+}
