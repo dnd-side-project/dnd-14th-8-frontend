@@ -1,15 +1,27 @@
 {
   "name": "dnd-14th-8-frontend",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "lint": "biome lint .",
+    "check": "biome check .",
+    "dev": "vite",
     "format": "biome format --write .",
-    "check": "biome check ."
+    "lint": "biome lint .",
+    "prepare": "simple-git-hooks",
+    "preview": "vite preview"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "package.json": [
+      "sort-package-json"
+    ],
+    "**/*.{css,js,json,jsx,ts,tsx,html}": [
+      "biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
   },
   "dependencies": {
     "react": "^19.2.3",
@@ -21,6 +33,9 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.2",
+    "lint-staged": "^16.2.7",
+    "simple-git-hooks": "^2.13.1",
+    "sort-package-json": "^3.6.0",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
   }
