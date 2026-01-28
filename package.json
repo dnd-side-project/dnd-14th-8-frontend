@@ -24,11 +24,15 @@
     ]
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
+    "@tailwindcss/vite": "^4.1.18",
     "@tsconfig/node24": "^24.0.4",
     "@tsconfig/vite-react": "^7.0.2",
     "@types/node": "^24.10.1",
@@ -38,7 +42,12 @@
     "lint-staged": "^16.2.7",
     "simple-git-hooks": "^2.13.1",
     "sort-package-json": "^3.6.0",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
+  },
+  "packageManager": "pnpm@10.17.0",
+  "engines": {
+    "node": ">=24.0.0"
   }
 }
