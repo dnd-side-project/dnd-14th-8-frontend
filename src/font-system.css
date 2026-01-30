@@ -1,0 +1,127 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  /* Typography tokens */
+  --text-28: 1.75rem;
+  --text-24: 1.5rem;
+  --text-20: 1.25rem;
+  --text-16: 1rem;
+  --text-14: 0.875rem;
+  --text-12: 0.75rem;
+}
+
+@layer base {
+  body {
+    font-family:
+      "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@utility head1-sb-28 {
+  font-size: var(--text-28);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+@utility head2-sb-24 {
+  font-size: var(--text-24);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+@utility title1-sb-20 {
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+@utility title2-sb-16 {
+  font-size: var(--text-16);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+@utility body1-m-16 {
+  font-size: var(--text-16);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility body2-r-16 {
+  font-size: var(--text-16);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility body3-sb-14 {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility body4-m-14 {
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility body5-r-14 {
+  font-size: var(--text-14);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility caption1-sb-12 {
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility caption2-m-12 {
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+@utility caption3-r-12 {
+  font-size: var(--text-12);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}

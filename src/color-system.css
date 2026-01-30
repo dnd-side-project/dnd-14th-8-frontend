@@ -1,0 +1,83 @@
+:root {
+  /* Primary */
+  --color-p-main: #4181ff;
+  --color-p50: #e5eeff;
+  --color-p100: #c2d7ff;
+  --color-p200: #abc8fc;
+  --color-p300: #82acff;
+  --color-p400: #5b93ff;
+  --color-p500: #1f5bd2;
+  --color-p600: #0f3e9a;
+  --color-p700: #163065;
+  --color-p800: #0f2756;
+  --color-p900: #07152f;
+
+  /* Sub */
+  --color-sb-main: #fb6b3c;
+  --color-sb50: #fff3ef;
+  --color-sb100: #faddd3;
+  --color-sb200: #ffb799;
+  --color-sb300: #ff875f;
+  --color-sb400: #ea4f1b;
+  --color-sb500: #d03a08;
+  --color-sb600: #ad3208;
+  --color-sb700: #812506;
+
+  /* Gray Scale */
+  --color-k10: #fafafc;
+  --color-k50: #f0f0f2;
+  --color-k100: #e7e7e9;
+  --color-k200: #ceced1;
+  --color-k300: #bdbdc1;
+  --color-k400: #a3a3a8;
+  --color-k500: #898990;
+  --color-k600: #6f6f77;
+  --color-k700: #55555c;
+  --color-k800: #3b3b42;
+  --color-k900: #1c1c29;
+
+  /* Action */
+  --color-red: #f3062a;
+}
+
+@theme inline {
+  /* Primary (p50 ~ p900) */
+  --color-primary-main: var(--color-p-main);
+  --color-p-50: var(--color-p50);
+  --color-p-100: var(--color-p100);
+  --color-p-200: var(--color-p200);
+  --color-p-300: var(--color-p300);
+  --color-p-400: var(--color-p400);
+  --color-p-500: var(--color-p500);
+  --color-p-600: var(--color-p600);
+  --color-p-700: var(--color-p700);
+  --color-p-800: var(--color-p800);
+  --color-p-900: var(--color-p900);
+
+  /* Sub (sb50 ~ sb700) */
+  --color-sub-main: var(--color-sb-main);
+  --color-sb-50: var(--color-sb50);
+  --color-sb-100: var(--color-sb100);
+  --color-sb-200: var(--color-sb200);
+  --color-sb-300: var(--color-sb300);
+  --color-sb-400: var(--color-sb400);
+  --color-sb-500: var(--color-sb500);
+  --color-sb-600: var(--color-sb600);
+  --color-sb-700: var(--color-sb700);
+
+  /* Gray Scale (k10 ~ k900) */
+  --color-k-10: var(--color-k10);
+  --color-k-50: var(--color-k50);
+  --color-k-100: var(--color-k100);
+  --color-k-200: var(--color-k200);
+  --color-k-300: var(--color-k300);
+  --color-k-400: var(--color-k400);
+  --color-k-500: var(--color-k500);
+  --color-k-600: var(--color-k600);
+  --color-k-700: var(--color-k700);
+  --color-k-800: var(--color-k800);
+  --color-k-900: var(--color-k900);
+
+  /* Action (Red) */
+  --color-action-red: var(--color-red);
+}
