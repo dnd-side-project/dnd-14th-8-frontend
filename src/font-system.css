@@ -23,13 +23,77 @@
 }
 
 @theme inline {
-  /* Typography tokens */
-  --text-28: 1.75rem;
-  --text-24: 1.5rem;
-  --text-20: 1.25rem;
-  --text-16: 1rem;
-  --text-14: 0.875rem;
-  --text-12: 0.75rem;
+  /* head1-sb-28 */
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 1.35;
+  --text-h1--letter-spacing: -0.005em;
+  --text-h1--font-weight: 600;
+
+  /* head2-sb-24 */
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.35;
+  --text-h2--letter-spacing: -0.005em;
+  --text-h2--font-weight: 600;
+
+  /* title1-sb-20 */
+  --text-t1: 1.25rem;
+  --text-t1--line-height: 1.35;
+  --text-t1--letter-spacing: -0.005em;
+  --text-t1--font-weight: 600;
+
+  /* title2-sb-16 */
+  --text-t2: 1rem;
+  --text-t2--line-height: 1.35;
+  --text-t2--letter-spacing: -0.005em;
+  --text-t2--font-weight: 600;
+
+  /* body1-m-16 */
+  --text-b1: 1rem;
+  --text-b1--line-height: 1.5;
+  --text-b1--letter-spacing: -0.01em;
+  --text-b1--font-weight: 500;
+
+  /* body2-r-16 */
+  --text-b2: 1rem;
+  --text-b2--line-height: 1.5;
+  --text-b2--letter-spacing: -0.01em;
+  --text-b2--font-weight: 400;
+
+  /* body3-sb-14 */
+  --text-b3: 0.875rem;
+  --text-b3--line-height: 1.5;
+  --text-b3--letter-spacing: -0.01em;
+  --text-b3--font-weight: 600;
+
+  /* body4-m-14 */
+  --text-b4: 0.875rem;
+  --text-b4--line-height: 1.5;
+  --text-b4--letter-spacing: -0.01em;
+  --text-b4--font-weight: 500;
+
+  /* body5-r-14 */
+  --text-b5: 0.875rem;
+  --text-b5--line-height: 1.5;
+  --text-b5--letter-spacing: -0.01em;
+  --text-b5--font-weight: 400;
+
+  /* caption1-sb-12 */
+  --text-c1: 0.75rem;
+  --text-c1--line-height: 1.5;
+  --text-c1--letter-spacing: -0.01em;
+  --text-c1--font-weight: 600;
+
+  /* caption2-m-12 */
+  --text-c2: 0.75rem;
+  --text-c2--line-height: 1.5;
+  --text-c2--letter-spacing: -0.01em;
+  --text-c2--font-weight: 500;
+
+  /* caption3-r-12 */
+  --text-c3: 0.75rem;
+  --text-c3--line-height: 1.5;
+  --text-c3--letter-spacing: -0.01em;
+  --text-c3--font-weight: 400;
 }
 
 @layer base {
@@ -40,88 +104,4 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-}
-
-@utility head1-sb-28 {
-  font-size: var(--text-28);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
-
-@utility head2-sb-24 {
-  font-size: var(--text-24);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
-
-@utility title1-sb-20 {
-  font-size: var(--text-20);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
-
-@utility title2-sb-16 {
-  font-size: var(--text-16);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.005em;
-}
-
-@utility body1-m-16 {
-  font-size: var(--text-16);
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility body2-r-16 {
-  font-size: var(--text-16);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility body3-sb-14 {
-  font-size: var(--text-14);
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility body4-m-14 {
-  font-size: var(--text-14);
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility body5-r-14 {
-  font-size: var(--text-14);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility caption1-sb-12 {
-  font-size: var(--text-12);
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility caption2-m-12 {
-  font-size: var(--text-12);
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
-
-@utility caption3-r-12 {
-  font-size: var(--text-12);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: -0.01em;
 }

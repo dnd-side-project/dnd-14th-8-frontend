@@ -8,9 +8,9 @@ function App() {
 
   return (
     <>
-      <h1 className="head1-sb-28 text-primary-main">Vite + React</h1>
+      <h1 className="text-h1 text-primary-main">Vite + React</h1>
       <button
-        className="text-sb-500"
+        className="text-t2"
         type="button"
         onClick={() => setCount((count) => count + 1)}
       >
@@ -20,7 +20,7 @@ function App() {
       <p
         className={cn(
           "bg-amber-200",
-          isHighlight ? "head2-sb-24 text-sb-700" : "body4-m-14 text-p-500",
+          isHighlight ? "text-b3 text-sb-700" : "text-b2 text-p-500",
         )}
       >
         {isHighlight
