@@ -31,9 +31,16 @@ jobs:
 
       - run: pnpm run build
 
-      - uses: cloudflare/wrangler-action@v3
+      - id: deploy
+        uses: cloudflare/wrangler-action@v3
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy dist --project-name=dnd-14th-8-frontend
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: moojing/cf-preview-bot@v1
+        if: github.event_name == 'pull_request'
+        with:
+          deployment_url: ${{ steps.deploy.outputs.deployment-url }}
+          branch_preview_url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
