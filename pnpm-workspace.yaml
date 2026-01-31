@@ -5,6 +5,6 @@ onlyBuiltDependencies:
   - "@swc/core"
   - "esbuild"
   - "simple-git-hooks"
-  - "wrangler"
+  - "workerd"
 strictDepBuilds: true
 trustPolicy: no-downgrade
