@@ -1,7 +1,4 @@
 import { useState } from "react";
-import viteLogo from "/vite.svg";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
 import { cn } from "./utils";
 
 function App() {
@@ -11,25 +8,19 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noopener">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noopener">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="text-3xl underline">Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+      <h1 className="text-h1 text-primary-main">Vite + React</h1>
+      <button
+        className="text-t2"
+        type="button"
+        onClick={() => setCount((count) => count + 1)}
+      >
+        count is {count}
+      </button>
 
       <p
         className={cn(
-          "mt-4 text-sm",
-          isHighlight ? "text-orange-600 font-bold" : "text-gray-500",
+          "bg-amber-200",
+          isHighlight ? "text-b3 text-sb-700" : "text-b2 text-p-500",
         )}
       >
         {isHighlight
