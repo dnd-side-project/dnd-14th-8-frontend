@@ -24,6 +24,7 @@
   --color-sb700: #812506;
 
   /* Gray Scale */
+  --color-k5: #fefefe;
   --color-k10: #fafafc;
   --color-k50: #f0f0f2;
   --color-k100: #e7e7e9;
@@ -34,14 +35,15 @@
   --color-k600: #6f6f77;
   --color-k700: #55555c;
   --color-k800: #3b3b42;
-  --color-k900: #1c1c29;
+  --color-k900: #16161a;
 
   /* Action */
   --color-red: #f3062a;
+  --color-green: #03d46f;
 }
 
 @theme inline {
-  /* Primary (p50 ~ p900) */
+  /* Primary */
   --color-primary-main: var(--color-p-main);
   --color-p-50: var(--color-p50);
   --color-p-100: var(--color-p100);
@@ -54,7 +56,7 @@
   --color-p-800: var(--color-p800);
   --color-p-900: var(--color-p900);
 
-  /* Sub (sb50 ~ sb700) */
+  /* Sub */
   --color-sub-main: var(--color-sb-main);
   --color-sb-50: var(--color-sb50);
   --color-sb-100: var(--color-sb100);
@@ -65,7 +67,8 @@
   --color-sb-600: var(--color-sb600);
   --color-sb-700: var(--color-sb700);
 
-  /* Gray Scale (k10 ~ k900) */
+  /* Gray Scale */
+  --color-k-5: var(--color-k5);
   --color-k-10: var(--color-k10);
   --color-k-50: var(--color-k50);
   --color-k-100: var(--color-k100);
@@ -78,6 +81,7 @@
   --color-k-800: var(--color-k800);
   --color-k-900: var(--color-k900);
 
-  /* Action (Red) */
+  /* Action */
   --color-action-red: var(--color-red);
+  --color-action-green: var(--color-green);
 }
