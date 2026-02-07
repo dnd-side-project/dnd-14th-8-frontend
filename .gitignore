@@ -27,6 +27,6 @@ dist-ssr
 # Environment Variables
 .env
 
-*storybook.log
 # Storybook build output
+*storybook.log
 storybook-static/

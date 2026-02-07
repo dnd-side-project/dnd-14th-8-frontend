@@ -11,4 +11,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    watch: {
+      ignored: [
+        "**/.direnv/**",
+        "**/.git/**",
+        "**/.storybook/**",
+        "**/dist/**",
+        "**/node_modules/**",
+      ],
+    },
+  },
 });

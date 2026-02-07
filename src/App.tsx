@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MobileLayout } from "./shared/components/mobile-layout";
 import { cn } from "./utils";
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
   const isHighlight = count > 0 && count % 5 === 0;
 
   return (
-    <>
+    <MobileLayout>
       <h1 className="text-h1 text-primary-main">Vite + React</h1>
       <button
         className="text-t2"
@@ -27,7 +28,7 @@ function App() {
           ? "🎉 5의 배수 달성! 스타일이 변경되었습니다."
           : "5의 배수가 되면 버튼이 변해요!"}
       </p>
-    </>
+    </MobileLayout>
   );
 }
 
