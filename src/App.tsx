@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { MobileLayout } from "./shared/components/mobile-layout";
-import { cn } from "./utils";
+import { MobileLayout } from "@/shared/components/mobile-layout";
+import { cn } from "@/shared/utils/cn";
 
 function App() {
   const [count, setCount] = useState(0);
