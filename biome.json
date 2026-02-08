@@ -4,6 +4,14 @@
     "ignoreUnknown": true,
     "includes": ["**", "!**/dist", "!**/.direnv"]
   },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": true,
@@ -20,6 +28,17 @@
         "noUnusedImports": "error"
       },
       "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": ["../**"],
+                "message": "Use @/ alias instead of relative parent imports."
+              }
+            ]
+          }
+        },
         "useSelfClosingElements": "error"
       },
       "suspicious": {
