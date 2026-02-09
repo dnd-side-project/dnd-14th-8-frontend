@@ -27,6 +27,15 @@
       "correctness": {
         "noUnusedImports": "error"
       },
+      "nursery": {
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "error",
+          "options": {
+            "functions": ["clsx", "cn", "cva", "tw", "tw.*"]
+          }
+        }
+      },
       "style": {
         "noRestrictedImports": {
           "level": "error",
