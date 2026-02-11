@@ -6,6 +6,7 @@
   --color-p200: #abc8fc;
   --color-p300: #82acff;
   --color-p400: #5b93ff;
+  --color-p450: #276cf4;
   --color-p500: #1f5bd2;
   --color-p600: #0f3e9a;
   --color-p700: #163065;
@@ -34,6 +35,7 @@
   --color-k500: #898990;
   --color-k600: #6f6f77;
   --color-k700: #55555c;
+  --color-k750: #46464d;
   --color-k800: #3b3b42;
   --color-k900: #16161a;
 
@@ -50,6 +52,7 @@
   --color-p-200: var(--color-p200);
   --color-p-300: var(--color-p300);
   --color-p-400: var(--color-p400);
+  --color-p-450: var(--color-p450);
   --color-p-500: var(--color-p500);
   --color-p-600: var(--color-p600);
   --color-p-700: var(--color-p700);
@@ -78,6 +81,7 @@
   --color-k-500: var(--color-k500);
   --color-k-600: var(--color-k600);
   --color-k-700: var(--color-k700);
+  --color-k-750: var(--color-k750);
   --color-k-800: var(--color-k800);
   --color-k-900: var(--color-k900);
 
