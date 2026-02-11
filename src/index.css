@@ -1,3 +1,5 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "./**/*.{ts,tsx,js,jsx,html,css}";
+
 @import "./font-system.css";
 @import "./color-system.css";
