@@ -25,6 +25,7 @@
     "rules": {
       "recommended": true,
       "correctness": {
+        "noInvalidPositionAtImportRule": "off",
         "noUnusedImports": "error"
       },
       "nursery": {
