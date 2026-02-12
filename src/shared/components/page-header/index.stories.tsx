@@ -13,7 +13,7 @@ const meta: Meta<typeof PageHeader> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-96 border-k-100 border-b">
+      <div className="w-100 bg-gray-50 p-4">
         <Story />
       </div>
     ),
@@ -42,24 +42,27 @@ export const WithTextAction: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col divide-y divide-k-100">
-      <p className="font-mono text-[10px] text-gray-400"># Case 1: Standard</p>
-      <PageHeader title="text" onBack={() => {}} />
-
-      <p className="font-mono text-[10px] text-gray-400">
-        # Case 2: With Action
-      </p>
-      <PageHeader
-        title="text"
-        onBack={() => {}}
-        rightElement={<span className="text-b3 text-primary-main">초기화</span>}
-      />
+    <div className="flex flex-col gap-8">
+      <section className="space-y-2">
+        <p className="text-b2 text-k-400"># Case 1: Standard</p>
+        <PageHeader title="text" onBack={() => {}} />
+      </section>
+      <section className="space-y-2">
+        <p className="text-b2 text-k-400"># Case 2: With Action</p>
+        <PageHeader
+          title="text"
+          onBack={() => {}}
+          rightElement={
+            <span className="text-b3 text-primary-main">초기화</span>
+          }
+        />
+      </section>
     </div>
   ),
 
   decorators: [
     (Story) => (
-      <div>
+      <div className="w-100 bg-gray-50 p-4">
         <Story />
       </div>
     ),
