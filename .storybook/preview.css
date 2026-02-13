@@ -1,0 +1,13 @@
+@import "../src/index.css";
+
+/* https://github.com/storybookjs/storybook/issues/32443 */
+@custom-variant active (&:active);
+@custom-variant disabled (&:disabled);
+@custom-variant enabled (&:enabled);
+@custom-variant focus (&:focus);
+@custom-variant focus-visible (&:focus-visible);
+@custom-variant focus-within (&:focus-within);
+@custom-variant hover (&:hover);
+@custom-variant link (&:link);
+@custom-variant target (&:target);
+@custom-variant visited (&:visited);

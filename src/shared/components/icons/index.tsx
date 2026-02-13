@@ -10,6 +10,7 @@ export { default as CloseIcon } from "@/assets/icons/close.svg?react";
 export { default as ErrorIcon } from "@/assets/icons/error.svg?react";
 export { default as MemberIcon } from "@/assets/icons/member.svg?react";
 export { default as MinusIcon } from "@/assets/icons/minus.svg?react";
+export { default as PlaceholderIcon } from "@/assets/icons/placeholder.svg?react";
 export { default as PlusIcon } from "@/assets/icons/plus.svg?react";
 export { default as ShareIcon } from "@/assets/icons/share.svg?react";
 export { default as TimeIcon } from "@/assets/icons/time.svg?react";
