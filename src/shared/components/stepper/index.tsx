@@ -20,7 +20,7 @@ export function Stepper({
   return (
     <div
       className={cn(
-        "flex h-14 w-83.75 items-center justify-between rounded-lg bg-k-50 px-4",
+        "flex h-14 w-full items-center justify-between rounded-lg bg-k-50 px-4",
         className,
       )}
     >
