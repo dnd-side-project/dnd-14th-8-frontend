@@ -1,24 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PageHeader } from ".";
+import { ChipButton } from "@/shared/components/chip-button";
+import { PageHeader } from "@/shared/components/page-header";
 
 const meta: Meta<typeof PageHeader> = {
   title: "shared/PageHeader",
   component: PageHeader,
-  parameters: {
-    layout: "fullscreen",
-    argTypes: {
-      onBack: { action: "back-clicked" },
-      onRightPress: { action: "right-press-clicked" },
-    },
+  argTypes: {
+    onBack: { action: "back-clicked" },
   },
   decorators: [
     (Story) => (
-      <div className="w-100 bg-gray-50 p-4">
+      <div className="w-[375px] px-5 py-3">
         <Story />
       </div>
     ),
   ],
-};
+  parameters: {
+    layout: "centered",
+  },
+} satisfies Meta<typeof PageHeader>;
+
 export default meta;
 
 type Story = StoryObj<typeof PageHeader>;
@@ -26,17 +27,23 @@ type Story = StoryObj<typeof PageHeader>;
 export const Default: Story = {
   args: {
     title: "모임정보 입력",
-    onBack: () => alert("뒤로가기 클릭!"),
+    onBack: () => {},
   },
 };
 
-export const WithTextAction: Story = {
+export const WithChipAction: Story = {
   args: {
     title: "일정 추가하기",
     onBack: () => alert("뒤로가기 클릭!"),
-    rightElement: <span className="text-b3 text-primary-main">초기화</span>,
-    rightLabel: "초기화",
-    onRightPress: () => alert("초기화 클릭!"),
+    rightElement: (
+      <ChipButton
+        variant="ghost"
+        size="lg"
+        onClick={() => alert("초기화 클릭!")}
+      >
+        초기화
+      </ChipButton>
+    ),
   },
 };
 
@@ -44,25 +51,31 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
       <section className="space-y-2">
-        <p className="text-b2 text-k-400"># Case 1: Standard</p>
-        <PageHeader title="text" onBack={() => {}} />
+        <p className="px-5 text-b2 text-k-400">
+          # Case 1: Standard (Back + Title)
+        </p>
+        <PageHeader title="텍스트" onBack={() => {}} />
       </section>
+
       <section className="space-y-2">
-        <p className="text-b2 text-k-400"># Case 2: With Action</p>
+        <p className="px-5 text-b2 text-k-400">
+          # Case 2: With ChipButton Action
+        </p>
         <PageHeader
-          title="text"
+          title="텍스트"
           onBack={() => {}}
           rightElement={
-            <span className="text-b3 text-primary-main">초기화</span>
+            <ChipButton variant="ghost" size="lg" onClick={() => {}}>
+              초기화
+            </ChipButton>
           }
         />
       </section>
     </div>
   ),
-
   decorators: [
     (Story) => (
-      <div className="w-100 bg-gray-50 p-4">
+      <div className="w-[375px] py-3">
         <Story />
       </div>
     ),
