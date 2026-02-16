@@ -29,8 +29,10 @@
     "axios": "^1.13.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -57,6 +59,7 @@
     "simple-git-hooks": "^2.13.1",
     "sort-package-json": "^3.6.0",
     "storybook": "8.6.15",
+    "storybook-addon-pseudo-states": "^4.0.4",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.2.4",
