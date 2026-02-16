@@ -1,8 +1,8 @@
-import MinusIcon from "@/assets/icons/minus.svg?react";
-import PlusIcon from "@/assets/icons/plus.svg?react";
+import { IconButton } from "@/shared/components/icon-button";
+import { MinusIcon, PlusIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
-interface StepperProps {
+export interface StepperProps {
   value: number;
   min?: number;
   max?: number;
@@ -24,25 +24,33 @@ export function Stepper({
         className,
       )}
     >
-      <button
-        type="button"
+      <IconButton
+        icon={MinusIcon}
+        size="xl"
+        background="square"
+        backgroundSize="md"
+        variant="surface"
+        iconSize="lg"
         disabled={value <= min}
         onClick={() => onChange(value - 1)}
-        className="flex size-8 cursor-pointer items-center justify-center rounded-md bg-k-5 text-k-500 disabled:cursor-not-allowed"
         aria-label="감소"
-      >
-        <MinusIcon className="size-6" />
-      </button>
+        className="disabled:cursor-not-allowed disabled:opacity-50"
+      />
+
       <span className="text-center text-b2 text-k-900">{value}명</span>
-      <button
-        type="button"
+
+      <IconButton
+        icon={PlusIcon}
+        size="xl"
+        background="square"
+        backgroundSize="md"
+        variant="primary"
+        iconSize="lg"
         disabled={value >= max}
         onClick={() => onChange(value + 1)}
-        className="flex size-8 cursor-pointer items-center justify-center rounded-md bg-primary-main text-k-5 disabled:cursor-not-allowed"
         aria-label="증가"
-      >
-        <PlusIcon className="size-6" />
-      </button>
+        className="disabled:cursor-not-allowed disabled:opacity-50"
+      />
     </div>
   );
 }

@@ -1,19 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Stepper } from ".";
+import { Stepper } from "@/shared/components/stepper";
 
-const meta: Meta<typeof Stepper> = {
+const meta = {
   title: "shared/Stepper",
   component: Stepper,
-  parameters: { layout: "centered" },
+  parameters: { layout: "fullscreen" },
   decorators: [
     (Story) => (
-      <div className="w-80">
+      <div className="w-[375px] px-5 py-3">
         <Story />
       </div>
     ),
   ],
-};
+} satisfies Meta<typeof Stepper>;
+
 export default meta;
 
 type Story = StoryObj<typeof Stepper>;
