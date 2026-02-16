@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ChevronDownIcon from "@/assets/icons/chevron-down.svg?react";
-import ChevronLeftIcon from "@/assets/icons/chevron-left.svg?react";
-import ChevronRightIcon from "@/assets/icons/chevron-right.svg?react";
-import ChevronUpIcon from "@/assets/icons/chevron-up.svg?react";
-import CloseIcon from "@/assets/icons/close.svg?react";
-import MinusIcon from "@/assets/icons/minus.svg?react";
-import PlusIcon from "@/assets/icons/plus.svg?react";
-import ShareIcon from "@/assets/icons/share.svg?react";
 import { IconButton } from "@/shared/components/icon-button";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  CloseIcon,
+  MinusIcon,
+  PlusIcon,
+  ShareIcon,
+} from "@/shared/components/icons";
 
 const meta = {
   title: "shared/IconButton",
