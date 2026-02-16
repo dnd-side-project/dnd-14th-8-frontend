@@ -1,14 +1,29 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
+import { PageHeader } from "@/shared/components/page-header";
 
 export function ScheduleEditParticipantsPage() {
+  const navigate = useNavigate();
   const { meetingId } = useParams();
+  const currentMeetingId = meetingId ?? "sample-meeting-id";
 
   return (
     <MobileLayout>
-      <section className="flex flex-col gap-4 p-5">
-        <h1 className="text-h2 text-k-900">모임 인원 수정</h1>
-        <p className="text-b5 text-k-700">meetingId: {meetingId}</p>
+      <section className="flex min-h-dvh flex-col px-5 pb-5">
+        <PageHeader
+          title="모임 인원 수정"
+          onBack={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
+        />
+
+        <div className="mt-auto">
+          <ButtonBottom
+            onClick={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
+            variant="blue"
+          >
+            일정 메인으로 이동
+          </ButtonBottom>
+        </div>
       </section>
     </MobileLayout>
   );

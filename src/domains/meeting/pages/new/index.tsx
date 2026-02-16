@@ -1,21 +1,24 @@
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
+import { PageHeader } from "@/shared/components/page-header";
 
 export function NewMeetingPage() {
+  const navigate = useNavigate();
+
   return (
     <MobileLayout>
-      <section className="flex flex-col gap-4 p-5">
-        <h1 className="text-h2 text-k-900">모임 개설 페이지</h1>
-        <p className="text-b5 text-k-600">
-          여기에 모임 생성 폼이 들어갈 예정입니다.
-        </p>
+      <section className="flex min-h-dvh flex-col px-5 pb-5">
+        <PageHeader title="모임 개설 페이지" onBack={() => navigate("/")} />
 
-        <Link
-          className="rounded-md border border-k-200 px-4 py-3 text-center text-b4 text-k-800 transition-colors hover:bg-k-10 active:bg-k-50"
-          to="/meetings/sample-meeting-id/schedule"
-        >
-          개설 후 일정 화면으로 이동
-        </Link>
+        <div className="mt-auto">
+          <ButtonBottom
+            onClick={() => navigate("/meetings/sample-meeting-id/schedule")}
+            variant="blue"
+          >
+            개설 후 일정 화면으로 이동
+          </ButtonBottom>
+        </div>
       </section>
     </MobileLayout>
   );
