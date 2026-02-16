@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Tab } from ".";
+import { Tab } from "@/shared/components/tab";
 
 const meta: Meta<typeof Tab> = {
   title: "shared/Tab",
   component: Tab,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div className="w-100 bg-gray-50 p-4">
+      <div className="w-[375px] px-5 py-3">
         <Story />
       </div>
     ),
   ],
-};
+} satisfies Meta<typeof Tab>;
 export default meta;
 
 type Story = StoryObj<typeof Tab>;
@@ -54,7 +54,7 @@ export const AllVariants: Story = {
   ),
   decorators: [
     (Story) => (
-      <div className="w-100 bg-gray-50 p-4">
+      <div className="w-[375px] py-3">
         <Story />
       </div>
     ),
