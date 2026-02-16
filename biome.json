@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/dist", "!**/.direnv"]
+    "includes": ["**", "!**/.direnv", "!**/dist", "!**/storybook-static"]
   },
   "assist": {
     "enabled": true,
