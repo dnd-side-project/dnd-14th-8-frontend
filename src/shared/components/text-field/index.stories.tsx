@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { TextFiled } from "@/shared/components/text-field";
+import { TextField } from "@/shared/components/text-field";
 
 const meta = {
-  title: "shared/TextFiled",
-  component: TextFiled,
+  title: "shared/TextField",
+  component: TextField,
   parameters: {
     layout: "centered",
   },
@@ -22,7 +22,7 @@ const meta = {
     },
     onClear: { action: "cleared" },
   },
-} satisfies Meta<typeof TextFiled>;
+} satisfies Meta<typeof TextField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -32,7 +32,7 @@ export const Playground: Story = {
     const [value, setValue] = useState("");
     const isError = args.maxLength ? value.length > args.maxLength : false;
     return (
-      <TextFiled
+      <TextField
         {...args}
         status={args.status || (isError ? "error" : "default")}
         value={value}
@@ -53,18 +53,18 @@ export const Playground: Story = {
 export const States: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
-      <TextFiled
+      <TextField
         label="방장 이름"
         placeholder="이름을 입력해주세요"
         helperText="최대 4자까지 적을 수 있어요"
         maxLength={4}
       />
 
-      <TextFiled label="방장 이름" value="김혜인" maxLength={4} />
+      <TextField label="방장 이름" value="김혜인" maxLength={4} />
 
-      <TextFiled label="방장 이름" status="focused" value="김" maxLength={4} />
+      <TextField label="방장 이름" status="focused" value="김" maxLength={4} />
 
-      <TextFiled
+      <TextField
         label="방장 이름"
         status="error"
         value="김혜인인인"
@@ -72,7 +72,7 @@ export const States: Story = {
         maxLength={4}
       />
 
-      <TextFiled
+      <TextField
         label="방장 이름"
         status="error"
         value=""

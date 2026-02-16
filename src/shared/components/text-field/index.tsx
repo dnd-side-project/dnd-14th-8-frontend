@@ -4,7 +4,7 @@ import { IconButton } from "@/shared/components/icon-button";
 import { CloseIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
-const textFiledVariants = cva(
+const textFieldVariants = cva(
   "flex w-full items-center rounded-xl border bg-k-50 transition-colors",
   {
     variants: {
@@ -21,16 +21,16 @@ const textFiledVariants = cva(
   },
 );
 
-export interface TextFiledProps
+export interface TextFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "status">,
-    VariantProps<typeof textFiledVariants> {
+    VariantProps<typeof textFieldVariants> {
   label?: string;
   helperText?: string;
   maxLength?: number;
   onClear?: () => void;
 }
 
-export function TextFiled({
+export function TextField({
   label,
   helperText,
   maxLength,
@@ -41,7 +41,7 @@ export function TextFiled({
   status,
   id,
   ...props
-}: TextFiledProps) {
+}: TextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
   const currentLength = String(value ?? "").length;
   const showDelete = currentLength > 0;
@@ -60,7 +60,7 @@ export function TextFiled({
 
       <div
         className={cn(
-          textFiledVariants({
+          textFieldVariants({
             status: computedStatus,
           }),
           className,
