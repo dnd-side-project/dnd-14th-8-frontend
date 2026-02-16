@@ -1,9 +1,14 @@
-import axios, { type AxiosInstance, type AxiosResponse } from "axios";
+import axios, { type AxiosInstance } from "axios";
 
-export interface CommonResponse<T> {
+export interface ApiResponse<T> {
   code: string;
+  data?: T;
   message: string;
-  data: T;
+}
+
+interface ApiErrorResponse {
+  code?: string;
+  message?: string;
 }
 
 export function createAxiosInstance(): AxiosInstance {
@@ -15,20 +20,18 @@ export function createAxiosInstance(): AxiosInstance {
     timeout: 5000,
   });
 
-  instance.interceptors.response.use(
-    <T>(response: AxiosResponse<CommonResponse<T>>): T => {
-      const { data } = response.data;
+  instance.interceptors.response.use(undefined, (error) => {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      const code = error.response?.data?.code;
+      const message = error.response?.data?.message;
 
-      return data;
-    },
-    (error) => {
-      if (error.response) {
-        const { code, message } = error.response.data;
+      if (typeof code === "string" && typeof message === "string") {
         console.error(`[API ERROR ${code}]: ${message}`);
       }
-      return Promise.reject(error);
-    },
-  );
+    }
+
+    return Promise.reject(error);
+  });
 
   return instance;
 }
