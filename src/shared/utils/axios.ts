@@ -1,10 +1,9 @@
 import axios, { type AxiosInstance } from "axios";
 
-export interface ApiResponse<T> {
+export type ApiResponse<T> = {
   code: string;
-  data?: T;
   message: string;
-}
+} & (T extends void ? { data?: undefined } : { data: T });
 
 interface ApiErrorResponse {
   code?: string;
