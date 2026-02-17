@@ -40,6 +40,8 @@ export function TextField({
   onChange,
   status,
   id,
+  onFocus,
+  onBlur,
   ...props
 }: TextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -48,7 +50,18 @@ export function TextField({
   const generatedId = useId();
   const inputId = id || generatedId;
 
-  const computedStatus = isFocused ? "focused" : status || "default";
+  const computedStatus =
+    status === "error" ? "error" : isFocused ? "focused" : "default";
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true);
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false);
+    onBlur?.(e);
+  };
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -67,6 +80,8 @@ export function TextField({
         )}
       >
         <input
+          {...props}
+          id={inputId}
           className={cn(
             "w-full bg-transparent px-4 py-4 text-b2 text-k-900 caret-primary-main outline-none",
             "transition-all placeholder:text-k-400 focus:placeholder:text-transparent",
@@ -74,9 +89,8 @@ export function TextField({
           value={value}
           onChange={onChange}
           maxLength={maxLength}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          {...props}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
 
         {showDelete && (
