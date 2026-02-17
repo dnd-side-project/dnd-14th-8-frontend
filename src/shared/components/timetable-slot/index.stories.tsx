@@ -25,7 +25,7 @@ type Story = StoryObj<typeof TimetableSlot>;
 
 export const AllStates: Story = {
   render: (args) => (
-    <div className="flex gap-4">
+    <div className="grid grid-cols-2 gap-4">
       <div className="flex flex-col items-center gap-2">
         <span className="text-gray-400 text-xs">Default</span>
         <TimetableSlot {...args} isSelected={false} />

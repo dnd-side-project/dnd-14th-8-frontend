@@ -26,9 +26,8 @@ const meta: Meta<typeof Timetable> = {
 export default meta;
 type Story = StoryObj<typeof Timetable>;
 
-// 오늘부터 7일간의 날짜 생성 함수
 const getDates = (count: number) => {
-  const start = new Date();
+  const start = new Date("2025-02-18T00:00:00.000Z");
   return Array.from({ length: count }).map((_, i) => {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
@@ -36,35 +35,53 @@ const getDates = (count: number) => {
   });
 };
 
-/**
- * 기본 사용 예시 (3일 분량)
- */
-export const Default: Story = {
-  args: {
-    dates: getDates(3),
-    startTime: 9,
-    endTime: 18,
-  },
+// 공통 기본 시간 설정
+const defaultTimeArgs = {
+  startTime: 9,
+  endTime: 13,
 };
 
-/**
- * 일주일 전체 보기 (7일)
- */
-export const Weekly: Story = {
+/** 1일 보기 (일간) */
+export const OneDay: Story = {
+  name: "1일",
   args: {
-    dates: getDates(7),
-    startTime: 9,
-    endTime: 22,
-  },
-};
-
-/**
- * 24시간 전체 표시
- */
-export const FullDay: Story = {
-  args: {
+    ...defaultTimeArgs,
     dates: getDates(1),
-    startTime: 0,
-    endTime: 24,
+  },
+};
+
+/** 2일 보기 */
+export const TwoDays: Story = {
+  name: "2일",
+  args: {
+    ...defaultTimeArgs,
+    dates: getDates(2),
+  },
+};
+
+/** 3일 보기 */
+export const ThreeDays: Story = {
+  name: "3일",
+  args: {
+    ...defaultTimeArgs,
+    dates: getDates(3),
+  },
+};
+
+/** 4일 보기 */
+export const FourDays: Story = {
+  name: "4일",
+  args: {
+    ...defaultTimeArgs,
+    dates: getDates(4),
+  },
+};
+
+/** 7일 보기 (주간) */
+export const Weekly: Story = {
+  name: "7일",
+  args: {
+    ...defaultTimeArgs,
+    dates: getDates(7),
   },
 };

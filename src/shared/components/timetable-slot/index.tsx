@@ -22,7 +22,7 @@ export function TimetableSlot({
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
       className={cn(
-        "h-10 w-15 rounded-md border transition-colors",
+        "h-10 w-full rounded-md border transition-colors",
         isSelected
           ? "border-primary-main bg-primary-main"
           : "border-k-50 bg-k-10",
