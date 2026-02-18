@@ -8,13 +8,36 @@ export interface TimetableProps {
   startTime?: number;
   endTime?: number;
   className?: string;
+  selected?: Date[];
+  onSelect?: (dates: Date[]) => void;
+  disabled?: boolean;
+  occupancy?: Record<string, number>;
 }
+
+const getOpacityMap = (occupancy: Record<string, number>) => {
+  const uniqueCounts = Array.from(new Set(Object.values(occupancy)))
+    .filter((count) => count > 0)
+    .sort((a, b) => a - b);
+
+  const N = uniqueCounts.length;
+  const map: Record<number, number> = {};
+
+  uniqueCounts.forEach((count, index) => {
+    map[count] = (index + 1) / N;
+  });
+
+  return map;
+};
 
 export function Timetable({
   dates,
   startTime = 9,
   endTime = 24,
   className,
+  selected = [],
+  onSelect,
+  disabled = false,
+  occupancy = {},
 }: TimetableProps) {
   const totalSlots = (endTime - startTime) * 2;
 
@@ -22,7 +45,11 @@ export function Timetable({
     useTimetableDragSelection({
       dates,
       startTime,
+      selected,
+      onSelect,
     });
+
+  const opacityMap = useMemo(() => getOpacityMap(occupancy), [occupancy]);
 
   const getDayName = (date: Date) => {
     return new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(date);
@@ -36,27 +63,24 @@ export function Timetable({
 
   const gridTemplateColumns = useMemo(() => {
     if (dates.length <= 4) {
-      return `40px repeat(${dates.length}, 1fr)`;
+      return `20px repeat(${dates.length}, 1fr)`;
     }
-    return `40px repeat(${dates.length}, 60px)`;
+    return `20px repeat(${dates.length}, 62px)`;
   }, [dates.length]);
 
   return (
     <div
       className={cn("relative w-full select-none overflow-x-auto", className)}
     >
-      {/* <div className="overflow-auto"> */}
       <div
         className="mb-3 grid min-w-max gap-1"
-        style={{
-          gridTemplateColumns: gridTemplateColumns,
-        }}
+        style={{ gridTemplateColumns }}
       >
-        <div className="sticky top-0 left-0 z-20 h-[58px] w-10 bg-k-5" />
+        <div className="sticky top-0 left-0 z-20 -mr-1 h-[58px] w-5 bg-k-5" />
         {dates.map((date) => (
           <div
             key={date.toISOString()}
-            className="sticky top-0 z-20 flex h-[58px] flex-col items-center justify-center bg-k-5"
+            className="sticky top-0 z-20 flex h-[54px] flex-col items-center justify-center bg-k-5"
           >
             <span className="text-b3 text-k-500">{getDayName(date)}</span>
             <span className="text-b3 text-k-700">{getFormattedDate(date)}</span>
@@ -66,34 +90,46 @@ export function Timetable({
         {Array.from({ length: totalSlots }).map((_, slotIdx) => {
           const isHourStart = slotIdx % 2 === 0;
           const currentHour = startTime + Math.floor(slotIdx / 2);
-          const timeKey = `${currentHour}:${slotIdx % 2 !== 0 ? "30" : "00"}`;
+          const currentMinutes = slotIdx % 2 !== 0 ? 30 : 0;
           const isLastSlot = slotIdx === totalSlots - 1;
 
           return (
-            <React.Fragment key={`row-${timeKey}`}>
-              <div className="sticky left-0 z-20 h-[40px] w-10 bg-k-5">
+            <React.Fragment key={`row-${currentHour}-${currentMinutes}}`}>
+              <div className="sticky left-0 z-20 -mr-2 h-[40px] w-5 bg-k-5">
                 {isHourStart && (
-                  <span className="absolute -top-2.5 left-0 z-30 w-full text-center text-b3 text-k-500">
+                  <span className="absolute -top-2.5 left-0 z-30 w-full text-b3 text-k-500">
                     {String(currentHour)}
                   </span>
                 )}
 
                 {isLastSlot && (
-                  <span className="absolute -bottom-2.5 left-0 z-30 w-full text-center text-b3 text-k-500">
+                  <span className="absolute -bottom-2.5 left-0 z-30 w-full text-b3 text-k-500">
                     {String(endTime)}
                   </span>
                 )}
               </div>
 
               {dates.map((date, dateIdx) => {
-                const cellKey = `${date.getTime()}-${timeKey}`;
+                const slotDate = new Date(date);
+                slotDate.setHours(currentHour, currentMinutes, 0, 0);
+                const timeKey = slotDate.getTime().toString();
+
+                const isSelected = selectedSlots.has(timeKey);
+                const userCount = occupancy[timeKey] || 0;
+                const opacity = opacityMap[userCount] || 0;
                 return (
                   <TimetableSlot
-                    key={cellKey}
-                    isSelected={selectedSlots.has(cellKey)}
-                    onMouseDown={() => handleMouseDown(dateIdx, slotIdx)}
-                    onMouseEnter={() => handleMouseEnter(dateIdx, slotIdx)}
-                    className="touch-none"
+                    key={timeKey}
+                    isSelected={isSelected}
+                    isDisabled={disabled}
+                    opacity={opacity}
+                    onMouseDown={() =>
+                      !disabled && handleMouseDown(dateIdx, slotIdx)
+                    }
+                    onMouseEnter={() =>
+                      !disabled && handleMouseEnter(dateIdx, slotIdx)
+                    }
+                    className={cn("touch-none", disabled && "cursor-default")}
                   />
                 );
               })}
@@ -102,6 +138,5 @@ export function Timetable({
         })}
       </div>
     </div>
-    // </div>
   );
 }

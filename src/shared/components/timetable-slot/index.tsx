@@ -2,6 +2,8 @@ import { cn } from "@/shared/utils/cn";
 
 export interface TimetableSlotProps {
   isSelected?: boolean;
+  isDisabled?: boolean;
+  opacity?: number;
   onClick?: () => void;
   onMouseDown?: () => void;
   onMouseEnter?: () => void;
@@ -10,6 +12,8 @@ export interface TimetableSlotProps {
 
 export function TimetableSlot({
   isSelected,
+  isDisabled,
+  opacity = 0,
   onClick,
   onMouseDown,
   onMouseEnter,
@@ -21,13 +25,22 @@ export function TimetableSlot({
       onClick={onClick}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
+      disabled={isDisabled}
       className={cn(
-        "h-10 w-full rounded-md border transition-colors",
-        isSelected
-          ? "border-primary-main bg-primary-main"
-          : "border-k-50 bg-k-10",
+        "h-10 w-full rounded-md border transition-all",
+        "border-k-50 bg-k-10",
+        isDisabled ? "cursor-default" : "cursor-pointer",
+        isSelected && "border-primary-main bg-primary-main",
         className,
       )}
+      style={{
+        backgroundColor:
+          !isSelected && opacity > 0
+            ? `rgba(65, 129, 255, ${opacity})`
+            : undefined,
+        borderColor:
+          !isSelected && opacity === 1 ? "rgba(65, 129, 255, 1)" : undefined,
+      }}
       aria-pressed={isSelected}
     />
   );

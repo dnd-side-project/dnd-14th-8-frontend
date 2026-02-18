@@ -1,38 +1,46 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 export type DragPos = { dateIdx: number; slotIdx: number };
 
 interface UseTimetableDragSelectionParams {
   dates: Date[];
   startTime: number;
-  onSelect?: (selectedKeys: Set<string>) => void;
+  selected: Date[];
+  onSelect?: (dates: Date[]) => void;
 }
 
 export function useTimetableDragSelection({
   dates,
   startTime,
+  selected,
   onSelect,
 }: UseTimetableDragSelectionParams) {
-  const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
+  const selectedSlots = useMemo(() => {
+    return new Set(selected.map((date) => date.getTime().toString()));
+  }, [selected]);
 
   const isMouseDownRef = useRef(false);
   const dragStartPosRef = useRef<DragPos | null>(null);
   const dragModeRef = useRef<"add" | "remove">("add");
+
   const initialSelectedBeforeDragRef = useRef<Set<string>>(new Set());
 
-  const getSlotKey = useCallback(
+  const getSlotDate = useCallback(
     (dateIdx: number, slotIdx: number) => {
-      const date = dates[dateIdx];
+      const baseDate = dates[dateIdx];
       const hour = startTime + Math.floor(slotIdx / 2);
-      const timeLabel = slotIdx % 2 !== 0 ? "30" : "00";
-      return `${date.getTime()}-${hour}:${timeLabel}`;
+      const minutes = slotIdx % 2 !== 0 ? 30 : 0;
+
+      const slotDate = new Date(baseDate);
+      slotDate.setHours(hour, minutes, 0, 0);
+      return slotDate;
     },
     [dates, startTime],
   );
 
   const updateRangeSelection = useCallback(
     (currentPos: DragPos) => {
-      if (!dragStartPosRef.current) return;
+      if (!dragStartPosRef.current || !onSelect) return;
 
       const start = dragStartPosRef.current;
       const minDateIdx = Math.min(start.dateIdx, currentPos.dateIdx);
@@ -40,32 +48,37 @@ export function useTimetableDragSelection({
       const minSlotIdx = Math.min(start.slotIdx, currentPos.slotIdx);
       const maxSlotIdx = Math.max(start.slotIdx, currentPos.slotIdx);
 
-      const nextSelected = new Set(initialSelectedBeforeDragRef.current);
+      const nextSelectedSet = new Set(initialSelectedBeforeDragRef.current);
 
       for (let d = minDateIdx; d <= maxDateIdx; d++) {
         for (let s = minSlotIdx; s <= maxSlotIdx; s++) {
-          const key = getSlotKey(d, s);
+          const slotDate = getSlotDate(d, s);
+          const timeStr = slotDate.getTime().toString();
+
           if (dragModeRef.current === "add") {
-            nextSelected.add(key);
+            nextSelectedSet.add(timeStr);
           } else {
-            nextSelected.delete(key);
+            nextSelectedSet.delete(timeStr);
           }
         }
       }
 
-      setSelectedSlots(nextSelected);
-      onSelect?.(nextSelected);
+      const resultDates = Array.from(nextSelectedSet).map(
+        (time) => new Date(Number(time)),
+      );
+      onSelect(resultDates);
     },
-    [getSlotKey, onSelect],
+    [getSlotDate, onSelect],
   );
 
   const handleMouseDown = (dateIdx: number, slotIdx: number) => {
-    const key = getSlotKey(dateIdx, slotIdx);
-    const isSelected = selectedSlots.has(key);
+    const slotDate = getSlotDate(dateIdx, slotIdx);
+    const isSelected = selectedSlots.has(slotDate.getTime().toString());
 
     isMouseDownRef.current = true;
     dragStartPosRef.current = { dateIdx, slotIdx };
     dragModeRef.current = isSelected ? "remove" : "add";
+
     initialSelectedBeforeDragRef.current = new Set(selectedSlots);
 
     updateRangeSelection({ dateIdx, slotIdx });
