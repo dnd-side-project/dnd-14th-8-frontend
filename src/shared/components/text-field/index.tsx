@@ -64,7 +64,7 @@ export function TextField({
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className={cn("flex w-full flex-col gap-2", className)}>
       {label && (
         <label htmlFor={inputId} className="text-b3 text-k-900">
           {label}
@@ -76,7 +76,6 @@ export function TextField({
           textFieldVariants({
             status: computedStatus,
           }),
-          className,
         )}
       >
         <input

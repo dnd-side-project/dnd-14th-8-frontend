@@ -22,6 +22,6 @@ type Story = StoryObj<typeof Stepper>;
 export const Default: Story = {
   render: () => {
     const [v, setV] = useState(2);
-    return <Stepper value={v} onChange={setV} />;
+    return <Stepper label="인원 수" value={v} onChange={setV} />;
   },
 };
