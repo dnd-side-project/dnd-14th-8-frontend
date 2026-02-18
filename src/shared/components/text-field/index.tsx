@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { type InputHTMLAttributes, useId, useState } from "react";
+import { type InputHTMLAttributes, useId, useRef, useState } from "react";
 import { IconButton } from "@/shared/components/icon-button";
 import { CloseIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
@@ -45,6 +45,8 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const currentLength = String(value ?? "").length;
   const showDelete = currentLength > 0;
   const generatedId = useId();
@@ -61,6 +63,15 @@ export function TextField({
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(false);
     onBlur?.(e);
+  };
+
+  const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    onClear?.();
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
@@ -80,14 +91,15 @@ export function TextField({
       >
         <input
           {...props}
+          ref={inputRef}
           id={inputId}
+          autoComplete="off"
           className={cn(
             "w-full bg-transparent px-4 py-4 text-b2 text-k-900 caret-primary-main outline-none",
             "transition-all placeholder:text-k-400 focus:placeholder:text-transparent",
           )}
           value={value}
           onChange={onChange}
-          maxLength={maxLength}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
@@ -101,7 +113,7 @@ export function TextField({
               backgroundSize="xs"
               iconSize="xs"
               variant="gray"
-              onClick={onClear}
+              onClick={handleClear}
               type="button"
             />
           </div>
