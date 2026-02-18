@@ -47,6 +47,9 @@ export function Stepper({
           id={id}
           role="spinbutton"
           className="text-center text-b2 text-k-900"
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value}
         >
           {value}명
         </span>
