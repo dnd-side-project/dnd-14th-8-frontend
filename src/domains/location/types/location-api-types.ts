@@ -35,6 +35,7 @@ export interface RouteDto {
   departureName: string;
   drivingDistance: number;
   drivingDuration: number;
+  participantId: number;
   transitDistance: number;
   transitDuration: number;
 }
@@ -47,57 +48,47 @@ export interface StationRecommendationDto {
   longitude: number;
   rank: number;
   routes: RouteDto[];
+  stationId: number;
   stationName: string;
 }
 
 export interface MidpointRecommendationResponse {
   centerPoint: CenterPointDto;
+  departureTime?: string;
   recommendations: StationRecommendationDto[];
 }
 
-export interface OptimalLocationParticipantByCoordinates {
-  latitude: number;
-  longitude: number;
-  name: string;
-}
-
-export interface OptimalLocationParticipantBySchema {
-  isHost: boolean;
-  name: string;
+export interface ParticipantSummaryDto {
+  departureAddress: string;
   participantId: number;
-}
-
-export type OptimalLocationParticipant =
-  | OptimalLocationParticipantByCoordinates
-  | OptimalLocationParticipantBySchema;
-
-export interface OptimalLocationRequest {
-  participants: OptimalLocationParticipant[];
-}
-
-export interface OptimalLocationRoute {
-  distance: number;
-  duration: number;
   participantName: string;
-  payment: number;
-  transitCount: number;
 }
 
-export interface OptimalLocationRecommendation {
-  address: string;
-  avgDuration: number;
-  category: string;
-  distanceFromCenter: number;
-  latitude: number;
-  longitude: number;
-  minMax: number;
-  minSum: number;
-  name: string;
-  rank: number;
-  routes: OptimalLocationRoute[];
+export interface StationSummaryDto {
+  line: string;
+  stationId: number;
+  stationName: string;
 }
 
-export interface OptimalLocationResponse {
-  centerPoint: CenterPointDto;
-  recommendations: OptimalLocationRecommendation[];
+export interface TransitRouteDetailDto {
+  distanceMeters: number;
+  durationMinutes: number;
+  fare: number;
+  transferCount: number;
+  walkDistanceMeters: number;
+}
+
+export interface DrivingRouteDetailDto {
+  distanceMeters: number;
+  durationMinutes: number;
+  estimatedTaxiFare: number;
+  tollFare: number;
+}
+
+export interface PersonalRouteResponse {
+  departureTime?: string;
+  driving?: DrivingRouteDetailDto;
+  participant: ParticipantSummaryDto;
+  station: StationSummaryDto;
+  transit?: TransitRouteDetailDto;
 }
