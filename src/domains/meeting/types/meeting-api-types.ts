@@ -12,21 +12,12 @@ export interface UpdateMeetingRequest {
   participantCount?: number;
 }
 
-export interface MeetingScheduleParticipantWithVoteDates {
-  name: string;
-  votedDates: string[];
-}
-
-export type MeetingScheduleParticipant =
-  | ParticipantResponse
-  | MeetingScheduleParticipantWithVoteDates;
-
 export interface GetMeetingScheduleResponse {
   dateOptions: string[];
   endTime: string;
   meetingId: string;
   participantCount: number;
-  participants: MeetingScheduleParticipant[];
+  participants: ParticipantResponse[];
   startTime: string;
   votedParticipantCount: number;
 }
