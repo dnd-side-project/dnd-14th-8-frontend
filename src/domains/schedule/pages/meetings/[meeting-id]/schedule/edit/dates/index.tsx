@@ -39,13 +39,6 @@ export function ScheduleEditDatesPage() {
     { label: "오늘부터 30일", dates: getNextDays(30) },
   ];
 
-  const _getActivePresetLabel = () => {
-    const matchedPreset = datePresets.find((preset) =>
-      areDatesEqual(selectedDates, preset.dates),
-    );
-    return matchedPreset ? matchedPreset.label : null;
-  };
-
   // 플로우에 맞게 기본값 수정
   const [startTime, setStartTime] = useState("21:30");
   const [endTime, setEndTime] = useState("23:00");
