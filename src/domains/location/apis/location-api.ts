@@ -3,6 +3,8 @@ import type {
   CreateLocationVoteRequest,
   LocationVote,
   MidpointRecommendationResponse,
+  MidpointRouteMode,
+  NearbyPlaceSearchResponse,
   PersonalRouteResponse,
   UpdateLocationVoteRequest,
 } from "@/domains/location/types/location-api-types";
@@ -25,8 +27,6 @@ interface UpdateLocationVoteRequestBody {
   participantName: string;
 }
 
-export type MidpointRouteMode = "both" | "driving" | "transit";
-
 export interface DeleteLocationVoteParams {
   locationVoteId: number;
 }
@@ -48,6 +48,11 @@ export interface ListLocationVotesParams {
   locationPollId: number;
 }
 
+export interface NearbyPlaceSearchParams {
+  latitude: CoordinateValue;
+  longitude: CoordinateValue;
+}
+
 export interface UpdateLocationVoteParams {
   locationVoteId: number;
   payload: UpdateLocationVoteRequest;
@@ -64,7 +69,7 @@ function normalizeCreateLocationVoteRequest(
     ...payload,
     departureLat: toCoordinateString(payload.departureLat),
     departureLng: toCoordinateString(payload.departureLng),
-    locationPollId: payload.locationPollId.toString(),
+    locationPollId: payload.locationPollId,
   };
 }
 
@@ -135,6 +140,21 @@ export function getPersonalRoute({
         mode,
         participantId,
         stationId,
+      },
+    },
+  );
+}
+
+export function nearbyPlaceSearch({
+  latitude,
+  longitude,
+}: NearbyPlaceSearchParams) {
+  return api.get<ApiResponse<NearbyPlaceSearchResponse>>(
+    "/api/locations/nearby-place-search",
+    {
+      params: {
+        latitude: toCoordinateString(latitude),
+        longitude: toCoordinateString(longitude),
       },
     },
   );
