@@ -1,7 +1,7 @@
 import { useLayoutEffect } from "react";
 
 export function useLockBodyScroll() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
 
     document.body.style.overflow = "hidden";
