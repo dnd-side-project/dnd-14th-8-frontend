@@ -18,8 +18,9 @@ export function MainButton({
   return (
     <button
       type="button"
+      onClick={onClick}
       className={cn(
-        "cusor-pointer h-[160px] w-full rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
+        "h-[160px] w-full cursor-pointer rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
         "flex items-center justify-between",
         className,
       )}
