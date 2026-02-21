@@ -16,15 +16,13 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <header
-      className={cn("relative flex h-14 items-center pr-3 pl-1", className)}
-    >
+    <header className={cn("relative flex h-14 items-center pr-3", className)}>
       <div className="z-10 flex min-w-12 items-center">
         {onBack && (
           <button
             type="button"
             onClick={onBack}
-            className="flex size-12 cursor-pointer items-center justify-center"
+            className="flex size-12 cursor-pointer items-center"
             aria-label="뒤로가기"
           >
             <ChevronLeftIcon className="size-6 text-k-900" />
