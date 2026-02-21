@@ -24,6 +24,26 @@ const getNextDays = (count: number) => {
   return Array.from({ length: count }, (_, i) => addDays(today, i));
 };
 
+const datePresets = [
+  { label: "오늘부터 7일", dates: getNextDays(7) },
+  { label: "오늘부터 14일", dates: getNextDays(14) },
+  { label: "오늘부터 30일", dates: getNextDays(30) },
+];
+
+const timePresets = [
+  { label: "9시 ~ 18시", start: "09:00", end: "18:00" },
+  { label: "18시 ~ 06시", start: "18:00", end: "06:00" },
+  { label: "9시 ~ 24시", start: "09:00", end: "24:00" },
+];
+
+const timeOptions = Array.from({ length: 49 }, (_, i) => {
+  const hour = Math.floor(i / 2)
+    .toString()
+    .padStart(2, "0");
+  const minute = i % 2 === 0 ? "00" : "30";
+  return `${hour}:${minute}`;
+});
+
 export function ScheduleEditDatesPage() {
   const navigate = useNavigate();
   useLockBodyScroll();
@@ -33,29 +53,9 @@ export function ScheduleEditDatesPage() {
   // 플로우에 맞게 기본값 수정
   const [selectedDates, setSelectedDates] = useState<Date[]>(getNextDays(4));
 
-  const datePresets = [
-    { label: "오늘부터 7일", dates: getNextDays(7) },
-    { label: "오늘부터 14일", dates: getNextDays(14) },
-    { label: "오늘부터 30일", dates: getNextDays(30) },
-  ];
-
   // 플로우에 맞게 기본값 수정
   const [startTime, setStartTime] = useState("21:30");
   const [endTime, setEndTime] = useState("23:00");
-
-  const timeOptions = Array.from({ length: 49 }, (_, i) => {
-    const hour = Math.floor(i / 2)
-      .toString()
-      .padStart(2, "0");
-    const minute = i % 2 === 0 ? "00" : "30";
-    return `${hour}:${minute}`;
-  });
-
-  const timePresets = [
-    { label: "9시 ~ 18시", start: "09:00", end: "18:00" },
-    { label: "18시 ~ 06시", start: "18:00", end: "06:00" },
-    { label: "9시 ~ 24시", start: "09:00", end: "24:00" },
-  ];
 
   const handleTimePresetClick = (start: string, end: string) => {
     setStartTime(start);
@@ -167,7 +167,7 @@ export function ScheduleEditDatesPage() {
           </div>
 
           <ButtonBottomTimetableEdit
-            className="mx-auto my-3 w-full max-w-[335px] shrink-0 pb-[safe-area-inset-bottom]"
+            className="mx-auto my-3 w-full max-w-[335px] shrink-0"
             description="최대 30일, 0 ~ 24시까지 선택가능해요."
             onClick={() => {
               // 저장 로직 추가
