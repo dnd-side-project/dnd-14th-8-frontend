@@ -1,3 +1,6 @@
+import { useOutsideClick } from "@/shared/hooks/use-outside-click";
+import { cn } from "@/shared/utils/cn";
+
 const modalButtonStyles = {
   gray: "h-12 bg-k-50 text-k-750 text-b1 enabled:active:bg-k-200 enabled:hover:bg-k-100",
   blue: "h-12 bg-primary-main text-b1 text-k-10 enabled:active:bg-p-500 enabled:hover:bg-p-450",
@@ -5,6 +8,7 @@ const modalButtonStyles = {
 
 export interface ModalProps {
   isOpen?: boolean;
+  onClose?: () => void;
   title?: string;
   caption?: string;
   primaryButton: {
@@ -21,23 +25,31 @@ export interface ModalProps {
 
 export function Modal({
   isOpen,
+  onClose,
   title,
   caption,
   primaryButton,
   secondaryButton,
 }: ModalProps) {
+  const modalRef = useOutsideClick<HTMLDivElement>(onClose ?? (() => {}));
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-9">
-      <div className="w-full max-w-[303px] rounded-2xl bg-k-5 p-4">
+      <div
+        ref={modalRef}
+        className="w-full max-w-[303px] rounded-2xl bg-k-5 p-4"
+      >
         <div className="mb-6 text-center">
           {title && <h3 className="mb-2 text-k-800 text-t1">{title}</h3>}
           {caption && <p className="text-b4 text-k-500">{caption}</p>}
         </div>
 
         <div
-          className={`flex ${secondaryButton ? "flex-row gap-[11px]" : "flex-col"}`}
+          className={cn("flex", {
+            "flex-row gap-[11px]": secondaryButton,
+            "flex-col": !secondaryButton,
+          })}
         >
           {secondaryButton && (
             <button
@@ -52,7 +64,11 @@ export function Modal({
           <button
             type="button"
             onClick={primaryButton.onClick}
-            className={`${secondaryButton ? "flex-1" : "w-full"} rounded-md transition-all ${modalButtonStyles[primaryButton.color]}`}
+            className={cn(
+              "rounded-md transition-all",
+              secondaryButton ? "flex-1" : "w-full",
+              modalButtonStyles[primaryButton.color],
+            )}
           >
             {primaryButton.label}
           </button>
