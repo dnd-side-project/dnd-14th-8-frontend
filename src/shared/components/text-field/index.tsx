@@ -124,10 +124,10 @@ export function TextField({
         <div className="flex justify-between px-1 text-c3">
           <span
             className={cn(
-              isFocused
+              isFocused && computedStatus !== "error"
                 ? "opacity-0"
                 : "opacity-100 transition-opacity duration-200",
-              status === "error" ? "text-action-red" : "text-k-400",
+              computedStatus === "error" ? "text-action-red" : "text-k-400",
             )}
           >
             {helperText}
