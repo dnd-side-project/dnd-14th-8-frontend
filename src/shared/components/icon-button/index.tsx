@@ -12,6 +12,7 @@ const iconButtonVariants = cva(
   {
     variants: {
       size: {
+        xs: "size-5", // 20px
         sm: "size-8", // 32px
         md: "size-9", // 36px
         lg: "size-10", // 40px
@@ -26,6 +27,7 @@ const iconButtonVariants = cva(
         gray: "text-k-5",
         neutral: "text-k-500",
         subtle: "text-k-700",
+        ghost: "text-k-400",
       },
     },
     compoundVariants: [
@@ -53,6 +55,10 @@ const iconButtonVariants = cva(
         background: "none",
         variant: "subtle",
         class: "enabled:active:text-k-900 enabled:hover:text-k-800",
+      },
+      {
+        background: "none",
+        variant: "ghost",
       },
     ],
     defaultVariants: {
@@ -88,6 +94,7 @@ const backgroundVariants = cva(
           "bg-k-100 transition-colors group-enabled:group-active:bg-k-300 group-enabled:group-hover:bg-k-200",
         subtle:
           "transition-colors group-enabled:group-active:bg-k-50 group-enabled:group-hover:bg-k-10",
+        ghost: "bg-transparent",
       },
     },
     defaultVariants: {
@@ -118,11 +125,18 @@ type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 export interface IconButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: IconComponent;
-  size: "sm" | "md" | "lg" | "xl" | "2xl";
+  size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   background?: "none" | "circle" | "square";
   backgroundSize?: "xs" | "sm" | "md" | "lg";
   iconSize: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "primary" | "surface" | "dark" | "gray" | "neutral" | "subtle";
+  variant?:
+    | "primary"
+    | "surface"
+    | "dark"
+    | "gray"
+    | "neutral"
+    | "subtle"
+    | "ghost";
   iconClassName?: string;
 }
 
