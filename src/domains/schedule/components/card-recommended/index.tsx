@@ -1,7 +1,5 @@
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
 import type { HTMLAttributes, MouseEvent } from "react";
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import {
   AvailableIcon,
   ChevronDownIcon,
@@ -12,36 +10,34 @@ import { cn } from "@/shared/utils/cn";
 
 export interface CardRecommendedProps extends HTMLAttributes<HTMLDivElement> {
   index?: number;
-  date: { from: Date; to: Date };
-  participants: Participant[];
+  scheduleDate: string;
+  scheduleDayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  voteCount: number;
+  participantCount: number;
+  availableParticipantNames: string[];
+  unavailableParticipantNames: string[];
   expanded?: boolean;
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }
 
-interface Participant {
-  name: string;
-  isAvailable: boolean;
-}
-
-function processParticipants(participants: Participant[]) {
-  const available = participants.filter((p) => p.isAvailable);
-  const unavailable = participants.filter((p) => !p.isAvailable);
-
-  return {
-    availableCount: available.length,
-    availableNames: available.map((p) => p.name).join(", ") || "없음",
-    unavailableCount: unavailable.length,
-    unavailableNames: unavailable.map((p) => p.name).join(", ") || "없음",
-    participantCurrent: available.length,
-    participantTotal: participants.length,
-  };
+function formatDateLabel(scheduleDate: string, scheduleDayOfWeek: string) {
+  const [_, month, day] = scheduleDate.split("-");
+  return `${month}월 ${day}일 ${scheduleDayOfWeek}`;
 }
 
 export function CardRecommended({
   index = 1,
-  date,
-  participants,
+  scheduleDate,
+  scheduleDayOfWeek,
+  startTime,
+  endTime,
+  voteCount,
+  participantCount,
+  availableParticipantNames,
+  unavailableParticipantNames,
   className,
   expanded,
   defaultExpanded = false,
@@ -52,16 +48,12 @@ export function CardRecommended({
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const isExpanded = expanded ?? internalExpanded;
 
-  const dateLabel = format(date.from, "M월 d일 E요일", { locale: ko });
-  const timeLabel = `${format(date.from, "HH:mm")} ~ ${format(date.to, "HH:mm")}`;
-  const {
-    availableCount,
-    availableNames,
-    unavailableCount,
-    unavailableNames,
-    participantCurrent,
-    participantTotal,
-  } = useMemo(() => processParticipants(participants), [participants]);
+  const dateLabel = formatDateLabel(scheduleDate, scheduleDayOfWeek);
+  const timeLabel = `${startTime} ~ ${endTime}`;
+  const availableCount = availableParticipantNames.length;
+  const unavailableCount = unavailableParticipantNames.length;
+  const availableNames = availableParticipantNames.join(", ") || "없음";
+  const unavailableNames = unavailableParticipantNames.join(", ") || "없음";
 
   const handleToggleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (event.defaultPrevented) {
@@ -97,8 +89,8 @@ export function CardRecommended({
           <p className="inline-flex items-center gap-0.5 text-b1">
             <MemberIcon className="size-5 shrink-0 text-primary-main" />
             <span className="text-b4">
-              <span className="text-primary-main">{participantCurrent}</span>
-              <span className="text-k-700">/{participantTotal}</span>
+              <span className="text-primary-main">{voteCount}</span>
+              <span className="text-k-700">/{participantCount}</span>
             </span>
           </p>
           <ChevronDownIcon
