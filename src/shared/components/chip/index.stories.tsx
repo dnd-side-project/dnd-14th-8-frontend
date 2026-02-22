@@ -8,7 +8,7 @@ const meta = {
   argTypes: {
     size: {
       control: "inline-radio",
-      options: ["sm", "md"],
+      options: ["sm", "md", "lg", "xl", "2xl"],
     },
   },
   decorators: [
@@ -40,7 +40,9 @@ export const SizeVariants: Story = {
   render: () => (
     <div className="flex w-full items-end gap-3">
       <Chip size="sm">+n</Chip>
-      <Chip size="md">text</Chip>
+      <Chip size="md">address</Chip>
+      <Chip size="lg">name</Chip>
+      <Chip size="xl">text</Chip>
     </div>
   ),
 };
