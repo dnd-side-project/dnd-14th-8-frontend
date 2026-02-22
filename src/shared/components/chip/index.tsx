@@ -11,7 +11,7 @@ export const chipVariants = cva(
         md: "rounded-sm bg-p-50 px-1.5 py-0.5 text-b5 text-primary-main",
         lg: "rounded-sm px-2 py-1 text-b4 text-k-800",
         xl: "rounded-md px-3 py-1.5 text-b4 text-k-700",
-        "2xl": "rounded-[30px] px-3.5 py-2",
+        "2xl": "rounded-[30px] bg-k-5 px-3.5 py-2 text-b4 text-k-700",
       },
     },
     defaultVariants: {
@@ -31,3 +31,17 @@ export function Chip({ children, className, size, ...props }: ChipProps) {
     </span>
   );
 }
+
+Chip.Highlight = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <span className={cn("ml-1 font-semibold text-primary-main", className)}>
+      {children}
+    </span>
+  );
+};

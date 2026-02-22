@@ -10,6 +10,7 @@ export { default as ChevronLeftIcon } from "@/assets/icons/chevron-left.svg?reac
 export { default as ChevronRightIcon } from "@/assets/icons/chevron-right.svg?react";
 export { default as ChevronUpIcon } from "@/assets/icons/chevron-up.svg?react";
 export { default as CloseIcon } from "@/assets/icons/close.svg?react";
+export { default as DividerIcon } from "@/assets/icons/divider.svg?react";
 export { default as DividerPointIcon } from "@/assets/icons/divider-point.svg?react";
 export { default as ErrorIcon } from "@/assets/icons/error.svg?react";
 export { default as LocationIcon } from "@/assets/icons/locaiton.svg?react";
@@ -20,6 +21,7 @@ export { default as PlaceholderIcon } from "@/assets/icons/placeholder.svg?react
 export { default as PlusIcon } from "@/assets/icons/plus.svg?react";
 export { default as RestaurantIcon } from "@/assets/icons/restaurant.svg?react";
 export { default as SearchIcon } from "@/assets/icons/search.svg?react";
+export { default as SelectedCheckIcon } from "@/assets/icons/selected-check.svg?react";
 export { default as ShareIcon } from "@/assets/icons/share.svg?react";
 export { default as TargetIcon } from "@/assets/icons/target.svg?react";
 export { default as TimeIcon } from "@/assets/icons/time.svg?react";
