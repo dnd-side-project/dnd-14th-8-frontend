@@ -1,34 +1,47 @@
-import { useNavigate, useParams } from "react-router";
-import { ButtonBottom } from "@/shared/components/button-bottom";
+import { useScheduleVoteForm } from "@/domains/schedule/hooks/use-schedule-vote-form";
+import { ScheduleVoteFormView } from "@/domains/schedule/views/schedule-vote-form-view";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 
-export function ScheduleVotesNewPage() {
-  const navigate = useNavigate();
-  const { meetingId } = useParams();
-  const currentMeetingId = meetingId ?? "sample-meeting-id";
+export function ScheduleVotesPage() {
+  const {
+    control,
+    canSubmit,
+    endTime,
+    isPending,
+    isResetConfirmOpen,
+    isSubmitPending,
+    maxNameLength,
+    pageTitle,
+    startTime,
+    timetableDates,
+    onBack,
+    onCancelResetConfirm,
+    onConfirmReset,
+    onReset,
+    onSubmit,
+    onSubmitBlocked,
+  } = useScheduleVoteForm();
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader
-          title="일정 추가하기"
-          onBack={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
-        />
-
-        <div className="mt-auto">
-          <ButtonBottom
-            onClick={() =>
-              navigate(
-                `/meetings/${currentMeetingId}/schedule/votes/sample-vote-id`,
-              )
-            }
-            variant="blue"
-          >
-            일정 수정 페이지로 이동
-          </ButtonBottom>
-        </div>
-      </section>
+      <ScheduleVoteFormView
+        control={control}
+        title={pageTitle}
+        canSubmit={canSubmit}
+        maxNameLength={maxNameLength}
+        startTime={startTime}
+        endTime={endTime}
+        timetableDates={timetableDates}
+        isPending={isPending}
+        isSubmitPending={isSubmitPending}
+        isResetConfirmOpen={isResetConfirmOpen}
+        onBack={onBack}
+        onCancelResetConfirm={onCancelResetConfirm}
+        onConfirmReset={onConfirmReset}
+        onReset={onReset}
+        onSubmit={onSubmit}
+        onSubmitBlocked={onSubmitBlocked}
+      />
     </MobileLayout>
   );
 }
