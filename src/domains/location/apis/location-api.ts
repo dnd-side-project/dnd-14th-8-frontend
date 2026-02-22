@@ -3,8 +3,7 @@ import type {
   CreateLocationVoteRequest,
   LocationVote,
   MidpointRecommendationResponse,
-  OptimalLocationRequest,
-  OptimalLocationResponse,
+  PersonalRouteResponse,
   UpdateLocationVoteRequest,
 } from "@/domains/location/types/location-api-types";
 import { type ApiResponse, api } from "@/shared/utils/axios";
@@ -26,12 +25,23 @@ interface UpdateLocationVoteRequestBody {
   participantName: string;
 }
 
+export type MidpointRouteMode = "both" | "driving" | "transit";
+
 export interface DeleteLocationVoteParams {
   locationVoteId: number;
 }
 
 export interface GetMidpointRecommendationsParams {
+  departureTime?: string;
   meetingId: string;
+}
+
+export interface GetPersonalRouteParams {
+  departureTime?: string;
+  meetingId: string;
+  mode?: MidpointRouteMode;
+  participantId: number;
+  stationId: number;
 }
 
 export interface ListLocationVotesParams {
@@ -98,20 +108,34 @@ export function listLocationVotes({ locationPollId }: ListLocationVotesParams) {
 }
 
 export function getMidpointRecommendations({
+  departureTime,
   meetingId,
 }: GetMidpointRecommendationsParams) {
   return api.get<ApiResponse<MidpointRecommendationResponse>>(
     "/api/locations/midpoint-recommendations",
     {
-      params: { meetingId },
+      params: { departureTime, meetingId },
     },
   );
 }
 
-// 일단은 테스트 API인 것 같지만 추가하고 나중에 교체
-export function findOptimalLocations(payload: OptimalLocationRequest) {
-  return api.post<ApiResponse<OptimalLocationResponse>>(
-    "/api/test/janghh/optimal-location",
-    payload,
+export function getPersonalRoute({
+  departureTime,
+  meetingId,
+  mode,
+  participantId,
+  stationId,
+}: GetPersonalRouteParams) {
+  return api.get<ApiResponse<PersonalRouteResponse>>(
+    "/api/locations/midpoint-routes",
+    {
+      params: {
+        departureTime,
+        meetingId,
+        mode,
+        participantId,
+        stationId,
+      },
+    },
   );
 }
