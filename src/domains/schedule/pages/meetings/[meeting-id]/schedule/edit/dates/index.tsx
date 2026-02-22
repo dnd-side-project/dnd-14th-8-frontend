@@ -1,7 +1,7 @@
 import { addDays, isSameDay, startOfDay } from "date-fns";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-buttom-timetable-edit";
+import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-bottom-timetable-edit";
 import { Calendar } from "@/shared/components/calendar";
 import { ChipButton } from "@/shared/components/chip-button";
 import { Dropdown, DropdownOption } from "@/shared/components/dropdown";

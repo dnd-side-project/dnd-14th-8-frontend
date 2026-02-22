@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-buttom-timetable-edit";
+import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-bottom-timetable-edit";
 
 const meta = {
   title: "domains/schedule/ButtonButtomTimetableEdit",
