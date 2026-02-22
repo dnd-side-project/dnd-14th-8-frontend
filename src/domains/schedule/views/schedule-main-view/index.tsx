@@ -2,7 +2,6 @@ import type { HTMLAttributes } from "react";
 import { ScheduleMainHero } from "@/domains/schedule/components/schedule-main-hero";
 import { ScheduleMainOptimalContent } from "@/domains/schedule/components/schedule-main-optimal-content";
 import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-main-vote-content";
-import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Tab } from "@/shared/components/tab";
@@ -11,7 +10,7 @@ import { cn } from "@/shared/utils/cn";
 export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   meetingId: string;
   tab: "optimal" | "vote";
-  onAddVote: (scheduleVoteId?: number) => void;
+  onAddVote: () => void;
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
@@ -27,8 +26,6 @@ export function ScheduleMainView({
   tab,
   ...props
 }: ScheduleMainViewProps) {
-  const { data } = useGetMyParticipant({ meetingId });
-
   return (
     <div
       className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
@@ -59,7 +56,7 @@ export function ScheduleMainView({
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
       <BottomActionBarWithButtonAndShare
-        onClick={() => onAddVote(data?.scheduleVoteId)}
+        onClick={onAddVote}
         onShare={() => console.log("TODO: share")}
       >
         일정 추가하기
