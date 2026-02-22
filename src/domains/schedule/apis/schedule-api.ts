@@ -6,7 +6,7 @@ import type {
 import { type ApiResponse, api } from "@/shared/utils/axios";
 
 export interface ConfirmSchedulePollParams {
-  schedulePollId: number;
+  meetingId: string;
 }
 
 export interface CreateScheduleVoteParams {
@@ -52,10 +52,8 @@ export function updateSchedulePoll({
   });
 }
 
-export function confirmSchedulePoll({
-  schedulePollId,
-}: ConfirmSchedulePollParams) {
-  return api.put<ApiResponse<void>>(
-    `/api/schedules/poll/${schedulePollId}/confirm`,
-  );
+export function confirmSchedulePoll({ meetingId }: ConfirmSchedulePollParams) {
+  return api.put<ApiResponse<void>>("/api/schedules/poll/confirm", undefined, {
+    params: { meetingId },
+  });
 }

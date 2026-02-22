@@ -5,7 +5,7 @@ export interface CreateLocationVoteRequest {
   departureLng: CoordinateValue;
   departureLocation: string;
   localStorageKey?: string;
-  locationPollId: number | string;
+  locationPollId: string;
   meetingId: string;
   participantName: string;
 }
@@ -18,8 +18,8 @@ export interface UpdateLocationVoteRequest {
 }
 
 export interface LocationVote {
-  departureLat: CoordinateValue;
-  departureLng: CoordinateValue;
+  departureLat: number;
+  departureLng: number;
   departureLocation: string;
   locationVoteId: number;
   participantName: string;
@@ -58,6 +58,27 @@ export interface MidpointRecommendationResponse {
   recommendations: StationRecommendationDto[];
 }
 
+export interface PlaceDetail {
+  businessStatusMessage: string;
+  distanceFromBase: number;
+  formattedAddress: string;
+  id: number;
+  isOpen: boolean;
+  kakaoPlaceUrl: string;
+  latitude: number;
+  longitude: number;
+  name: string;
+}
+
+export interface CategoryPlaces {
+  category: string;
+  places: PlaceDetail[];
+}
+
+export interface NearbyPlaceSearchResponse {
+  categories: CategoryPlaces[];
+}
+
 export interface ParticipantSummaryDto {
   departureAddress: string;
   participantId: number;
@@ -92,3 +113,5 @@ export interface PersonalRouteResponse {
   station: StationSummaryDto;
   transit?: TransitRouteDetailDto;
 }
+
+export type MidpointRouteMode = "both" | "driving" | "transit";
