@@ -72,8 +72,8 @@ export const Interactive: Story = {
   },
   args: {
     startTime: 9,
-    endTime: 15,
-    dates: getDates(3),
+    endTime: 23,
+    dates: getDates(8),
   },
 };
 
