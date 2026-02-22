@@ -1,5 +1,4 @@
 import type { ComponentType, SVGProps } from "react";
-import { IconButton } from "@/shared/components/icon-button";
 import { cn } from "@/shared/utils/cn";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
@@ -41,15 +40,10 @@ export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
             )}
           >
             {tab.icon && (
-              <IconButton
-                icon={tab.icon}
-                size="xs"
-                iconSize="md"
-                background="none"
-                variant="ghost"
+              <tab.icon
                 className={cn(
-                  "pointer-events-none transition-colors",
-                  isActive && "text-primary-main",
+                  "size-5 shrink-0 transition-colors",
+                  isActive ? "text-primary-main" : "text-k-400",
                 )}
               />
             )}

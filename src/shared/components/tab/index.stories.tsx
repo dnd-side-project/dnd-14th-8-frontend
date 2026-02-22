@@ -31,11 +31,11 @@ const transportationTabs = [
 
 export const Default: Story = {
   render: (args) => {
-    const [activeTab, setActiveTab] = useState(mockTabs[0].id);
+    const [activeTab, setActiveTab] = useState(transportationTabs[0].id);
     return (
       <Tab
         {...args}
-        tabs={mockTabs}
+        tabs={transportationTabs}
         activeTabId={activeTab}
         onTabChange={(id) => {
           setActiveTab(id);
