@@ -1,6 +1,9 @@
 export { default as ArrowUpIcon } from "@/assets/icons/arrow-up.svg?react";
 export { default as AvailableIcon } from "@/assets/icons/available.svg?react";
+export { default as BookIcon } from "@/assets/icons/book.svg?react";
+export { default as CafeIcon } from "@/assets/icons/cafe.svg?react";
 export { default as CalendarIcon } from "@/assets/icons/calendar.svg?react";
+export { default as CarIcon } from "@/assets/icons/car.svg?react";
 export { default as CheckIcon } from "@/assets/icons/check.svg?react";
 export { default as ChevronDownIcon } from "@/assets/icons/chevron-down.svg?react";
 export { default as ChevronLeftIcon } from "@/assets/icons/chevron-left.svg?react";
@@ -8,10 +11,13 @@ export { default as ChevronRightIcon } from "@/assets/icons/chevron-right.svg?re
 export { default as ChevronUpIcon } from "@/assets/icons/chevron-up.svg?react";
 export { default as CloseIcon } from "@/assets/icons/close.svg?react";
 export { default as ErrorIcon } from "@/assets/icons/error.svg?react";
+export { default as MeetingRoomIcon } from "@/assets/icons/meetingroom.svg?react";
 export { default as MemberIcon } from "@/assets/icons/member.svg?react";
 export { default as MinusIcon } from "@/assets/icons/minus.svg?react";
 export { default as PlaceholderIcon } from "@/assets/icons/placeholder.svg?react";
 export { default as PlusIcon } from "@/assets/icons/plus.svg?react";
+export { default as ResturantIcon } from "@/assets/icons/resturant.svg?react";
 export { default as ShareIcon } from "@/assets/icons/share.svg?react";
 export { default as TimeIcon } from "@/assets/icons/time.svg?react";
+export { default as TrafficIcon } from "@/assets/icons/traffic.svg?react";
 export { default as UnavailableIcon } from "@/assets/icons/unavailable.svg?react";
