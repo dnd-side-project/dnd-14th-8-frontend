@@ -62,6 +62,12 @@ export function useCalendarSelection({
   selected,
 }: UseCalendarSelectionParams): UseCalendarSelectionResult {
   const isControlled = selected !== undefined;
+
+  const onSelectRef = useRef(onSelect);
+  useEffect(() => {
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
+
   const [internalSelected, setInternalSelected] = useState<Date[]>(() =>
     getSortedUniqueDates(defaultSelected ?? []),
   );
@@ -102,9 +108,9 @@ export function useCalendarSelection({
         setInternalSelected(normalizedDates);
       }
 
-      onSelect?.(normalizedDates);
+      onSelectRef.current?.(normalizedDates);
     },
-    [isControlled, onSelect],
+    [isControlled],
   );
 
   useEffect(() => {
