@@ -1,18 +1,18 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
-export interface ButtonSubStorkeProps
+export interface ButtonSubStrokeProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
 }
 
-export function ButtonSubStorke({
+export function ButtonSubStroke({
   children,
   className,
   icon,
   type = "button",
   ...props
-}: ButtonSubStorkeProps) {
+}: ButtonSubStrokeProps) {
   return (
     <button
       className={cn(

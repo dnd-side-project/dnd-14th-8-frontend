@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ButtonSubStorke } from "@/domains/location/components/button-sub-storke";
+import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { TargetIcon } from "@/shared/components/icons";
 
 const meta = {
-  title: "domains/location/ButtonSubStorke",
-  component: ButtonSubStorke,
+  title: "domains/location/ButtonSubStroke",
+  component: ButtonSubStroke,
   args: { children: "Button", icon: <TargetIcon /> },
   argTypes: { icon: { control: false } },
   decorators: [
@@ -15,19 +15,20 @@ const meta = {
     ),
   ],
   parameters: { layout: "centered" },
-} satisfies Meta<typeof ButtonSubStorke>;
+} satisfies Meta<typeof ButtonSubStroke>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const icon = <TargetIcon />;
+
 export const States: Story = {
   render: () => {
-    const icon = <TargetIcon />;
     return (
       <div className="flex w-full flex-col gap-2">
-        <ButtonSubStorke>출발지 추가하기</ButtonSubStorke>
-        <ButtonSubStorke icon={icon}>현 위치 불러오기</ButtonSubStorke>
+        <ButtonSubStroke>출발지 추가하기</ButtonSubStroke>
+        <ButtonSubStroke icon={icon}>현 위치 불러오기</ButtonSubStroke>
       </div>
     );
   },
