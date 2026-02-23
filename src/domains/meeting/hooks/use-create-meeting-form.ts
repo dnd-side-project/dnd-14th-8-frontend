@@ -19,7 +19,7 @@ export const createMeetingFormSchema = z.object({
 
 export type CreateMeetingFormValues = z.infer<typeof createMeetingFormSchema>;
 
-export function useCreateMeetingForm() {
+export function useCreateMeetingForm(flow?: string) {
   const navigate = useNavigate();
   const createMeetingMutation = useCreateMeeting();
 
@@ -55,7 +55,11 @@ export function useCreateMeetingForm() {
 
     setMeetingSession(meetingId, trimmedName);
 
-    navigate(`/meetings/${meetingId}/schedule`);
+    if (flow === "location") {
+      navigate(`/meetings/${meetingId}/location`);
+    } else {
+      navigate(`/meetings/${meetingId}/schedule`);
+    }
   });
 
   const handleSubmitBlocked = () => {

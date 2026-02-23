@@ -1,5 +1,5 @@
 import { Controller } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useCreateMeetingForm } from "@/domains/meeting/hooks/use-create-meeting-form";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
@@ -9,6 +9,7 @@ import { TextField } from "@/shared/components/text-field";
 
 export function NewMeetingPage() {
   const navigate = useNavigate();
+  const { flow } = useParams();
 
   const {
     control,
@@ -20,7 +21,7 @@ export function NewMeetingPage() {
     maxNameLength,
     onSubmit,
     onSubmitBlocked,
-  } = useCreateMeetingForm();
+  } = useCreateMeetingForm(flow);
 
   const participantName = watch("participantName");
   const participantCount = watch("participantCount");
