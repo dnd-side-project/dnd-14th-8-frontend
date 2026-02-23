@@ -1,11 +1,13 @@
+// import { Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
+// import { Stepper } from "@/shared/components/stepper";
 
-export function ScheduleEditParticipantsPage() {
+export function EditParticipantCountPage() {
   const navigate = useNavigate();
-  const { meetingId } = useParams();
+  const { meetingId, flow } = useParams();
   const currentMeetingId = meetingId ?? "sample-meeting-id";
 
   return (
@@ -13,15 +15,29 @@ export function ScheduleEditParticipantsPage() {
       <section className="flex min-h-dvh flex-col px-5 pb-5">
         <PageHeader
           title="모임 인원 수정"
+          // TODO: 수정
           onBack={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
         />
 
+        {/* <Controller
+          control={control}
+          name="participantCount"
+          render={({ field }) => (
+            <Stepper
+              label="인원 수"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        /> */}
+
         <div className="mt-auto">
           <ButtonBottom
-            onClick={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
-            variant="blue"
+            variant="black"
+            // disabled={!canSubmit || isSubmitPending}
+            // onClick={onSubmit}
           >
-            일정 메인으로 이동
+            완료
           </ButtonBottom>
         </div>
       </section>
