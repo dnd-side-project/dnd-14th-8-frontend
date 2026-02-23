@@ -1,6 +1,7 @@
 import { isSameDay } from "date-fns";
 import {
   type MouseEvent as ReactMouseEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -11,6 +12,7 @@ import {
   type DragSelectionMode,
   getCalendarDateKey,
   getCalendarDayMeta,
+  getCalendarDayMetaFromPoint,
   getDraggedSelection,
   isBlockedDay,
 } from "./drag-selection-utils";
@@ -64,15 +66,14 @@ export function useCalendarSelection({
     getSortedUniqueDates(defaultSelected ?? []),
   );
 
-  // 드래그 선택(add/remove) 진행 상태를 ref로 관리한다.
-  // 빈번한 마우스 이벤트마다 렌더링이 발생하지 않도록 state 대신 ref를 사용한다.
   const dragStartDateRef = useRef<Date | null>(null);
   const dragBaseDatesRef = useRef<Date[]>([]);
   const dragModeRef = useRef<DragSelectionMode>("add");
   const dragCommittedRef = useRef(false);
   const isMouseDownRef = useRef(false);
 
-  // 드래그 종료 직후 click 이벤트가 한 번 더 들어와 토글되는 것을 막기 위한 guard.
+  const lastTouchDateKeyRef = useRef<string | null>(null);
+
   const suppressClickDayKeyRef = useRef<string | null>(null);
   const suppressClickUntilMsRef = useRef(0);
 
@@ -83,80 +84,125 @@ export function useCalendarSelection({
   );
   const selectedDatesRef = useRef<Date[]>(selectedDates);
 
-  // 이벤트 핸들러에서 최신 선택 상태를 즉시 참조할 수 있도록 동기화한다.
   useEffect(() => {
     selectedDatesRef.current = selectedDates;
   }, [selectedDates]);
 
-  useEffect(() => {
-    // drag 시작점/모드(add|remove)는 mousedown 시점에 결정한다.
-    function handleMouseDown(event: MouseEvent) {
-      if (!enableDragSelection || event.button !== 0) {
+  const applySelection = useCallback(
+    (nextDates: Date[]) => {
+      const normalizedDates = getSortedUniqueDates(nextDates);
+
+      if (isSameDateList(selectedDatesRef.current, normalizedDates)) {
         return;
       }
 
+      selectedDatesRef.current = normalizedDates;
+
+      if (!isControlled) {
+        setInternalSelected(normalizedDates);
+      }
+
+      onSelect?.(normalizedDates);
+    },
+    [isControlled, onSelect],
+  );
+
+  useEffect(() => {
+    const startDragging = (date: Date, isSelected: boolean) => {
       if (suppressClickUntilMsRef.current <= Date.now()) {
         suppressClickDayKeyRef.current = null;
         suppressClickUntilMsRef.current = 0;
       }
-
-      const dayMeta = getCalendarDayMeta(calendarId, event.target);
-
-      if (!dayMeta || dayMeta.isBlocked) {
-        return;
-      }
-
       dragCommittedRef.current = false;
-      dragStartDateRef.current = dayMeta.date;
+      dragStartDateRef.current = date;
       dragBaseDatesRef.current = selectedDatesRef.current;
-      dragModeRef.current = dayMeta.isSelected ? "remove" : "add";
+      dragModeRef.current = isSelected ? "remove" : "add";
       isMouseDownRef.current = true;
-    }
+      lastTouchDateKeyRef.current = getCalendarDateKey(date);
+    };
 
-    // drag가 실제로 반영되었다면 mouseup 직후 click 토글을 일시적으로 무시한다.
-    function handleMouseUp() {
+    const stopDragging = () => {
       if (dragCommittedRef.current && dragStartDateRef.current) {
         suppressClickDayKeyRef.current = getCalendarDateKey(
           dragStartDateRef.current,
         );
         suppressClickUntilMsRef.current = Date.now() + 250;
       }
-
       dragCommittedRef.current = false;
       dragStartDateRef.current = null;
       dragBaseDatesRef.current = [];
-      dragModeRef.current = "add";
       isMouseDownRef.current = false;
+      lastTouchDateKeyRef.current = null;
+    };
+
+    function handleMouseDown(event: MouseEvent) {
+      if (!enableDragSelection || event.button !== 0) return;
+      const dayMeta = getCalendarDayMeta(calendarId, event.target);
+      if (!dayMeta || dayMeta.isBlocked) return;
+      startDragging(dayMeta.date, dayMeta.isSelected);
+    }
+
+    function handleTouchStart(event: TouchEvent) {
+      if (!enableDragSelection) return;
+      const touch = event.touches[0];
+      const dayMeta = getCalendarDayMetaFromPoint(
+        calendarId,
+        touch.clientX,
+        touch.clientY,
+      );
+      if (!dayMeta || dayMeta.isBlocked) return;
+
+      startDragging(dayMeta.date, dayMeta.isSelected);
+    }
+
+    function handleTouchMove(event: TouchEvent) {
+      if (
+        !enableDragSelection ||
+        !isMouseDownRef.current ||
+        !dragStartDateRef.current
+      )
+        return;
+
+      const touch = event.touches[0];
+      const dayMeta = getCalendarDayMetaFromPoint(
+        calendarId,
+        touch.clientX,
+        touch.clientY,
+      );
+      if (!dayMeta || dayMeta.isBlocked) return;
+
+      const dateKey = getCalendarDateKey(dayMeta.date);
+      if (lastTouchDateKeyRef.current === dateKey) return;
+
+      lastTouchDateKeyRef.current = dateKey;
+      dragCommittedRef.current = true;
+
+      const nextDates = getDraggedSelection(
+        dragBaseDatesRef.current,
+        dragStartDateRef.current,
+        dayMeta.date,
+        dragModeRef.current,
+      );
+      applySelection(nextDates);
+
+      if (event.cancelable) event.preventDefault();
     }
 
     window.addEventListener("mousedown", handleMouseDown, true);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseup", stopDragging);
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", stopDragging);
 
     return () => {
       window.removeEventListener("mousedown", handleMouseDown, true);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseup", stopDragging);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", stopDragging);
     };
-  }, [calendarId, enableDragSelection]);
+  }, [calendarId, enableDragSelection, applySelection]);
 
-  // 선택 배열을 정규화(중복 제거/정렬)하고 controlled/uncontrolled 상태를 동시에 처리한다.
-  function applySelection(nextDates: Date[]) {
-    const normalizedDates = getSortedUniqueDates(nextDates);
-
-    if (isSameDateList(selectedDatesRef.current, normalizedDates)) {
-      return;
-    }
-
-    selectedDatesRef.current = normalizedDates;
-
-    if (!isControlled) {
-      setInternalSelected(normalizedDates);
-    }
-
-    onSelect?.(normalizedDates);
-  }
-
-  // DayPicker 기본 multiple 선택 결과를 받는다.
-  // 단, drag 직후 발생한 click 토글은 guard 조건에서 무시한다.
   const handleSelect: OnSelectHandler<Date[] | undefined> = (
     nextDates,
     triggerDate,
@@ -166,7 +212,8 @@ export function useCalendarSelection({
     if (
       suppressClickDayKeyRef.current === getCalendarDateKey(triggerDate) &&
       suppressClickUntilMsRef.current > Date.now() &&
-      event instanceof MouseEvent
+      (event instanceof MouseEvent ||
+        (typeof TouchEvent !== "undefined" && event instanceof TouchEvent))
     ) {
       suppressClickDayKeyRef.current = null;
       suppressClickUntilMsRef.current = 0;
@@ -176,7 +223,6 @@ export function useCalendarSelection({
     applySelection(nextDates ?? []);
   };
 
-  // drag 중 포인터가 다른 날짜로 진입하면 baseDates + range 계산으로 선택을 갱신한다.
   const handleDayMouseEnter: DayEventHandler<ReactMouseEvent> = (
     day,
     modifiers,

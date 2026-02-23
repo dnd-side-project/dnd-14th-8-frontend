@@ -19,7 +19,7 @@ export function getCalendarClassNames({
   defaultClassNames,
 }: CalendarClassNamesParams): DayPickerProps["classNames"] {
   return {
-    root: cn("w-[335px]", defaultClassNames.root),
+    root: cn("w-[335px] touch-none", defaultClassNames.root),
     months: cn("relative w-full", defaultClassNames.months),
     month: cn("w-full", defaultClassNames.month),
     month_caption: cn(

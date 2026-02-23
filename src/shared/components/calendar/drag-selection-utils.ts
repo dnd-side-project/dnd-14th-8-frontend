@@ -76,3 +76,14 @@ export function getDraggedSelection(
     return [...baseDates, ...rangeDates];
   }
 }
+
+export function getCalendarDayMetaFromPoint(
+  calendarId: string,
+  x: number,
+  y: number,
+): CalendarDayMeta | null {
+  const element = document.elementFromPoint(x, y);
+  if (!element) return null;
+
+  return getCalendarDayMeta(calendarId, element);
+}
