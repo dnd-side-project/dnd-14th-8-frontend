@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import { useCreateMeeting } from "@/domains/meeting/hooks/use-create-meeting";
+import { toast } from "@/shared/components/toast";
 import { getGuestId, setMeetingSession } from "@/shared/utils/auth";
 
 export const NAME_MAX_LENGTH = 4;
@@ -13,7 +14,7 @@ export const createMeetingFormSchema = z.object({
     .string()
     .trim()
     .min(1, "이름을 입력해주세요")
-    .max(NAME_MAX_LENGTH, "최대 4자까지 적을 수 있어요"),
+    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`),
   participantCount: z.number().min(2),
 });
 
@@ -40,33 +41,30 @@ export function useCreateMeetingForm(flow?: string) {
     mode: "onChange",
   });
 
-  const isPending = createMeetingMutation.isPending;
-
   const submitHandler = handleSubmit(async (data) => {
-    const trimmedName = data.participantName.trim();
+    try {
+      const trimmedName = data.participantName.trim();
 
-    const response = await createMeetingMutation.mutateAsync({
-      localStorageKey,
-      participantName: trimmedName,
-      participantCount: data.participantCount,
-    });
+      const response = await createMeetingMutation.mutateAsync({
+        localStorageKey,
+        participantName: trimmedName,
+        participantCount: data.participantCount,
+      });
 
-    const meetingId = response.data.data;
+      const meetingId = response.data.data;
 
-    setMeetingSession(meetingId, trimmedName);
+      setMeetingSession(meetingId, trimmedName);
 
-    if (flow === "location") {
-      navigate(`/meetings/${meetingId}/location`);
-    } else {
-      navigate(`/meetings/${meetingId}/schedule`);
+      navigate(
+        flow === "location"
+          ? `/meetings/${meetingId}/location`
+          : `/meetings/${meetingId}/schedule`,
+      );
+    } catch (error) {
+      console.error("모임 생성 실패:", error);
+      toast.error("모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.");
     }
   });
-
-  const handleSubmitBlocked = () => {
-    if (errors.participantName?.message) {
-      return;
-    }
-  };
 
   return {
     // form
@@ -77,11 +75,10 @@ export function useCreateMeetingForm(flow?: string) {
     // view
     errors,
     canSubmit: isValid,
-    isSubmitPending: isPending,
+    isSubmitPending: createMeetingMutation.isPending,
     maxNameLength: NAME_MAX_LENGTH,
 
     // actions
     onSubmit: () => void submitHandler(),
-    onSubmitBlocked: handleSubmitBlocked,
   };
 }

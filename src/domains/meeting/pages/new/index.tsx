@@ -20,10 +20,9 @@ export function NewMeetingPage() {
     isSubmitPending,
     maxNameLength,
     onSubmit,
-    onSubmitBlocked,
   } = useCreateMeetingForm(flow);
 
-  const participantName = watch("participantName");
+  const _participantName = watch("participantName");
   const participantCount = watch("participantCount");
 
   return (
@@ -43,11 +42,10 @@ export function NewMeetingPage() {
               maxLength={maxNameLength}
               className="mt-3"
               status={errors.participantName ? "error" : "default"}
+              onClear={() => field.onChange("")}
               helperText={
-                errors.participantName?.message ??
-                (participantName
-                  ? `최대 ${maxNameLength}자까지 적을 수 있어요`
-                  : "")
+                errors.participantName?.message ||
+                `최대 ${maxNameLength}자까지 입력할 수 있어요`
               }
             />
           )}
@@ -67,7 +65,7 @@ export function NewMeetingPage() {
           <ButtonBottom
             variant="black"
             disabled={!canSubmit || isSubmitPending}
-            onClick={canSubmit ? onSubmit : onSubmitBlocked}
+            onClick={onSubmit}
           >
             모임 생성하기
           </ButtonBottom>
