@@ -11,7 +11,7 @@ export function CustomRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/new" element={<NewMeetingPage />} />
+      <Route path="/new/:flow" element={<NewMeetingPage />} />
       <Route
         path="/meetings/:meetingId/schedule"
         element={<ScheduleMainPage />}
