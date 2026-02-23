@@ -2,7 +2,7 @@ import {
   BookIcon,
   CafeIcon,
   MeetingRoomIcon,
-  PinLogoIcon,
+  PinIcon,
   RestaurantIcon,
 } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
@@ -58,7 +58,7 @@ export function FacilityPinSelected({ type, className }: FacilityPinProps) {
         className,
       )}
     >
-      <PinLogoIcon />
+      <PinIcon />
       <div className="absolute inset-0 flex translate-y-[-3px] items-center justify-center">
         <FacilityIcon type={type} className="size-8" />
       </div>
