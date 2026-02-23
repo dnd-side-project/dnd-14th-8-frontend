@@ -17,6 +17,7 @@ export { default as LocationIcon } from "@/assets/icons/locaiton.svg?react";
 export { default as MeetingRoomIcon } from "@/assets/icons/meetingroom.svg?react";
 export { default as MemberIcon } from "@/assets/icons/member.svg?react";
 export { default as MinusIcon } from "@/assets/icons/minus.svg?react";
+export { default as PinLogoIcon } from "@/assets/icons/pin-logo.svg?react";
 export { default as PlaceholderIcon } from "@/assets/icons/placeholder.svg?react";
 export { default as PlusIcon } from "@/assets/icons/plus.svg?react";
 export { default as RestaurantIcon } from "@/assets/icons/restaurant.svg?react";
