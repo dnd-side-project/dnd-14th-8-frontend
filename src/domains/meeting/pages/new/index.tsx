@@ -13,17 +13,12 @@ export function NewMeetingPage() {
 
   const {
     control,
-    watch,
-    setValue,
     errors,
     canSubmit,
     isSubmitPending,
     maxNameLength,
     onSubmit,
   } = useCreateMeetingForm(flow);
-
-  const _participantName = watch("participantName");
-  const participantCount = watch("participantCount");
 
   return (
     <MobileLayout>
@@ -52,13 +47,17 @@ export function NewMeetingPage() {
         />
 
         {/* 인원 수 */}
-        <Stepper
-          label="인원 수"
-          value={participantCount}
-          onChange={(value) =>
-            setValue("participantCount", value, { shouldValidate: true })
-          }
-          className="mt-6"
+        <Controller
+          control={control}
+          name="participantCount"
+          render={({ field }) => (
+            <Stepper
+              label="인원 수"
+              value={field.value}
+              onChange={field.onChange}
+              className="mt-6"
+            />
+          )}
         />
 
         <div className="mt-auto">

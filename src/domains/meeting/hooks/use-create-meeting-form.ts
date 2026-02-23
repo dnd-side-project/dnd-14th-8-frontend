@@ -24,8 +24,6 @@ export function useCreateMeetingForm(flow?: string) {
   const navigate = useNavigate();
   const createMeetingMutation = useCreateMeeting();
 
-  const localStorageKey = getGuestId();
-
   const {
     control,
     handleSubmit,
@@ -41,25 +39,26 @@ export function useCreateMeetingForm(flow?: string) {
     mode: "onChange",
   });
 
-  const submitHandler = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
-      const trimmedName = data.participantName.trim();
+      const localStorageKey = getGuestId();
 
       const response = await createMeetingMutation.mutateAsync({
         localStorageKey,
-        participantName: trimmedName,
+        participantName: data.participantName,
         participantCount: data.participantCount,
       });
 
       const meetingId = response.data.data;
 
-      setMeetingSession(meetingId, trimmedName);
+      setMeetingSession(meetingId, data.participantName);
 
-      navigate(
+      const targetPath =
         flow === "location"
           ? `/meetings/${meetingId}/location`
-          : `/meetings/${meetingId}/schedule`,
-      );
+          : `/meetings/${meetingId}/schedule`;
+
+      navigate(targetPath);
     } catch (error) {
       console.error("모임 생성 실패:", error);
       toast.error("모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.");
@@ -79,6 +78,6 @@ export function useCreateMeetingForm(flow?: string) {
     maxNameLength: NAME_MAX_LENGTH,
 
     // actions
-    onSubmit: () => void submitHandler(),
+    onSubmit,
   };
 }
