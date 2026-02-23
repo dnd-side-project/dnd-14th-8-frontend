@@ -55,7 +55,7 @@ export function useCreateMeetingForm() {
 
     setMeetingSession(meetingId, trimmedName);
 
-    navigate(`/meetings/${meetingId}/schedule?tab=vote`);
+    navigate(`/meetings/${meetingId}/schedule`);
   });
 
   const handleSubmitBlocked = () => {
