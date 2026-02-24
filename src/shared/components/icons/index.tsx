@@ -21,6 +21,7 @@ export { default as MinusIcon } from "@/assets/icons/minus.svg?react";
 export { default as PinIcon } from "@/assets/icons/pin.svg?react";
 export { default as PlaceholderIcon } from "@/assets/icons/placeholder.svg?react";
 export { default as PlusIcon } from "@/assets/icons/plus.svg?react";
+export { default as PolygonIcon } from "@/assets/icons/polygon.svg?react";
 export { default as RestaurantIcon } from "@/assets/icons/restaurant.svg?react";
 export { default as SearchIcon } from "@/assets/icons/search.svg?react";
 export { default as SelectedCheckIcon } from "@/assets/icons/selected-check.svg?react";
