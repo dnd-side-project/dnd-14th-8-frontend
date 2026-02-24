@@ -17,6 +17,7 @@ import { IconButton } from "@/shared/components/icon-button";
 import { CloseIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Modal } from "@/shared/components/modal";
+import { toast } from "@/shared/components/toast";
 import { useLockBodyScroll } from "@/shared/hooks/use-lock-body-scroll";
 
 export function ScheduleEditDatesPage() {
@@ -37,6 +38,7 @@ export function ScheduleEditDatesPage() {
   const [endTime, setEndTime] = useState("24:00");
   const [currentMonth, setCurrentMonth] = useState<Date>(today);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -69,9 +71,8 @@ export function ScheduleEditDatesPage() {
     return isDateChanged || isTimeChanged;
   }, [selectedDates, startTime, endTime, initialData]);
 
-  const handleSave = () => {
-    if (!meetingId || !isDirty || selectedDates.length === 0 || isPending)
-      return;
+  const requestUpdate = () => {
+    if (!meetingId) return;
 
     const payload = {
       dateOptions: selectedDates.map((d) => format(d, "yyyy-MM-dd")),
@@ -87,12 +88,25 @@ export function ScheduleEditDatesPage() {
             queryKey: ["meeting", "schedules", meetingId],
           });
           navigate("..");
+          toast.success("수정 완료되었어요!");
         },
         onError: () => {
           alert("일정 수정에 실패했습니다.");
         },
       },
     );
+  };
+
+  const handleSave = () => {
+    if (!meetingId || !isDirty || selectedDates.length === 0 || isPending)
+      return;
+
+    // 투표한 인원이 1명이라도 있으면 확인 모달 오픈
+    if (initialData && initialData.votedParticipantCount >= 1) {
+      setIsConfirmModalOpen(true);
+    } else {
+      requestUpdate();
+    }
   };
 
   const handleTimePresetClick = (start: string, end: string) => {
@@ -242,6 +256,29 @@ export function ScheduleEditDatesPage() {
           onClick: () => {
             setIsExitModalOpen(false);
             navigate("..");
+          },
+        }}
+      />
+
+      <Modal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        title="시간표 범위를 수정할까요?"
+        caption={`기존에 등록된 일정 중 변경된 범위에 포함되지\n않는 시간은 자동으로 삭제돼요.`}
+        secondaryButton={{
+          label: "취소",
+          color: "gray",
+          onClick: () => {
+            setIsConfirmModalOpen(false);
+            navigate("..");
+          },
+        }}
+        primaryButton={{
+          label: "변경하기",
+          color: "blue",
+          onClick: () => {
+            setIsConfirmModalOpen(false);
+            requestUpdate();
           },
         }}
       />

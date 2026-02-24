@@ -8,6 +8,6 @@ export const DATE_PRESETS = [
 
 export const TIME_PRESETS = [
   { label: "9시 ~ 18시", start: "09:00", end: "18:00" },
-  { label: "18시 ~ 06시", start: "18:00", end: "06:00" },
+  { label: "18시 ~ 24시", start: "18:00", end: "24:00" },
   { label: "9시 ~ 24시", start: "09:00", end: "24:00" },
 ];

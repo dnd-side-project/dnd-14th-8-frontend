@@ -42,7 +42,9 @@ export function Modal({
       >
         <div className="mb-6 text-center">
           {title && <h3 className="mt-3 mb-2 text-k-800 text-t1">{title}</h3>}
-          {caption && <p className="text-b4 text-k-500">{caption}</p>}
+          {caption && (
+            <p className="whitespace-pre-wrap text-b4 text-k-500">{caption}</p>
+          )}
         </div>
 
         <div
