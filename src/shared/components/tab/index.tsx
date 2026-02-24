@@ -1,8 +1,12 @@
+import type { ComponentType, SVGProps } from "react";
 import { cn } from "@/shared/utils/cn";
+
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 export interface TabItem {
   id: string;
   label: string;
+  icon?: IconComponent;
 }
 
 export interface TabProps {
@@ -14,9 +18,13 @@ export interface TabProps {
 
 export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
   return (
-    <div className={cn("flex border-k-400 border-b", className)} role="tablist">
+    <div
+      className={cn("flex border-k-400 border-b bg-k-5", className)}
+      role="tablist"
+    >
       {tabs.map((tab) => {
         const isActive = activeTabId === tab.id;
+
         return (
           <button
             key={tab.id}
@@ -25,13 +33,22 @@ export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
             aria-selected={isActive}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              "-mb-[1px] flex-1 cursor-pointer border-b-2 py-3 text-center transition-colors",
+              "-mb-[1px] flex flex-1 cursor-pointer items-center justify-center gap-[1px] border-b-2 py-3 transition-colors",
               isActive
                 ? "border-primary-main text-primary-main text-t2"
                 : "border-transparent text-b1 text-k-400",
             )}
           >
-            {tab.label}
+            {tab.icon && (
+              <tab.icon
+                className={cn(
+                  "size-5 shrink-0 transition-colors",
+                  isActive ? "text-primary-main" : "text-k-400",
+                )}
+              />
+            )}
+
+            <span>{tab.label}</span>
           </button>
         );
       })}

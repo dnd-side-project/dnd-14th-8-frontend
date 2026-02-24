@@ -1,3 +1,4 @@
+import type { PointerEvent } from "react";
 import { cn } from "@/shared/utils/cn";
 
 export interface TimetableSlotProps {
@@ -5,9 +6,10 @@ export interface TimetableSlotProps {
   isDisabled?: boolean;
   opacity?: number;
   onClick?: () => void;
-  onMouseDown?: () => void;
-  onMouseEnter?: () => void;
+  onPointerDown?: (event: PointerEvent<HTMLButtonElement>) => void;
   className?: string;
+  dataDateIdx?: number;
+  dataSlotIdx?: number;
 }
 
 export function TimetableSlot({
@@ -15,17 +17,19 @@ export function TimetableSlot({
   isDisabled,
   opacity = 0,
   onClick,
-  onMouseDown,
-  onMouseEnter,
+  onPointerDown,
   className,
+  dataDateIdx,
+  dataSlotIdx,
 }: TimetableSlotProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      onMouseDown={onMouseDown}
-      onMouseEnter={onMouseEnter}
+      onPointerDown={onPointerDown}
       disabled={isDisabled}
+      data-date-idx={dataDateIdx}
+      data-slot-idx={dataSlotIdx}
       className={cn(
         "h-10 w-full rounded-md border transition-all",
         "border-k-50 bg-k-10",
