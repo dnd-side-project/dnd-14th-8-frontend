@@ -1,14 +1,18 @@
 // import { Controller } from "react-hook-form";
+
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
+import { Stepper } from "@/shared/components/stepper";
 // import { Stepper } from "@/shared/components/stepper";
 
-export function EditParticipantCountPage() {
+export function MeetingEditParticipantsPage() {
   const navigate = useNavigate();
   const { meetingId, flow } = useParams();
   const currentMeetingId = meetingId ?? "sample-meeting-id";
+  const [count, setCount] = useState(2);
 
   return (
     <MobileLayout>
@@ -30,6 +34,8 @@ export function EditParticipantCountPage() {
             />
           )}
         /> */}
+
+        <Stepper label="인원 수" value={count} onChange={setCount} />
 
         <div className="mt-auto">
           <ButtonBottom

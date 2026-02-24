@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import { LandingPage } from "@/domains/meeting/pages";
-import { EditParticipantCountPage } from "@/domains/meeting/pages/edit-participant-count";
+import { MeetingEditParticipantsPage } from "@/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants";
 import { NewMeetingPage } from "@/domains/meeting/pages/new";
 import { ScheduleMainPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule";
 import { ScheduleEditDatesPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates";
@@ -13,8 +13,8 @@ export function CustomRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/new" element={<NewMeetingPage />} />
       <Route
-        path="/meetings/:meetingId/:flow/edit/participantCount"
-        element={<EditParticipantCountPage />}
+        path="/meetings/:meetingId/:flow/edit/participants"
+        element={<MeetingEditParticipantsPage />}
       />
       <Route
         path="/meetings/:meetingId/schedule"
