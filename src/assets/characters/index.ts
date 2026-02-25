@@ -1,0 +1,10 @@
+export { default as Empty1Character } from "@/assets/character/empty-1.svg?react";
+export { default as Empty2Character } from "@/assets/character/empty-2.svg?react";
+export { default as InvitationMidpointCharacter } from "@/assets/character/invitation-midpoint.svg?react";
+export { default as InvitationScheduleCharacter } from "@/assets/character/invitation-schedule.svg?react";
+export { default as LandingMidpointCharacter } from "@/assets/character/landing-midpoint.svg?react";
+export { default as LandingScheduleCharacter } from "@/assets/character/landing-schedule.svg?react";
+export { default as Schedule1Character } from "@/assets/character/schedule-1.svg?react";
+export { default as Schedule2Character } from "@/assets/character/schedule-2.svg?react";
+export { default as Schedule3Character } from "@/assets/character/schedule-3.svg?react";
+export { default as Schedule4Character } from "@/assets/character/schedule-4.svg?react";
