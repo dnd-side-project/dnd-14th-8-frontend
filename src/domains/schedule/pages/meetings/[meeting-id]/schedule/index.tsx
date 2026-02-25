@@ -13,12 +13,7 @@ export function ScheduleMainPage() {
     [searchParams],
   );
 
-  const handleAddVote = (scheduleVoteId?: number) => {
-    if (scheduleVoteId) {
-      navigate(`/meetings/${meetingId}/schedule/votes/${scheduleVoteId}`);
-      return;
-    }
-
+  const handleAddVote = () => {
     navigate(`/meetings/${meetingId}/schedule/votes`);
   };
 
