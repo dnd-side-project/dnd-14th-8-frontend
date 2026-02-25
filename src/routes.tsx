@@ -35,6 +35,42 @@ export function CustomRoutes() {
         path="/meetings/:meetingId/schedule/votes"
         element={<ScheduleVotesPage />}
       />
+
+      <Route path="/meetings/:meetingId/location" element={<MapDefaultPage />}>
+        <Route path="stations" element={<LocationMainPage />} />
+        <Route
+          path="stations/:stationId/participants/:participantId"
+          element={<RouteDetailPage />}
+        />
+        <Route path="nearby/:coords" element={<NearbySearchPage />} />
+        <Route
+          path="nearby/:coords/places/:placeId"
+          element={<PlaceDetailPage />}
+        />
+      </Route>
+
+      <Route
+        path="/meetings/:meetingId/location/votes"
+        element={<DepartureListPage />}
+      />
+
+      <Route
+        path="/meetings/:meetingId/location/votes/new"
+        element={<DepartureNewPage />}
+      />
+      <Route
+        path="/meetings/:meetingId/location/votes/new/search"
+        element={<DepartureNewSearchPage />}
+      />
+
+      <Route
+        path="/meetings/:meetingId/location/votes/:locationVoteId"
+        element={<DepartureEditPage />}
+      />
+      <Route
+        path="/meetings/:meetingId/location/votes/:locationVoteId/search"
+        element={<DepartureEditSearchPage />}
+      />
     </Routes>
   );
 }
