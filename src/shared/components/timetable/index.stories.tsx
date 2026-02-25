@@ -99,3 +99,45 @@ export const Weekly: Story = {
     occupancy: mockOccupancy,
   },
 };
+
+/** 4. 30분 단위 시작/종료 (21:30 ~ 23:00) */
+export const HalfHourBoundary: Story = {
+  name: "30분 단위 (21:30~23:00)",
+  render: (args) => {
+    const [selected, setSelected] = useState<Date[]>([]);
+    return (
+      <div className="flex flex-col gap-4">
+        <p className="font-medium text-k-500 text-sm">
+          21:30 시작 · 선택된 슬롯: {selected.length}개
+        </p>
+        <Timetable {...args} selected={selected} onSelect={setSelected} />
+      </div>
+    );
+  },
+  args: {
+    startTime: 21.5,
+    endTime: 23,
+    dates: getDates(5),
+  },
+};
+
+/** 5. 30분 단위 시작 + 30분 단위 종료 (9:30 ~ 18:30) */
+export const HalfHourBoth: Story = {
+  name: "30분 단위 양쪽 (9:30~18:30)",
+  render: (args) => {
+    const [selected, setSelected] = useState<Date[]>([]);
+    return (
+      <div className="flex flex-col gap-4">
+        <p className="font-medium text-k-500 text-sm">
+          9:30 ~ 18:30 · 선택된 슬롯: {selected.length}개
+        </p>
+        <Timetable {...args} selected={selected} onSelect={setSelected} />
+      </div>
+    );
+  },
+  args: {
+    startTime: 9.5,
+    endTime: 18.5,
+    dates: getDates(4),
+  },
+};

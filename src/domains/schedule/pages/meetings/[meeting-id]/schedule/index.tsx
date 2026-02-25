@@ -1,31 +1,45 @@
-import { Outlet, useNavigate } from "react-router";
-import { ButtonBottom } from "@/shared/components/button-bottom";
+import { useMemo } from "react";
+import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
+import { ScheduleMainView } from "@/domains/schedule/views/schedule-main-view";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 
 export function ScheduleMainPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { meetingId } = useParams() as { meetingId: string };
+
+  const tab = useMemo(
+    () => (searchParams.get("tab") === "optimal" ? "optimal" : "vote"),
+    [searchParams],
+  );
+
+  const handleAddVote = (scheduleVoteId?: number) => {
+    if (scheduleVoteId) {
+      navigate(`/meetings/${meetingId}/schedule/votes/${scheduleVoteId}`);
+      return;
+    }
+
+    navigate(`/meetings/${meetingId}/schedule/votes`);
+  };
+
+  const handleTabChange = (nextTab: "optimal" | "vote") => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set("tab", nextTab);
+    setSearchParams(nextSearchParams, { replace: true });
+  };
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="일정 메인 화면" />
-
-        <div className="mt-4 flex flex-col gap-2">
-          <ButtonBottom onClick={() => navigate("edit/dates")} variant="white">
-            시간표 기간 편집
-          </ButtonBottom>
-          <ButtonBottom
-            onClick={() => navigate("edit/participants")}
-            variant="white"
-          >
-            모임 인원 수정
-          </ButtonBottom>
-          <ButtonBottom onClick={() => navigate("votes")} variant="white">
-            일정 추가하기
-          </ButtonBottom>
-        </div>
-      </section>
+      <ScheduleMainView
+        meetingId={meetingId}
+        tab={tab}
+        onAddVote={handleAddVote}
+        onEditSchedule={() => navigate("edit/dates")}
+        onParticipantEdit={() =>
+          navigate(`/meetings/${meetingId}/schedule/edit/participants`)
+        }
+        onTabChange={handleTabChange}
+      />
       <Outlet />
     </MobileLayout>
   );
