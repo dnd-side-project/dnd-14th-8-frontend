@@ -14,8 +14,7 @@ import { NewMeetingPage } from "@/domains/meeting/pages/new";
 import { ScheduleMainPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule";
 import { ScheduleEditDatesPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates";
 import { ScheduleEditParticipantsPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/participants";
-import { ScheduleVotesNewPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/votes";
-import { ScheduleVotesEditPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/votes/[schedule-vote-id]";
+import { ScheduleVotesPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/votes";
 
 export function CustomRoutes() {
   return (
@@ -34,11 +33,7 @@ export function CustomRoutes() {
       />
       <Route
         path="/meetings/:meetingId/schedule/votes"
-        element={<ScheduleVotesNewPage />}
-      />
-      <Route
-        path="/meetings/:meetingId/schedule/votes/:scheduleVoteId"
-        element={<ScheduleVotesEditPage />}
+        element={<ScheduleVotesPage />}
       />
 
       <Route path="/meetings/:meetingId/location" element={<MapDefaultPage />}>
