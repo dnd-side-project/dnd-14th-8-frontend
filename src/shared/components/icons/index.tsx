@@ -1,3 +1,4 @@
+export { default as ArrowRightIcon } from "@/assets/icons/arrow-right.svg?react";
 export { default as ArrowUpIcon } from "@/assets/icons/arrow-up.svg?react";
 export { default as AvailableIcon } from "@/assets/icons/available.svg?react";
 export { default as BookIcon } from "@/assets/icons/book.svg?react";
