@@ -5,7 +5,6 @@ import { NewMeetingPage } from "@/domains/meeting/pages/new";
 import { ScheduleMainPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule";
 import { ScheduleEditDatesPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates";
 import { ScheduleVotesPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/votes";
-import { ScheduleVotesEditPage } from "@/domains/schedule/pages/meetings/[meeting-id]/schedule/votes/[schedule-vote-id]";
 
 export function CustomRoutes() {
   return (
