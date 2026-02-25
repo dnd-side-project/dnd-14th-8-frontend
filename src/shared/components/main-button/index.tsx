@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
 export interface MainButtonProps {
   title?: string;
   description?: string;
-  imgSrc?: string;
+  character?: ReactNode;
+  characterClassName?: string;
   className?: string;
   onClick?: () => void;
 }
@@ -11,7 +13,8 @@ export interface MainButtonProps {
 export function MainButton({
   title,
   description,
-  imgSrc,
+  character,
+  characterClassName,
   className,
   onClick,
 }: MainButtonProps) {
@@ -20,23 +23,19 @@ export function MainButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "h-[160px] w-full cursor-pointer rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
-        "flex items-center justify-between",
+        "relative h-[160px] w-full cursor-pointer rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
+        "flex items-center justify-between overflow-hidden",
         className,
       )}
     >
-      <div className="flex flex-col gap-2 text-left">
+      <div className="z-10 flex flex-col gap-2 text-left">
         <h3 className="text-h3 text-k-5">{title}</h3>
         <p className="whitespace-pre-line text-b2 text-k-5">{description}</p>
       </div>
 
-      {imgSrc && (
-        <div className="shrink-0">
-          <img
-            src={imgSrc}
-            alt={title}
-            className="h-[108px] w-[148px] object-contain"
-          />
+      {character && (
+        <div className={cn("absolute shrink-0 leading-0", characterClassName)}>
+          {character}
         </div>
       )}
     </button>
