@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as Icons from ".";
 
-const SIZE_VARIANTS = [16, 20, 24, 28, 32];
+const SIZE_VARIANTS = [16, 20, 24, 28, 32, 48, 76];
 const COLOR_VARIANTS = [
   { label: "k-5", value: "var(--color-k-5)" },
   { label: "k-500", value: "var(--color-k-500)" },

@@ -61,8 +61,10 @@ export function useTimetableDragSelection({
   const getSlotDate = useCallback(
     (dateIdx: number, slotIdx: number) => {
       const baseDate = dates[dateIdx];
-      const hour = startTime + Math.floor(slotIdx / 2);
-      const minutes = slotIdx % 2 !== 0 ? 30 : 0;
+      const startMinutes = startTime * 60;
+      const slotMinutes = startMinutes + slotIdx * 30;
+      const hour = Math.floor(slotMinutes / 60);
+      const minutes = slotMinutes % 60;
 
       const slotDate = new Date(baseDate);
       slotDate.setHours(hour, minutes, 0, 0);

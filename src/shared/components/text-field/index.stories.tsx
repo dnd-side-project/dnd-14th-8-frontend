@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { SearchIcon } from "@/shared/components/icons";
 import { TextField } from "@/shared/components/text-field";
 
 const meta = {
@@ -20,6 +21,11 @@ const meta = {
       control: "select",
       options: ["default", "focused", "error"],
     },
+    variant: {
+      control: "select",
+      options: ["gray", "outlined"],
+    },
+    leftIcon: { control: false },
     onClear: { action: "cleared" },
   },
 } satisfies Meta<typeof TextField>;
@@ -60,6 +66,12 @@ export const States: Story = {
         maxLength={4}
       />
 
+      <TextField
+        label="방장 이름"
+        placeholder="아웃라인 스타일"
+        variant="outlined"
+      />
+
       <TextField label="방장 이름" value="김혜인" maxLength={4} />
 
       <TextField label="방장 이름" status="focused" value="김" maxLength={4} />
@@ -78,6 +90,18 @@ export const States: Story = {
         value=""
         helperText="이름을 입력해주세요"
         maxLength={4}
+      />
+    </div>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <TextField label="출발지" placeholder="출발장소" rightIcon={SearchIcon} />
+      <TextField
+        placeholder="지하철역, 아파트 이름 등으로 검색"
+        leftIcon={SearchIcon}
       />
     </div>
   ),

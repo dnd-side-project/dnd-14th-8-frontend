@@ -1,10 +1,13 @@
-export function parseHour(value: string, fallback: number) {
-  const [hour] = value.split(":");
-  const parsed = Number(hour);
+export function parseTime(value: string, fallback: number) {
+  const [hourText, minuteText] = value.split(":");
+  const hour = Number(hourText);
 
-  if (!Number.isFinite(parsed)) {
+  if (!Number.isFinite(hour)) {
     return fallback;
   }
 
-  return Math.min(24, Math.max(0, parsed));
+  const minute = Number(minuteText ?? "0");
+  const total = hour + (Number.isFinite(minute) ? minute / 60 : 0);
+
+  return Math.min(24, Math.max(0, total));
 }
