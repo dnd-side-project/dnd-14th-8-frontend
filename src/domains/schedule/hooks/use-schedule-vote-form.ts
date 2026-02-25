@@ -18,7 +18,7 @@ import {
   useGetMyParticipant,
 } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useUpdateScheduleVote } from "@/domains/schedule/hooks/use-update-schedule-vote";
-import { parseHour } from "@/domains/schedule/utils/parse";
+import { parseTime } from "@/domains/schedule/utils/parse";
 import {
   normalizeScheduleVoteId,
   toIsoDates,
@@ -80,8 +80,8 @@ export function useScheduleVoteForm() {
       return undefined;
     }
 
-    const startTime = parseHour(schedulesQuery.data.startTime, 9);
-    const endTime = parseHour(schedulesQuery.data.endTime, 24);
+    const startTime = parseTime(schedulesQuery.data.startTime, 9);
+    const endTime = parseTime(schedulesQuery.data.endTime, 24);
     const hasValidRange = endTime > startTime;
     const myParticipantName = myParticipantQuery.data?.name;
 
