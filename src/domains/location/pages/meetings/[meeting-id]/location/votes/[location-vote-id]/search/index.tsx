@@ -1,5 +1,14 @@
+import { useNavigate } from "react-router";
 import { MobileLayout } from "@/shared/components/mobile-layout";
+import { PageHeader } from "@/shared/components/page-header";
 
 export function DepartureEditSearchPage() {
-  return <MobileLayout>출발지 추가에서 장소 찾기 페이지</MobileLayout>;
+  const navigate = useNavigate();
+  return (
+    <MobileLayout>
+      <section className="flex min-h-dvh flex-col px-5 pb-5">
+        <PageHeader title="장소 찾기" onBack={() => navigate(-1)} />
+      </section>
+    </MobileLayout>
+  );
 }
