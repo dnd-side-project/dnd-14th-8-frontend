@@ -3,7 +3,7 @@ import { ScheduleMainVoteParticipants } from "@/domains/schedule/components/sche
 import { useGetMeetingScheduleVoteResults } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
 import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting-schedules";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
-import { parseHour } from "@/domains/schedule/utils/parse";
+import { parseTime } from "@/domains/schedule/utils/parse";
 import { toScheduleOccupancy } from "@/domains/schedule/utils/timetable";
 import { Timetable } from "@/shared/components/timetable";
 
@@ -51,8 +51,8 @@ export function ScheduleMainVoteContent({
         dates={schedulesQuery.data.dateOptions.map(
           (dateOption) => new Date(dateOption),
         )}
-        startTime={parseHour(schedulesQuery.data.startTime, 9)}
-        endTime={parseHour(schedulesQuery.data.endTime, 24)}
+        startTime={parseTime(schedulesQuery.data.startTime, 9)}
+        endTime={parseTime(schedulesQuery.data.endTime, 24)}
         occupancy={toScheduleOccupancy(
           voteResultsQuery.data.scheduleVoteResult,
         )}

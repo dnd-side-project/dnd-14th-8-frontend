@@ -49,7 +49,7 @@ export function Timetable({
   occupancy = {},
   stickyHeaderTop = 0,
 }: TimetableProps) {
-  const totalSlots = (endTime - startTime) * 2;
+  const totalSlots = Math.round((endTime - startTime) * 2);
 
   const {
     selectedSlots,
@@ -260,9 +260,11 @@ export function Timetable({
           style={{ gridTemplateColumns: bodyGridTemplateColumns }}
         >
           {Array.from({ length: totalSlots }).map((_, slotIdx) => {
-            const isHourStart = slotIdx % 2 === 0;
-            const currentHour = startTime + Math.floor(slotIdx / 2);
-            const currentMinutes = slotIdx % 2 !== 0 ? 30 : 0;
+            const startMinutes = startTime * 60;
+            const slotMinutes = startMinutes + slotIdx * 30;
+            const currentHour = Math.floor(slotMinutes / 60);
+            const currentMinutes = slotMinutes % 60;
+            const isHourStart = currentMinutes === 0;
             const isFirstSlot = slotIdx === 0;
             const isLastSlot = slotIdx === totalSlots - 1;
 
@@ -280,7 +282,7 @@ export function Timetable({
                     </span>
                   )}
 
-                  {isLastSlot && (
+                  {isLastSlot && endTime % 1 === 0 && (
                     <span className="absolute bottom-0 left-0 z-20 w-full bg-k-5 text-b3 text-k-500">
                       {String(endTime)}
                     </span>
