@@ -25,8 +25,17 @@ export function DepartureListPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { data: departures, isLoading } = useGetDepartures({ meetingId });
-  console.log(departures);
   const { mutate: deleteDeparture } = useDeleteDeparture();
+
+  const handleGoToResult = () => {
+    if ((departures?.length ?? 0) < 2) {
+      toast.error("최소 2개 이상의 출발지가 필요해요");
+      return;
+    }
+
+    // 메인 페이지로 이동 - 해당 페이지에서 useGetMeetingScheduleVoteResults를 호출하여 데이터 보여주기
+    navigate(`/meetings/${meetingId}/location/stations`);
+  };
 
   const handleDelete = () => {
     if (selectedLocationVoteId === null) return;
@@ -55,13 +64,6 @@ export function DepartureListPage() {
         <ButtonSubStroke onClick={() => navigate("new")} className="mt-3 mb-3">
           출발지 추가하기
         </ButtonSubStroke>
-        {/* <ItemSavedplace
-          name="김혜인"
-          location="홍대입구역"
-          address="서울특별시 마포구 서교동"
-          onEdit={() => navigate(":locationVoteId")}
-          // onDelete={fn()}
-        /> */}
 
         <div className="flex flex-col">
           {departures?.map((item) => (
@@ -80,8 +82,8 @@ export function DepartureListPage() {
         <div className="mt-auto">
           <ButtonBottom
             variant="black"
-            // disabled={!canSubmit || isSubmitPending}
-            // onClick={onSubmit}
+            // disabled={(departures?.length ?? 0) < 2}
+            onClick={handleGoToResult}
           >
             중간지점 결과 보러가기
           </ButtonBottom>

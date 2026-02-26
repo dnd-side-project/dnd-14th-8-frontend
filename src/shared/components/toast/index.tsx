@@ -50,7 +50,8 @@ export function Toast({
           content: cn("items-center gap-1", toastOptions?.classNames?.content),
           icon: cn("size-5 shrink-0", toastOptions?.classNames?.icon),
           toast: cn(
-            "cn-toast inline-flex! items-center! w-fit! gap-0.5! rounded-full! px-4! py-2! text-b4! text-k-5! shadow-none! data-[x-position=center]:right-0 data-[x-position=center]:left-0 data-[x-position=center]:mx-auto",
+            "cn-toast inline-flex! items-center! whitespace-nowrap! w-max! max-w-[95vw]! gap-0.5! rounded-full! px-4! py-2! text-b4! text-k-5! shadow-none!",
+            "fixed! left-1/2! -translate-x-1/2!",
             "mb-[90px]!",
             toastOptions?.classNames?.toast,
           ),
