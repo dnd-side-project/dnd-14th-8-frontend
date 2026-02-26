@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { ItemSearchResult } from "@/domains/location/components/item-search-result"; // 추가
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
@@ -11,6 +11,7 @@ import { TextField } from "@/shared/components/text-field";
 
 export function DepartureNewSearchPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [keyword, setKeyword] = useState("");
 
   const {
@@ -49,9 +50,13 @@ export function DepartureNewSearchPage() {
     if (!currentAddress) return;
 
     navigate("..", {
-      state: { address: currentAddress, coords: currentCoords },
+      state: {
+        ...location.state,
+        address: currentAddress,
+        coords: currentCoords,
+      },
     });
-  }, [currentAddress, currentCoords, navigate]);
+  }, [currentAddress, currentCoords, navigate, location.state]);
 
   return (
     <MobileLayout>
@@ -97,6 +102,7 @@ export function DepartureNewSearchPage() {
                 onClick={() =>
                   navigate("..", {
                     state: {
+                      ...location.state,
                       address: item.title, // 선택한 장소명 전달
                       coords: [Number(item.y), Number(item.x)],
                     },
