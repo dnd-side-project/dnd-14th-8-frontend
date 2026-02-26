@@ -106,10 +106,10 @@ export function deleteLocationVote({
   return api.delete<ApiResponse<void>>(`/api/locations/vote/${locationVoteId}`);
 }
 
-export function listLocationVotes({ locationPollId }: ListLocationVotesParams) {
-  return api.get<ApiResponse<LocationVote[]>>(
-    `/api/locations/poll/${locationPollId}/votes`,
-  );
+export function getDepartures({ meetingId }: { meetingId: string }) {
+  return api.get<ApiResponse<LocationVote[]>>(`/api/locations/votes`, {
+    params: { meetingId },
+  });
 }
 
 export function getMidpointRecommendations({
