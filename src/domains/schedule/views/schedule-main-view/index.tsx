@@ -5,6 +5,7 @@ import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Tab } from "@/shared/components/tab";
+import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import { cn } from "@/shared/utils/cn";
 
 export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
@@ -26,6 +27,8 @@ export function ScheduleMainView({
   tab,
   ...props
 }: ScheduleMainViewProps) {
+  const { share } = useShareSheet();
+
   return (
     <div
       className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
@@ -55,10 +58,7 @@ export function ScheduleMainView({
 
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
-      <BottomActionBarWithButtonAndShare
-        onClick={onAddVote}
-        onShare={() => console.log("TODO: share")}
-      >
+      <BottomActionBarWithButtonAndShare onClick={onAddVote} onShare={share}>
         일정 추가하기
       </BottomActionBarWithButtonAndShare>
     </div>

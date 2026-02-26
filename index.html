@@ -1,13 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>temp-vite-project</title>
+
+    <title>모여락 | 모임 일정·장소 조율</title>
+    <meta
+      name="description"
+      content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="모여락 | 모임 일정·장소 조율" />
+    <meta
+      property="og:description"
+      content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
+    />
+    <meta property="og:image" content="%BASE_URL%static/images/share.png" />
+    <meta property="og:image:alt" content="모여락 | 모임 일정·장소 조율" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="모여락 | 모임 일정·장소 조율" />
+    <meta
+      name="twitter:description"
+      content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
+    />
+    <meta name="twitter:image" content="%BASE_URL%static/images/share.png" />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
   </head>
   <body>
     <div id="root"></div>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=%VITE_KAKAO_API_KEY%&libraries=services"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=%VITE_NAVER_CLIENT_ID%&submodules=geocoder"
+    ></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

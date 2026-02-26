@@ -2,7 +2,13 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/.direnv", "!**/dist", "!**/storybook-static"]
+    "includes": [
+      "**",
+      "!**/.direnv",
+      "!**/dist",
+      "!**/storybook-static",
+      "!src/domains/location/types/kakao.d.ts"
+    ]
   },
   "assist": {
     "enabled": true,
