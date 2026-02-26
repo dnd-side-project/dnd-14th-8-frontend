@@ -49,28 +49,19 @@ export function CustomRoutes() {
         />
       </Route>
 
-      <Route
-        path="/meetings/:meetingId/location/votes"
-        element={<DepartureListPage />}
-      />
+      <Route path="/meetings/:meetingId/location/votes">
+        <Route index element={<DepartureListPage />} />
 
-      <Route
-        path="/meetings/:meetingId/location/votes/new"
-        element={<DepartureNewPage />}
-      />
-      <Route
-        path="/meetings/:meetingId/location/votes/new/search"
-        element={<DepartureNewSearchPage />}
-      />
+        <Route path="new">
+          <Route index element={<DepartureNewPage />} />
+          <Route path="search" element={<DepartureNewSearchPage />} />
+        </Route>
 
-      <Route
-        path="/meetings/:meetingId/location/votes/:locationVoteId"
-        element={<DepartureEditPage />}
-      />
-      <Route
-        path="/meetings/:meetingId/location/votes/:locationVoteId/search"
-        element={<DepartureEditSearchPage />}
-      />
+        <Route path=":locationVoteId">
+          <Route index element={<DepartureEditPage />} />
+          <Route path="search" element={<DepartureEditSearchPage />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }

@@ -22,7 +22,7 @@ const textFieldVariants = cva(
       status: {
         default: "hover:border-p-300 active:border-primary-main",
         error: "border-action-red",
-        focused: "border-primary-main",
+        focused: "border-primary-main bg-k-5",
       },
     },
     compoundVariants: [
@@ -56,6 +56,7 @@ export interface TextFieldProps
   onClear?: () => void;
   leftIcon?: IconComponent;
   rightIcon?: IconComponent;
+  hidePlaceholderOnFocus?: boolean;
 }
 
 export function TextField({
@@ -66,6 +67,7 @@ export function TextField({
   onClear,
   leftIcon: LeftIcon,
   rightIcon: RightIcon,
+  hidePlaceholderOnFocus = false,
   value,
   className,
   onChange,
@@ -131,7 +133,8 @@ export function TextField({
           autoComplete="off"
           className={cn(
             "w-full bg-transparent px-4 py-4 text-b2 text-k-900 caret-primary-main outline-none",
-            "transition-all placeholder:text-k-400 focus:placeholder:text-transparent",
+            "transition-all placeholder:text-k-400",
+            hidePlaceholderOnFocus && "focus:placeholder:text-transparent",
             !!LeftIcon && "pl-2",
           )}
           value={value}
