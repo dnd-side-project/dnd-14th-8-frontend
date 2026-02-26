@@ -33,7 +33,7 @@ export function DepartureListPage() {
       return;
     }
 
-    // 메인 페이지로 이동 - 해당 페이지에서 useGetMeetingScheduleVoteResults를 호출하여 데이터 보여주기
+    // 메인 페이지로 이동 - 해당 페이지에서 useGetMidpointRecommendations를 호출하여 데이터 보여주기
     navigate(`/meetings/${meetingId}/location/stations`);
   };
 
@@ -80,11 +80,7 @@ export function DepartureListPage() {
         </div>
 
         <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            // disabled={(departures?.length ?? 0) < 2}
-            onClick={handleGoToResult}
-          >
+          <ButtonBottom variant="black" onClick={handleGoToResult}>
             중간지점 결과 보러가기
           </ButtonBottom>
         </div>
