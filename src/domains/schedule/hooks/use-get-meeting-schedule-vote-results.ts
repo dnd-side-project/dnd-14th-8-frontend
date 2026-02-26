@@ -20,6 +20,6 @@ export function useGetMeetingScheduleVoteResults({
       return data.data;
     },
     queryKey: getMeetingScheduleVoteResultsQueryKey({ meetingId }),
-    // staleTime: 30 * 1000,
+    staleTime: 30 * 1000,
   });
 }

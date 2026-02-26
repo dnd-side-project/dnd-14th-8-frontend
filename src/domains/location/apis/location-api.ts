@@ -107,7 +107,7 @@ export function deleteLocationVote({
 }
 
 export function getDepartures({ meetingId }: { meetingId: string }) {
-  return api.get<ApiResponse<LocationVote[]>>(`/api/locations/votes`, {
+  return api.get<ApiResponse<LocationVote[]>>(`/api/locations/vote`, {
     params: { meetingId },
   });
 }

@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-
 import { useCreateDeparture } from "@/domains/location/hooks/use-create-departure";
+import { getDeparturesQueryKey } from "@/domains/location/hooks/use-get-departures";
 import type { CreateLocationVoteRequest } from "@/domains/location/types/location-api-types";
 import { toast } from "@/shared/components/toast";
 import { getGuestId } from "@/shared/utils/auth";
@@ -33,6 +34,7 @@ export function useCreateDepartureForm(
   initialValues?: Partial<CreateDepartureFormValues>,
 ) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const createDepartureMutation = useCreateDeparture();
 
   const {
@@ -70,6 +72,9 @@ export function useCreateDepartureForm(
       };
 
       await createDepartureMutation.mutateAsync(requestPayload);
+      await queryClient.invalidateQueries({
+        queryKey: getDeparturesQueryKey({ meetingId }),
+      });
 
       toast.success("출발지가 추가되었어요");
       navigate(`/meetings/${meetingId}/location/votes`);
