@@ -49,7 +49,6 @@ export function ShareSheetView({
 
   return (
     <div
-      aria-hidden={!isOpen}
       className={cn(
         "fixed inset-0 z-100",
         isOpen ? "pointer-events-auto" : "pointer-events-none",
@@ -69,7 +68,7 @@ export function ShareSheetView({
         aria-label="공유하기"
         aria-modal="true"
         className={cn(
-          "absolute right-0 bottom-0 left-0 z-10 mx-auto w-full max-w-[375px] overflow-hidden rounded-t-[20px] bg-k-5 transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+          "absolute right-0 bottom-0 left-0 z-10 mx-auto w-full overflow-hidden rounded-t-[20px] bg-k-5 transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] sm:max-w-[375px]",
           isOpen ? "translate-y-0" : "translate-y-full",
         )}
         role="dialog"
