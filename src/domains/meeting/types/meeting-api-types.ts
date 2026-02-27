@@ -23,6 +23,7 @@ export interface GetMeetingScheduleResponse {
   participants: ScheduleParticipant[];
   startTime: string;
   votedParticipantCount: number;
+  pollStatus: string;
 }
 
 export interface ScheduleVoteResult {
