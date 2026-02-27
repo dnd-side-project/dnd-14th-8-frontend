@@ -12,24 +12,48 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   meetingId: string;
   tab: "optimal" | "vote";
   hasExistingVote: boolean;
+  isHost: boolean;
   onVoteAction: () => void;
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
+  onGoToLocation?: () => void;
 }
 
 export function ScheduleMainView({
   className,
   meetingId,
   hasExistingVote,
+  isHost,
   onVoteAction,
   onEditSchedule,
   onParticipantEdit,
   onTabChange,
+  onGoToLocation,
   tab,
   ...props
 }: ScheduleMainViewProps) {
   const { share } = useShareSheet();
+
+  // 3. 버튼 텍스트 및 액션 결정 로직
+  const getButtonConfig = () => {
+    // 최적일정 탭이면서 팀장인 경우
+    if (tab === "optimal" && isHost) {
+      return {
+        text: "장소 정하러 가기",
+        action: onGoToLocation ?? onVoteAction,
+        variant: "blue" as const,
+      };
+    }
+    // 그 외
+    return {
+      text: hasExistingVote ? "일정 수정하기" : "일정 추가하기",
+      action: onVoteAction,
+      variant: "black" as const,
+    };
+  };
+
+  const { text, action, variant } = getButtonConfig();
 
   return (
     <div
@@ -60,8 +84,12 @@ export function ScheduleMainView({
 
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
-      <BottomActionBarWithButtonAndShare onClick={onVoteAction} onShare={share}>
-        {hasExistingVote ? "일정 수정하기" : "일정 추가하기"}
+      <BottomActionBarWithButtonAndShare
+        onClick={action}
+        onShare={share}
+        buttonVariant={variant}
+      >
+        {text}
       </BottomActionBarWithButtonAndShare>
     </div>
   );

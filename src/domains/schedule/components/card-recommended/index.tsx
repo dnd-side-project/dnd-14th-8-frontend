@@ -24,7 +24,9 @@ export interface CardRecommendedProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 function formatDateLabel(scheduleDate: string, scheduleDayOfWeek: string) {
-  const [_, month, day] = scheduleDate.split("-");
+  const parts = scheduleDate.split("-"); // ["2026", "02", "28"]
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
   return `${month}월 ${day}일 ${scheduleDayOfWeek}`;
 }
 
