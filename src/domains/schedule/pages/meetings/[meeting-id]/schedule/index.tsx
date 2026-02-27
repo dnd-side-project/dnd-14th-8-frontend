@@ -21,7 +21,7 @@ export function ScheduleMainPage() {
   const hasExistingVote =
     normalizeScheduleVoteId(myParticipantQuery.data?.scheduleVoteId) !==
     undefined;
-  const isHost = myParticipantQuery.data?.isHost !== undefined;
+  const isHost = !!myParticipantQuery.data?.isHost;
 
   const tab = useMemo(
     () => (searchParams.get("tab") === "optimal" ? "optimal" : "vote"),
