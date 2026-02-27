@@ -8,7 +8,7 @@ import { toast } from "@/shared/components/toast";
 import { ShareSheetView } from "@/shared/providers/share-sheet-provider/share-sheet-view";
 import { useShareSheetState } from "@/shared/providers/share-sheet-provider/use-share-sheet-state";
 import { copyTextToClipboard } from "@/shared/utils/clipboard";
-import { openKakaoAppScheme } from "@/shared/utils/kakao";
+import { shareKakao } from "@/shared/utils/kakao";
 
 interface ShareSheetContextValue {
   share: () => void;
@@ -32,9 +32,8 @@ export function ShareSheetProvider({ children }: PropsWithChildren) {
   }, [close]);
 
   const handleKakaoShare = useCallback(() => {
-    const opened = openKakaoAppScheme(window.location.href);
-
-    if (!opened) {
+    const shared = shareKakao(window.location.href);
+    if (!shared) {
       void handleCopyShare();
       return;
     }

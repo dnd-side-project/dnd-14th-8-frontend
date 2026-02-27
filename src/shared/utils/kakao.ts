@@ -1,17 +1,27 @@
-export function openKakaoAppScheme(text: string): boolean {
-  if (!/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+export function shareKakao(requestUrl: string): boolean {
+  if (!window.Kakao?.Share?.sendDefault) {
     return false;
   }
 
-  const encodedText = encodeURIComponent(text);
-
-  // Android
-  if (/Android/i.test(navigator.userAgent)) {
-    window.location.href = `intent://send?text=${encodedText}#Intent;package=com.kakao.talk;scheme=kakaolink;end`;
+  try {
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "일정 조율하러 모여락!",
+        description: "모임 일정과 장소를 쉽고 빠르게 정하는 모여락",
+        imageUrl: "https://moyeorak.site/static/images/share.png",
+        link: { mobileWebUrl: requestUrl, webUrl: requestUrl },
+      },
+      buttons: [
+        {
+          title: "웹으로 보기",
+          link: { mobileWebUrl: requestUrl, webUrl: requestUrl },
+        },
+      ],
+    });
     return true;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
-
-  // iOS
-  window.location.href = `kakaolink://send?text=${encodedText}`;
-  return true;
 }
