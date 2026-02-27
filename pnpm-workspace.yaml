@@ -4,6 +4,7 @@ minimumReleaseAgeExclude:
 onlyBuiltDependencies:
   - "@swc/core"
   - "esbuild"
+  - "sharp"
   - "simple-git-hooks"
   - "workerd"
 strictDepBuilds: true
