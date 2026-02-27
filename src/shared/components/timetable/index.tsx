@@ -211,9 +211,9 @@ export function Timetable({
 
   return (
     <div className={cn("relative w-full select-none", className)}>
-      <div className="sticky z-10 bg-k-5" style={{ top: stickyHeaderTop }}>
-        <div className="flex gap-1 pb-3">
-          <div className="sticky left-0 z-10 h-[58px] w-5 shrink-0 bg-k-5" />
+      <div className="sticky z-25 bg-k-5" style={{ top: stickyHeaderTop }}>
+        <div className="flex gap-1 pt-1 pb-1">
+          <div className="sticky left-0 z-30 h-[58px] w-5 shrink-0 bg-k-5" />
 
           <div
             className="min-w-0 flex-1 overflow-hidden"
@@ -250,7 +250,7 @@ export function Timetable({
         onPointerUp={handleBodyPointerUp}
         onPointerCancel={handleBodyPointerUp}
         className={cn(
-          "overflow-x-auto overflow-y-hidden overscroll-x-contain",
+          "scrollbar-hide overflow-x-auto overflow-y-hidden overscroll-x-contain",
           isDraggingSelection ? "touch-none" : "touch-auto",
         )}
         data-timetable-scroll="body"
