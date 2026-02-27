@@ -20,7 +20,7 @@ export function BottomActionBar({
   return (
     <div
       className={cn(
-        "fixed right-0 bottom-0 left-0 z-30 mx-auto w-full max-w-[375px] px-5 pt-3 pb-3 transition-colors",
+        "fixed right-0 bottom-0 left-0 z-30 mx-auto w-full px-5 pt-3 pb-3 transition-colors sm:max-w-[375px]",
         tone === "solid" || scrolled
           ? "border-k-50 border-t bg-k-5"
           : "bg-transparent",
