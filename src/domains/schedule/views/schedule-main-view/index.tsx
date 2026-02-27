@@ -11,7 +11,8 @@ import { cn } from "@/shared/utils/cn";
 export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   meetingId: string;
   tab: "optimal" | "vote";
-  onAddVote: () => void;
+  hasExistingVote: boolean;
+  onVoteAction: () => void;
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
@@ -20,7 +21,8 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
 export function ScheduleMainView({
   className,
   meetingId,
-  onAddVote,
+  hasExistingVote,
+  onVoteAction,
   onEditSchedule,
   onParticipantEdit,
   onTabChange,
@@ -58,8 +60,8 @@ export function ScheduleMainView({
 
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
-      <BottomActionBarWithButtonAndShare onClick={onAddVote} onShare={share}>
-        일정 추가하기
+      <BottomActionBarWithButtonAndShare onClick={onVoteAction} onShare={share}>
+        {hasExistingVote ? "일정 수정하기" : "일정 추가하기"}
       </BottomActionBarWithButtonAndShare>
     </div>
   );

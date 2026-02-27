@@ -5,9 +5,9 @@ export interface CreateScheduleVoteRequest {
 }
 
 export interface UpdateScheduleVoteRequest {
-  participantId?: number;
-  participantName?: string;
-  votedDates?: string[];
+  participantId: number;
+  participantName: string;
+  votedDates: string[];
 }
 
 export interface UpdateSchedulePollRequest {

@@ -1,5 +1,3 @@
-import type { ParticipantResponse } from "@/domains/meeting/types/participant-api-types";
-
 export interface CreateMeetingRequest {
   localStorageKey: string;
   participantCount?: number;
@@ -12,12 +10,17 @@ export interface UpdateMeetingRequest {
   participantCount?: number;
 }
 
+export interface ScheduleParticipant {
+  name: string;
+  votedDates: string[];
+}
+
 export interface GetMeetingScheduleResponse {
   dateOptions: string[];
   endTime: string;
   meetingId: string;
   participantCount: number;
-  participants: ParticipantResponse[];
+  participants: ScheduleParticipant[];
   startTime: string;
   votedParticipantCount: number;
 }

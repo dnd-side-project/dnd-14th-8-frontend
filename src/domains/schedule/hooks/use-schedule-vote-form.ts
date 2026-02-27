@@ -5,10 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { z } from "zod";
 import { useCreateScheduleVote } from "@/domains/schedule/hooks/use-create-schedule-vote";
-import {
-  getMeetingScheduleVoteResultsQueryKey,
-  useGetMeetingScheduleVoteResults,
-} from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
+import { getMeetingScheduleVoteResultsQueryKey } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
 import {
   getMeetingSchedulesQueryKey,
   useGetMeetingSchedules,
@@ -23,6 +20,7 @@ import {
   normalizeScheduleVoteId,
   toIsoDates,
 } from "@/domains/schedule/utils/schedule-vote";
+import { getParticipantVotedDates } from "@/domains/schedule/utils/timetable";
 import { toast } from "@/shared/components/toast";
 import { useUnsavedChangesGuard } from "@/shared/hooks/use-unsaved-changes-guard";
 import { getGuestId } from "@/shared/utils/auth";
@@ -61,9 +59,6 @@ export function useScheduleVoteForm() {
   const schedulesQuery = useGetMeetingSchedules({
     meetingId: currentMeetingId,
   });
-  const voteResultsQuery = useGetMeetingScheduleVoteResults({
-    meetingId: currentMeetingId,
-  });
   const myParticipantQuery = useGetMyParticipant({
     meetingId: currentMeetingId,
   });
@@ -76,7 +71,7 @@ export function useScheduleVoteForm() {
 
   // ── Initial data ──
   const initialData = useMemo<ScheduleVoteFormInitialData | undefined>(() => {
-    if (!schedulesQuery.data || !voteResultsQuery.data) {
+    if (!schedulesQuery.data) {
       return undefined;
     }
 
@@ -85,25 +80,23 @@ export function useScheduleVoteForm() {
     const hasValidRange = endTime > startTime;
     const myParticipantName = myParticipantQuery.data?.name;
 
+    const selectedDates = myParticipantName
+      ? getParticipantVotedDates(
+          schedulesQuery.data.participants,
+          myParticipantName,
+        )
+      : [];
+
     return {
       endTime: hasValidRange ? endTime : 24,
       participantName: myParticipantName ?? "",
-      selectedDates: myParticipantName
-        ? voteResultsQuery.data.scheduleVoteResult
-            .filter((result) =>
-              result.availableParticipantNames.includes(myParticipantName),
-            )
-            .map(
-              (result) =>
-                new Date(`${result.scheduleDate}T${result.startTime}`),
-            )
-        : [],
+      selectedDates,
       startTime: hasValidRange ? startTime : 9,
       timetableDates: schedulesQuery.data.dateOptions.map(
         (dateOption) => new Date(dateOption),
       ),
     };
-  }, [myParticipantQuery.data, schedulesQuery.data, voteResultsQuery.data]);
+  }, [myParticipantQuery.data, schedulesQuery.data]);
 
   // ── Form state ──
   const {
@@ -147,9 +140,11 @@ export function useScheduleVoteForm() {
 
   useUnsavedChangesGuard({ enabled: isDirty });
 
-  const isPending = schedulesQuery.isPending || voteResultsQuery.isPending;
+  const isPending = schedulesQuery.isPending;
 
   // ── Actions ──
+  // 최적일정 탭(ScheduleMainOptimalContent)이 schedule-vote/results를
+  // 별도로 구독하므로 해당 캐시도 함께 무효화한다.
   const invalidateScheduleQueries = async () => {
     await Promise.all([
       queryClient.invalidateQueries({
@@ -182,12 +177,15 @@ export function useScheduleVoteForm() {
         },
       });
     } else {
-      if (!normalizedVoteId) {
+      const participantId = myParticipantQuery.data?.participantId;
+
+      if (!normalizedVoteId || !participantId) {
         throw new Error("수정할 일정 투표 ID가 필요해요.");
       }
 
       await updateVoteMutation.mutateAsync({
         payload: {
+          participantId,
           participantName: trimmedName,
           votedDates: toIsoDates(data.selectedDates),
         },
@@ -206,12 +204,18 @@ export function useScheduleVoteForm() {
     setIsResetConfirmOpen(false);
 
     if (isEditMode) {
-      if (!normalizedVoteId) {
+      const participantId = myParticipantQuery.data?.participantId;
+
+      if (!normalizedVoteId || !participantId) {
         throw new Error("수정할 일정 투표 ID가 필요해요.");
       }
 
       await clearVoteMutation.mutateAsync({
-        payload: { votedDates: [] },
+        payload: {
+          participantId,
+          participantName: getValues("name").trim(),
+          votedDates: [],
+        },
         scheduleVoteId: normalizedVoteId,
       });
       await invalidateScheduleQueries();
