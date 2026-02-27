@@ -1,14 +1,12 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { CardRecommended } from "@/domains/schedule/components/card-recommended";
-import {
-  PlaceholderContent,
-  ScheduleMainOptimalPlaceholder,
-} from "@/domains/schedule/components/schedule-main-optimal-content/placeholder";
+import { ScheduleMainOptimalPlaceholder } from "@/domains/schedule/components/schedule-main-optimal-content/placeholder";
 import { splitResults } from "@/domains/schedule/components/schedule-main-optimal-content/split-results";
 import { useGetMeetingScheduleVoteResults } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
 import { ButtonBottomWithIcon } from "@/shared/components/button-bottom-with-icon";
 import { ChevronDownIcon, ChevronUpIcon } from "@/shared/components/icons";
+import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { cn } from "@/shared/utils/cn";
 
 export function ScheduleMainOptimalContent() {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { Empty2Character } from "@/assets/characters";
 import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { ItemSearchResult } from "@/domains/location/components/item-search-result"; // 추가
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
@@ -7,6 +8,7 @@ import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
 import { SearchIcon, TargetIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
+import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { TextField } from "@/shared/components/text-field";
 
 export function DepartureNewSearchPage() {
@@ -113,10 +115,11 @@ export function DepartureNewSearchPage() {
 
           {!isSearching && results.length === 0 && keyword.length > 1 && (
             <div className="mt-25 flex flex-col items-center">
-              <p className="text-k-800 text-t2">일치하는 주소가 없어요..</p>
-              <p className="text-b5 text-k-700">
-                검색한 지역을 다시 확인해 보세요.
-              </p>
+              <PlaceholderContent
+                graphic={<Empty2Character />}
+                title="일치하는 주소가 없어요.."
+                description="검색한 지역을 다시 확인해 보세요."
+              />
             </div>
           )}
         </div>
