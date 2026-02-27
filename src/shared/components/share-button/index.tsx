@@ -44,7 +44,7 @@ export function ShareButton({
       type={type}
       {...props}
     >
-      <Icon aria-hidden className="size-14 shrink-0" />
+      <Icon className="size-14 shrink-0" />
       <span className="text-b4 text-k-700">{label ?? defaultLabel}</span>
     </button>
   );

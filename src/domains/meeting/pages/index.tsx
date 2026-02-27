@@ -1,4 +1,8 @@
 import { useNavigate } from "react-router";
+import {
+  LandingMidpointCharacter,
+  LandingScheduleCharacter,
+} from "@/assets/characters";
 import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
@@ -20,6 +24,8 @@ export function LandingPage() {
             className="bg-primary-main"
             title="일정 조율하기"
             description={"쉽고 빠르게 일정을\n조율하세요!"}
+            character={<LandingScheduleCharacter />}
+            characterClassName="right-[-60px] bottom-[-90px]"
             onClick={() => navigate("/new/schedule")}
           />
 
@@ -27,6 +33,8 @@ export function LandingPage() {
             className="bg-sub-main"
             title="중간 지점 찾기"
             description={"공평한 중간지점을\n찾아보세요!"}
+            character={<LandingMidpointCharacter />}
+            characterClassName="right-[-60px] bottom-[-115px]"
             onClick={() => navigate("/new/location")}
           />
         </div>

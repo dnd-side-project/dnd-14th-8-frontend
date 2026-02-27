@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import GraphicPlaceholder from "@/assets/graphic/placeholder.svg?react";
+import { Empty1Character } from "@/assets/characters";
 import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting-schedules";
+import { PlaceholderContent } from "@/shared/components/placeholder-content";
 
 export function ScheduleMainOptimalPlaceholder({
   meetingId,
@@ -22,13 +22,8 @@ export function ScheduleMainOptimalPlaceholder({
   if (votedParticipantCount <= 1) {
     return (
       <PlaceholderContent
-        title={
-          <>
-            아직 2명 이상의 일정이
-            <br />
-            등록되지 않았어요.
-          </>
-        }
+        graphic={<Empty1Character />}
+        title="두 명 이상의 일정이 필요해요.."
         description="링크를 공유하거나 일정을 등록해 보세요."
       />
     );
@@ -36,28 +31,9 @@ export function ScheduleMainOptimalPlaceholder({
 
   return (
     <PlaceholderContent
-      title="겹치는 시간대가 아직 없어요."
-      description="시간 범위를 넓히거나 일정을 다시 등록해 보세요."
+      graphic={<Empty1Character />}
+      title="아직 겹치는 시간대가 없어요.."
+      description="시간 범위를 넓히거나 팀원들을 기다려 보세요."
     />
-  );
-}
-
-export function PlaceholderContent({
-  title,
-  description,
-}: {
-  title: ReactNode;
-  description: ReactNode;
-}) {
-  return (
-    <div className="grid min-h-0 flex-1 place-items-center">
-      <div className="flex flex-col items-center text-center">
-        <GraphicPlaceholder className="size-[172px] text-k-300" />
-        <div className="mt-4 flex flex-col gap-3">
-          <p className="text-k-700 text-t1">{title}</p>
-          <p className="text-b4 text-k-500">{description}</p>
-        </div>
-      </div>
-    </div>
   );
 }

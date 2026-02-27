@@ -32,7 +32,7 @@ export function NewMeetingPage() {
           render={({ field }) => (
             <TextField
               {...field}
-              label="방장 이름"
+              label="팀장 이름"
               placeholder="이름을 입력해주세요"
               maxLength={maxNameLength}
               className="mt-3"

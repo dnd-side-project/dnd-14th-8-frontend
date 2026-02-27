@@ -1,39 +1,50 @@
 import { useMemo } from "react";
-import GraphicPlaceholder from "@/assets/graphic/placeholder.svg?react";
+import {
+  Schedule1Character,
+  Schedule2Character,
+  Schedule3Character,
+  Schedule4Character,
+} from "@/assets/characters";
 import { ScheduleEdit } from "@/domains/schedule/components/schedule-edit";
 import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting-schedules";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
-import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
 
 export interface ScheduleMainHeroProps {
   meetingId: string;
   onEditSchedule: () => void;
 }
 
+function ScheduleMainHeroSkeleton() {
+  return null;
+}
+
 export function ScheduleMainHero({
   meetingId,
   onEditSchedule,
 }: ScheduleMainHeroProps) {
-  const { data, isPending } = useGetMyParticipant({ meetingId });
+  const { data: myData, isPending: isMyPending } = useGetMyParticipant({
+    meetingId,
+  });
 
-  if (isPending) {
-    return <ScheduleMainHeroSkeleton />;
-  }
+  if (isMyPending) return <ScheduleMainHeroSkeleton />;
 
-  if (data?.isHost) {
+  // 1. 호스트인 경우 (팀장)
+  if (myData?.isHost) {
     return (
       <ScheduleMainHeroForHost
         meetingId={meetingId}
         onEditSchedule={onEditSchedule}
       />
     );
-  } else {
-    return <ScheduleMainHeroForParticipant meetingId={meetingId} />;
   }
-}
 
-function ScheduleMainHeroSkeleton() {
-  return null;
+  // 2. 참여자인 경우 (팀원)
+  return (
+    <ScheduleMainHeroForParticipant
+      meetingId={meetingId}
+      hasMyVote={!!myData?.scheduleVoteId}
+    />
+  );
 }
 
 function ScheduleMainHeroForHost({
@@ -45,19 +56,36 @@ function ScheduleMainHeroForHost({
 }) {
   const { data, isPending } = useGetMeetingSchedules({ meetingId });
 
-  if (!data || isPending) {
-    return <ScheduleMainHeroSkeleton />;
-  }
+  const status = useMemo(() => {
+    if (!data) return null;
+    const { votedParticipantCount: voted, participantCount: total } = data;
+    return {
+      voted,
+      total,
+      isAllVoted: voted === total && total > 0,
+      isOverHalf: voted >= total / 2 && voted < total,
+    };
+  }, [data]);
+
+  if (!data || isPending || !status) return <ScheduleMainHeroSkeleton />;
 
   return (
-    <section className="w-full bg-k-50 px-5 pt-6 pb-4">
+    <section className="w-full bg-p-50 px-5 pt-6 pb-4">
       <div className="relative mb-5">
-        <h1 className="break-keep text-h1 text-k-900">
-          팀원에게 링크를
-          <br />
-          <span className="text-primary-main">공유</span>해보세요!
+        <h1 className="whitespace-pre-line text-h2 text-k-900">
+          {status.isAllVoted
+            ? "모든 팀원이\n일정을 등록했어요!"
+            : status.isOverHalf
+              ? "절반 이상이\n일정을 등록했어요!"
+              : "팀원들에게 링크를\n공유해보세요!"}
         </h1>
-        <GraphicPlaceholder className="absolute right-0 -bottom-12 size-[118px] text-k-300" />
+        {status.isAllVoted ? (
+          <Schedule4Character className="absolute right-2 -bottom-13.25 size-[118px]" />
+        ) : status.isOverHalf ? (
+          <Schedule3Character className="absolute right-2 -bottom-13.25 size-[118px]" />
+        ) : (
+          <Schedule1Character className="absolute right-2 -bottom-13.25 size-[118px]" />
+        )}
       </div>
       <ScheduleEdit
         dates={data.dateOptions.map((date) => new Date(date))}
@@ -70,26 +98,57 @@ function ScheduleMainHeroForHost({
   );
 }
 
-function ScheduleMainHeroForParticipant({ meetingId }: { meetingId: string }) {
-  const { data, isPending } = useListParticipants({ meetingId });
+function ScheduleMainHeroForParticipant({
+  meetingId,
+  hasMyVote,
+}: {
+  meetingId: string;
+  hasMyVote: boolean;
+}) {
+  const { data, isPending } = useGetMeetingSchedules({ meetingId });
 
-  const hostName = useMemo(() => {
-    const host = data?.participants.find((participant) => participant.isHost);
-    return host?.name ?? "팀장";
-  }, [data?.participants]);
+  const status = useMemo(() => {
+    if (!data) return null;
+    const { votedParticipantCount: voted, participantCount: total } = data;
+    return {
+      voted,
+      total,
+      isAllVoted: voted === total && total > 0,
+      isOverHalf: voted >= total / 2 && voted < total,
+    };
+  }, [data]);
 
-  if (isPending) {
-    return <ScheduleMainHeroSkeleton />;
-  }
+  if (!data || isPending || !status) return <ScheduleMainHeroSkeleton />;
+
+  // 텍스트 및 캐릭터 결정 로직
+  const getUIContent = () => {
+    if (status.isAllVoted)
+      return {
+        title: "모든 팀원이\n일정을 등록했어요!",
+        Char: Schedule4Character,
+      };
+    if (status.isOverHalf)
+      return {
+        title: "절반 이상이\n일정을 등록했어요!",
+        Char: Schedule3Character,
+      };
+    if (hasMyVote)
+      return {
+        title: "일정 등록 완료!\n팀원들을 기다려요",
+        Char: Schedule2Character,
+      };
+    return {
+      title: "일정을 등록하고\n모임을 시작해보세요!",
+      Char: Schedule1Character,
+    };
+  };
+
+  const { title, Char } = getUIContent();
 
   return (
-    <section className="relative w-full bg-k-50 px-5 pt-6 pb-5">
-      <h1 className="break-keep text-h1 text-k-900">
-        <span className="text-primary-main">{hostName}</span>님과 모임을
-        <br />
-        시작해보세요!
-      </h1>
-      <GraphicPlaceholder className="absolute right-0 -bottom-8 size-[118px] text-k-300" />
+    <section className="relative w-full bg-p-50 px-5 pt-6 pb-5">
+      <h1 className="whitespace-pre-line text-h2 text-k-900">{title}</h1>
+      <Char className="absolute right-6 -bottom-8.75 size-[118px]" />
     </section>
   );
 }

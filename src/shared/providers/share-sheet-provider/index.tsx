@@ -24,7 +24,8 @@ export function ShareSheetProvider({ children }: PropsWithChildren) {
   const handleCopyShare = useCallback(async () => {
     const copied = await copyTextToClipboard(window.location.href);
     if (!copied) {
-      console.error("클립보드 복사에 실패했어요");
+      toast.error("클립보드 복사에 실패했어요");
+      return;
     }
 
     toast.success("클립보드에 복사되었어요");
@@ -32,6 +33,16 @@ export function ShareSheetProvider({ children }: PropsWithChildren) {
   }, [close]);
 
   const handleKakaoShare = useCallback(() => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
+
+    if (!isMobile || !isKakaoInApp) {
+      toast.error("모바일 카카오톡 앱에서만 공유할 수 있어요");
+      close();
+      // void handleCopyShare();
+      return;
+    }
+
     const shared = shareKakao(window.location.href);
     if (!shared) {
       void handleCopyShare();

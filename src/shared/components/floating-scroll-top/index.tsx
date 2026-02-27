@@ -55,7 +55,7 @@ export function FloatingScrollTop({
       aria-hidden={!isVisible}
       onTransitionEnd={handleTransitionEnd}
       className={cn(
-        "fixed right-0 left-0 z-20 mx-auto flex w-full max-w-[375px] justify-end px-5 transition-[opacity,transform] duration-200 ease-out",
+        "fixed right-0 left-0 z-20 mx-auto flex w-full justify-end px-5 transition-[opacity,transform] duration-200 ease-out sm:max-w-[375px]",
         isVisible && "pointer-events-auto opacity-100",
         !isVisible && "pointer-events-none opacity-0",
         className,

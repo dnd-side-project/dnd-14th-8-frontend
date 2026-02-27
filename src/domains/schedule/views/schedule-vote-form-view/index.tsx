@@ -4,8 +4,8 @@ import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-sel
 import type { ScheduleVoteFormValues } from "@/domains/schedule/hooks/use-schedule-vote-form";
 import { BottomActionBar } from "@/shared/components/bottom-action-bar";
 import { ButtonBottom } from "@/shared/components/button-bottom";
-import { ConfirmModal } from "@/shared/components/confirm-modal";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
+import { Modal } from "@/shared/components/modal";
 import { PageHeader } from "@/shared/components/page-header";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
 import { TextField } from "@/shared/components/text-field";
@@ -139,14 +139,22 @@ export function ScheduleVoteFormView({
         </ButtonBottom>
       </BottomActionBar>
 
-      {isResetConfirmOpen ? (
-        <ConfirmModal
-          title="입력한 일정을 모두 지울까요?"
-          description="입력한 내용이 모두 사라져요"
-          onCancel={onCancelResetConfirm}
-          onConfirm={onConfirmReset}
-        />
-      ) : null}
+      <Modal
+        isOpen={isResetConfirmOpen}
+        onClose={onCancelResetConfirm}
+        title="입력한 일정을 모두 지울까요?"
+        caption="입력한 내용이 모두 사라져요."
+        secondaryButton={{
+          label: "취소",
+          onClick: onCancelResetConfirm,
+          color: "gray",
+        }}
+        primaryButton={{
+          label: "초기화",
+          onClick: onConfirmReset,
+          color: "blue",
+        }}
+      />
 
       <ReactHookFormDevtools control={control} />
     </section>
