@@ -12,8 +12,8 @@ export interface ListParticipantResponse {
 export interface ParticipantResponse {
   isHost: boolean;
   localStorageKey: string;
-  locationVoteId: number;
+  locationVoteId: number | null;
   name: string;
   participantId: number;
-  scheduleVoteId: number;
+  scheduleVoteId: number | null;
 }

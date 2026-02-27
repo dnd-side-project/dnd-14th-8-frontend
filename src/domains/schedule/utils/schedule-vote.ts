@@ -2,7 +2,7 @@
  * 일정 투표 관련 유틸리티 함수
  */
 
-export function normalizeScheduleVoteId(scheduleVoteId?: number) {
+export function normalizeScheduleVoteId(scheduleVoteId?: number | null) {
   if (!scheduleVoteId || Number.isNaN(scheduleVoteId) || scheduleVoteId <= 0) {
     return undefined;
   }

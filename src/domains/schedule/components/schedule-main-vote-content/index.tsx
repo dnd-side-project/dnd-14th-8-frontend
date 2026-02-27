@@ -1,11 +1,13 @@
+import { useMemo } from "react";
 import { useParams } from "react-router";
+import type { ScheduleParticipant } from "@/domains/meeting/types/meeting-api-types";
 import { ScheduleMainVoteParticipants } from "@/domains/schedule/components/schedule-main-vote-participants";
-import { useGetMeetingScheduleVoteResults } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
 import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting-schedules";
-import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { parseTime } from "@/domains/schedule/utils/parse";
-import { toScheduleOccupancy } from "@/domains/schedule/utils/timetable";
+import { toOccupancyFromParticipants } from "@/domains/schedule/utils/timetable";
 import { Timetable } from "@/shared/components/timetable";
+
+const EMPTY_PARTICIPANTS: ScheduleParticipant[] = [];
 
 export interface ScheduleMainVoteContentProps {
   onParticipantEdit: () => void;
@@ -17,15 +19,21 @@ export function ScheduleMainVoteContent({
   const { meetingId } = useParams() as { meetingId: string };
 
   const schedulesQuery = useGetMeetingSchedules({ meetingId });
-  const voteResultsQuery = useGetMeetingScheduleVoteResults({ meetingId });
-  const myParticipantQuery = useGetMyParticipant({ meetingId });
 
-  if (
-    schedulesQuery.isPending ||
-    voteResultsQuery.isPending ||
-    !schedulesQuery.data ||
-    !voteResultsQuery.data
-  ) {
+  const participants = schedulesQuery.data?.participants ?? EMPTY_PARTICIPANTS;
+
+  const occupancy = useMemo(
+    () => toOccupancyFromParticipants(participants),
+    [participants],
+  );
+
+  const votedParticipantNames = useMemo(
+    () =>
+      participants.filter((p) => p.votedDates.length > 0).map((p) => p.name),
+    [participants],
+  );
+
+  if (schedulesQuery.isPending || !schedulesQuery.data) {
     return (
       <div className="py-10 text-center text-b4 text-k-500">
         시간표를 불러오는 중이에요.
@@ -33,17 +41,13 @@ export function ScheduleMainVoteContent({
     );
   }
 
-  const myParticipantName = myParticipantQuery.data?.name;
-
   return (
     <>
       <ScheduleMainVoteParticipants
         meetingId={meetingId}
         participantCount={schedulesQuery.data.participantCount}
         votedParticipantCount={schedulesQuery.data.votedParticipantCount}
-        votedParticipantNames={schedulesQuery.data.participants
-          .filter((participant) => participant.scheduleVoteId)
-          .map((participant) => participant.name)}
+        votedParticipantNames={votedParticipantNames}
         onParticipantEdit={onParticipantEdit}
       />
       <Timetable
@@ -53,21 +57,7 @@ export function ScheduleMainVoteContent({
         )}
         startTime={parseTime(schedulesQuery.data.startTime, 9)}
         endTime={parseTime(schedulesQuery.data.endTime, 24)}
-        occupancy={toScheduleOccupancy(
-          voteResultsQuery.data.scheduleVoteResult,
-        )}
-        selected={
-          myParticipantName
-            ? voteResultsQuery.data.scheduleVoteResult
-                .filter((result) =>
-                  result.availableParticipantNames.includes(myParticipantName),
-                )
-                .map(
-                  (result) =>
-                    new Date(`${result.scheduleDate}T${result.startTime}`),
-                )
-            : []
-        }
+        occupancy={occupancy}
         disabled
         stickyHeaderTop={48}
       />
