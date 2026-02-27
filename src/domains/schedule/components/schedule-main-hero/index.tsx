@@ -58,34 +58,52 @@ function ScheduleMainHeroForHost({
 
   const status = useMemo(() => {
     if (!data) return null;
-    const { votedParticipantCount: voted, participantCount: total } = data;
+    const {
+      votedParticipantCount: voted,
+      participantCount: total,
+      pollStatus,
+    } = data;
     return {
       voted,
       total,
+      pollStatus,
       isAllVoted: voted === total && total > 0,
       isOverHalf: voted >= total / 2 && voted < total,
+      isConfirmed: pollStatus === "CONFIRMED",
     };
   }, [data]);
 
   if (!data || isPending || !status) return <ScheduleMainHeroSkeleton />;
 
+  const getUIContent = () => {
+    if (status.isConfirmed)
+      return {
+        title: "일정 논의가 이미\n완료되었어요!",
+        Char: Schedule4Character,
+      };
+    if (status.isAllVoted)
+      return {
+        title: "모든 팀원이\n일정을 등록했어요!",
+        Char: Schedule4Character,
+      };
+    if (status.isOverHalf)
+      return {
+        title: "절반 이상이\n일정을 등록했어요!",
+        Char: Schedule3Character,
+      };
+    return {
+      title: "팀원들에게 링크를\n공유해보세요!",
+      Char: Schedule1Character,
+    };
+  };
+
+  const { title, Char } = getUIContent();
+
   return (
     <section className="w-full bg-p-50 px-5 pt-6 pb-4">
       <div className="relative mb-5">
-        <h1 className="whitespace-pre-line text-h2 text-k-900">
-          {status.isAllVoted
-            ? "모든 팀원이\n일정을 등록했어요!"
-            : status.isOverHalf
-              ? "절반 이상이\n일정을 등록했어요!"
-              : "팀원들에게 링크를\n공유해보세요!"}
-        </h1>
-        {status.isAllVoted ? (
-          <Schedule4Character className="absolute right-2 -bottom-13.25 size-[118px]" />
-        ) : status.isOverHalf ? (
-          <Schedule3Character className="absolute right-2 -bottom-13.25 size-[118px]" />
-        ) : (
-          <Schedule1Character className="absolute right-2 -bottom-13.25 size-[118px]" />
-        )}
+        <h1 className="whitespace-pre-line text-h2 text-k-900">{title}</h1>
+        <Char className="absolute right-2 -bottom-13.25 size-[118px]" />
       </div>
       <ScheduleEdit
         dates={data.dateOptions.map((date) => new Date(date))}
@@ -109,12 +127,18 @@ function ScheduleMainHeroForParticipant({
 
   const status = useMemo(() => {
     if (!data) return null;
-    const { votedParticipantCount: voted, participantCount: total } = data;
+    const {
+      votedParticipantCount: voted,
+      participantCount: total,
+      pollStatus,
+    } = data;
     return {
       voted,
       total,
+      pollStatus,
       isAllVoted: voted === total && total > 0,
       isOverHalf: voted >= total / 2 && voted < total,
+      isConfirmed: pollStatus === "CONFIRMED",
     };
   }, [data]);
 
@@ -122,6 +146,11 @@ function ScheduleMainHeroForParticipant({
 
   // 텍스트 및 캐릭터 결정 로직
   const getUIContent = () => {
+    if (status.isConfirmed)
+      return {
+        title: "일정 논의가 이미\n완료되었어요!",
+        Char: Schedule4Character,
+      };
     if (status.isAllVoted)
       return {
         title: "모든 팀원이\n일정을 등록했어요!",

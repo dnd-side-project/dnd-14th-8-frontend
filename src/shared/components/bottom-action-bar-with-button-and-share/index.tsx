@@ -15,6 +15,7 @@ export interface BottomActionBarWithButtonAndShareProps {
   disabled?: boolean;
   children?: ReactNode;
   className?: string;
+  buttonVariant?: "black" | "blue" | "white";
 }
 
 export function BottomActionBarWithButtonAndShare({
@@ -23,6 +24,7 @@ export function BottomActionBarWithButtonAndShare({
   onShare,
   children,
   className,
+  buttonVariant = "black",
 }: BottomActionBarWithButtonAndShareProps) {
   return (
     <BottomActionBar
@@ -30,7 +32,11 @@ export function BottomActionBarWithButtonAndShare({
       className={cn("flex items-center gap-2", className)}
     >
       <ShareIconButton onClick={onShare} />
-      <ButtonBottom onClick={onClick} className="w-full flex-1" variant="black">
+      <ButtonBottom
+        onClick={onClick}
+        className="w-full flex-1"
+        variant={buttonVariant}
+      >
         {children}
       </ButtonBottom>
     </BottomActionBar>
