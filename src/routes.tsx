@@ -25,11 +25,7 @@ export function CustomRoutes() {
 
       <Route
         path="/meetings/:meetingId/:flow/edit/participants"
-        element={
-          <MeetingGuard>
-            <MeetingEditParticipantsPage />
-          </MeetingGuard>
-        }
+        element={<MeetingEditParticipantsPage />}
       />
 
       <Route
@@ -44,11 +40,7 @@ export function CustomRoutes() {
       </Route>
       <Route
         path="/meetings/:meetingId/schedule/votes"
-        element={
-          <MeetingGuard>
-            <ScheduleVotesPage />
-          </MeetingGuard>
-        }
+        element={<ScheduleVotesPage />}
       />
 
       <Route
@@ -72,49 +64,14 @@ export function CustomRoutes() {
       </Route>
 
       <Route path="/meetings/:meetingId/location/votes">
-        <Route
-          index
-          element={
-            <MeetingGuard>
-              <DepartureListPage />
-            </MeetingGuard>
-          }
-        />
+        <Route index element={<DepartureListPage />} />
         <Route path="new">
-          <Route
-            index
-            element={
-              <MeetingGuard>
-                <DepartureNewPage />
-              </MeetingGuard>
-            }
-          />
-          <Route
-            path="search"
-            element={
-              <MeetingGuard>
-                <DepartureNewSearchPage />
-              </MeetingGuard>
-            }
-          />
+          <Route index element={<DepartureNewPage />} />
+          <Route path="search" element={<DepartureNewSearchPage />} />
         </Route>
         <Route path=":locationVoteId">
-          <Route
-            index
-            element={
-              <MeetingGuard>
-                <DepartureEditPage />
-              </MeetingGuard>
-            }
-          />
-          <Route
-            path="search"
-            element={
-              <MeetingGuard>
-                <DepartureEditSearchPage />
-              </MeetingGuard>
-            }
-          />
+          <Route index element={<DepartureEditPage />} />
+          <Route path="search" element={<DepartureEditSearchPage />} />
         </Route>
       </Route>
     </Routes>
