@@ -9,6 +9,7 @@ import { DepartureEditPage } from "@/domains/location/pages/meetings/[meeting-id
 import { DepartureEditSearchPage } from "@/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/search";
 import { DepartureNewPage } from "@/domains/location/pages/meetings/[meeting-id]/location/votes/new";
 import { DepartureNewSearchPage } from "@/domains/location/pages/meetings/[meeting-id]/location/votes/new/search";
+import { MeetingGuard } from "@/domains/meeting/components/meeting-guard";
 import { LandingPage } from "@/domains/meeting/pages";
 import { MeetingEditParticipantsPage } from "@/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants";
 import { NewMeetingPage } from "@/domains/meeting/pages/new";
@@ -21,22 +22,43 @@ export function CustomRoutes() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/new/:flow" element={<NewMeetingPage />} />
+
       <Route
         path="/meetings/:meetingId/:flow/edit/participants"
-        element={<MeetingEditParticipantsPage />}
+        element={
+          <MeetingGuard>
+            <MeetingEditParticipantsPage />
+          </MeetingGuard>
+        }
       />
+
       <Route
         path="/meetings/:meetingId/schedule"
-        element={<ScheduleMainPage />}
+        element={
+          <MeetingGuard>
+            <ScheduleMainPage />
+          </MeetingGuard>
+        }
       >
         <Route path="edit/dates" element={<ScheduleEditDatesPage />} />
       </Route>
       <Route
         path="/meetings/:meetingId/schedule/votes"
-        element={<ScheduleVotesPage />}
+        element={
+          <MeetingGuard>
+            <ScheduleVotesPage />
+          </MeetingGuard>
+        }
       />
 
-      <Route path="/meetings/:meetingId/location" element={<MapDefaultPage />}>
+      <Route
+        path="/meetings/:meetingId/location"
+        element={
+          <MeetingGuard>
+            <MapDefaultPage />
+          </MeetingGuard>
+        }
+      >
         <Route path="stations" element={<LocationMainPage />} />
         <Route
           path="stations/:stationId/participants/:participantId"
@@ -50,16 +72,49 @@ export function CustomRoutes() {
       </Route>
 
       <Route path="/meetings/:meetingId/location/votes">
-        <Route index element={<DepartureListPage />} />
-
+        <Route
+          index
+          element={
+            <MeetingGuard>
+              <DepartureListPage />
+            </MeetingGuard>
+          }
+        />
         <Route path="new">
-          <Route index element={<DepartureNewPage />} />
-          <Route path="search" element={<DepartureNewSearchPage />} />
+          <Route
+            index
+            element={
+              <MeetingGuard>
+                <DepartureNewPage />
+              </MeetingGuard>
+            }
+          />
+          <Route
+            path="search"
+            element={
+              <MeetingGuard>
+                <DepartureNewSearchPage />
+              </MeetingGuard>
+            }
+          />
         </Route>
-
         <Route path=":locationVoteId">
-          <Route index element={<DepartureEditPage />} />
-          <Route path="search" element={<DepartureEditSearchPage />} />
+          <Route
+            index
+            element={
+              <MeetingGuard>
+                <DepartureEditPage />
+              </MeetingGuard>
+            }
+          />
+          <Route
+            path="search"
+            element={
+              <MeetingGuard>
+                <DepartureEditSearchPage />
+              </MeetingGuard>
+            }
+          />
         </Route>
       </Route>
     </Routes>
