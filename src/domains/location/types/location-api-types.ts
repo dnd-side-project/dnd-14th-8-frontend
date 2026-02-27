@@ -5,7 +5,6 @@ export interface CreateLocationVoteRequest {
   departureLng: CoordinateValue;
   departureLocation: string;
   localStorageKey?: string;
-  locationPollId: string;
   meetingId: string;
   participantName: string;
 }
@@ -54,16 +53,18 @@ export interface StationRecommendationDto {
 
 export interface MidpointRecommendationResponse {
   centerPoint: CenterPointDto;
-  departureTime?: string;
+  departureTime?: string | null;
+  registeredCount: number;
+  totalCount: number;
   recommendations: StationRecommendationDto[];
 }
 
 export interface PlaceDetail {
-  businessStatusMessage: string;
+  businessStatusMessage: string | null;
   distanceFromBase: number;
   formattedAddress: string;
   id: number;
-  isOpen: boolean;
+  isOpen: boolean | null;
   kakaoPlaceUrl: string;
   latitude: number;
   longitude: number;
@@ -107,7 +108,7 @@ export interface DrivingRouteDetailDto {
 }
 
 export interface PersonalRouteResponse {
-  departureTime?: string;
+  departureTime?: string | null;
   driving?: DrivingRouteDetailDto;
   participant: ParticipantSummaryDto;
   station: StationSummaryDto;

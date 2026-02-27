@@ -15,7 +15,6 @@ interface CreateLocationVoteRequestBody {
   departureLng: string;
   departureLocation: string;
   localStorageKey?: string;
-  locationPollId?: string;
   meetingId: string;
   participantName: string;
 }
@@ -44,10 +43,6 @@ export interface GetPersonalRouteParams {
   stationId: number;
 }
 
-export interface ListLocationVotesParams {
-  locationPollId: number;
-}
-
 export interface NearbyPlaceSearchParams {
   latitude: CoordinateValue;
   longitude: CoordinateValue;
@@ -69,7 +64,6 @@ function normalizeCreateLocationVoteRequest(
     ...payload,
     departureLat: toCoordinateString(payload.departureLat),
     departureLng: toCoordinateString(payload.departureLng),
-    locationPollId: payload.locationPollId,
   };
 }
 

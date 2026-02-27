@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { MeetingJoinInvite } from "@/domains/meeting/components/meeting-join-invite";
 import { useMeetingAccess } from "@/domains/meeting/hooks/use-meeting-access";
@@ -7,35 +7,76 @@ interface MeetingGuardProps {
   children: ReactNode;
 }
 
+function getInviteAcceptedStorageKey(meetingId?: string) {
+  return meetingId ? `moyeorak.invite.accepted.${meetingId}` : null;
+}
+
 export function MeetingGuard({ children }: MeetingGuardProps) {
   const { meetingId } = useParams<{ meetingId: string }>();
-
-  // 서버 데이터 기준 참여 여부 확인
   const { isMember, hostName, isLoading } = useMeetingAccess(meetingId);
 
-  // 처음 들어왔을 때 멤버가 아니라면(isMember: false) 초대장 보여주기
+  const inviteAcceptedStorageKey = useMemo(
+    () => getInviteAcceptedStorageKey(meetingId),
+    [meetingId],
+  );
+
   const [showInvite, setShowInvite] = useState(false);
+  const [hasResolvedGuard, setHasResolvedGuard] = useState(() => {
+    if (!inviteAcceptedStorageKey) return false;
+    return localStorage.getItem(inviteAcceptedStorageKey) === "1";
+  });
+  const [hasAcceptedInvite, setHasAcceptedInvite] = useState(() => {
+    if (!inviteAcceptedStorageKey) return false;
+    return localStorage.getItem(inviteAcceptedStorageKey) === "1";
+  });
 
   useEffect(() => {
-    // 로딩이 끝나고 멤버가 아니라고 판별되면 초대장 노출
-    if (!isLoading && !isMember) {
-      setShowInvite(true);
+    if (!inviteAcceptedStorageKey) {
+      setHasAcceptedInvite(false);
+      setHasResolvedGuard(false);
+      return;
     }
-  }, [isLoading, isMember]);
 
-  // '모임 참여하기' 버튼 클릭 시 실행
+    const accepted = localStorage.getItem(inviteAcceptedStorageKey) === "1";
+    setHasAcceptedInvite(accepted);
+
+    if (accepted) {
+      setHasResolvedGuard(true);
+    }
+  }, [inviteAcceptedStorageKey]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setHasResolvedGuard(true);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (isMember) {
+      setShowInvite(false);
+      return;
+    }
+
+    setShowInvite(!hasAcceptedInvite);
+  }, [hasAcceptedInvite, isLoading, isMember]);
+
   const handleJoinClick = () => {
-    // 단순히 초대장 상태만 끄면, children(메인 화면) 나타나기
+    if (inviteAcceptedStorageKey) {
+      localStorage.setItem(inviteAcceptedStorageKey, "1");
+    }
+
+    setHasAcceptedInvite(true);
+    setHasResolvedGuard(true);
     setShowInvite(false);
   };
 
-  if (isLoading) return null;
+  if (!hasResolvedGuard) return null;
 
-  // 초대장 상태가 활성화되어 있으면 초대장 노출
   if (showInvite) {
     return <MeetingJoinInvite hostName={hostName} onJoin={handleJoinClick} />;
   }
 
-  // 그 외에는 메인 화면 노출
   return <>{children}</>;
 }

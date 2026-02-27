@@ -10,8 +10,8 @@ export interface CardFacilityProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   name: string;
   distanceFromBase: number;
-  isOpen: boolean;
-  businessStatusMessage: string;
+  isOpen: boolean | null;
+  businessStatusMessage: string | null;
 }
 
 export function CardFacility({
@@ -43,13 +43,21 @@ export function CardFacility({
         </div>
         <div className="flex items-center gap-0.5">
           <TimeIcon className="size-5 shrink-0 text-k-500" />
-          {isOpen ? (
+          {isOpen == null ? (
+            <span className="text-b5 text-k-600">영업정보 없음</span>
+          ) : isOpen ? (
             <span className="text-b5 text-primary-main">영업중</span>
           ) : (
             <span className="text-b5 text-k-600">영업종료</span>
           )}
-          <span className="text-b5 text-k-200">·</span>
-          <span className="text-b5 text-k-600">{businessStatusMessage}</span>
+          {businessStatusMessage && (
+            <>
+              <span className="text-b5 text-k-200">·</span>
+              <span className="text-b5 text-k-600">
+                {businessStatusMessage}
+              </span>
+            </>
+          )}
         </div>
       </div>
       <ChevronRightIcon className="-mr-1 size-10 shrink-0 text-k-400" />
