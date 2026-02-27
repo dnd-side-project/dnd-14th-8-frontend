@@ -40,7 +40,7 @@ export function ScheduleMainPage() {
       {
         onSuccess: () => {
           setIsLocationModalOpen(false);
-          navigate(`/meetings/${meetingId}/location/stations`); // 일정 메인 화면으로 이동
+          navigate(`/meetings/${meetingId}/location/stations`); // 장소 메인 화면으로 이동
         },
         onError: () => {
           toast.error("일정을 확정하는 중 오류가 발생했어요");
