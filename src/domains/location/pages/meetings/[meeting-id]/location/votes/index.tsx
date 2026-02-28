@@ -8,6 +8,7 @@ import {
   getDeparturesQueryKey,
   useGetDepartures,
 } from "@/domains/location/hooks/use-get-departures";
+import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Modal } from "@/shared/components/modal";
@@ -33,7 +34,6 @@ export function DepartureListPage() {
       return;
     }
 
-    // 메인 페이지로 이동 - 해당 페이지에서 useGetMidpointRecommendations를 호출하여 데이터 보여주기
     navigate(`/meetings/${meetingId}/location/stations`);
   };
 
@@ -45,9 +45,14 @@ export function DepartureListPage() {
       {
         onSuccess: () => {
           // 목록 새로고침
-          queryClient.invalidateQueries({
-            queryKey: getDeparturesQueryKey({ meetingId }),
-          });
+          void Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: getDeparturesQueryKey({ meetingId }),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: getMidpointRecommendationsQueryKey({ meetingId }),
+            }),
+          ]);
           setIsDeleteModalOpen(false);
           toast.success("출발지가 삭제되었어요");
         },

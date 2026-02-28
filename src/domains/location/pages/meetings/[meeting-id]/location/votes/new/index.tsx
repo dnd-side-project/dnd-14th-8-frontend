@@ -11,9 +11,16 @@ import { PageHeader } from "@/shared/components/page-header";
 import { Select } from "@/shared/components/select";
 import { TextField } from "@/shared/components/text-field";
 
+interface VoteSearchLocationState {
+  address?: string;
+  coords?: [number, number];
+  name?: string;
+  selectedParticipantId?: string;
+}
+
 export function DepartureNewPage() {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { state } = useLocation() as { state: VoteSearchLocationState | null };
   const { meetingId } = useParams() as { meetingId: string };
 
   const { data: myInfo } = useGetMyParticipant({ meetingId });
@@ -30,8 +37,8 @@ export function DepartureNewPage() {
     setValue,
   } = useCreateDepartureForm(meetingId, {
     departureLocation: state?.address,
-    departureLat: state?.lat,
-    departureLng: state?.lng,
+    departureLat: state?.coords ? String(state.coords[0]) : undefined,
+    departureLng: state?.coords ? String(state.coords[1]) : undefined,
     participantName: state?.name,
     participantId: state?.selectedParticipantId,
   });
@@ -43,7 +50,7 @@ export function DepartureNewPage() {
 
     if (state?.coords && Array.isArray(state.coords)) {
       const [lat, lng] = state.coords;
-      if (lat && lng) {
+      if (Number.isFinite(lat) && Number.isFinite(lng)) {
         setValue("departureLat", String(lat));
         setValue("departureLng", String(lng));
       }

@@ -1,26 +1,28 @@
 import { useCallback, useState } from "react";
 
 export function useReverseGeocode() {
-  const [address, setAddress] = useState<string>("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
   const getAddressFromCoords = useCallback((lat: number, lng: number) => {
-    if (!window.naver || !window.naver.maps.Service) {
+    const naverMaps = window.naver?.maps;
+    const service = naverMaps?.Service;
+    const LatLng = naverMaps?.LatLng;
+
+    if (!service || !LatLng) {
+      setAddress("");
       return;
     }
 
     setLoading(true);
 
-    window.naver.maps.Service.reverseGeocode(
+    service.reverseGeocode(
       {
-        coords: new window.naver.maps.LatLng(lat, lng),
-        orders: [
-          window.naver.maps.Service.OrderType.ADDR,
-          window.naver.maps.Service.OrderType.ROAD_ADDR,
-        ].join(","),
+        coords: new LatLng(lat, lng),
+        orders: [service.OrderType.ADDR, service.OrderType.ROAD_ADDR].join(","),
       },
       (status, response) => {
-        if (status !== window.naver.maps.Service.Status.OK) {
+        if (status !== service.Status.OK) {
           setAddress("주소를 찾을 수 없습니다.");
           setLoading(false);
           return;
