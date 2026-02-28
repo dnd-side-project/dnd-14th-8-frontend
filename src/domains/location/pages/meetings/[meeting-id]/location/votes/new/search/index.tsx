@@ -16,26 +16,18 @@ export function DepartureNewSearchPage() {
   const location = useLocation();
   const [keyword, setKeyword] = useState("");
 
-  const {
-    results,
-    loading: isSearching,
-    error: searchError,
-    search,
-  } = usePlaceSearch();
+  const { results, loading: isSearching, search } = usePlaceSearch();
 
   const {
     address: currentAddress,
     coords: currentCoords,
     loading: isFetchingLocation,
-    error: locationError,
     getCurrentLocation,
   } = useCurrentLocation();
 
-  // 🔎 디바운스 검색
+  // 디바운스 검색
   useEffect(() => {
     if (keyword.trim().length < 2) {
-      // 만약 usePlaceSearch에서 clearResults 같은 함수를 제공한다면 호출
-      // 현재는 search 함수 내부에 빈 값 처리가 있으므로 바로 호출 가능합니다.
       search("");
       return;
     }
@@ -47,7 +39,7 @@ export function DepartureNewSearchPage() {
     return () => clearTimeout(timer);
   }, [keyword, search]);
 
-  // 📍 현 위치 성공 시 자동 이동
+  // 현 위치 성공 시 자동 이동
   useEffect(() => {
     if (!currentAddress) return;
 
@@ -84,13 +76,13 @@ export function DepartureNewSearchPage() {
           </ButtonSubStroke>
         </div>
 
-        {/* 🔍 검색 결과 리스트 */}
+        {/* 검색 결과 리스트 */}
         <div className="mt-4 flex-1 overflow-y-auto">
-          {isSearching && (
+          {/* {isSearching && (
             <p className="mt-10 text-center text-gray-400 text-sm">
               검색 중...
             </p>
-          )}
+          )} */}
 
           {!isSearching &&
             results.map((item) => (
@@ -123,12 +115,6 @@ export function DepartureNewSearchPage() {
             </div>
           )}
         </div>
-
-        {(searchError || locationError) && (
-          <p className="mt-2 px-5 text-red-500 text-sm">
-            {searchError || locationError}
-          </p>
-        )}
       </section>
     </MobileLayout>
   );
