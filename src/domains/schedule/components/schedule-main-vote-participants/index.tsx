@@ -41,7 +41,7 @@ export function ScheduleMainVoteParticipants({
         {data?.isHost && <ChevronRightIcon className="size-4 text-k-400" />}
       </button>
       {votedParticipantNames.length > 0 && (
-        <div className="flex gap-1.5 overflow-x-auto">
+        <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">
           {votedParticipantNames.map((name) => (
             <Chip size="xl" key={name}>
               {name}
