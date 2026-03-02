@@ -10,7 +10,11 @@ export function useCurrentLocation() {
   const [error, setError] = useState<string | null>(null);
 
   const reverseGeocode = useCallback((coords: Coordinates) => {
-    if (!window.naver) {
+    const naverMaps = window.naver?.maps;
+    const service = naverMaps?.Service;
+    const LatLng = naverMaps?.LatLng;
+
+    if (!service || !LatLng) {
       setError("지도 SDK가 아직 로드되지 않았습니다.");
       setLoading(false);
       return;
@@ -18,32 +22,27 @@ export function useCurrentLocation() {
 
     const [lat, lng] = coords;
 
-    window.naver.maps.Service.reverseGeocode(
+    service.reverseGeocode(
       {
-        coords: new window.naver.maps.LatLng(lat, lng),
-        orders: [
-          window.naver.maps.Service.OrderType.ADDR,
-          window.naver.maps.Service.OrderType.ROAD_ADDR,
-        ].join(","),
+        coords: new LatLng(lat, lng),
+        orders: [service.OrderType.ADDR, service.OrderType.ROAD_ADDR].join(","),
       },
       (
         status: naver.maps.Service.Status,
         response: naver.maps.Service.ReverseGeocodeResponse,
       ) => {
-        if (status !== window.naver.maps.Service.Status.OK) {
-          console.log("status:", status);
-          console.log("response:", response);
-          setError("주소를 찾을 수 없습니다.");
+        if (status !== service.Status.OK) {
+          setError("주소를 찾을 수 없어요");
           setLoading(false);
           return;
         }
 
-        const address =
+        const resolvedAddress =
           response.v2.address?.roadAddress ||
           response.v2.address?.jibunAddress ||
           "주소를 찾을 수 없습니다.";
 
-        setAddress(address);
+        setAddress(resolvedAddress);
         setLoading(false);
       },
     );

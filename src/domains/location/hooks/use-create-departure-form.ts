@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateDeparture } from "@/domains/location/hooks/use-create-departure";
 import { getDeparturesQueryKey } from "@/domains/location/hooks/use-get-departures";
+import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import type { CreateLocationVoteRequest } from "@/domains/location/types/location-api-types";
 import { toast } from "@/shared/components/toast";
 import { getGuestId } from "@/shared/utils/auth";
@@ -13,7 +14,6 @@ export const NAME_MAX_LENGTH = 4;
 
 export const createDepartureFormSchema = z.object({
   meetingId: z.string(),
-  locationPollId: z.string().optional(),
   participantName: z
     .string()
     .trim()
@@ -46,8 +46,7 @@ export function useCreateDepartureForm(
   } = useForm<CreateDepartureFormValues>({
     resolver: zodResolver(createDepartureFormSchema),
     defaultValues: {
-      meetingId: meetingId,
-      locationPollId: initialValues?.locationPollId || "", // 초기값 설정
+      meetingId,
       participantName: initialValues?.participantName || "",
       participantId: initialValues?.participantId || "",
       departureLocation: initialValues?.departureLocation || "",
@@ -63,18 +62,23 @@ export function useCreateDepartureForm(
 
       const requestPayload: CreateLocationVoteRequest = {
         meetingId: data.meetingId,
-        localStorageKey: localStorageKey || "",
+        localStorageKey: localStorageKey || undefined,
         participantName: data.participantName || "",
         departureLocation: data.departureLocation,
         departureLat: data.departureLat,
         departureLng: data.departureLng,
-        locationPollId: data.locationPollId || "",
       };
 
       await createDepartureMutation.mutateAsync(requestPayload);
-      await queryClient.invalidateQueries({
-        queryKey: getDeparturesQueryKey({ meetingId }),
-      });
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: getDeparturesQueryKey({ meetingId }),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: getMidpointRecommendationsQueryKey({ meetingId }),
+        }),
+      ]);
 
       toast.success("출발지가 추가되었어요");
       navigate(`/meetings/${meetingId}/location/votes`);

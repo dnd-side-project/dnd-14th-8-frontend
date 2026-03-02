@@ -1,5 +1,8 @@
-import { Route, Routes } from "react-router";
-import { MapDefaultPage } from "@/domains/location/pages/meetings/[meeting-id]/location";
+import { Outlet, Route, Routes } from "react-router";
+import {
+  MapDefaultPage,
+  MapIndexRedirectPage,
+} from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { NearbySearchPage } from "@/domains/location/pages/meetings/[meeting-id]/location/nearby/[coords]";
 import { PlaceDetailPage } from "@/domains/location/pages/meetings/[meeting-id]/location/nearby/[coords]/places/[place-id]";
 import { LocationMainPage } from "@/domains/location/pages/meetings/[meeting-id]/location/stations";
@@ -51,6 +54,7 @@ export function CustomRoutes() {
           </MeetingGuard>
         }
       >
+        <Route index element={<MapIndexRedirectPage />} />
         <Route path="stations" element={<LocationMainPage />} />
         <Route
           path="stations/:stationId/participants/:participantId"
@@ -63,7 +67,14 @@ export function CustomRoutes() {
         />
       </Route>
 
-      <Route path="/meetings/:meetingId/location/votes">
+      <Route
+        path="/meetings/:meetingId/location/votes"
+        element={
+          <MeetingGuard>
+            <Outlet />
+          </MeetingGuard>
+        }
+      >
         <Route index element={<DepartureListPage />} />
         <Route path="new">
           <Route index element={<DepartureNewPage />} />
