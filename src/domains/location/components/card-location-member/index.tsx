@@ -9,12 +9,14 @@ export interface CardLocationMemberProps
   name: string;
   address: string;
   durationMinutes: number;
+  unreachable?: boolean;
 }
 
 export function CardLocationMember({
   name,
   address,
   durationMinutes,
+  unreachable = false,
   className,
   ...props
 }: CardLocationMemberProps) {
@@ -37,8 +39,10 @@ export function CardLocationMember({
         </span> */}
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        <span className="text-k-900 text-t2">
-          {formatDuration(durationMinutes)}
+        <span
+          className={unreachable ? "text-b4 text-k-400" : "text-k-900 text-t2"}
+        >
+          {unreachable ? "경로 없음" : formatDuration(durationMinutes)}
         </span>
         <ChevronRightIcon className="size-6 shrink-0 text-k-400" />
       </div>
