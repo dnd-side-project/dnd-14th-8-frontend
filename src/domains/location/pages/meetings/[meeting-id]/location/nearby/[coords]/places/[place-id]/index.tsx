@@ -135,6 +135,7 @@ export function PlaceDetailPage() {
 
           navigate(
             `/meetings/${meetingId}/location/nearby/${stationCoordsPath}?${next.toString()}`,
+            { replace: true },
           );
         }}
       />
@@ -207,6 +208,7 @@ export function PlaceDetailPage() {
                 onClick={() =>
                   navigate(
                     `/meetings/${meetingId}/location/nearby/${coordsPath}?${searchParams.toString()}`,
+                    { replace: true },
                   )
                 }
               >
