@@ -5,11 +5,16 @@ import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
+import {
+  isWithinServiceArea,
+  OUT_OF_SERVICE_AREA_MESSAGE,
+} from "@/domains/location/utils/service-area";
 import { SearchIcon, TargetIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { TextField } from "@/shared/components/text-field";
+import { toast } from "@/shared/components/toast";
 
 interface VoteSearchLocationState {
   address?: string;
@@ -56,6 +61,11 @@ export function DepartureNewSearchPage() {
   useEffect(() => {
     if (!currentAddress) return;
 
+    if (currentCoords && !isWithinServiceArea(...currentCoords)) {
+      toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
+      return;
+    }
+
     navigate("..", {
       state: {
         ...location.state,
@@ -101,15 +111,21 @@ export function DepartureNewSearchPage() {
                 text={item.title}
                 description={item.roadAddress || item.address}
                 highlight={keyword}
-                onClick={() =>
+                onClick={() => {
+                  const lat = Number(item.y);
+                  const lng = Number(item.x);
+                  if (!isWithinServiceArea(lat, lng)) {
+                    toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
+                    return;
+                  }
                   navigate("..", {
                     state: {
                       ...location.state,
                       address: item.roadAddress || item.address,
-                      coords: [Number(item.y), Number(item.x)],
+                      coords: [lat, lng],
                     },
-                  })
-                }
+                  });
+                }}
               />
             ))}
 

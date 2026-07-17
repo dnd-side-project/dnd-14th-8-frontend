@@ -17,6 +17,17 @@ interface MidpointInsufficientDepartureData {
   totalCount?: number;
 }
 
+export interface MidpointQueryData
+  extends Omit<
+    MidpointRecommendationResponse,
+    "registeredCount" | "totalCount"
+  > {
+  /** 무게중심 반경 내 지하철역이 없어 추천 불가 (E417) */
+  noNearbyStations?: boolean;
+  registeredCount?: number;
+  totalCount?: number;
+}
+
 function normalizeMidpointResponse(
   response: MidpointRecommendationResponse,
 ): MidpointRecommendationResponse {
@@ -46,7 +57,7 @@ export function useGetMidpointRecommendations({
   departureTime,
 }: GetMidpointRecommendationsParams) {
   return useQuery({
-    queryFn: async () => {
+    queryFn: async (): Promise<MidpointQueryData> => {
       try {
         const { data } = await getMidpointRecommendations({
           meetingId,
@@ -55,6 +66,19 @@ export function useGetMidpointRecommendations({
 
         return normalizeMidpointResponse(data.data);
       } catch (error) {
+        // E417: 출발지들의 무게중심 반경 내 지하철역이 없음 (서로 너무 멀리 떨어진 경우)
+        if (
+          axios.isAxiosError<ApiResponse<unknown>>(error) &&
+          error.response?.data?.code === "E417"
+        ) {
+          return {
+            centerPoint: DEFAULT_CENTER,
+            departureTime,
+            recommendations: [],
+            noNearbyStations: true,
+          };
+        }
+
         if (
           axios.isAxiosError<ApiResponse<MidpointInsufficientDepartureData>>(
             error,

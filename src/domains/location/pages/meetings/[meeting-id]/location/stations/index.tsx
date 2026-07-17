@@ -281,6 +281,7 @@ export function LocationMainPage() {
                     name={locationVote.participantName}
                     address={route.departureAddress}
                     durationMinutes={route.transitDuration}
+                    unreachable={route.transitReachable === false}
                     onClick={() =>
                       navigate(
                         `/meetings/${meetingId}/location/stations/${selectedStation.stationId}/participants/${route.participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${ROUTE_TAB_VALUES.transit}`,
@@ -290,6 +291,14 @@ export function LocationMainPage() {
                 );
               })}
             </div>
+          </div>
+        ) : midpoint?.noNearbyStations ? (
+          <div className="flex min-h-full flex-col px-5 pb-[106px]">
+            <PlaceholderContent
+              graphic={<PlaceholderGraphic className="h-[90px] w-[104px]" />}
+              title="중간지점을 찾지 못했어요"
+              description="출발지들이 서로 너무 멀리 떨어져 있어요. 출발지를 다시 확인해주세요"
+            />
           </div>
         ) : (
           <div className="flex min-h-full flex-col px-5 pb-[106px]">

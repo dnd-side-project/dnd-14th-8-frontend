@@ -51,6 +51,11 @@ export function useGetPersonalRoute(params: GetPersonalRouteParams) {
           return null;
         }
 
+        // E428: 출발지에서 해당 역까지 이동 경로 없음 (독도 등 도달 불가 출발지)
+        if (axios.isAxiosError(error) && apiError?.code === "E428") {
+          return null;
+        }
+
         throw error;
       }
     },

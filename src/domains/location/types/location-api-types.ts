@@ -34,9 +34,13 @@ export interface RouteDto {
   departureName: string;
   drivingDistance: number;
   drivingDuration: number;
+  /** false면 drivingDuration은 999 고정값 */
+  drivingReachable?: boolean;
   participantId: number;
   transitDistance: number;
   transitDuration: number;
+  /** false면 transitDuration은 999 고정값 */
+  transitReachable?: boolean;
 }
 
 export interface StationRecommendationDto {
