@@ -132,6 +132,7 @@ export function RouteDetailPage() {
         onStationClick={(station) => {
           navigate(
             `/meetings/${meetingId}/location/stations/${station.stationId}/participants/${participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${activeTab}`,
+            { replace: true },
           );
         }}
       />
@@ -188,6 +189,7 @@ export function RouteDetailPage() {
                   onClick={() =>
                     navigate(
                       `/meetings/${meetingId}/location/stations/${station.stationId}/participants/${participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${activeTab}`,
+                      { replace: true },
                     )
                   }
                 >
@@ -213,7 +215,7 @@ export function RouteDetailPage() {
                     ? ROUTE_TAB_VALUES.driving
                     : ROUTE_TAB_VALUES.transit,
                 );
-                setSearchParams(next);
+                setSearchParams(next, { replace: true });
               }}
             />
 
@@ -259,6 +261,7 @@ export function RouteDetailPage() {
               onClick={() =>
                 navigate(
                   `/meetings/${meetingId}/location/stations?${LOCATION_QUERY_PARAMS.stationId}=${personalRoute.station.stationId}`,
+                  { replace: true },
                 )
               }
             >
@@ -275,6 +278,7 @@ export function RouteDetailPage() {
               onClick={() =>
                 navigate(
                   `/meetings/${meetingId}/location/stations?${LOCATION_QUERY_PARAMS.stationId}=${stationId}`,
+                  { replace: true },
                 )
               }
             >
