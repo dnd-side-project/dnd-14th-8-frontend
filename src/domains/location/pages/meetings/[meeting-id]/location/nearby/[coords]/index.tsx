@@ -161,6 +161,7 @@ export function NearbySearchPage() {
 
           navigate(
             `/meetings/${meetingId}/location/nearby/${stationCoordsPath}?${next.toString()}`,
+            { replace: true },
           );
         }}
       />
@@ -189,7 +190,7 @@ export function NearbySearchPage() {
           latitude={place.latitude}
           longitude={place.longitude}
           onClick={() =>
-            window.location.assign(
+            navigate(
               `/meetings/${meetingId}/location/nearby/${normalizedCoords}/places/${place.id}?${searchParams.toString()}`,
             )
           }
@@ -220,7 +221,7 @@ export function NearbySearchPage() {
                     LOCATION_QUERY_PARAMS.nearbyCategory,
                     categoryPlaces.category,
                   );
-                  setSearchParams(next);
+                  setSearchParams(next, { replace: true });
                 }}
               >
                 {categoryPlaces.category}
@@ -237,7 +238,7 @@ export function NearbySearchPage() {
                 isOpen={place.isOpen}
                 businessStatusMessage={place.businessStatusMessage}
                 onClick={() =>
-                  window.location.assign(
+                  navigate(
                     `/meetings/${meetingId}/location/nearby/${normalizedCoords}/places/${place.id}?${searchParams.toString()}`,
                   )
                 }
