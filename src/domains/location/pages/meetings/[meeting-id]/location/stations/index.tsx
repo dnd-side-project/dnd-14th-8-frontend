@@ -147,7 +147,7 @@ export function LocationMainPage() {
   const handleStationClick = (stationId: number) => {
     const next = new URLSearchParams(searchParams);
     next.set(LOCATION_QUERY_PARAMS.stationId, String(stationId));
-    setSearchParams(next);
+    setSearchParams(next, { replace: true });
   };
 
   const handleMoveNearby = () => {
@@ -158,7 +158,7 @@ export function LocationMainPage() {
       longitude: selectedStation.longitude,
     });
 
-    window.location.assign(
+    navigate(
       `/meetings/${meetingId}/location/nearby/${coordsPath}?${LOCATION_QUERY_PARAMS.stationId}=${selectedStation.stationId}`,
     );
   };
