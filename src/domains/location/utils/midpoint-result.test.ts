@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
+import type {
+  LocationVote,
+  StationRecommendationDto,
+} from "@/domains/location/types/location-api-types";
 import { isNearbyDepartureResult } from "@/domains/location/utils/midpoint-result";
 
 function createRecommendation(
@@ -42,6 +45,17 @@ function createRecommendation(
   };
 }
 
+function createDeparture(overrides: Partial<LocationVote>): LocationVote {
+  return {
+    departureLat: 37.5,
+    departureLng: 127,
+    departureLocation: "서울시",
+    locationVoteId: 1,
+    participantName: "참가자A",
+    ...overrides,
+  };
+}
+
 describe("isNearbyDepartureResult", () => {
   it("상위 추천 후보들의 평균 시간이 5분 이하 차이고 1순위 모든 경로가 15분 이하면 true를 반환한다", () => {
     const recommendations = [
@@ -51,6 +65,31 @@ describe("isNearbyDepartureResult", () => {
     ];
 
     expect(isNearbyDepartureResult(recommendations)).toBe(true);
+  });
+
+  it("출발지가 가까우면 추천 후보 간 평균 시간이 벌어져도 true를 반환한다", () => {
+    const recommendations = [
+      createRecommendation({ avgTransitDuration: 6.5, rank: 1 }),
+      createRecommendation({ avgTransitDuration: 9, rank: 2, stationId: 2 }),
+      createRecommendation({ avgTransitDuration: 19, rank: 3, stationId: 3 }),
+    ];
+    const departures = [
+      createDeparture({
+        departureLat: 37.5727,
+        departureLng: 127.0164,
+        departureLocation: "동묘앞역",
+        locationVoteId: 1,
+      }),
+      createDeparture({
+        departureLat: 37.5714,
+        departureLng: 127.0095,
+        departureLocation: "동대문역",
+        locationVoteId: 2,
+        participantName: "참가자B",
+      }),
+    ];
+
+    expect(isNearbyDepartureResult(recommendations, departures)).toBe(true);
   });
 
   it("추천 후보가 하나뿐이면 false를 반환한다", () => {
@@ -130,12 +169,21 @@ describe("isNearbyDepartureResult", () => {
     expect(isNearbyDepartureResult(recommendations)).toBe(false);
   });
 
-  it("추천 후보 간 평균 시간이 5분을 초과하면 false를 반환한다", () => {
+  it("출발지가 멀리 떨어져 있으면 false를 반환한다", () => {
     const recommendations = [
       createRecommendation({ avgTransitDuration: 8, rank: 1 }),
       createRecommendation({ avgTransitDuration: 14, rank: 2, stationId: 2 }),
     ];
+    const departures = [
+      createDeparture({ departureLat: 37.5, departureLng: 127 }),
+      createDeparture({
+        departureLat: 37.65,
+        departureLng: 126.77,
+        locationVoteId: 2,
+        participantName: "참가자B",
+      }),
+    ];
 
-    expect(isNearbyDepartureResult(recommendations)).toBe(false);
+    expect(isNearbyDepartureResult(recommendations, departures)).toBe(false);
   });
 });

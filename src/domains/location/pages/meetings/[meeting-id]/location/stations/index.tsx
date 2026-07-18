@@ -153,7 +153,8 @@ export function LocationMainPage() {
   const hasEnoughDepartures = registeredCount >= 2;
   const isNearbyDepartures =
     midpoint?.resultType === "NEARBY_DEPARTURES" ||
-    (!midpoint?.resultType && isNearbyDepartureResult(recommendations));
+    (!midpoint?.resultType &&
+      isNearbyDepartureResult(recommendations, departures ?? []));
 
   const handleStationClick = (stationId: number) => {
     const next = new URLSearchParams(searchParams);
