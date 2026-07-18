@@ -6,6 +6,8 @@ export interface CreateLocationVoteRequest {
   departureLocation: string;
   localStorageKey?: string;
   meetingId: string;
+  /** 출발지를 연결할 기존 참여자 ID (대리 추가 시 지정) */
+  participantId?: number;
   participantName: string;
 }
 
