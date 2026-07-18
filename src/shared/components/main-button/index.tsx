@@ -6,15 +6,25 @@ export interface MainButtonProps {
   description?: string;
   character?: ReactNode;
   characterClassName?: string;
+  characterMotion?: "float" | "sway";
   className?: string;
   onClick?: () => void;
 }
+
+const characterMotionClassNames: Record<
+  NonNullable<MainButtonProps["characterMotion"]>,
+  string
+> = {
+  float: "animate-main-character-float",
+  sway: "animate-main-character-sway",
+};
 
 export function MainButton({
   title,
   description,
   character,
   characterClassName,
+  characterMotion,
   className,
   onClick,
 }: MainButtonProps) {
@@ -24,7 +34,7 @@ export function MainButton({
       onClick={onClick}
       className={cn(
         "relative h-[160px] w-full cursor-pointer rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
-        "flex items-center justify-between overflow-hidden",
+        "group flex items-center justify-between overflow-hidden",
         className,
       )}
     >
@@ -34,7 +44,13 @@ export function MainButton({
       </div>
 
       {character && (
-        <div className={cn("absolute shrink-0 leading-0", characterClassName)}>
+        <div
+          className={cn(
+            "absolute shrink-0 leading-0",
+            characterMotion && characterMotionClassNames[characterMotion],
+            characterClassName,
+          )}
+        >
           {character}
         </div>
       )}

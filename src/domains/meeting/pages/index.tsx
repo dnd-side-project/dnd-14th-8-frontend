@@ -27,6 +27,7 @@ export function LandingPage() {
             title="일정 조율하기"
             description={"쉽고 빠르게 일정을\n조율하세요!"}
             character={<LandingScheduleCharacter />}
+            characterMotion="float"
             characterClassName="right-[-60px] bottom-[-90px]"
             onClick={() => navigate("/new/schedule")}
           />
@@ -36,6 +37,7 @@ export function LandingPage() {
             title="중간 지점 찾기"
             description={"공평한 중간지점을\n찾아보세요!"}
             character={<LandingMidpointCharacter />}
+            characterMotion="sway"
             characterClassName="right-[-60px] bottom-[-115px]"
             onClick={() => navigate("/new/location")}
           />
