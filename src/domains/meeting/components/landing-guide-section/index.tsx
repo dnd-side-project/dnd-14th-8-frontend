@@ -92,6 +92,7 @@ export function LandingGuideSection() {
                     "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-b2 text-k-5",
                     feature.badgeClassName,
                   )}
+                  aria-hidden="true"
                 >
                   {index + 1}
                 </span>
