@@ -29,15 +29,47 @@ export interface MidpointQueryData
   totalCount?: number;
 }
 
-function normalizeMidpointResponse(
+function getPhysicalStationKey(
+  recommendation: MidpointRecommendationResponse["recommendations"][number],
+) {
+  return [
+    recommendation.stationName,
+    recommendation.latitude,
+    recommendation.longitude,
+  ].join(":");
+}
+
+function dedupeRecommendations(
+  recommendations: MidpointRecommendationResponse["recommendations"],
+) {
+  const seenStationIds = new Set<number>();
+  const seenPhysicalStations = new Set<string>();
+
+  return recommendations.filter((recommendation) => {
+    const physicalStationKey = getPhysicalStationKey(recommendation);
+    if (
+      seenStationIds.has(recommendation.stationId) ||
+      seenPhysicalStations.has(physicalStationKey)
+    ) {
+      return false;
+    }
+
+    seenStationIds.add(recommendation.stationId);
+    seenPhysicalStations.add(physicalStationKey);
+    return true;
+  });
+}
+
+export function normalizeMidpointResponse(
   response: MidpointRecommendationResponse,
 ): MidpointRecommendationResponse {
-  const registeredCount =
-    response.registeredCount ?? response.recommendations.length;
+  const recommendations = dedupeRecommendations(response.recommendations);
+  const registeredCount = response.registeredCount ?? recommendations.length;
   const totalCount = response.totalCount ?? registeredCount;
 
   return {
     ...response,
+    recommendations,
     registeredCount,
     totalCount,
   };
