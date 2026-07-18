@@ -22,19 +22,30 @@ export function BottomActionBarWithButtonAndShare({
   tone,
   onClick,
   onShare,
+  disabled,
   children,
   className,
-  buttonVariant = "black",
+  buttonVariant = "white",
 }: BottomActionBarWithButtonAndShareProps) {
   return (
     <BottomActionBar
       tone={tone}
       className={cn("flex items-center gap-2", className)}
     >
-      <ShareIconButton onClick={onShare} />
+      <IconButton
+        aria-label="공유하기"
+        background="square"
+        backgroundSize="lg"
+        icon={ShareIcon}
+        iconSize="xl"
+        onClick={onShare}
+        size="2xl"
+        variant="primary"
+      />
       <ButtonBottom
+        disabled={disabled}
         onClick={onClick}
-        className="w-full flex-1"
+        className="min-w-0 flex-1 px-4"
         variant={buttonVariant}
       >
         {children}
@@ -42,17 +53,3 @@ export function BottomActionBarWithButtonAndShare({
     </BottomActionBar>
   );
 }
-
-const ShareIconButton = ({ onClick }: { onClick: () => void }) => {
-  return (
-    <IconButton
-      icon={ShareIcon}
-      size="2xl"
-      background="square"
-      backgroundSize="lg"
-      iconSize="xl"
-      variant="dark"
-      onClick={onClick}
-    />
-  );
-};

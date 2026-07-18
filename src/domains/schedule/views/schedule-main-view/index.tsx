@@ -42,18 +42,16 @@ export function ScheduleMainView({
       return {
         text: "장소 정하러 가기",
         action: onGoToLocation ?? onVoteAction,
-        variant: "blue" as const,
       };
     }
     // 그 외
     return {
       text: hasExistingVote ? "일정 수정하기" : "일정 추가하기",
       action: onVoteAction,
-      variant: "black" as const,
     };
   };
 
-  const { text, action, variant } = getButtonConfig();
+  const { text, action } = getButtonConfig();
 
   return (
     <div
@@ -84,11 +82,7 @@ export function ScheduleMainView({
 
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
-      <BottomActionBarWithButtonAndShare
-        onClick={action}
-        onShare={share}
-        buttonVariant={variant}
-      >
+      <BottomActionBarWithButtonAndShare onClick={action} onShare={share}>
         {text}
       </BottomActionBarWithButtonAndShare>
     </div>
