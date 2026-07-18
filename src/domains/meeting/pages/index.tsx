@@ -4,6 +4,8 @@ import {
   LandingScheduleCharacter,
 } from "@/assets/characters";
 import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
+import { LandingGuideSection } from "@/domains/meeting/components/landing-guide-section";
+import { ChevronDownIcon } from "@/shared/components/icons";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
@@ -12,7 +14,7 @@ export function LandingPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pt-6">
+      <section className="flex min-h-dvh flex-col px-5 pt-6 pb-6">
         <div className="mb-15 flex flex-col items-center">
           <MoyeorakLogo />
           <span className="text-b1 text-gray-750">
@@ -38,7 +40,22 @@ export function LandingPage() {
             onClick={() => navigate("/new/location")}
           />
         </div>
+
+        <button
+          type="button"
+          className="mt-auto flex cursor-pointer flex-col items-center gap-1 pt-10 text-b2 text-gray-750"
+          onClick={() =>
+            document
+              .getElementById("landing-guide")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+        >
+          이용방법 보기
+          <ChevronDownIcon />
+        </button>
       </section>
+
+      <LandingGuideSection />
     </MobileLayout>
   );
 }
