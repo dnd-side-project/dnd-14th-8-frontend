@@ -10,6 +10,10 @@ export interface UpdateMeetingRequest {
   participantCount?: number;
 }
 
+export interface LandingStatsResponse {
+  todayCreatedMeetingCount: number;
+}
+
 export interface ScheduleParticipant {
   name: string;
   votedDates: string[];

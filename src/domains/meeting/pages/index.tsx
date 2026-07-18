@@ -5,12 +5,15 @@ import {
 } from "@/assets/characters";
 import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
 import { LandingGuideSection } from "@/domains/meeting/components/landing-guide-section";
+import { LandingStatsBadge } from "@/domains/meeting/components/landing-stats-badge";
+import { useMeetingStatsQuery } from "@/domains/meeting/hooks/use-meeting-stats-query";
 import { ChevronDownIcon } from "@/shared/components/icons";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const { data: meetingStats } = useMeetingStatsQuery();
 
   return (
     <MobileLayout>
@@ -20,6 +23,9 @@ export function LandingPage() {
           <span className="text-b1 text-gray-750">
             모임을 더 즐겁게, 효율적으로 시작해요
           </span>
+          <LandingStatsBadge
+            todayCreatedMeetingCount={meetingStats?.todayCreatedMeetingCount}
+          />
         </div>
         <div className="flex flex-col gap-4">
           <MainButton
