@@ -26,7 +26,7 @@ import {
   formatDepartureDateTime,
   formatDuration,
 } from "@/domains/location/utils/format";
-import { isNearbyDepartureResult } from "@/domains/location/utils/midpoint-result";
+import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
 import {
@@ -151,10 +151,11 @@ export function LocationMainPage() {
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
   const hasEnoughDepartures = registeredCount >= 2;
-  const isNearbyDepartures =
-    midpoint?.resultType === "NEARBY_DEPARTURES" ||
-    (!midpoint?.resultType &&
-      isNearbyDepartureResult(recommendations, departures ?? []));
+  const isNearbyDepartures = shouldShowNearbyDepartureNote({
+    resultType: midpoint?.resultType,
+    recommendations,
+    departures: departures ?? [],
+  });
 
   const handleStationClick = (stationId: number) => {
     const next = new URLSearchParams(searchParams);

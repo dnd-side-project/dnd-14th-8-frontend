@@ -1,5 +1,6 @@
 import type {
   LocationVote,
+  MidpointResultType,
   StationRecommendationDto,
 } from "@/domains/location/types/location-api-types";
 
@@ -12,6 +13,10 @@ export function isNearbyDepartureResult(
   departures: LocationVote[] = [],
 ) {
   if (recommendations.length === 0) return false;
+
+  if (departures.length >= 2) {
+    return areDeparturesClose(departures);
+  }
 
   const sorted = [...recommendations].sort((a, b) => a.rank - b.rank);
   const topRecommendations = sorted.slice(0, 3);
@@ -26,10 +31,6 @@ export function isNearbyDepartureResult(
 
   if (!allRoutesShort) return false;
 
-  if (departures.length >= 2) {
-    return areDeparturesClose(departures);
-  }
-
   if (recommendations.length < 2) return false;
 
   const avgDurations = topRecommendations.map(
@@ -38,6 +39,21 @@ export function isNearbyDepartureResult(
   const avgDurationGap = Math.max(...avgDurations) - Math.min(...avgDurations);
 
   return avgDurationGap <= NEARBY_MAX_AVG_DURATION_GAP_MINUTES;
+}
+
+export function shouldShowNearbyDepartureNote({
+  resultType,
+  recommendations,
+  departures,
+}: {
+  resultType?: MidpointResultType;
+  recommendations: StationRecommendationDto[];
+  departures: LocationVote[];
+}) {
+  return (
+    resultType === "NEARBY_DEPARTURES" ||
+    isNearbyDepartureResult(recommendations, departures)
+  );
 }
 
 function areDeparturesClose(departures: LocationVote[]) {

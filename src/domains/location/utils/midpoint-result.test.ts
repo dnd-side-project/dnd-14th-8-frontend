@@ -3,7 +3,10 @@ import type {
   LocationVote,
   StationRecommendationDto,
 } from "@/domains/location/types/location-api-types";
-import { isNearbyDepartureResult } from "@/domains/location/utils/midpoint-result";
+import {
+  isNearbyDepartureResult,
+  shouldShowNearbyDepartureNote,
+} from "@/domains/location/utils/midpoint-result";
 
 function createRecommendation(
   overrides: Partial<StationRecommendationDto>,
@@ -90,6 +93,86 @@ describe("isNearbyDepartureResult", () => {
     ];
 
     expect(isNearbyDepartureResult(recommendations, departures)).toBe(true);
+  });
+
+  it("출발지가 가까우면 1순위 경로 시간이 길어도 true를 반환한다", () => {
+    const recommendations = [
+      createRecommendation({
+        avgTransitDuration: 20,
+        rank: 1,
+        stationName: "홍대입구역",
+        routes: [
+          {
+            departureAddress: "홍대입구역 2호선",
+            departureName: "참가자A",
+            drivingDistance: 500,
+            drivingDuration: 3,
+            drivingReachable: true,
+            participantId: 1,
+            transitDistance: 0,
+            transitDuration: 18,
+            transitReachable: true,
+          },
+          {
+            departureAddress: "홍대입구역 공항철도",
+            departureName: "참가자B",
+            drivingDistance: 500,
+            drivingDuration: 3,
+            drivingReachable: true,
+            participantId: 2,
+            transitDistance: 0,
+            transitDuration: 22,
+            transitReachable: true,
+          },
+        ],
+      }),
+    ];
+    const departures = [
+      createDeparture({
+        departureLat: 37.5572,
+        departureLng: 126.9245,
+        departureLocation: "홍대입구역 2호선",
+        locationVoteId: 1,
+      }),
+      createDeparture({
+        departureLat: 37.557,
+        departureLng: 126.9269,
+        departureLocation: "홍대입구역 공항철도",
+        locationVoteId: 2,
+        participantName: "참가자B",
+      }),
+    ];
+
+    expect(isNearbyDepartureResult(recommendations, departures)).toBe(true);
+  });
+
+  it("백엔드가 NORMAL을 내려도 출발지가 가까우면 안내 표시 대상으로 판단한다", () => {
+    const recommendations = [
+      createRecommendation({ stationName: "홍대입구역" }),
+    ];
+    const departures = [
+      createDeparture({
+        departureLat: 37.5572,
+        departureLng: 126.9245,
+        departureLocation: "홍대입구역 2호선",
+        locationVoteId: 1,
+      }),
+      createDeparture({
+        departureLat: 37.557,
+        departureLng: 126.9269,
+        departureLocation: "홍대입구역 공항철도",
+        locationVoteId: 2,
+        participantName: "참가자B",
+      }),
+    ];
+
+    expect(
+      shouldShowNearbyDepartureNote({
+        resultType: "NORMAL",
+        recommendations,
+        departures,
+      }),
+    ).toBe(true);
   });
 
   it("추천 후보가 하나뿐이면 false를 반환한다", () => {
