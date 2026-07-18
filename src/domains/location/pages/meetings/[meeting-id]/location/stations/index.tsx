@@ -11,6 +11,7 @@ import { CardLocationMember } from "@/domains/location/components/card-location-
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
 import { TextPin } from "@/domains/location/components/text-pin";
+import { LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import {
   LOCATION_QUERY_PARAMS,
   ROUTE_TAB_VALUES,
@@ -72,10 +73,14 @@ export function LocationMainPage() {
   const { mapInst, sheetHeight, setSheetHeight } =
     useOutletContext<MapPageOutletContext>();
 
-  const { data: departures } = useGetDepartures({ meetingId });
+  const { data: departures } = useGetDepartures({
+    meetingId,
+    ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
+  });
   const { data: midpoint, isLoading: isMidpointLoading } =
     useGetMidpointRecommendations({
       meetingId,
+      ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
     });
 
   const recommendations = midpoint?.recommendations ?? [];
