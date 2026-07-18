@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { DepartureItem } from "@/domains/location/components/departure-item";
+import { LOCATION_DEPARTURE_LIST_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import { useDeleteDeparture } from "@/domains/location/hooks/use-delete-departure";
 import {
   getDeparturesQueryKey,
@@ -25,7 +26,10 @@ export function DepartureListPage() {
   >(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { data: departures, isLoading } = useGetDepartures({ meetingId });
+  const { data: departures, isLoading } = useGetDepartures({
+    meetingId,
+    ...LOCATION_DEPARTURE_LIST_LIVE_QUERY_OPTIONS,
+  });
   const { mutate: deleteDeparture } = useDeleteDeparture();
 
   const handleGoToResult = () => {

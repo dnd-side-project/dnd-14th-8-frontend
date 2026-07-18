@@ -4,6 +4,7 @@ import {
   type GetMidpointRecommendationsParams,
   getMidpointRecommendations,
 } from "@/domains/location/apis/location-api";
+import type { LocationLiveQueryOptions } from "@/domains/location/constants/live-query-options";
 import type { MidpointRecommendationResponse } from "@/domains/location/types/location-api-types";
 import type { ApiResponse } from "@/shared/utils/axios";
 
@@ -55,7 +56,8 @@ export function getMidpointRecommendationsQueryKey({
 export function useGetMidpointRecommendations({
   meetingId,
   departureTime,
-}: GetMidpointRecommendationsParams) {
+  ...liveQueryOptions
+}: GetMidpointRecommendationsParams & LocationLiveQueryOptions) {
   return useQuery({
     queryFn: async (): Promise<MidpointQueryData> => {
       try {
@@ -109,5 +111,6 @@ export function useGetMidpointRecommendations({
     }),
     staleTime: 30 * 1000,
     enabled: !!meetingId,
+    ...liveQueryOptions,
   });
 }

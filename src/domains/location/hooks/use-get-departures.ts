@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getDepartures } from "@/domains/location/apis/location-api";
+import type { LocationLiveQueryOptions } from "@/domains/location/constants/live-query-options";
 import { getApiErrorShape } from "@/shared/utils/api-error";
 
 export function getDeparturesQueryKey({ meetingId }: { meetingId: string }) {
   return ["locations", "vote", meetingId];
 }
 
-export function useGetDepartures({ meetingId }: { meetingId: string }) {
+export function useGetDepartures({
+  meetingId,
+  ...liveQueryOptions
+}: { meetingId: string } & LocationLiveQueryOptions) {
   return useQuery({
     queryKey: getDeparturesQueryKey({ meetingId }),
     queryFn: async () => {
@@ -31,5 +35,6 @@ export function useGetDepartures({ meetingId }: { meetingId: string }) {
     },
     staleTime: 30 * 1000,
     enabled: !!meetingId,
+    ...liveQueryOptions,
   });
 }
