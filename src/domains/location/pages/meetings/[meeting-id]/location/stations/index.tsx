@@ -9,6 +9,7 @@ import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
 import { MapMarker } from "@/domains/location/components/map-marker";
+import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
 import { TextPin } from "@/domains/location/components/text-pin";
 import {
   LOCATION_QUERY_PARAMS,
@@ -175,13 +176,7 @@ export function LocationMainPage() {
   return (
     <>
       {selectedStation && (
-        <button
-          type="button"
-          className="absolute top-3 right-5 z-30 rounded-full bg-k-5 px-3 py-2 text-b4 text-k-700 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]"
-          onClick={handleMoveNearby}
-        >
-          주변 <span className="text-primary-main underline">둘러보기</span>
-        </button>
+        <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
 
       {recommendations.map((station) => (
