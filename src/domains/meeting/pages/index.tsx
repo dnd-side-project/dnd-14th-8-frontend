@@ -64,6 +64,17 @@ export function LandingPage() {
       </section>
 
       <LandingGuideSection />
+
+      <footer className="px-5 pb-8 text-center text-b2 text-k-500">
+        서비스 이용 중 문의나 오류가 있다면{" "}
+        <a
+          href="mailto:moyeorak.team@gmail.com"
+          className="text-k-700 underline underline-offset-2"
+        >
+          moyeorak.team@gmail.com
+        </a>
+        으로 알려주세요.
+      </footer>
     </MobileLayout>
   );
 }
