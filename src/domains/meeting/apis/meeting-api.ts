@@ -2,6 +2,7 @@ import type {
   CreateMeetingRequest,
   GetMeetingScheduleResponse,
   GetMeetingScheduleVoteResultResponse,
+  LandingStatsResponse,
   UpdateMeetingRequest,
 } from "@/domains/meeting/types/meeting-api-types";
 import { type ApiResponse, api } from "@/shared/utils/axios";
@@ -20,6 +21,10 @@ export function createMeeting(payload: CreateMeetingRequest) {
 
 export function updateMeeting(payload: UpdateMeetingRequest) {
   return api.put<ApiResponse<void>>("/api/meetings", payload);
+}
+
+export function getMeetingStats() {
+  return api.get<ApiResponse<LandingStatsResponse>>("/api/meetings/stats");
 }
 
 export function getMeetingSchedules({ meetingId }: GetMeetingSchedulesParams) {
