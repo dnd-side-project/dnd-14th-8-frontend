@@ -53,6 +53,17 @@ export const Playground: Story = {
           >
             오류
           </ChipButton>
+          <ChipButton
+            size="lg"
+            variant="outlined"
+            onClick={() =>
+              toast.error("현재는 수도권 내 출발지만 선택할 수 있어요.", {
+                toasterId,
+              })
+            }
+          >
+            긴 오류
+          </ChipButton>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 px-5 py-3">

@@ -9,7 +9,7 @@ const SERVICE_AREA = {
 };
 
 export const OUT_OF_SERVICE_AREA_MESSAGE =
-  "아직 수도권에서만 이용할 수 있어요. 수도권 내 출발지를 선택해주세요";
+  "현재는 수도권 내 출발지만 선택할 수 있어요.";
 
 export const OUT_OF_SERVICE_AREA_ERROR_CODE = "E427";
 
