@@ -9,6 +9,7 @@ import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
 import { MapMarker } from "@/domains/location/components/map-marker";
+import { NearbyDeparturesNote } from "@/domains/location/components/nearby-departures-note";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
 import { TextPin } from "@/domains/location/components/text-pin";
 import { LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
@@ -238,32 +239,17 @@ export function LocationMainPage() {
               ))}
             </div>
 
-            {isNearbyDepartures && (
-              <div className="rounded-lg border border-primary-main/20 bg-p-50 px-4 py-3">
-                <p className="text-primary-main text-t2">
-                  이미 가까운 위치에 있어요
-                </p>
-                <p className="mt-1 text-b4 text-k-600">
-                  이동 시간이 거의 비슷해서 편한 역을 골라도 괜찮아요.
-                </p>
-              </div>
-            )}
-
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-h2 text-k-800">
                   {selectedStation.stationName}
                 </p>
-                {isNearbyDepartures ? (
-                  <p className="mt-0.5 text-h1 text-k-900">가까운 후보예요</p>
-                ) : (
-                  <p className="mt-0.5 text-h1 text-k-900">
-                    평균{" "}
-                    {formatDuration(
-                      Math.round(selectedStation.avgTransitDuration),
-                    )}
-                  </p>
-                )}
+                <p className="mt-0.5 text-h1 text-k-900">
+                  평균{" "}
+                  {formatDuration(
+                    Math.round(selectedStation.avgTransitDuration),
+                  )}
+                </p>
               </div>
 
               <button
@@ -276,10 +262,11 @@ export function LocationMainPage() {
             </div>
 
             <p className="text-b4 text-k-400">
-              {isNearbyDepartures
-                ? "출발지가 서로 가까워 이동 시간이 거의 비슷해요"
-                : `${selectedStation.line} · 중심에서 ${selectedStation.distanceFromCenter}m`}
+              {selectedStation.line} · 중심에서{" "}
+              {selectedStation.distanceFromCenter}m
             </p>
+
+            {isNearbyDepartures && <NearbyDeparturesNote />}
 
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
