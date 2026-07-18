@@ -57,9 +57,12 @@ export interface StationRecommendationDto {
   stationName: string;
 }
 
+export type MidpointResultType = "NORMAL" | "NEARBY_DEPARTURES";
+
 export interface MidpointRecommendationResponse {
   centerPoint: CenterPointDto;
   departureTime?: string | null;
+  resultType?: MidpointResultType;
   registeredCount: number;
   totalCount: number;
   recommendations: StationRecommendationDto[];

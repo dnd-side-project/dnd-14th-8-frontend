@@ -25,6 +25,7 @@ import {
   formatDepartureDateTime,
   formatDuration,
 } from "@/domains/location/utils/format";
+import { isNearbyDepartureResult } from "@/domains/location/utils/midpoint-result";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
 import {
@@ -149,6 +150,9 @@ export function LocationMainPage() {
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
   const hasEnoughDepartures = registeredCount >= 2;
+  const isNearbyDepartures =
+    midpoint?.resultType === "NEARBY_DEPARTURES" ||
+    (!midpoint?.resultType && isNearbyDepartureResult(recommendations));
 
   const handleStationClick = (stationId: number) => {
     const next = new URLSearchParams(searchParams);
@@ -234,17 +238,32 @@ export function LocationMainPage() {
               ))}
             </div>
 
+            {isNearbyDepartures && (
+              <div className="rounded-lg border border-primary-main/20 bg-p-50 px-4 py-3">
+                <p className="text-primary-main text-t2">
+                  이미 가까운 위치에 있어요
+                </p>
+                <p className="mt-1 text-b4 text-k-600">
+                  이동 시간이 거의 비슷해서 편한 역을 골라도 괜찮아요.
+                </p>
+              </div>
+            )}
+
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-h2 text-k-800">
                   {selectedStation.stationName}
                 </p>
-                <p className="mt-0.5 text-h1 text-k-900">
-                  평균{" "}
-                  {formatDuration(
-                    Math.round(selectedStation.avgTransitDuration),
-                  )}
-                </p>
+                {isNearbyDepartures ? (
+                  <p className="mt-0.5 text-h1 text-k-900">가까운 후보예요</p>
+                ) : (
+                  <p className="mt-0.5 text-h1 text-k-900">
+                    평균{" "}
+                    {formatDuration(
+                      Math.round(selectedStation.avgTransitDuration),
+                    )}
+                  </p>
+                )}
               </div>
 
               <button
@@ -257,8 +276,9 @@ export function LocationMainPage() {
             </div>
 
             <p className="text-b4 text-k-400">
-              {selectedStation.line} · 중심에서{" "}
-              {selectedStation.distanceFromCenter}m
+              {isNearbyDepartures
+                ? "출발지가 서로 가까워 이동 시간이 거의 비슷해요"
+                : `${selectedStation.line} · 중심에서 ${selectedStation.distanceFromCenter}m`}
             </p>
 
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
