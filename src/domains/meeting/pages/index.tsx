@@ -6,7 +6,9 @@ import {
 import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
 import { LandingGuideSection } from "@/domains/meeting/components/landing-guide-section";
 import { LandingStatsBadge } from "@/domains/meeting/components/landing-stats-badge";
+import { MyMeetingList } from "@/domains/meeting/components/my-meeting-list";
 import { useMeetingStatsQuery } from "@/domains/meeting/hooks/use-meeting-stats-query";
+import { useMyMeetingsQuery } from "@/domains/meeting/hooks/use-my-meetings-query";
 import { ChevronDownIcon } from "@/shared/components/icons";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
@@ -14,6 +16,9 @@ import { MobileLayout } from "@/shared/components/mobile-layout";
 export function LandingPage() {
   const navigate = useNavigate();
   const { data: meetingStats } = useMeetingStatsQuery();
+  const { data: myMeetings = [], isError: isMyMeetingsError } =
+    useMyMeetingsQuery();
+  const visibleMyMeetings = isMyMeetingsError ? [] : myMeetings;
 
   return (
     <MobileLayout>
@@ -48,6 +53,11 @@ export function LandingPage() {
             onClick={() => navigate("/new/location")}
           />
         </div>
+
+        <MyMeetingList
+          meetings={visibleMyMeetings}
+          onSelect={(meetingId) => navigate(`/meetings/${meetingId}/schedule`)}
+        />
 
         <button
           type="button"

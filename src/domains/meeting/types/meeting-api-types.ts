@@ -14,6 +14,14 @@ export interface LandingStatsResponse {
   todayCreatedMeetingCount: number;
 }
 
+export interface MyMeetingResponse {
+  createdAt: string;
+  hostName: string;
+  isHost: boolean;
+  meetingId: string;
+  participantCount: number;
+}
+
 export interface ScheduleParticipant {
   name: string;
   votedDates: string[];
