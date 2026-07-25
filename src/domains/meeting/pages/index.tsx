@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   LandingMidpointCharacter,
@@ -7,18 +8,43 @@ import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
 import { LandingGuideSection } from "@/domains/meeting/components/landing-guide-section";
 import { LandingStatsBadge } from "@/domains/meeting/components/landing-stats-badge";
 import { MyMeetingList } from "@/domains/meeting/components/my-meeting-list";
+import { RecentMeetingFlowDialog } from "@/domains/meeting/components/recent-meeting-flow-dialog";
 import { useMeetingStatsQuery } from "@/domains/meeting/hooks/use-meeting-stats-query";
 import { useMyMeetingsQuery } from "@/domains/meeting/hooks/use-my-meetings-query";
+import type { MyMeetingResponse } from "@/domains/meeting/types/meeting-api-types";
+import { getRecentMeetingNavigationTarget } from "@/domains/meeting/utils/recent-meeting-navigation";
 import { ChevronDownIcon } from "@/shared/components/icons";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const [flowSelectionMeeting, setFlowSelectionMeeting] =
+    useState<MyMeetingResponse | null>(null);
   const { data: meetingStats } = useMeetingStatsQuery();
   const { data: myMeetings = [], isError: isMyMeetingsError } =
     useMyMeetingsQuery();
   const visibleMyMeetings = isMyMeetingsError ? [] : myMeetings;
+
+  const handleSelectRecentMeeting = (meeting: MyMeetingResponse) => {
+    const target = getRecentMeetingNavigationTarget(meeting);
+    if (target) {
+      navigate(target);
+      return;
+    }
+
+    setFlowSelectionMeeting(meeting);
+  };
+
+  const handleGoToSchedule = () => {
+    if (!flowSelectionMeeting) return;
+    navigate(`/meetings/${flowSelectionMeeting.meetingId}/schedule`);
+  };
+
+  const handleGoToLocation = () => {
+    if (!flowSelectionMeeting) return;
+    navigate(`/meetings/${flowSelectionMeeting.meetingId}/location/stations`);
+  };
 
   return (
     <MobileLayout>
@@ -56,7 +82,7 @@ export function LandingPage() {
 
         <MyMeetingList
           meetings={visibleMyMeetings}
-          onSelect={(meetingId) => navigate(`/meetings/${meetingId}/schedule`)}
+          onSelect={handleSelectRecentMeeting}
         />
 
         <button
@@ -74,6 +100,14 @@ export function LandingPage() {
       </section>
 
       <LandingGuideSection />
+
+      <RecentMeetingFlowDialog
+        hostName={flowSelectionMeeting?.hostName ?? ""}
+        isOpen={!!flowSelectionMeeting}
+        onClose={() => setFlowSelectionMeeting(null)}
+        onGoToLocation={handleGoToLocation}
+        onGoToSchedule={handleGoToSchedule}
+      />
 
       <footer className="px-5 pb-8 text-center text-b2 text-k-500">
         서비스 이용 중 문의나 오류가 있다면{" "}

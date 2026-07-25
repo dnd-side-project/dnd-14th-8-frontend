@@ -5,7 +5,7 @@ const RECENT_MEETING_LIMIT = 5;
 
 interface MyMeetingListProps {
   meetings: MyMeetingResponse[];
-  onSelect: (meetingId: string) => void;
+  onSelect: (meeting: MyMeetingResponse) => void;
 }
 
 export function MyMeetingList({ meetings, onSelect }: MyMeetingListProps) {
@@ -25,7 +25,7 @@ export function MyMeetingList({ meetings, onSelect }: MyMeetingListProps) {
             <button
               type="button"
               className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border border-k-100 bg-k-5 px-4 py-3 text-left shadow-[0_2px_6px_0_rgba(22,22,26,0.06)] transition-colors hover:bg-k-10 focus-visible:outline-2 focus-visible:outline-primary-main focus-visible:outline-offset-2"
-              onClick={() => onSelect(meeting.meetingId)}
+              onClick={() => onSelect(meeting)}
             >
               <span className="min-w-0">
                 <span className="block truncate text-k-900 text-t2">

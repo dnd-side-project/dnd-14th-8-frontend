@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import { useCreateMeeting } from "@/domains/meeting/hooks/use-create-meeting";
+import { getCreateMeetingFlow } from "@/domains/meeting/utils/create-meeting-flow";
 import { toast } from "@/shared/components/toast";
 import { getGuestId, setMeetingSession } from "@/shared/utils/auth";
 
@@ -44,6 +45,7 @@ export function useCreateMeetingForm(flow?: string) {
       const localStorageKey = getGuestId();
 
       const response = await createMeetingMutation.mutateAsync({
+        flow: getCreateMeetingFlow(flow),
         localStorageKey,
         participantName: data.participantName,
         participantCount: data.participantCount,
