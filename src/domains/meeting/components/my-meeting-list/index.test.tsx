@@ -31,4 +31,22 @@ describe("MyMeetingList", () => {
 
     expect(markup).toBe("");
   });
+
+  it("renders up to five recent meetings", () => {
+    const meetings = Array.from({ length: 6 }, (_, index) => ({
+      createdAt: `2026-07-${23 - index}T14:10:00`,
+      hostName: `호스트${index + 1}`,
+      isHost: index === 0,
+      meetingId: `meeting-id-${index + 1}`,
+      participantCount: 4,
+    }));
+
+    const markup = renderToStaticMarkup(
+      <MyMeetingList meetings={meetings} onSelect={vi.fn()} />,
+    );
+
+    expect(markup).toContain("호스트1님의 모임");
+    expect(markup).toContain("호스트5님의 모임");
+    expect(markup).not.toContain("호스트6님의 모임");
+  });
 });
