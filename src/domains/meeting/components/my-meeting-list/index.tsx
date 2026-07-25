@@ -1,8 +1,6 @@
 import type { MyMeetingResponse } from "@/domains/meeting/types/meeting-api-types";
 import { ChevronRightIcon } from "@/shared/components/icons";
 
-const RECENT_MEETING_LIMIT = 5;
-
 interface MyMeetingListProps {
   meetings: MyMeetingResponse[];
   onSelect: (meetingId: string) => void;
@@ -20,7 +18,7 @@ export function MyMeetingList({ meetings, onSelect }: MyMeetingListProps) {
       </div>
 
       <ul className="flex flex-col gap-2">
-        {meetings.slice(0, RECENT_MEETING_LIMIT).map((meeting) => (
+        {meetings.map((meeting) => (
           <li key={meeting.meetingId}>
             <button
               type="button"
