@@ -8,6 +8,7 @@ import {
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
+import { InsufficientDeparturesEmptyState } from "@/domains/location/components/insufficient-departures-empty-state";
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { NearbyDeparturesNote } from "@/domains/location/components/nearby-departures-note";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
@@ -26,7 +27,9 @@ import {
   formatDepartureDateTime,
   formatDuration,
 } from "@/domains/location/utils/format";
+import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
+import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
 import {
@@ -79,6 +82,7 @@ export function LocationMainPage() {
     meetingId,
     ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
   });
+  const { data: myInfo } = useGetMyParticipant({ meetingId });
   const { data: midpoint, isLoading: isMidpointLoading } =
     useGetMidpointRecommendations({
       meetingId,
@@ -151,6 +155,15 @@ export function LocationMainPage() {
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
   const hasEnoughDepartures = registeredCount >= 2;
+  const isInsufficientDepartures =
+    !hasRecommendations && !midpoint?.noNearbyStations;
+  const insufficientDepartureContent = isInsufficientDepartures
+    ? getInsufficientDepartureContent({
+        registeredCount,
+        totalCount,
+        hasMyDeparture: myInfo?.locationVoteId != null,
+      })
+    : null;
   const isNearbyDepartures = shouldShowNearbyDepartureNote({
     resultType: midpoint?.resultType,
     recommendations,
@@ -177,6 +190,11 @@ export function LocationMainPage() {
   };
 
   const handleVoteAction = () => {
+    if (insufficientDepartureContent?.primaryAction === "share") {
+      share();
+      return;
+    }
+
     if (hasEnoughDepartures) {
       navigate(`/meetings/${meetingId}/location/votes`);
       return;
@@ -311,10 +329,19 @@ export function LocationMainPage() {
           </div>
         ) : (
           <div className="flex min-h-full flex-col px-5 pb-[106px]">
-            <PlaceholderContent
-              graphic={<PlaceholderGraphic className="h-[90px] w-[104px]" />}
-              title="출발지가 아직 충분하지 않아요"
-              description={`${registeredCount}명 등록됨 · 최소 2명 이상 출발지를 등록하면 중간지점을 추천해드려요`}
+            <InsufficientDeparturesEmptyState
+              content={
+                insufficientDepartureContent ??
+                getInsufficientDepartureContent({
+                  registeredCount,
+                  totalCount,
+                  hasMyDeparture: myInfo?.locationVoteId != null,
+                })
+              }
+              onAddDeparture={() =>
+                navigate(`/meetings/${meetingId}/location/votes/new`)
+              }
+              onShare={share}
             />
           </div>
         )}
@@ -323,8 +350,14 @@ export function LocationMainPage() {
       <BottomActionBarWithButtonAndShare
         onClick={handleVoteAction}
         onShare={share}
+        buttonVariant={insufficientDepartureContent ? "blue" : "white"}
+        showShareButton={insufficientDepartureContent === null}
       >
-        {hasEnoughDepartures ? "출발지 관리하기" : "출발지 추가하기"}
+        {insufficientDepartureContent?.primaryAction === "share"
+          ? "초대 링크 공유하기"
+          : hasEnoughDepartures
+            ? "출발지 관리하기"
+            : "출발지 추가하기"}
       </BottomActionBarWithButtonAndShare>
     </>
   );
