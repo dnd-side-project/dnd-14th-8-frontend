@@ -16,6 +16,7 @@ export interface BottomActionBarWithButtonAndShareProps {
   children?: ReactNode;
   className?: string;
   buttonVariant?: "black" | "blue" | "white";
+  showShareButton?: boolean;
 }
 
 export function BottomActionBarWithButtonAndShare({
@@ -26,22 +27,25 @@ export function BottomActionBarWithButtonAndShare({
   children,
   className,
   buttonVariant = "white",
+  showShareButton = true,
 }: BottomActionBarWithButtonAndShareProps) {
   return (
     <BottomActionBar
       tone={tone}
       className={cn("flex items-center gap-2", className)}
     >
-      <IconButton
-        aria-label="공유하기"
-        background="square"
-        backgroundSize="lg"
-        icon={ShareIcon}
-        iconSize="xl"
-        onClick={onShare}
-        size="2xl"
-        variant="primary"
-      />
+      {showShareButton && (
+        <IconButton
+          aria-label="공유하기"
+          background="square"
+          backgroundSize="lg"
+          icon={ShareIcon}
+          iconSize="xl"
+          onClick={onShare}
+          size="2xl"
+          variant="primary"
+        />
+      )}
       <ButtonBottom
         disabled={disabled}
         onClick={onClick}

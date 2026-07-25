@@ -28,4 +28,19 @@ describe("BottomActionBarWithButtonAndShare", () => {
     expect(markup).toContain("bg-primary-main");
     expect(markup).toContain("border-k-200");
   });
+
+  it("can hide the icon share CTA when sharing is the main labeled action", () => {
+    const markup = renderToStaticMarkup(
+      <BottomActionBarWithButtonAndShare
+        onClick={() => undefined}
+        onShare={() => undefined}
+        showShareButton={false}
+      >
+        초대 링크 공유하기
+      </BottomActionBarWithButtonAndShare>,
+    );
+
+    expect(markup).toContain("초대 링크 공유하기");
+    expect(markup).not.toContain('aria-label="공유하기"');
+  });
 });
