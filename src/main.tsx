@@ -2,6 +2,7 @@ import "@/index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { CustomRoutes } from "@/routes";
+import { InstallPromptProvider } from "@/shared/providers/install-prompt-provider";
 import { ReactRouterProvider } from "@/shared/providers/react-router-provider";
 import { ShareSheetProvider } from "@/shared/providers/share-sheet-provider";
 import { TanstackQueryProvider } from "@/shared/providers/tanstack-query-provider";
@@ -15,7 +16,9 @@ if (rootElement) {
         <ReactRouterProvider>
           <ToastProvider>
             <ShareSheetProvider>
-              <CustomRoutes />
+              <InstallPromptProvider>
+                <CustomRoutes />
+              </InstallPromptProvider>
             </ShareSheetProvider>
           </ToastProvider>
         </ReactRouterProvider>

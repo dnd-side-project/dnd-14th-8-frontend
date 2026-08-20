@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4181ff" />
 
     <!-- Google Tag Manager -->
     <script>
@@ -50,6 +51,16 @@
       content="https://moyeorak.site/static/images/share.png"
     />
 
+    <!-- beforeinstallprompt는 앱 번들이 실행되기 전에 발화할 수 있어 여기서 미리 잡아둔다. -->
+    <script>
+      window.__moyeorakInstallPrompt = null;
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        window.__moyeorakInstallPrompt = event;
+        window.dispatchEvent(new Event("moyeorak:installprompt"));
+      });
+    </script>
+
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
@@ -57,7 +68,6 @@
       name="google-site-verification"
       content="0MBoLHQrm5dhzHH8YWnXyMHLRjlqk9Gx19XLQQL5Yys"
     />
-    <link rel="manifest" href="/manifest.webmanifest" />
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->

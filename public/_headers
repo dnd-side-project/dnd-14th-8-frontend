@@ -1,3 +1,6 @@
+/sw.js
+  Cache-Control: no-cache
+
 https://:project.pages.dev/*
   X-Robots-Tag: noindex
 
