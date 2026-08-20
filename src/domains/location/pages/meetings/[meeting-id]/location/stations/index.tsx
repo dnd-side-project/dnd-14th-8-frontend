@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useNavigate,
   useOutletContext,
@@ -28,6 +28,7 @@ import {
   formatDuration,
 } from "@/domains/location/utils/format";
 import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
+import { getVisibleCenterOffsetY } from "@/domains/location/utils/map-viewport";
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
@@ -68,6 +69,43 @@ function fitMapBounds({
     left: 20,
     right: 20,
   });
+}
+
+/**
+ * 바텀시트가 지도 아래를 덮고 있으므로, 좌표를 컨테이너 정중앙이 아니라
+ * 시트가 비워둔 영역의 한가운데로 보낸다. 그냥 panTo 하면 fitMapBounds가
+ * 준 하단 패딩이 무시되고 선택한 역이 시트 뒤로 숨는다.
+ */
+function panToVisibleCenter({
+  latitude,
+  longitude,
+  mapInst,
+  sheetHeight,
+}: {
+  latitude: number;
+  longitude: number;
+  mapInst: naver.maps.Map;
+  sheetHeight: number;
+}) {
+  const maps = window.naver?.maps;
+  if (!maps) return;
+
+  const target = new maps.LatLng(latitude, longitude);
+  const projection = mapInst.getProjection();
+  const offset = projection.fromCoordToOffset(target);
+
+  mapInst.panTo(
+    projection.fromOffsetToCoord(
+      new maps.Point(
+        offset.x,
+        getVisibleCenterOffsetY({
+          mapHeight: mapInst.getSize().height,
+          sheetHeight,
+          targetOffsetY: offset.y,
+        }),
+      ),
+    ),
+  );
 }
 
 export function LocationMainPage() {
@@ -133,13 +171,26 @@ export function LocationMainPage() {
     fitMapBounds({ mapInst, sheetHeight, points });
   }, [mapInst, sheetHeight, recommendations, departures]);
 
-  useEffect(() => {
-    const maps = window.naver?.maps;
-    if (!mapInst || !selectedStation || !maps) return;
+  /**
+   * 시트를 끄는 동안 sheetHeight가 매 프레임 갱신되므로 deps에 넣지 않는다.
+   * 넣으면 panTo 애니메이션이 프레임마다 다시 시작해 지도가 떨린다.
+   * 시트 드래그로 인한 재프레이밍은 위의 fitMapBounds가 맡는다.
+   */
+  const sheetHeightRef = useRef(sheetHeight);
 
-    mapInst.panTo(
-      new maps.LatLng(selectedStation.latitude, selectedStation.longitude),
-    );
+  useEffect(() => {
+    sheetHeightRef.current = sheetHeight;
+  }, [sheetHeight]);
+
+  useEffect(() => {
+    if (!mapInst || !selectedStation) return;
+
+    panToVisibleCenter({
+      latitude: selectedStation.latitude,
+      longitude: selectedStation.longitude,
+      mapInst,
+      sheetHeight: sheetHeightRef.current,
+    });
   }, [mapInst, selectedStation]);
 
   const routeByParticipantName = useMemo(() => {
