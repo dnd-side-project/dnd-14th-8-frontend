@@ -5,8 +5,11 @@ const meta = {
   title: "domains/location/BottomSheet",
   component: BottomSheet,
   decorators: [
-    (Story) => (
-      <div className="relative mx-auto h-[812px] w-[375px] overflow-hidden bg-k-50">
+    (Story, context) => (
+      <div
+        className="relative mx-auto w-[375px] overflow-hidden bg-k-50"
+        style={{ height: context.parameters.containerHeight ?? 812 }}
+      >
         <div className="flex h-full items-center justify-center text-b4 text-k-400">
           지도 영역
         </div>
@@ -75,4 +78,23 @@ export const Full: Story = {
       </div>
     ),
   },
+};
+
+/**
+ * iPhone SE(667px)에서의 full 스냅. 시안 높이 747px을 그대로 쓰면 뷰포트를
+ * 80px 넘겨 드래그 핸들이 화면 밖으로 밀려났다.
+ */
+export const SmallScreenFull: Story = {
+  args: {
+    defaultSnap: "full",
+    children: (
+      <div className="px-5 py-4">
+        <h2 className="text-k-900 text-t1">작은 화면 Full 상태</h2>
+        <p className="mt-2 text-b4 text-k-500">
+          뷰포트 667px — 핸들이 화면 안에 남아야 한다
+        </p>
+      </div>
+    ),
+  },
+  parameters: { containerHeight: 667 },
 };
