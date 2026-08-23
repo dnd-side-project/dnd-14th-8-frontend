@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { getSheetHeightBySnap } from "@/domains/location/components/bottom-sheet/snap-height";
+import {
+  getNearestSnap,
+  getSheetHeightBySnap,
+} from "@/domains/location/components/bottom-sheet/snap-height";
 
 // 디자인 기준 높이: 콘텐츠 219/494/711 + 핸들 36 = 255/530/747
 const DESIGN_VIEWPORT = 844;
@@ -34,5 +37,23 @@ describe("getSheetHeightBySnap", () => {
 
   it("falls back to the designed height before the viewport is measurable", () => {
     expect(getSheetHeightBySnap("half", 0)).toBe(530);
+  });
+});
+
+describe("getNearestSnap", () => {
+  it("settles on the snap the drag ended closest to", () => {
+    // 844px 기준 스냅 높이는 255/530/743.
+    expect(getNearestSnap(300, DESIGN_VIEWPORT)).toBe("peek");
+    expect(getNearestSnap(600, DESIGN_VIEWPORT)).toBe("half");
+    expect(getNearestSnap(700, DESIGN_VIEWPORT)).toBe("full");
+  });
+
+  it("picks the lower snap when the drag ends exactly between two", () => {
+    // 255와 530의 중간은 392.5. 애매하면 지도를 더 보여주는 쪽으로 내린다.
+    expect(getNearestSnap(392, DESIGN_VIEWPORT)).toBe("peek");
+  });
+
+  it("still settles before the viewport is measurable", () => {
+    expect(getNearestSnap(530, 0)).toBe("half");
   });
 });

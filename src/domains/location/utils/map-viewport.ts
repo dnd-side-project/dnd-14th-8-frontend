@@ -26,3 +26,53 @@ export function getVisibleCenterOffsetY({
 
   return targetOffsetY + sheetHeight / 2;
 }
+
+export interface MapFitPadding {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
+const FIT_TOP_PADDING_PX = 80;
+const FIT_SIDE_PADDING_PX = 20;
+/** 마커가 시트 모서리에 딱 붙지 않도록 두는 여유. */
+const FIT_SHEET_GAP_PX = 20;
+const FIT_MIN_BOTTOM_PADDING_PX = 140;
+/** 이보다 좁은 띠에 억지로 맞추면 마커가 알아볼 수 없게 축소된다. */
+const FIT_MIN_BAND_PX = 120;
+
+/**
+ * fitBounds에 넘길 패딩. 시트가 지도를 거의 다 덮어 맞출 여지가 없으면
+ * null을 돌려주고, 그때는 마지막 프레이밍을 그대로 두는 편이 낫다.
+ */
+export function getMapFitPadding({
+  mapHeight,
+  sheetHeight,
+}: {
+  mapHeight: number;
+  sheetHeight: number;
+}): MapFitPadding | null {
+  const bottom = Math.max(
+    sheetHeight + FIT_SHEET_GAP_PX,
+    FIT_MIN_BOTTOM_PADDING_PX,
+  );
+  const side = FIT_SIDE_PADDING_PX;
+
+  // 아직 지도를 재지 못했으면 좁은지 판단할 수 없으니 그냥 맞춘다.
+  if (mapHeight <= 0) {
+    return { top: FIT_TOP_PADDING_PX, bottom, left: side, right: side };
+  }
+
+  const available = mapHeight - bottom;
+  if (available < FIT_MIN_BAND_PX) {
+    return null;
+  }
+
+  return {
+    top: Math.min(FIT_TOP_PADDING_PX, available - FIT_MIN_BAND_PX),
+    bottom,
+    left: side,
+    right: side,
+  };
+}

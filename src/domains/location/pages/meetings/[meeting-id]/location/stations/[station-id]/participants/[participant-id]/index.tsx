@@ -21,6 +21,7 @@ import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-
 import { useGetPersonalRoute } from "@/domains/location/hooks/use-get-personal-route";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { formatDepartureDateTime } from "@/domains/location/utils/format";
+import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { ChipButton } from "@/shared/components/chip-button";
 import {
@@ -115,12 +116,15 @@ export function RouteDetailPage() {
     );
     const bounds = new maps.LatLngBounds(stationLatLng, departureLatLng);
 
-    mapInst.fitBounds(bounds, {
-      top: 80,
-      bottom: Math.max(sheetHeight + 20, 140),
-      left: 20,
-      right: 20,
+    const padding = getMapFitPadding({
+      mapHeight: mapInst.getSize().height,
+      sheetHeight,
     });
+    // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
+    // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
+    if (!padding) return;
+
+    mapInst.fitBounds(bounds, padding);
   }, [mapInst, selectedStation, selectedDeparture, sheetHeight]);
 
   return (
