@@ -20,6 +20,7 @@ import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-
 import { useNearbyPlaceSearch } from "@/domains/location/hooks/use-nearby-place-search";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
+import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import {
   BookIcon,
   CafeIcon,
@@ -133,12 +134,15 @@ export function NearbySearchPage() {
       bounds.extend(new maps.LatLng(point.latitude, point.longitude));
     });
 
-    mapInst.fitBounds(bounds, {
-      top: 80,
-      bottom: Math.max(sheetHeight + 20, 140),
-      left: 20,
-      right: 20,
+    const padding = getMapFitPadding({
+      mapHeight: mapInst.getSize().height,
+      sheetHeight,
     });
+    // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
+    // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
+    if (!padding) return;
+
+    mapInst.fitBounds(bounds, padding);
   }, [mapInst, selectedStation, selectedPlaces, sheetHeight]);
 
   return (

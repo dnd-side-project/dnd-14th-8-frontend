@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import {
+  getNearestSnap,
   getSheetHeightBySnap,
   type SheetSnap,
 } from "@/domains/location/components/bottom-sheet/snap-height";
@@ -61,9 +62,13 @@ export function BottomSheet({
     setHeight(getSheetHeightBySnap(snap, containerHeight));
   }, [snap, containerHeight]);
 
+  // 드래그 중에는 알리지 않는다. 매 프레임 높이가 나가면 이 값으로 지도를
+  // 다시 맞추는 쪽이 프레임마다 재프레이밍을 돌려 지도가 요동친다.
   useEffect(() => {
+    if (dragging) return;
+
     onHeightChange?.(height);
-  }, [height, onHeightChange]);
+  }, [dragging, height, onHeightChange]);
 
   const minHeight = getSheetHeightBySnap("peek", containerHeight);
   const maxHeight = getSheetHeightBySnap("full", containerHeight);
@@ -88,18 +93,12 @@ export function BottomSheet({
     if (!dragging) return;
     setDragging(false);
 
-    const snaps: SheetSnap[] = ["peek", "half", "full"];
-    const nextSnap = snaps.reduce((bestSnap, currentSnap) => {
-      const bestDistance = Math.abs(
-        height - getSheetHeightBySnap(bestSnap, containerHeight),
-      );
-      const currentDistance = Math.abs(
-        height - getSheetHeightBySnap(currentSnap, containerHeight),
-      );
-      return currentDistance < bestDistance ? currentSnap : bestSnap;
-    }, "peek" as SheetSnap);
+    const nextSnap = getNearestSnap(height, containerHeight);
 
+    // 스냅이 그대로면 snap 변경 effect가 돌지 않아 손을 뗀 높이에 멈춘다.
+    // 높이도 같이 되돌려야 항상 스냅 위치로 붙는다.
     setSnap(nextSnap);
+    setHeight(getSheetHeightBySnap(nextSnap, containerHeight));
   };
 
   return (

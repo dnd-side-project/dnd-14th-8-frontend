@@ -31,3 +31,22 @@ export function getSheetHeightBySnap(snap: SheetSnap, viewportHeight: number) {
     Math.min(designHeight, viewportHeight * SNAP_MAX_VIEWPORT_RATIO[snap]),
   );
 }
+
+const SNAPS: SheetSnap[] = ["peek", "half", "full"];
+
+/** 드래그가 끝난 높이에서 가장 가까운 스냅. 같은 거리면 낮은 쪽을 고른다. */
+export function getNearestSnap(
+  height: number,
+  viewportHeight: number,
+): SheetSnap {
+  return SNAPS.reduce((nearest, snap) => {
+    const nearestDistance = Math.abs(
+      height - getSheetHeightBySnap(nearest, viewportHeight),
+    );
+    const distance = Math.abs(
+      height - getSheetHeightBySnap(snap, viewportHeight),
+    );
+
+    return distance < nearestDistance ? snap : nearest;
+  }, SNAPS[0]);
+}

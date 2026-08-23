@@ -28,7 +28,10 @@ import {
   formatDuration,
 } from "@/domains/location/utils/format";
 import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
-import { getVisibleCenterOffsetY } from "@/domains/location/utils/map-viewport";
+import {
+  getMapFitPadding,
+  getVisibleCenterOffsetY,
+} from "@/domains/location/utils/map-viewport";
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
@@ -63,12 +66,15 @@ function fitMapBounds({
     bounds.extend(new maps.LatLng(point.latitude, point.longitude));
   });
 
-  mapInst.fitBounds(bounds, {
-    top: 80,
-    bottom: Math.max(sheetHeight + 20, 140),
-    left: 20,
-    right: 20,
+  const padding = getMapFitPadding({
+    mapHeight: mapInst.getSize().height,
+    sheetHeight,
   });
+  // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
+  // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
+  if (!padding) return;
+
+  mapInst.fitBounds(bounds, padding);
 }
 
 /**
@@ -172,9 +178,9 @@ export function LocationMainPage() {
   }, [mapInst, sheetHeight, recommendations, departures]);
 
   /**
-   * 시트를 끄는 동안 sheetHeight가 매 프레임 갱신되므로 deps에 넣지 않는다.
-   * 넣으면 panTo 애니메이션이 프레임마다 다시 시작해 지도가 떨린다.
-   * 시트 드래그로 인한 재프레이밍은 위의 fitMapBounds가 맡는다.
+   * sheetHeight를 deps에 넣지 않는다. 넣으면 스냅이 바뀔 때마다 panTo가
+   * 다시 돌아, 시트만 올렸는데 지도가 따라 움직인다. 시트 높이에 맞춘
+   * 재프레이밍은 위의 fitMapBounds가 맡는다.
    */
   const sheetHeightRef = useRef(sheetHeight);
 
@@ -341,8 +347,7 @@ export function LocationMainPage() {
 
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
-              팀원{" "}
-              <span className="text-primary-main">{registeredCount}</span>/
+              팀원 <span className="text-primary-main">{registeredCount}</span>/
               {totalCount}
             </p>
 
