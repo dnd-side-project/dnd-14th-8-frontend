@@ -39,7 +39,7 @@ export function ScheduleMainVoteContent({
   if (schedulesQuery.isPending || !schedulesQuery.data) {
     return (
       <div className="py-10 text-center text-b4 text-k-500">
-        시간표를 불러오는 중이에요.
+        시간표를 불러오는 중이에요
       </div>
     );
   }

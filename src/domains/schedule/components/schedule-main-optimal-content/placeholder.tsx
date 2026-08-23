@@ -13,7 +13,7 @@ export function ScheduleMainOptimalPlaceholder({
   if (isPending) {
     return (
       <PlaceholderContent
-        title="최적 일정을 불러오는 중이에요."
+        title="최적일정을 불러오는 중이에요"
         description="잠시만 기다려주세요."
       />
     );
@@ -23,7 +23,7 @@ export function ScheduleMainOptimalPlaceholder({
     return (
       <PlaceholderContent
         graphic={<Empty1Character />}
-        title="두 명 이상의 일정이 필요해요.."
+        title="두 명 이상의 일정이 필요해요"
         description="링크를 공유하거나 일정을 등록해 보세요."
       />
     );
@@ -32,7 +32,7 @@ export function ScheduleMainOptimalPlaceholder({
   return (
     <PlaceholderContent
       graphic={<Empty1Character />}
-      title="아직 겹치는 시간대가 없어요.."
+      title="아직 겹치는 시간대가 없어요"
       description="시간 범위를 넓히거나 팀원들을 기다려 보세요."
     />
   );

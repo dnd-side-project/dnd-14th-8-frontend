@@ -57,9 +57,12 @@ export const Playground: Story = {
             size="lg"
             variant="outlined"
             onClick={() =>
-              toast.error("현재는 수도권 내 출발지만 선택할 수 있어요.", {
-                toasterId,
-              })
+              toast.error(
+                "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
+                {
+                  toasterId,
+                },
+              )
             }
           >
             긴 오류

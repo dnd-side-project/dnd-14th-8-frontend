@@ -272,7 +272,7 @@ export function LocationMainPage() {
 
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
-              참여자{" "}
+              팀원{" "}
               <span className="text-primary-main">{registeredCount}</span>/
               {totalCount}
             </p>

@@ -43,7 +43,7 @@ export function ScheduleMainPage() {
           navigate(`/meetings/${meetingId}/location/stations`); // 장소 메인 화면으로 이동
         },
         onError: () => {
-          toast.error("일정을 확정하는 중 오류가 발생했어요");
+          toast.error("일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.");
         },
       },
     );

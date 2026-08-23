@@ -133,7 +133,7 @@ export function DepartureNewSearchPage() {
             <div className="mt-25 flex flex-col items-center gap-4 px-5">
               <PlaceholderContent
                 graphic={<Empty2Character />}
-                title="일치하는 주소가 없어요.."
+                title="일치하는 주소가 없어요"
                 description="검색한 지역을 다시 확인해 보세요."
               />
 

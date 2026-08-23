@@ -15,7 +15,7 @@ export function useCurrentLocation() {
     const LatLng = naverMaps?.LatLng;
 
     if (!service || !LatLng) {
-      setError("지도 SDK가 아직 로드되지 않았습니다.");
+      setError("지도를 아직 불러오는 중이에요. 잠시 후 다시 시도해주세요.");
       setLoading(false);
       return;
     }
@@ -40,7 +40,7 @@ export function useCurrentLocation() {
         const resolvedAddress =
           response.v2.address?.roadAddress ||
           response.v2.address?.jibunAddress ||
-          "주소를 찾을 수 없습니다.";
+          "주소를 찾을 수 없어요";
 
         setAddress(resolvedAddress);
         setLoading(false);
@@ -50,7 +50,7 @@ export function useCurrentLocation() {
 
   const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("브라우저가 위치 정보를 지원하지 않습니다.");
+      setError("이 브라우저에서는 위치를 가져올 수 없어요.");
       return;
     }
 

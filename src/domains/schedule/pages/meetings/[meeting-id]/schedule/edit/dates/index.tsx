@@ -88,10 +88,10 @@ export function ScheduleEditDatesPage() {
             queryKey: ["meeting", "schedules", meetingId],
           });
           navigate("..");
-          toast.success("수정 완료되었어요!");
+          toast.success("시간표 범위가 수정되었어요");
         },
         onError: () => {
-          alert("일정 수정에 실패했습니다.");
+          toast.error("일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.");
         },
       },
     );
