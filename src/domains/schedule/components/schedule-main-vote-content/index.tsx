@@ -11,10 +11,13 @@ const EMPTY_PARTICIPANTS: ScheduleParticipant[] = [];
 
 export interface ScheduleMainVoteContentProps {
   onParticipantEdit: () => void;
+  /** 하단 "일정 추가하기"와 같은 동작. 읽기 전용 시간표를 탭했을 때도 쓴다. */
+  onVoteAction: () => void;
 }
 
 export function ScheduleMainVoteContent({
   onParticipantEdit,
+  onVoteAction,
 }: ScheduleMainVoteContentProps) {
   const { meetingId } = useParams() as { meetingId: string };
 
@@ -59,6 +62,7 @@ export function ScheduleMainVoteContent({
         endTime={parseTime(schedulesQuery.data.endTime, 24)}
         occupancy={occupancy}
         disabled
+        onDisabledTap={onVoteAction}
         stickyHeaderTop={48}
       />
     </>
