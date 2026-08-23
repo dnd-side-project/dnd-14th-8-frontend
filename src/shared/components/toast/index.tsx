@@ -11,6 +11,7 @@ export const toast = {
   success: sonnerToast.success,
   dismiss: sonnerToast.dismiss,
   error: sonnerToast.error,
+  message: sonnerToast.message,
 };
 
 export interface ToastProps extends ToasterProps {}
@@ -43,6 +44,10 @@ export function Toast({
         ...toastOptions,
         classNames: {
           ...toastOptions?.classNames,
+          actionButton: cn(
+            "shrink-0 rounded-full bg-k-5 px-3 py-1.5 text-b4 text-k-800 transition-colors hover:bg-k-100",
+            toastOptions?.classNames?.actionButton,
+          ),
           closeButton: cn(
             "border-none bg-k-750 text-k-300 transition-colors hover:bg-k-800 hover:text-k-100",
             toastOptions?.classNames?.closeButton,

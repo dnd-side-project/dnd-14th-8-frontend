@@ -11,7 +11,10 @@ export default defineConfig({
     tailwindcss(),
     svgr(),
     VitePWA({
-      registerType: "autoUpdate",
+      // 갱신 시점을 사용자가 고르도록 토스트로 알린다. main.tsx에서 직접
+      // 등록하므로 자동 주입 스크립트는 끈다.
+      registerType: "prompt",
+      injectRegister: null,
       includeAssets: ["favicon.ico", "favicon.svg", "favicon-180.png"],
       manifest: {
         name: "모여락 | 모임 일정·장소 조율",
