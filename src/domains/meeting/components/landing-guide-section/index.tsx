@@ -25,15 +25,15 @@ const GUIDE_FEATURES: GuideFeature[] = [
     steps: [
       {
         title: "모임 만들기",
-        description: "모임 이름과 정보를 입력해 시작해요",
+        description: "이름과 인원 수를 입력해 시작해요",
       },
       {
         title: "후보 날짜 고르고 링크 공유",
-        description: "가능한 날짜 후보를 정하고 친구들에게 링크를 보내요",
+        description: "가능한 날짜 후보를 정하고 팀원들에게 링크를 보내요",
       },
       {
         title: "가능한 날짜 투표",
-        description: "참여자들이 각자 되는 날짜에 투표해요",
+        description: "팀원들이 각자 되는 날짜에 투표해요",
       },
       {
         title: "모두가 되는 날 확인",
@@ -42,17 +42,17 @@ const GUIDE_FEATURES: GuideFeature[] = [
     ],
   },
   {
-    title: "중간 지점 찾기",
+    title: "중간지점 찾기",
     character: <InvitationMidpointCharacter className="h-12 w-auto" />,
     badgeClassName: "bg-sub-main",
     steps: [
       {
         title: "모임 만들기",
-        description: "모임 이름과 정보를 입력해 시작해요",
+        description: "이름과 인원 수를 입력해 시작해요",
       },
       {
         title: "링크 공유하고 출발지 등록",
-        description: "참여자들이 각자 출발지를 등록해요",
+        description: "팀원들이 각자 출발지를 등록해요",
       },
       {
         title: "중간지점 역 추천 받기",

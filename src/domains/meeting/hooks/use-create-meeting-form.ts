@@ -15,7 +15,7 @@ export const createMeetingFormSchema = z.object({
     .string()
     .trim()
     .min(1, "이름을 입력해주세요")
-    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`),
+    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 입력할 수 있어요`),
   participantCount: z.number().min(2),
 });
 

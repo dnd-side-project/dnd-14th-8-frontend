@@ -75,7 +75,10 @@ export function ScheduleMainView({
 
       <section className="flex min-h-0 flex-1 flex-col px-5 py-3 pb-[106px]">
         {tab === "vote" && (
-          <ScheduleMainVoteContent onParticipantEdit={onParticipantEdit} />
+          <ScheduleMainVoteContent
+            onParticipantEdit={onParticipantEdit}
+            onVoteAction={onVoteAction}
+          />
         )}
         {tab === "optimal" && <ScheduleMainOptimalContent />}
       </section>

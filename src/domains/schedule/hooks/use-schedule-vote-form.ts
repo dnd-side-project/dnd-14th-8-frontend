@@ -32,7 +32,7 @@ const scheduleVoteFormSchema = z.object({
     .string()
     .trim()
     .min(1, "이름을 입력해주세요")
-    .max(NAME_MAX_LENGTH, "최대 4자까지 적을 수 있어요"),
+    .max(NAME_MAX_LENGTH, "최대 4자까지 입력할 수 있어요"),
   selectedDates: z.array(z.date()).min(1, "입력된 일정이 없어요"),
 });
 

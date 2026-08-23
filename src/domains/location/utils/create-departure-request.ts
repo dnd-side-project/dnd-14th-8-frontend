@@ -5,7 +5,7 @@ import type { CreateLocationVoteRequest } from "@/domains/location/types/locatio
 // E413: localStorageKey 중복(이미 참여한 사용자), E430: 지정한 참여자가 이미 출발지 등록
 const DUPLICATE_DEPARTURE_ERROR_CODES = ["E413", "E430"];
 
-export const DUPLICATE_DEPARTURE_MESSAGE = "이미 출발지를 등록한 참여자예요";
+export const DUPLICATE_DEPARTURE_MESSAGE = "이미 출발지를 등록한 팀원이에요";
 
 interface BuildCreateDepartureRequestParams {
   departureLat: string;

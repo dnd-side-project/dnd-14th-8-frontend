@@ -30,7 +30,7 @@ export function MeetingJoinInvite({
           </p>
           {isLocationFlow ? (
             <p className="text-b1 text-k-800">
-              모임에 참여해서 중간 지점을 찾아보세요.
+              모임에 참여해서 중간지점을 찾아보세요.
             </p>
           ) : (
             <p className="text-b1 text-k-800">

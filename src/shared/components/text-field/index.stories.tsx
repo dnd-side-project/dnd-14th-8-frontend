@@ -44,12 +44,12 @@ export const Playground: Story = {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onClear={() => setValue("")}
-        helperText={isError ? "최대 4자까지 적을 수 있어요" : args.helperText}
+        helperText={isError ? "최대 4자까지 입력할 수 있어요" : args.helperText}
       />
     );
   },
   args: {
-    label: "방장 이름",
+    label: "팀장 이름",
     placeholder: "이름을 입력해주세요",
     helperText: "최대 4자까지 입력할 수 있어요",
     maxLength: 4,
@@ -60,32 +60,32 @@ export const States: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
       <TextField
-        label="방장 이름"
+        label="팀장 이름"
         placeholder="이름을 입력해주세요"
-        helperText="최대 4자까지 적을 수 있어요"
+        helperText="최대 4자까지 입력할 수 있어요"
         maxLength={4}
       />
 
       <TextField
-        label="방장 이름"
+        label="팀장 이름"
         placeholder="아웃라인 스타일"
         variant="outlined"
       />
 
-      <TextField label="방장 이름" value="김혜인" maxLength={4} />
+      <TextField label="팀장 이름" value="김혜인" maxLength={4} />
 
-      <TextField label="방장 이름" status="focused" value="김" maxLength={4} />
+      <TextField label="팀장 이름" status="focused" value="김" maxLength={4} />
 
       <TextField
-        label="방장 이름"
+        label="팀장 이름"
         status="error"
         value="김혜인인인"
-        helperText="최대 4자까지 적을 수 있어요"
+        helperText="최대 4자까지 입력할 수 있어요"
         maxLength={4}
       />
 
       <TextField
-        label="방장 이름"
+        label="팀장 이름"
         status="error"
         value=""
         helperText="이름을 입력해주세요"

@@ -31,7 +31,7 @@ export function ScheduleMainOptimalContent() {
   if (isPending) {
     return (
       <PlaceholderContent
-        title="최적 일정을 불러오는 중이에요."
+        title="최적일정을 불러오는 중이에요"
         description="잠시만 기다려주세요."
       />
     );

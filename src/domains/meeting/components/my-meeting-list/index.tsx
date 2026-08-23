@@ -46,7 +46,7 @@ export function MyMeetingList({ meetings, onSelect }: MyMeetingListProps) {
 }
 
 function getRoleLabel(isHost: boolean) {
-  return isHost ? "팀장" : "참여자";
+  return isHost ? "팀장" : "팀원";
 }
 
 function formatCreatedDate(createdAt: string) {

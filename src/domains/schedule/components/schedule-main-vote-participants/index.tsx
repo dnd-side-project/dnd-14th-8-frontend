@@ -35,7 +35,7 @@ export function ScheduleMainVoteParticipants({
         )}
       >
         <MemberIcon className="size-5" />
-        <span className="mr-0.5">참여자</span>
+        <span className="mr-0.5">팀원</span>
         <span className="text-primary-main">{votedParticipantCount}</span>
         <span className="mr-0.5">/{participantCount}</span>
         {data?.isHost && <ChevronRightIcon className="size-4 text-k-400" />}

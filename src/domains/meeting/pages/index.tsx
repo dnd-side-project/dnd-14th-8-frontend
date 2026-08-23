@@ -71,7 +71,7 @@ export function LandingPage() {
 
           <MainButton
             className="bg-sub-main"
-            title="중간 지점 찾기"
+            title="중간지점 찾기"
             description={"공평한 중간지점을\n찾아보세요!"}
             character={<LandingMidpointCharacter />}
             characterMotion="sway"
