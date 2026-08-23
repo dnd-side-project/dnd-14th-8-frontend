@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
+import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
+import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
 import { useConfirmSchedulePoll } from "@/domains/schedule/hooks/use-confirm-schedule-poll";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { normalizeScheduleVoteId } from "@/domains/schedule/utils/schedule-vote";
@@ -16,6 +18,9 @@ export function ScheduleMainPage() {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
   const { mutate: confirmSchedule } = useConfirmSchedulePoll();
+  const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
+    meetingId,
+  });
 
   const myParticipantQuery = useGetMyParticipant({ meetingId });
   const hasExistingVote =
@@ -61,8 +66,14 @@ export function ScheduleMainPage() {
         onParticipantEdit={() =>
           navigate(`/meetings/${meetingId}/schedule/edit/participants`)
         }
+        onGoHome={goHome}
         onGoToLocation={() => setIsLocationModalOpen(true)}
         onTabChange={handleTabChange}
+      />
+      <HomeExitConfirmModal
+        isOpen={isConfirmOpen}
+        onCancel={cancelGoHome}
+        onConfirm={confirmGoHome}
       />
       <Modal
         isOpen={isLocationModalOpen}

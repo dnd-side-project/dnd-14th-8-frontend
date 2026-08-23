@@ -30,9 +30,12 @@ import {
 import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
 import { getVisibleCenterOffsetY } from "@/domains/location/utils/map-viewport";
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
+import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
+import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
+import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import {
   ChevronDownIcon,
   LogoPinIcon,
@@ -121,6 +124,9 @@ export function LocationMainPage() {
     ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
   });
   const { data: myInfo } = useGetMyParticipant({ meetingId });
+  const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
+    meetingId,
+  });
   const { data: midpoint, isLoading: isMidpointLoading } =
     useGetMidpointRecommendations({
       meetingId,
@@ -256,6 +262,8 @@ export function LocationMainPage() {
 
   return (
     <>
+      <HomeLogoButton className="absolute top-4 left-4" onClick={goHome} />
+
       {selectedStation && (
         <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
@@ -341,8 +349,7 @@ export function LocationMainPage() {
 
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
-              팀원{" "}
-              <span className="text-primary-main">{registeredCount}</span>/
+              팀원 <span className="text-primary-main">{registeredCount}</span>/
               {totalCount}
             </p>
 
@@ -410,6 +417,12 @@ export function LocationMainPage() {
             ? "출발지 관리하기"
             : "출발지 추가하기"}
       </BottomActionBarWithButtonAndShare>
+
+      <HomeExitConfirmModal
+        isOpen={isConfirmOpen}
+        onCancel={cancelGoHome}
+        onConfirm={confirmGoHome}
+      />
     </>
   );
 }

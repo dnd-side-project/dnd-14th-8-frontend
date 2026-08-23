@@ -4,6 +4,7 @@ import { ScheduleMainOptimalContent } from "@/domains/schedule/components/schedu
 import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-main-vote-content";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
+import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import { Tab } from "@/shared/components/tab";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import { cn } from "@/shared/utils/cn";
@@ -17,6 +18,7 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
+  onGoHome: () => void;
   onGoToLocation?: () => void;
 }
 
@@ -29,6 +31,7 @@ export function ScheduleMainView({
   onEditSchedule,
   onParticipantEdit,
   onTabChange,
+  onGoHome,
   onGoToLocation,
   tab,
   ...props
@@ -58,6 +61,12 @@ export function ScheduleMainView({
       className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
       {...props}
     >
+      {/* Hero는 로딩 중 null을 반환하고 pt-6 바로 아래에 제목이 오므로,
+          홈 버튼은 Hero 안에 겹치지 않고 같은 배경의 바로 위에 둔다. */}
+      <div className="w-full shrink-0 bg-p-50 px-4 pt-4">
+        <HomeLogoButton onClick={onGoHome} />
+      </div>
+
       <ScheduleMainHero meetingId={meetingId} onEditSchedule={onEditSchedule} />
 
       <section className="sticky top-0 z-30 shrink-0 bg-k-5">
