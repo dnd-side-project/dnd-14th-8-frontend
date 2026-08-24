@@ -32,15 +32,6 @@ export function DepartureListPage() {
   });
   const { mutate: deleteDeparture } = useDeleteDeparture();
 
-  const handleGoToResult = () => {
-    if ((departures?.length ?? 0) < 2) {
-      toast.error("최소 2개 이상의 출발지가 필요해요");
-      return;
-    }
-
-    navigate(`/meetings/${meetingId}/location/stations`);
-  };
-
   const handleDelete = () => {
     if (selectedLocationVoteId === null) return;
 
@@ -92,7 +83,10 @@ export function DepartureListPage() {
         </div>
 
         <div className="mt-auto">
-          <ButtonBottom variant="black" onClick={handleGoToResult}>
+          <ButtonBottom
+            variant="black"
+            onClick={() => navigate(`/meetings/${meetingId}/location/stations`)}
+          >
             중간지점 결과 보러가기
           </ButtonBottom>
         </div>
