@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { z } from "zod";
 import {
   NAME_MAX_LENGTH,
@@ -17,6 +16,7 @@ import {
   OUT_OF_SERVICE_AREA_MESSAGE,
 } from "@/domains/location/utils/service-area";
 import { toast } from "@/shared/components/toast";
+import { useFlowReturn } from "@/shared/hooks/use-flow-return";
 
 export const updateDepartureFormSchema = z
   .object({
@@ -39,12 +39,17 @@ export function useUpdateDepartureForm({
   meetingId,
   locationVoteId,
   initialValues,
+  entryIdx,
 }: {
   meetingId: string;
   locationVoteId: number;
   initialValues?: Partial<UpdateDepartureFormValues>;
+  entryIdx?: number | null;
 }) {
-  const navigate = useNavigate();
+  const returnToOrigin = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/votes`,
+  });
   const queryClient = useQueryClient();
   const updateDepartureMutation = useUpdateDeparture();
 
@@ -92,7 +97,7 @@ export function useUpdateDepartureForm({
       ]);
 
       toast.success("출발지가 수정되었어요");
-      navigate(`/meetings/${meetingId}/location/votes`);
+      returnToOrigin();
     } catch (error) {
       console.error("출발지 수정 실패:", error);
       if (isOutOfServiceAreaError(error)) {

@@ -1,12 +1,5 @@
 import type { ParticipantResponse } from "@/domains/meeting/types/participant-api-types";
-
-/**
- * 0은 서버가 미등록을 뜻할 때 쓰는 sentinel이라 등록으로 치지 않는다.
- * normalizeScheduleVoteId와 같은 규칙을 출발지 투표에도 적용한다.
- */
-function hasVote(voteId: number | null) {
-  return typeof voteId === "number" && voteId > 0;
-}
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 
 /**
  * 홈으로 나갔다가 최근 모임 목록을 통해 이 모임으로 돌아올 수 있는지 판단한다.
@@ -23,7 +16,7 @@ export function canReturnToMeeting(
 
   return (
     participant.isHost ||
-    hasVote(participant.scheduleVoteId) ||
-    hasVote(participant.locationVoteId)
+    hasVoteId(participant.scheduleVoteId) ||
+    hasVoteId(participant.locationVoteId)
   );
 }

@@ -10,11 +10,16 @@ import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
 import { Select } from "@/shared/components/select";
 import { TextField } from "@/shared/components/text-field";
+import {
+  useFlowEntryIndex,
+  useFlowReturn,
+} from "@/shared/hooks/use-flow-return";
 
 interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
+  entryIdx?: number | null;
   selectedParticipantId?: string;
 }
 
@@ -22,6 +27,12 @@ export function DepartureNewPage() {
   const navigate = useNavigate();
   const { state } = useLocation() as { state: VoteSearchLocationState | null };
   const { meetingId } = useParams() as { meetingId: string };
+
+  const entryIdx = useFlowEntryIndex(state?.entryIdx);
+  const leaveForm = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/stations`,
+  });
 
   const { data: myInfo } = useGetMyParticipant({ meetingId });
   const { data: participantsData } = useListParticipants({ meetingId });
@@ -35,13 +46,17 @@ export function DepartureNewPage() {
     onSubmit,
     watch,
     setValue,
-  } = useCreateDepartureForm(meetingId, {
-    departureLocation: state?.address,
-    departureLat: state?.coords ? String(state.coords[0]) : undefined,
-    departureLng: state?.coords ? String(state.coords[1]) : undefined,
-    participantName: state?.name,
-    participantId: state?.selectedParticipantId,
-  });
+  } = useCreateDepartureForm(
+    meetingId,
+    {
+      departureLocation: state?.address,
+      departureLat: state?.coords ? String(state.coords[0]) : undefined,
+      departureLng: state?.coords ? String(state.coords[1]) : undefined,
+      participantName: state?.name,
+      participantId: state?.selectedParticipantId,
+    },
+    entryIdx,
+  );
 
   useEffect(() => {
     if (state?.address) {
@@ -84,6 +99,7 @@ export function DepartureNewPage() {
         address: currentValues.departureLocation,
         selectedParticipantId: currentValues.participantId,
         name: currentValues.participantName,
+        entryIdx,
       },
     });
   };
@@ -91,7 +107,7 @@ export function DepartureNewPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 추가" onBack={() => navigate(-1)} />
+        <PageHeader title="출발지 추가" onBack={leaveForm} />
 
         <div className="mt-3 flex flex-col gap-6">
           {hasParticipants ? (

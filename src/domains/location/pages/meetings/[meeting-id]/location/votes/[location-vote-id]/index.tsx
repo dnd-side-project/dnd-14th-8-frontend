@@ -8,10 +8,16 @@ import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
 import { TextField } from "@/shared/components/text-field";
+import {
+  useFlowEntryIndex,
+  useFlowReturn,
+} from "@/shared/hooks/use-flow-return";
 
 interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
+  // 폼이 기억한 진입 위치. 검색을 다녀와도 잃지 않게 그대로 실어 보낸다.
+  entryIdx?: number | null;
   name?: string;
 }
 
@@ -22,6 +28,12 @@ export function DepartureEditPage() {
 
   const locationVoteIdNumber = Number(locationVoteId);
   const initializedRef = useRef(false);
+
+  const entryIdx = useFlowEntryIndex(state?.entryIdx);
+  const leaveForm = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/votes`,
+  });
 
   const { data: departures, isLoading } = useGetDepartures({ meetingId });
 
@@ -43,6 +55,7 @@ export function DepartureEditPage() {
     watch,
     setValue,
   } = useUpdateDepartureForm({
+    entryIdx,
     meetingId,
     locationVoteId: locationVoteIdNumber,
   });
@@ -81,6 +94,7 @@ export function DepartureEditPage() {
     navigate("search", {
       state: {
         address: currentValues.departureLocation,
+        entryIdx,
         name: currentValues.participantName,
       },
     });
@@ -92,14 +106,14 @@ export function DepartureEditPage() {
     return (
       <MobileLayout>
         <section className="flex min-h-dvh flex-col px-5 pb-5">
-          <PageHeader title="출발지 수정" onBack={() => navigate(-1)} />
+          <PageHeader title="출발지 수정" onBack={leaveForm} />
 
           <p className="mt-10 text-center text-b2 text-k-500">
             수정할 출발지를 찾을 수 없어요.
           </p>
 
           <div className="mt-auto">
-            <ButtonBottom variant="black" onClick={() => navigate(-1)}>
+            <ButtonBottom variant="black" onClick={leaveForm}>
               이전으로 돌아가기
             </ButtonBottom>
           </div>
@@ -111,7 +125,7 @@ export function DepartureEditPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 수정" onBack={() => navigate(-1)} />
+        <PageHeader title="출발지 수정" onBack={leaveForm} />
 
         <div className="mt-3 flex flex-col gap-6">
           <Controller

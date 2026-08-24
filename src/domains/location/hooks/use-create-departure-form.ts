@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateDeparture } from "@/domains/location/hooks/use-create-departure";
 import { getDeparturesQueryKey } from "@/domains/location/hooks/use-get-departures";
@@ -16,11 +15,13 @@ import {
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
 } from "@/domains/location/utils/service-area";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import {
   getMyParticipantQueryKey,
   useGetMyParticipant,
 } from "@/domains/schedule/hooks/use-get-my-participant";
 import { toast } from "@/shared/components/toast";
+import { useFlowReturn } from "@/shared/hooks/use-flow-return";
 import { getGuestId } from "@/shared/utils/auth";
 
 export const NAME_MAX_LENGTH = 4;
@@ -67,8 +68,12 @@ export type CreateDepartureFormValues = z.infer<
 export function useCreateDepartureForm(
   meetingId: string,
   initialValues?: Partial<CreateDepartureFormValues>,
+  entryIdx?: number | null,
 ) {
-  const navigate = useNavigate();
+  const returnToOrigin = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/stations`,
+  });
   const queryClient = useQueryClient();
   const createDepartureMutation = useCreateDeparture();
   const { data: myInfo } = useGetMyParticipant({ meetingId });
@@ -104,7 +109,7 @@ export function useCreateDepartureForm(
         departureLat: data.departureLat,
         departureLng: data.departureLng,
         guestId,
-        hasMyLocationVote: myInfo?.locationVoteId != null,
+        hasMyLocationVote: hasVoteId(myInfo?.locationVoteId),
       });
 
       await createDepartureMutation.mutateAsync(requestPayload);
@@ -125,7 +130,7 @@ export function useCreateDepartureForm(
       ]);
 
       toast.success("출발지가 추가되었어요");
-      navigate(`/meetings/${meetingId}/location/votes`);
+      returnToOrigin();
     } catch (error) {
       console.error("출발지 추가 실패:", error);
       if (isOutOfServiceAreaError(error)) {

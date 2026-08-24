@@ -20,6 +20,9 @@ interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
+  // 폼이 기억한 진입 위치다. 검색을 다녀오면 폼이 다시 마운트되면서 위치가
+  // 달라지므로, 원래 값을 잃지 않게 그대로 실어 보낸다.
+  entryIdx?: number | null;
   selectedParticipantId?: string;
 }
 

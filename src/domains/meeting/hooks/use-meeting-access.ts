@@ -1,3 +1,4 @@
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
 
@@ -21,8 +22,8 @@ export function useMeetingAccess(meetingId?: string) {
   const isMember = !!(
     myInfo &&
     (myInfo.isHost ||
-      myInfo.scheduleVoteId !== null ||
-      myInfo.locationVoteId !== null)
+      hasVoteId(myInfo.scheduleVoteId) ||
+      hasVoteId(myInfo.locationVoteId))
   );
 
   return {

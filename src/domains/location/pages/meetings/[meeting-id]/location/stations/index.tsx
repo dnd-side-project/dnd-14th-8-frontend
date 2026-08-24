@@ -35,6 +35,7 @@ import {
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
 import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
 import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
@@ -129,7 +130,9 @@ export function LocationMainPage() {
     meetingId,
     ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
   });
-  const { data: myInfo } = useGetMyParticipant({ meetingId });
+  const { data: myInfo, isLoading: isMyInfoLoading } = useGetMyParticipant({
+    meetingId,
+  });
   const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
     meetingId,
   });
@@ -213,6 +216,12 @@ export function LocationMainPage() {
     );
   }, [selectedStation]);
 
+  /**
+   * myInfo가 도착하기 전에는 hasMyDeparture가 false라 이미 등록한 사람에게도
+   * "내 출발지 등록하기"가 잠깐 떴다가 바뀐다. 빈 상태와 CTA가 둘 다 이 값에
+   * 기대므로 midpoint와 함께 기다렸다가 한 번에 그린다.
+   */
+  const isContentLoading = isMidpointLoading || isMyInfoLoading;
   const hasRecommendations = recommendations.length > 0;
   const departureCount = departures?.length ?? 0;
   const registeredCount = midpoint?.registeredCount ?? departureCount;
@@ -223,7 +232,7 @@ export function LocationMainPage() {
   const insufficientDepartureContent = isInsufficientDepartures
     ? getInsufficientDepartureContent({
         registeredCount,
-        hasMyDeparture: myInfo?.locationVoteId != null,
+        hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
         departures: departures ?? [],
         myLocationVoteId: myInfo?.locationVoteId,
       })
@@ -306,7 +315,7 @@ export function LocationMainPage() {
       ))}
 
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
-        {isMidpointLoading ? null : hasRecommendations && selectedStation ? (
+        {isContentLoading ? null : hasRecommendations && selectedStation ? (
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
             <div className="scrollbar-hide flex gap-2 overflow-x-auto">
               {recommendations.map((station) => (
@@ -399,7 +408,7 @@ export function LocationMainPage() {
                 insufficientDepartureContent ??
                 getInsufficientDepartureContent({
                   registeredCount,
-                  hasMyDeparture: myInfo?.locationVoteId != null,
+                  hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
                   departures: departures ?? [],
                   myLocationVoteId: myInfo?.locationVoteId,
                 })
@@ -413,18 +422,20 @@ export function LocationMainPage() {
         )}
       </BottomSheet>
 
-      <BottomActionBarWithButtonAndShare
-        onClick={handleVoteAction}
-        onShare={share}
-        buttonVariant={insufficientDepartureContent ? "blue" : "white"}
-        showShareButton={insufficientDepartureContent === null}
-      >
-        {insufficientDepartureContent?.primaryAction === "share"
-          ? "초대 링크 공유하기"
-          : hasEnoughDepartures
-            ? "출발지 관리하기"
-            : "출발지 추가하기"}
-      </BottomActionBarWithButtonAndShare>
+      {!isContentLoading && (
+        <BottomActionBarWithButtonAndShare
+          onClick={handleVoteAction}
+          onShare={share}
+          buttonVariant={insufficientDepartureContent ? "blue" : "white"}
+          showShareButton={insufficientDepartureContent === null}
+        >
+          {insufficientDepartureContent?.primaryAction === "share"
+            ? "초대 링크 공유하기"
+            : hasEnoughDepartures
+              ? "출발지 관리하기"
+              : "출발지 추가하기"}
+        </BottomActionBarWithButtonAndShare>
+      )}
 
       <HomeExitConfirmModal
         isOpen={isConfirmOpen}
