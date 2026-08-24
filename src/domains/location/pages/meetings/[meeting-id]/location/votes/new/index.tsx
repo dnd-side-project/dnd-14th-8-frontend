@@ -2,7 +2,6 @@ import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useCreateDepartureForm } from "@/domains/location/hooks/use-create-departure-form";
-import type { DepartureReturnTarget } from "@/domains/location/utils/departure-return";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
 import { ButtonBottom } from "@/shared/components/button-bottom";
@@ -11,12 +10,16 @@ import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
 import { Select } from "@/shared/components/select";
 import { TextField } from "@/shared/components/text-field";
+import {
+  useFlowEntryIndex,
+  useFlowReturn,
+} from "@/shared/hooks/use-flow-return";
 
 interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
-  returnTo?: DepartureReturnTarget;
+  entryIdx?: number | null;
   selectedParticipantId?: string;
 }
 
@@ -24,6 +27,12 @@ export function DepartureNewPage() {
   const navigate = useNavigate();
   const { state } = useLocation() as { state: VoteSearchLocationState | null };
   const { meetingId } = useParams() as { meetingId: string };
+
+  const entryIdx = useFlowEntryIndex(state?.entryIdx);
+  const leaveForm = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/stations`,
+  });
 
   const { data: myInfo } = useGetMyParticipant({ meetingId });
   const { data: participantsData } = useListParticipants({ meetingId });
@@ -46,7 +55,7 @@ export function DepartureNewPage() {
       participantName: state?.name,
       participantId: state?.selectedParticipantId,
     },
-    state?.returnTo,
+    entryIdx,
   );
 
   useEffect(() => {
@@ -90,7 +99,7 @@ export function DepartureNewPage() {
         address: currentValues.departureLocation,
         selectedParticipantId: currentValues.participantId,
         name: currentValues.participantName,
-        returnTo: state?.returnTo,
+        entryIdx,
       },
     });
   };
@@ -98,7 +107,7 @@ export function DepartureNewPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 추가" onBack={() => navigate(-1)} />
+        <PageHeader title="출발지 추가" onBack={leaveForm} />
 
         <div className="mt-3 flex flex-col gap-6">
           {hasParticipants ? (

@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateDeparture } from "@/domains/location/hooks/use-create-departure";
 import { getDeparturesQueryKey } from "@/domains/location/hooks/use-get-departures";
@@ -11,10 +10,6 @@ import {
   DUPLICATE_DEPARTURE_MESSAGE,
   isDuplicateDepartureError,
 } from "@/domains/location/utils/create-departure-request";
-import {
-  type DepartureReturnTarget,
-  getDepartureReturnPath,
-} from "@/domains/location/utils/departure-return";
 import {
   isOutOfServiceAreaError,
   isWithinServiceArea,
@@ -26,6 +21,7 @@ import {
   useGetMyParticipant,
 } from "@/domains/schedule/hooks/use-get-my-participant";
 import { toast } from "@/shared/components/toast";
+import { useFlowReturn } from "@/shared/hooks/use-flow-return";
 import { getGuestId } from "@/shared/utils/auth";
 
 export const NAME_MAX_LENGTH = 4;
@@ -72,9 +68,12 @@ export type CreateDepartureFormValues = z.infer<
 export function useCreateDepartureForm(
   meetingId: string,
   initialValues?: Partial<CreateDepartureFormValues>,
-  returnTo?: DepartureReturnTarget | string | null,
+  entryIdx?: number | null,
 ) {
-  const navigate = useNavigate();
+  const returnToOrigin = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/stations`,
+  });
   const queryClient = useQueryClient();
   const createDepartureMutation = useCreateDeparture();
   const { data: myInfo } = useGetMyParticipant({ meetingId });
@@ -131,7 +130,7 @@ export function useCreateDepartureForm(
       ]);
 
       toast.success("출발지가 추가되었어요");
-      navigate(getDepartureReturnPath({ meetingId, returnTo }));
+      returnToOrigin();
     } catch (error) {
       console.error("출발지 추가 실패:", error);
       if (isOutOfServiceAreaError(error)) {

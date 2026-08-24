@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { z } from "zod";
 import { useCreateScheduleVote } from "@/domains/schedule/hooks/use-create-schedule-vote";
 import { getMeetingScheduleVoteResultsQueryKey } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
@@ -22,6 +22,10 @@ import {
 } from "@/domains/schedule/utils/schedule-vote";
 import { getParticipantVotedDates } from "@/domains/schedule/utils/timetable";
 import { toast } from "@/shared/components/toast";
+import {
+  useFlowEntryIndex,
+  useFlowReturn,
+} from "@/shared/hooks/use-flow-return";
 import { useUnsavedChangesGuard } from "@/shared/hooks/use-unsaved-changes-guard";
 import { getGuestId } from "@/shared/utils/auth";
 
@@ -47,12 +51,14 @@ interface ScheduleVoteFormInitialData {
 }
 
 export function useScheduleVoteForm() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { meetingId } = useParams();
 
   const currentMeetingId = meetingId ?? "sample-meeting-id";
   const schedulePath = `/meetings/${currentMeetingId}/schedule`;
+  // 폼을 새로 push하면 뒤로가기가 이미 제출한 폼으로 돌아온다.
+  const entryIdx = useFlowEntryIndex();
+  const leaveForm = useFlowReturn({ entryIdx, fallbackPath: schedulePath });
   const [localStorageKey] = useState(getGuestId);
 
   // ── Queries ──
@@ -197,7 +203,7 @@ export function useScheduleVoteForm() {
     // 저장 성공 시점을 새 기준점으로 잡아 isDirty를 false로 리셋
     reset(data);
     toast.success(isEditMode ? "일정이 수정되었어요" : "일정이 추가되었어요");
-    navigate(schedulePath);
+    leaveForm();
   });
 
   const handleConfirmReset = async () => {
@@ -251,7 +257,7 @@ export function useScheduleVoteForm() {
     startTime: initialData?.startTime ?? 9,
     timetableDates: initialData?.timetableDates ?? [],
     // Actions
-    onBack: () => navigate(schedulePath),
+    onBack: leaveForm,
     onCancelResetConfirm: () => setIsResetConfirmOpen(false),
     onConfirmReset: () => void handleConfirmReset(),
     onReset: () => setIsResetConfirmOpen(true),
