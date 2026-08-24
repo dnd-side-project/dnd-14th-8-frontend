@@ -1,14 +1,32 @@
 import type { ScheduleParticipant } from "@/domains/meeting/types/meeting-api-types";
 
+const WALL_CLOCK_PATTERN =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/;
+
 /**
- * 서버가 Z 없이 반환하는 날자 문자열을 UTC로 파싱하는 함수
+ * 서버가 내려주는 투표 시각을 Asia/Seoul 벽시계 그대로 읽는 함수.
+ *
+ * 서버는 LocalDateTime을 오프셋 없이 직렬화하므로 표기된 시각이 곧 사용자가
+ * 고른 슬롯이다. 오프셋이 붙어 오더라도 서버가 의도한 값은 벽시계 시각이라
+ * 오프셋은 무시한다.
  */
-export function parseVotedDateUTC(dateStr: string): Date {
-  if (!dateStr.endsWith("Z") && !dateStr.includes("+")) {
-    return new Date(`${dateStr}Z`);
+export function parseVotedDate(dateStr: string): Date {
+  const matched = WALL_CLOCK_PATTERN.exec(dateStr);
+
+  if (!matched) {
+    return new Date(Number.NaN);
   }
 
-  return new Date(dateStr);
+  const [, year, month, day, hour, minute, second] = matched;
+
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second ?? 0),
+  );
 }
 
 /**
@@ -21,7 +39,7 @@ export function toOccupancyFromParticipants(
 
   for (const participant of participants) {
     for (const votedDate of participant.votedDates) {
-      const date = parseVotedDateUTC(votedDate);
+      const date = parseVotedDate(votedDate);
 
       if (Number.isNaN(date.getTime())) {
         continue;
@@ -45,7 +63,7 @@ export function getParticipantVotedDates(
   const participant = participants.find((p) => p.name === participantName);
   return (
     participant?.votedDates
-      .map(parseVotedDateUTC)
+      .map(parseVotedDate)
       .filter((d) => !Number.isNaN(d.getTime())) || []
   );
 }

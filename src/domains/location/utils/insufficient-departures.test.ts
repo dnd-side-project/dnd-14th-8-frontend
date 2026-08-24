@@ -1,96 +1,134 @@
 import { describe, expect, it } from "vitest";
 import { getInsufficientDepartureContent } from "./insufficient-departures";
 
+const 지훈 = {
+  locationVoteId: 11,
+  participantName: "지훈",
+  departureLocation: "강남역 2번 출구",
+};
+const 수아 = {
+  locationVoteId: 22,
+  participantName: "수아",
+  departureLocation: "홍대입구역",
+};
+
 describe("getInsufficientDepartureContent", () => {
-  it("출발지가 없으면 첫 출발지 등록을 유도한다", () => {
+  it("출발지가 없으면 내 등록 슬롯과 대기 슬롯을 하나씩 만든다", () => {
     expect(
       getInsufficientDepartureContent({
         registeredCount: 0,
-        totalCount: 5,
         hasMyDeparture: false,
+        departures: [],
       }),
     ).toEqual({
-      title: "출발지를 등록하면 중간지점을 찾을 수 있어요",
-      description: null,
-      progressText: "출발지 등록 0 / 5",
-      remainingText: "중간지점 추천까지 2명 더 필요해요",
-      helperText: null,
-      totalStatusText: null,
+      title: "2명이 모이면 중간지점을 찾아드려요",
+      slots: [
+        { key: "empty-0", kind: "add-mine" },
+        { key: "empty-1", kind: "waiting" },
+      ],
       primaryAction: "add",
       secondaryAction: "share",
     });
   });
 
-  it("내 출발지가 등록되어 있으면 공유를 우선 행동으로 안내한다", () => {
+  it("내 출발지가 등록되어 있으면 남은 자리를 초대 슬롯으로 만든다", () => {
     expect(
       getInsufficientDepartureContent({
         registeredCount: 1,
-        totalCount: 5,
         hasMyDeparture: true,
+        departures: [지훈],
+        myLocationVoteId: 11,
       }),
     ).toEqual({
       title: "한 명만 더 등록하면 중간지점을 찾을 수 있어요",
-      description: null,
-      progressText: "출발지 등록 1 / 5",
-      remainingText: "중간지점 추천까지 1명 더 필요해요",
-      helperText: null,
-      totalStatusText: null,
+      slots: [
+        {
+          key: "departure-11",
+          kind: "filled",
+          name: "지훈",
+          location: "강남역 2번 출구",
+          isMine: true,
+        },
+        { key: "empty-0", kind: "invite" },
+      ],
       primaryAction: "share",
       secondaryAction: "add",
     });
   });
 
-  it("내 출발지가 없고 다른 출발지가 있으면 내 출발지 추가를 우선 행동으로 안내한다", () => {
+  it("다른 사람만 등록했으면 남은 자리를 내 등록 슬롯으로 만든다", () => {
     expect(
       getInsufficientDepartureContent({
         registeredCount: 1,
-        totalCount: 5,
         hasMyDeparture: false,
+        departures: [지훈],
+        myLocationVoteId: null,
       }),
     ).toEqual({
       title: "내 출발지를 추가하면 중간지점을 찾을 수 있어요",
-      description: null,
-      progressText: "출발지 등록 1 / 5",
-      remainingText: "중간지점 추천까지 1명 더 필요해요",
-      helperText: null,
-      totalStatusText: null,
+      slots: [
+        {
+          key: "departure-11",
+          kind: "filled",
+          name: "지훈",
+          location: "강남역 2번 출구",
+          isMine: false,
+        },
+        { key: "empty-0", kind: "add-mine" },
+      ],
       primaryAction: "add",
       secondaryAction: "share",
     });
   });
 
-  it("2명 모임이면 전체 참여 현황 보조 문구를 생략한다", () => {
-    expect(
-      getInsufficientDepartureContent({
-        registeredCount: 1,
-        totalCount: 2,
-        hasMyDeparture: true,
-      }).totalStatusText,
-    ).toBeNull();
-  });
-
-  it("전체 인원 수가 0명으로 오면 진행 상태 분모는 최소 추천 조건으로 대체한다", () => {
-    expect(
-      getInsufficientDepartureContent({
-        registeredCount: 0,
-        totalCount: 0,
-        hasMyDeparture: false,
-      }).progressText,
-    ).toBe("출발지 등록 0 / 2");
-  });
-
-  it("내 출발지를 등록한 뒤에는 친구 공유를 유도한다", () => {
-    expect(
-      getInsufficientDepartureContent({
-        registeredCount: 1,
-        totalCount: 5,
-        hasMyDeparture: true,
-      }),
-    ).toMatchObject({
-      title: "한 명만 더 등록하면 중간지점을 찾을 수 있어요",
-      description: null,
-      primaryAction: "share",
-      secondaryAction: "add",
+  it("최소 추천 조건보다 많이 등록되어 있으면 등록 수만큼 슬롯을 만든다", () => {
+    const { slots } = getInsufficientDepartureContent({
+      registeredCount: 2,
+      hasMyDeparture: true,
+      departures: [지훈, 수아],
+      myLocationVoteId: 22,
     });
+
+    expect(slots).toHaveLength(2);
+    expect(slots.every((slot) => slot.kind === "filled")).toBe(true);
+  });
+
+  it("등록 수보다 출발지 목록이 늦게 도착해도 슬롯 수는 최소 추천 조건을 지킨다", () => {
+    const { slots } = getInsufficientDepartureContent({
+      registeredCount: 1,
+      hasMyDeparture: false,
+      departures: [],
+    });
+
+    expect(slots).toEqual([
+      { key: "empty-0", kind: "add-mine" },
+      { key: "empty-1", kind: "waiting" },
+    ]);
+  });
+
+  it("빈 자리가 여러 개면 첫 자리에만 행동을 붙이고 나머지는 대기로 둔다", () => {
+    const { slots } = getInsufficientDepartureContent({
+      registeredCount: 0,
+      hasMyDeparture: true,
+      departures: [],
+    });
+
+    expect(slots).toEqual([
+      { key: "empty-0", kind: "invite" },
+      { key: "empty-1", kind: "waiting" },
+    ]);
+  });
+
+  it("진행 상태를 문장으로 반복하지 않는다", () => {
+    const content = getInsufficientDepartureContent({
+      registeredCount: 0,
+      hasMyDeparture: false,
+      departures: [],
+    });
+
+    expect(content).not.toHaveProperty("progressText");
+    expect(content).not.toHaveProperty("remainingText");
+    expect(content).not.toHaveProperty("totalStatusText");
+    expect(content).not.toHaveProperty("helperText");
   });
 });

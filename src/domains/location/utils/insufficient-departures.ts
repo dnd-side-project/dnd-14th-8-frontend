@@ -2,95 +2,121 @@ const MIN_DEPARTURE_COUNT = 2;
 
 export type InsufficientDepartureAction = "add" | "share";
 
+export interface DepartureSummary {
+  locationVoteId: number;
+  participantName: string;
+  departureLocation: string;
+}
+
+/**
+ * 빈 상태를 문장으로 설명하는 대신 자리(슬롯)로 그린다. 채워진 자리와 남은
+ * 자리를 나란히 보여주면 "몇 명 중 몇 명"을 따로 읽어줄 필요가 없다.
+ */
+export type DepartureSlot =
+  | {
+      key: string;
+      kind: "filled";
+      name: string;
+      location: string;
+      isMine: boolean;
+    }
+  | { key: string; kind: "add-mine" }
+  | { key: string; kind: "invite" }
+  | { key: string; kind: "waiting" };
+
 export interface GetInsufficientDepartureContentParams {
   registeredCount: number;
-  totalCount?: number;
   hasMyDeparture: boolean;
+  departures?: DepartureSummary[];
+  myLocationVoteId?: number | null;
 }
 
 export interface InsufficientDepartureContent {
   title: string;
-  description: string | null;
-  progressText: string;
-  remainingText: string;
-  helperText: string | null;
-  totalStatusText: string | null;
+  slots: DepartureSlot[];
   primaryAction: InsufficientDepartureAction;
   secondaryAction: InsufficientDepartureAction | null;
 }
 
-function formatPersonCount(count: number) {
-  return `${count}명`;
+function getFilledSlots({
+  departures,
+  slotCount,
+  myLocationVoteId,
+}: {
+  departures: DepartureSummary[];
+  slotCount: number;
+  myLocationVoteId?: number | null;
+}): DepartureSlot[] {
+  return departures.slice(0, slotCount).map((departure) => ({
+    key: `departure-${departure.locationVoteId}`,
+    kind: "filled",
+    name: departure.participantName,
+    location: departure.departureLocation,
+    isMine:
+      myLocationVoteId != null && departure.locationVoteId === myLocationVoteId,
+  }));
 }
 
-function getProgressText({
+/**
+ * 빈 자리는 첫 칸에만 다음 행동을 붙인다. 모든 칸이 버튼이면 무엇부터
+ * 해야 하는지가 흐려진다.
+ */
+function getEmptySlots({
+  emptyCount,
+  hasMyDeparture,
+}: {
+  emptyCount: number;
+  hasMyDeparture: boolean;
+}): DepartureSlot[] {
+  return Array.from({ length: emptyCount }, (_, index) => {
+    if (index > 0) return { key: `empty-${index}`, kind: "waiting" as const };
+
+    return {
+      key: `empty-${index}`,
+      kind: hasMyDeparture ? ("invite" as const) : ("add-mine" as const),
+    };
+  });
+}
+
+function getTitle({
   registeredCount,
-  totalCount,
+  hasMyDeparture,
 }: {
   registeredCount: number;
-  totalCount?: number;
+  hasMyDeparture: boolean;
 }) {
-  const baseTotalCount =
-    totalCount && totalCount > 0 ? totalCount : MIN_DEPARTURE_COUNT;
-  const denominator = Math.max(baseTotalCount, registeredCount);
+  if (registeredCount === 0) return "2명이 모이면 중간지점을 찾아드려요";
+  if (!hasMyDeparture) return "내 출발지를 추가하면 중간지점을 찾을 수 있어요";
 
-  return `출발지 등록 ${registeredCount} / ${denominator}`;
-}
-
-function getRemainingText(remainingCount: number) {
-  return `중간지점 추천까지 ${formatPersonCount(remainingCount)} 더 필요해요`;
+  return "한 명만 더 등록하면 중간지점을 찾을 수 있어요";
 }
 
 export function getInsufficientDepartureContent({
   registeredCount,
-  totalCount,
   hasMyDeparture,
+  departures = [],
+  myLocationVoteId,
 }: GetInsufficientDepartureContentParams): InsufficientDepartureContent {
   const normalizedRegisteredCount = Math.max(registeredCount, 0);
-  const remainingCount = Math.max(
-    MIN_DEPARTURE_COUNT - normalizedRegisteredCount,
-    0,
-  );
-  const progressText = getProgressText({
-    registeredCount: normalizedRegisteredCount,
-    totalCount,
+  const slotCount = Math.max(MIN_DEPARTURE_COUNT, normalizedRegisteredCount);
+  const filledSlots = getFilledSlots({
+    departures,
+    slotCount,
+    myLocationVoteId,
   });
-  const remainingText = getRemainingText(remainingCount);
-
-  if (normalizedRegisteredCount === 0) {
-    return {
-      title: "출발지를 등록하면 중간지점을 찾을 수 있어요",
-      description: null,
-      progressText,
-      remainingText,
-      helperText: null,
-      totalStatusText: null,
-      primaryAction: "add",
-      secondaryAction: "share",
-    };
-  }
-
-  if (!hasMyDeparture) {
-    return {
-      title: "내 출발지를 추가하면 중간지점을 찾을 수 있어요",
-      description: null,
-      progressText,
-      remainingText,
-      helperText: null,
-      totalStatusText: null,
-      primaryAction: "add",
-      secondaryAction: "share",
-    };
-  }
+  const emptySlots = getEmptySlots({
+    emptyCount: slotCount - filledSlots.length,
+    hasMyDeparture,
+  });
+  const canRegisterMine = normalizedRegisteredCount > 0 && !hasMyDeparture;
 
   return {
-    title: "한 명만 더 등록하면 중간지점을 찾을 수 있어요",
-    description: null,
-    progressText,
-    remainingText,
-    helperText: null,
-    totalStatusText: null,
-    primaryAction: "share",
-    secondaryAction: "add",
+    title: getTitle({
+      registeredCount: normalizedRegisteredCount,
+      hasMyDeparture,
+    }),
+    slots: [...filledSlots, ...emptySlots],
+    primaryAction: hasMyDeparture && !canRegisterMine ? "share" : "add",
+    secondaryAction: hasMyDeparture && !canRegisterMine ? "add" : "share",
   };
 }

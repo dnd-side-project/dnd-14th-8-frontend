@@ -223,8 +223,9 @@ export function LocationMainPage() {
   const insufficientDepartureContent = isInsufficientDepartures
     ? getInsufficientDepartureContent({
         registeredCount,
-        totalCount,
         hasMyDeparture: myInfo?.locationVoteId != null,
+        departures: departures ?? [],
+        myLocationVoteId: myInfo?.locationVoteId,
       })
     : null;
   const isNearbyDepartures = shouldShowNearbyDepartureNote({
@@ -398,8 +399,9 @@ export function LocationMainPage() {
                 insufficientDepartureContent ??
                 getInsufficientDepartureContent({
                   registeredCount,
-                  totalCount,
                   hasMyDeparture: myInfo?.locationVoteId != null,
+                  departures: departures ?? [],
+                  myLocationVoteId: myInfo?.locationVoteId,
                 })
               }
               onAddDeparture={() =>
