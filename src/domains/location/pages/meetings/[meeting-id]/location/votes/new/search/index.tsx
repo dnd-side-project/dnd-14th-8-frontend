@@ -5,6 +5,7 @@ import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
+import type { DepartureReturnTarget } from "@/domains/location/utils/departure-return";
 import {
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
@@ -20,6 +21,9 @@ interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
+  // 출발지 추가 화면이 등록 후 돌아갈 곳을 기억하고 있으므로 검색을 다녀와도
+  // 잃어버리지 않게 그대로 실어 보낸다.
+  returnTo?: DepartureReturnTarget;
   selectedParticipantId?: string;
 }
 

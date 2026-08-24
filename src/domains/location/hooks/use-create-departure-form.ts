@@ -12,6 +12,10 @@ import {
   isDuplicateDepartureError,
 } from "@/domains/location/utils/create-departure-request";
 import {
+  type DepartureReturnTarget,
+  getDepartureReturnPath,
+} from "@/domains/location/utils/departure-return";
+import {
   isOutOfServiceAreaError,
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
@@ -68,6 +72,7 @@ export type CreateDepartureFormValues = z.infer<
 export function useCreateDepartureForm(
   meetingId: string,
   initialValues?: Partial<CreateDepartureFormValues>,
+  returnTo?: DepartureReturnTarget | string | null,
 ) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -126,7 +131,7 @@ export function useCreateDepartureForm(
       ]);
 
       toast.success("출발지가 추가되었어요");
-      navigate(`/meetings/${meetingId}/location/votes`);
+      navigate(getDepartureReturnPath({ meetingId, returnTo }));
     } catch (error) {
       console.error("출발지 추가 실패:", error);
       if (isOutOfServiceAreaError(error)) {

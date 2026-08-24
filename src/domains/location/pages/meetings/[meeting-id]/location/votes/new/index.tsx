@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useCreateDepartureForm } from "@/domains/location/hooks/use-create-departure-form";
+import type { DepartureReturnTarget } from "@/domains/location/utils/departure-return";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
 import { ButtonBottom } from "@/shared/components/button-bottom";
@@ -15,6 +16,7 @@ interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
+  returnTo?: DepartureReturnTarget;
   selectedParticipantId?: string;
 }
 
@@ -35,13 +37,17 @@ export function DepartureNewPage() {
     onSubmit,
     watch,
     setValue,
-  } = useCreateDepartureForm(meetingId, {
-    departureLocation: state?.address,
-    departureLat: state?.coords ? String(state.coords[0]) : undefined,
-    departureLng: state?.coords ? String(state.coords[1]) : undefined,
-    participantName: state?.name,
-    participantId: state?.selectedParticipantId,
-  });
+  } = useCreateDepartureForm(
+    meetingId,
+    {
+      departureLocation: state?.address,
+      departureLat: state?.coords ? String(state.coords[0]) : undefined,
+      departureLng: state?.coords ? String(state.coords[1]) : undefined,
+      participantName: state?.name,
+      participantId: state?.selectedParticipantId,
+    },
+    state?.returnTo,
+  );
 
   useEffect(() => {
     if (state?.address) {
@@ -84,6 +90,7 @@ export function DepartureNewPage() {
         address: currentValues.departureLocation,
         selectedParticipantId: currentValues.participantId,
         name: currentValues.participantName,
+        returnTo: state?.returnTo,
       },
     });
   };

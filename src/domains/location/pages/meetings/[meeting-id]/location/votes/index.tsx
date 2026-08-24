@@ -70,7 +70,10 @@ export function DepartureListPage() {
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
         <PageHeader title="출발지 관리" onBack={() => navigate(-1)} />
-        <ButtonSubStroke onClick={() => navigate("new")} className="mt-3 mb-3">
+        <ButtonSubStroke
+          onClick={() => navigate("new", { state: { returnTo: "manage" } })}
+          className="mt-3 mb-3"
+        >
           출발지 추가하기
         </ButtonSubStroke>
 
