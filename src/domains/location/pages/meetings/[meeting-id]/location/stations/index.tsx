@@ -35,6 +35,7 @@ import {
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
 import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
 import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
@@ -223,7 +224,7 @@ export function LocationMainPage() {
   const insufficientDepartureContent = isInsufficientDepartures
     ? getInsufficientDepartureContent({
         registeredCount,
-        hasMyDeparture: myInfo?.locationVoteId != null,
+        hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
         departures: departures ?? [],
         myLocationVoteId: myInfo?.locationVoteId,
       })
@@ -399,7 +400,7 @@ export function LocationMainPage() {
                 insufficientDepartureContent ??
                 getInsufficientDepartureContent({
                   registeredCount,
-                  hasMyDeparture: myInfo?.locationVoteId != null,
+                  hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
                   departures: departures ?? [],
                   myLocationVoteId: myInfo?.locationVoteId,
                 })

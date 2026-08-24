@@ -16,6 +16,7 @@ import {
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
 } from "@/domains/location/utils/service-area";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import {
   getMyParticipantQueryKey,
   useGetMyParticipant,
@@ -104,7 +105,7 @@ export function useCreateDepartureForm(
         departureLat: data.departureLat,
         departureLng: data.departureLng,
         guestId,
-        hasMyLocationVote: myInfo?.locationVoteId != null,
+        hasMyLocationVote: hasVoteId(myInfo?.locationVoteId),
       });
 
       await createDepartureMutation.mutateAsync(requestPayload);
