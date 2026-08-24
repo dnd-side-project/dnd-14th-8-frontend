@@ -9,17 +9,6 @@ import { ChevronDownIcon, ChevronUpIcon } from "@/shared/components/icons";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { cn } from "@/shared/utils/cn";
 
-const convertToKST = (time: string) => {
-  if (!time) return "";
-  // 시간 형식이 "HH:mm"일 경우를 가정
-  const [hours, minutes] = time.split(":").map(Number);
-  const date = new Date();
-  date.setHours(hours + 9); // 9시간 추가
-  date.setMinutes(minutes);
-
-  return date.toTimeString().slice(0, 5); // 다시 "HH:mm" 형식으로 반환
-};
-
 export function ScheduleMainOptimalContent() {
   const { meetingId } = useParams() as { meetingId: string };
   const { data, isPending } = useGetMeetingScheduleVoteResults({ meetingId });
@@ -50,8 +39,8 @@ export function ScheduleMainOptimalContent() {
           index={index + 1}
           scheduleDate={recommendation.scheduleDate}
           scheduleDayOfWeek={recommendation.scheduleDayOfWeek}
-          startTime={convertToKST(recommendation.startTime)}
-          endTime={convertToKST(recommendation.endTime)}
+          startTime={recommendation.startTime}
+          endTime={recommendation.endTime}
           voteCount={recommendation.voteCount}
           participantCount={data?.participantCount ?? 0}
           availableParticipantNames={recommendation.availableParticipantNames}
@@ -78,8 +67,8 @@ export function ScheduleMainOptimalContent() {
                     index={visible.length + index + 1}
                     scheduleDate={recommendation.scheduleDate}
                     scheduleDayOfWeek={recommendation.scheduleDayOfWeek}
-                    startTime={convertToKST(recommendation.startTime)}
-                    endTime={convertToKST(recommendation.endTime)}
+                    startTime={recommendation.startTime}
+                    endTime={recommendation.endTime}
                     voteCount={recommendation.voteCount}
                     participantCount={data?.participantCount ?? 0}
                     availableParticipantNames={
