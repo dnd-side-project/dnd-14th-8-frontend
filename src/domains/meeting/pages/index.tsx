@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import mainLocationGraphic from "@/assets/graphic/main-location.svg";
-import mainScheduleGraphic from "@/assets/graphic/main-schedule.svg";
+import mainLocationGraphic from "@/assets/graphic/main-location.png";
+import mainScheduleGraphic from "@/assets/graphic/main-schedule.png";
 import MoyeorakLogo from "@/assets/moyeorak-logo-white.svg?react";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
@@ -31,9 +31,7 @@ export function LandingPage() {
             title="중간 장소 찾기"
             description="모두가 효율적인 장소 찾기"
             graphicSrc={mainLocationGraphic}
-            // 그래픽에 그림자가 포함되어 335x140 카드 바깥으로 8px씩 여백이 있어
-            // 카드 영역에 맞도록 여백만큼 밖으로 확장한다.
-            graphicClassName="inset-auto top-[-5.714%] left-[-2.388%] h-[111.429%] w-[104.776%] max-w-none"
+            className="shadow-[0_0_8px_var(--colors-shadow-neutral-default)]"
             titleClassName="text-fg-brand-default"
             descriptionClassName="text-fg-neutral-subtler"
             onClick={() => navigate("/new/location")}
