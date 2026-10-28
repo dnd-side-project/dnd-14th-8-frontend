@@ -38,7 +38,7 @@ export const RequiredParticipantsLocation: Story = {
 export const NoOverlappingTime: Story = {
   args: {
     graphic: <Empty1Character />,
-    title: "아직 겹치는 시간대가 없어요..",
+    title: "아직 겹치는 시간대가 없어요",
     description: "시간 범위를 넓히거나 팀원들을 기다려 보세요.",
   },
 };
@@ -46,7 +46,7 @@ export const NoOverlappingTime: Story = {
 export const NoAddressFound: Story = {
   args: {
     graphic: <Empty2Character />,
-    title: "일치하는 주소가 없어요..",
+    title: "일치하는 주소가 없어요",
     description: "검색한 지역을 다시 확인해 보세요.",
   },
 };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, fn, userEvent } from "@storybook/test";
 import { useState } from "react";
 import { Timetable } from "@/shared/components/timetable";
 
@@ -139,5 +140,89 @@ export const HalfHourBoth: Story = {
     startTime: 9.5,
     endTime: 18.5,
     dates: getDates(4),
+  },
+};
+
+/**
+ * 6. 읽기 전용 시간표의 탭 처리
+ *
+ * 메인 화면 시간표는 읽기 전용이지만, 사용자는 "내 시간을 넣으려고" 격자를
+ * 누른다. 그 탭을 편집 화면으로 연결하되 스크롤 제스처와는 구분해야 한다.
+ */
+const readOnlyTapArgs = {
+  startTime: 9,
+  endTime: 11,
+  dates: getDates(3),
+  disabled: true,
+};
+
+const getSlot = (
+  canvasElement: HTMLElement,
+  dateIdx: number,
+  slotIdx: number,
+) => {
+  const slot = canvasElement.querySelector<HTMLElement>(
+    `[data-date-idx="${dateIdx}"][data-slot-idx="${slotIdx}"]`,
+  );
+  if (!slot) throw new Error(`슬롯을 찾지 못했어요: ${dateIdx}/${slotIdx}`);
+  return slot;
+};
+
+export const ReadOnlyTap: Story = {
+  name: "읽기 전용 · 탭하면 편집으로",
+  args: { ...readOnlyTapArgs, onDisabledTap: fn(), onSelect: fn() },
+  play: async ({ args, canvasElement }) => {
+    const slot = getSlot(canvasElement, 1, 2);
+
+    await userEvent.pointer([
+      {
+        keys: "[MouseLeft>]",
+        target: slot,
+        coords: { clientX: 120, clientY: 300 },
+      },
+      {
+        keys: "[/MouseLeft]",
+        target: slot,
+        coords: { clientX: 122, clientY: 301 },
+      },
+    ]);
+
+    await expect(args.onDisabledTap).toHaveBeenCalledTimes(1);
+    await expect(args.onSelect).not.toHaveBeenCalled();
+  },
+};
+
+export const ReadOnlyDrag: Story = {
+  name: "읽기 전용 · 스크롤 제스처는 무시",
+  args: { ...readOnlyTapArgs, onDisabledTap: fn(), onSelect: fn() },
+  play: async ({ args, canvasElement }) => {
+    const from = getSlot(canvasElement, 0, 2);
+    const to = getSlot(canvasElement, 2, 2);
+
+    await userEvent.pointer([
+      {
+        keys: "[MouseLeft>]",
+        target: from,
+        coords: { clientX: 220, clientY: 300 },
+      },
+      { target: to, coords: { clientX: 120, clientY: 302 } },
+      {
+        keys: "[/MouseLeft]",
+        target: to,
+        coords: { clientX: 120, clientY: 302 },
+      },
+    ]);
+
+    await expect(args.onDisabledTap).not.toHaveBeenCalled();
+  },
+};
+
+export const ReadOnlyWithoutTapHandler: Story = {
+  name: "읽기 전용 · 핸들러 없으면 종전대로 무반응",
+  args: { ...readOnlyTapArgs, onSelect: fn() },
+  play: async ({ args, canvasElement }) => {
+    await userEvent.click(getSlot(canvasElement, 1, 2));
+
+    await expect(args.onSelect).not.toHaveBeenCalled();
   },
 };

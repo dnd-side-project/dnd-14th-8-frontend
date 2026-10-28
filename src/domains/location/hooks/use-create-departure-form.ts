@@ -1,29 +1,65 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateDeparture } from "@/domains/location/hooks/use-create-departure";
 import { getDeparturesQueryKey } from "@/domains/location/hooks/use-get-departures";
 import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
-import type { CreateLocationVoteRequest } from "@/domains/location/types/location-api-types";
+import {
+  buildCreateDepartureRequest,
+  DUPLICATE_DEPARTURE_MESSAGE,
+  isDuplicateDepartureError,
+} from "@/domains/location/utils/create-departure-request";
+import {
+  isOutOfServiceAreaError,
+  isWithinServiceArea,
+  OUT_OF_SERVICE_AREA_MESSAGE,
+} from "@/domains/location/utils/service-area";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
+import {
+  getMyParticipantQueryKey,
+  useGetMyParticipant,
+} from "@/domains/schedule/hooks/use-get-my-participant";
 import { toast } from "@/shared/components/toast";
+import { useFlowReturn } from "@/shared/hooks/use-flow-return";
 import { getGuestId } from "@/shared/utils/auth";
 
 export const NAME_MAX_LENGTH = 4;
 
-export const createDepartureFormSchema = z.object({
-  meetingId: z.string(),
-  participantName: z
-    .string()
-    .trim()
-    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`)
-    .optional(),
-  participantId: z.string().optional(),
-  departureLocation: z.string().min(1, "출발지를 선택해주세요"),
-  departureLat: z.string().min(1),
-  departureLng: z.string().min(1),
-});
+export function refineServiceArea(
+  values: { departureLat: string; departureLng: string },
+  ctx: z.RefinementCtx,
+) {
+  if (!values.departureLat || !values.departureLng) return;
+
+  if (
+    !isWithinServiceArea(
+      Number(values.departureLat),
+      Number(values.departureLng),
+    )
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["departureLocation"],
+      message: OUT_OF_SERVICE_AREA_MESSAGE,
+    });
+  }
+}
+
+export const createDepartureFormSchema = z
+  .object({
+    meetingId: z.string(),
+    participantName: z
+      .string()
+      .trim()
+      .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`)
+      .optional(),
+    participantId: z.string().optional(),
+    departureLocation: z.string().min(1, "출발지를 선택해주세요"),
+    departureLat: z.string().min(1),
+    departureLng: z.string().min(1),
+  })
+  .superRefine(refineServiceArea);
 
 export type CreateDepartureFormValues = z.infer<
   typeof createDepartureFormSchema
@@ -32,10 +68,15 @@ export type CreateDepartureFormValues = z.infer<
 export function useCreateDepartureForm(
   meetingId: string,
   initialValues?: Partial<CreateDepartureFormValues>,
+  entryIdx?: number | null,
 ) {
-  const navigate = useNavigate();
+  const returnToOrigin = useFlowReturn({
+    entryIdx,
+    fallbackPath: `/meetings/${meetingId}/location/stations`,
+  });
   const queryClient = useQueryClient();
   const createDepartureMutation = useCreateDeparture();
+  const { data: myInfo } = useGetMyParticipant({ meetingId });
 
   const {
     control,
@@ -58,16 +99,18 @@ export function useCreateDepartureForm(
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const localStorageKey = getGuestId();
+      const guestId = getGuestId();
 
-      const requestPayload: CreateLocationVoteRequest = {
+      const requestPayload = buildCreateDepartureRequest({
         meetingId: data.meetingId,
-        localStorageKey: localStorageKey || undefined,
+        participantId: data.participantId,
         participantName: data.participantName || "",
         departureLocation: data.departureLocation,
         departureLat: data.departureLat,
         departureLng: data.departureLng,
-      };
+        guestId,
+        hasMyLocationVote: hasVoteId(myInfo?.locationVoteId),
+      });
 
       await createDepartureMutation.mutateAsync(requestPayload);
 
@@ -78,12 +121,26 @@ export function useCreateDepartureForm(
         queryClient.invalidateQueries({
           queryKey: getMidpointRecommendationsQueryKey({ meetingId }),
         }),
+        queryClient.invalidateQueries({
+          queryKey: getMyParticipantQueryKey({
+            localStorageKey: guestId,
+            meetingId,
+          }),
+        }),
       ]);
 
       toast.success("출발지가 추가되었어요");
-      navigate(`/meetings/${meetingId}/location/votes`);
+      returnToOrigin();
     } catch (error) {
       console.error("출발지 추가 실패:", error);
+      if (isOutOfServiceAreaError(error)) {
+        toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
+        return;
+      }
+      if (isDuplicateDepartureError(error)) {
+        toast.error(DUPLICATE_DEPARTURE_MESSAGE);
+        return;
+      }
       toast.error("출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.");
     }
   });
@@ -99,6 +156,10 @@ export function useCreateDepartureForm(
       !!watch("departureLng") &&
       watch("departureLat") !== "undefined" &&
       watch("departureLng") !== "undefined" &&
+      isWithinServiceArea(
+        Number(watch("departureLat")),
+        Number(watch("departureLng")),
+      ) &&
       (!!watch("participantName")?.trim() || !!watch("participantId")),
     isSubmitPending: createDepartureMutation.isPending,
     maxNameLength: NAME_MAX_LENGTH,

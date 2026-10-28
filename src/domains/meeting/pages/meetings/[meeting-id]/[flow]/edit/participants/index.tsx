@@ -57,10 +57,12 @@ export function MeetingEditParticipantsPage() {
           // TODO: 수정 -> 일정일 때, 장소일 떄
           navigate(`/meetings/${currentMeetingId}/schedule`);
 
-          toast.success("모임인원이 수정되었어요");
+          toast.success("모임 인원이 수정되었어요");
         },
         onError: () => {
-          alert("수정에 실패했습니다. 다시 시도해주세요.");
+          toast.error(
+            "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
+          );
         },
       },
     );

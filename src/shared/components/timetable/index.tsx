@@ -9,6 +9,7 @@ import {
 } from "react";
 import { TimetableSlot } from "@/shared/components/timetable-slot";
 import { cn } from "@/shared/utils/cn";
+import { isTapGesture, type PointerPosition } from "./tap-gesture";
 import { useTimetableDragSelection } from "./use-timetable-drag-selection";
 
 export interface TimetableProps {
@@ -21,6 +22,8 @@ export interface TimetableProps {
   disabled?: boolean;
   occupancy?: Record<string, number>;
   stickyHeaderTop?: number;
+  /** 읽기 전용 시간표를 탭했을 때. 넘기지 않으면 종전대로 무반응이다. */
+  onDisabledTap?: () => void;
 }
 
 const getOpacityMap = (occupancy: Record<string, number>) => {
@@ -48,6 +51,7 @@ export function Timetable({
   disabled = false,
   occupancy = {},
   stickyHeaderTop = 0,
+  onDisabledTap,
 }: TimetableProps) {
   const totalSlots = Math.round((endTime - startTime) * 2);
 
@@ -69,6 +73,7 @@ export function Timetable({
   const bodyScrollRef = useRef<HTMLDivElement>(null);
   const frameIdRef = useRef<number | null>(null);
   const pendingScrollLeftRef = useRef(0);
+  const disabledTapStartRef = useRef<PointerPosition | null>(null);
 
   const getDayName = (date: Date) => {
     return new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(date);
@@ -169,7 +174,62 @@ export function Timetable({
     }
   };
 
+  const handleBodyPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!disabled || !onDisabledTap) {
+      return;
+    }
+
+    disabledTapStartRef.current = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+  };
+
+  /**
+   * 읽기 전용 시간표를 탭하면 편집 화면으로 넘긴다. 사용자는 격자를 눌러
+   * 자기 시간을 넣으려 하는데 지금까지는 아무 반응이 없었다.
+   */
+  const handleDisabledTapEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = disabledTapStartRef.current;
+    disabledTapStartRef.current = null;
+
+    if (!start || !onDisabledTap) {
+      return;
+    }
+
+    const end = { clientX: event.clientX, clientY: event.clientY };
+    if (!isTapGesture(start, end)) {
+      return;
+    }
+
+    /**
+     * 드래그와 달리 탭은 포인터가 머문 자리가 곧 target이라 elementFromPoint가
+     * 필요 없다. 열 사이 여백이나 시간 눈금을 눌렀을 때는 무시한다.
+     */
+    const slot = (event.target as HTMLElement | null)?.closest(
+      "[data-date-idx][data-slot-idx]",
+    );
+    if (!slot || !event.currentTarget.contains(slot)) {
+      return;
+    }
+
+    onDisabledTap();
+  };
+
   const handleBodyPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (disabled) {
+      handleDisabledTapEnd(event);
+      return;
+    }
+
+    handlePointerUp(event.pointerId);
+  };
+
+  const handleBodyPointerCancel = (
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    disabledTapStartRef.current = null;
+
     if (disabled) {
       return;
     }
@@ -246,9 +306,10 @@ export function Timetable({
       <div
         ref={bodyScrollRef}
         onScroll={handleBodyScroll}
+        onPointerDown={handleBodyPointerDown}
         onPointerMove={handleBodyPointerMove}
         onPointerUp={handleBodyPointerUp}
-        onPointerCancel={handleBodyPointerUp}
+        onPointerCancel={handleBodyPointerCancel}
         className={cn(
           "scrollbar-hide overflow-x-auto overflow-y-hidden overscroll-x-contain",
           isDraggingSelection ? "touch-none" : "touch-auto",

@@ -4,6 +4,7 @@ import { ScheduleMainOptimalContent } from "@/domains/schedule/components/schedu
 import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-main-vote-content";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
+import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import { Tab } from "@/shared/components/tab";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import { cn } from "@/shared/utils/cn";
@@ -17,6 +18,7 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
+  onGoHome: () => void;
   onGoToLocation?: () => void;
 }
 
@@ -29,6 +31,7 @@ export function ScheduleMainView({
   onEditSchedule,
   onParticipantEdit,
   onTabChange,
+  onGoHome,
   onGoToLocation,
   tab,
   ...props
@@ -42,24 +45,28 @@ export function ScheduleMainView({
       return {
         text: "장소 정하러 가기",
         action: onGoToLocation ?? onVoteAction,
-        variant: "blue" as const,
       };
     }
     // 그 외
     return {
       text: hasExistingVote ? "일정 수정하기" : "일정 추가하기",
       action: onVoteAction,
-      variant: "black" as const,
     };
   };
 
-  const { text, action, variant } = getButtonConfig();
+  const { text, action } = getButtonConfig();
 
   return (
     <div
       className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
       {...props}
     >
+      {/* Hero는 로딩 중 null을 반환하고 pt-6 바로 아래에 제목이 오므로,
+          홈 버튼은 Hero 안에 겹치지 않고 같은 배경의 바로 위에 둔다. */}
+      <div className="w-full shrink-0 bg-p-50 px-4 pt-4">
+        <HomeLogoButton onClick={onGoHome} />
+      </div>
+
       <ScheduleMainHero meetingId={meetingId} onEditSchedule={onEditSchedule} />
 
       <section className="sticky top-0 z-30 shrink-0 bg-k-5">
@@ -77,18 +84,17 @@ export function ScheduleMainView({
 
       <section className="flex min-h-0 flex-1 flex-col px-5 py-3 pb-[106px]">
         {tab === "vote" && (
-          <ScheduleMainVoteContent onParticipantEdit={onParticipantEdit} />
+          <ScheduleMainVoteContent
+            onParticipantEdit={onParticipantEdit}
+            onVoteAction={onVoteAction}
+          />
         )}
         {tab === "optimal" && <ScheduleMainOptimalContent />}
       </section>
 
       <FloatingScrollTop top={4} className="bottom-[92px]" />
 
-      <BottomActionBarWithButtonAndShare
-        onClick={action}
-        onShare={share}
-        buttonVariant={variant}
-      >
+      <BottomActionBarWithButtonAndShare onClick={action} onShare={share}>
         {text}
       </BottomActionBarWithButtonAndShare>
     </div>

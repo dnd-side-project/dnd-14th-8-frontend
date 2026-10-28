@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /new/
+Disallow: /meetings/
+
+Sitemap: https://moyeorak.site/sitemap.xml

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useNavigate,
   useOutletContext,
@@ -8,8 +8,12 @@ import {
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
+import { InsufficientDeparturesEmptyState } from "@/domains/location/components/insufficient-departures-empty-state";
 import { MapMarker } from "@/domains/location/components/map-marker";
+import { NearbyDeparturesNote } from "@/domains/location/components/nearby-departures-note";
+import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
 import { TextPin } from "@/domains/location/components/text-pin";
+import { LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import {
   LOCATION_QUERY_PARAMS,
   ROUTE_TAB_VALUES,
@@ -23,8 +27,19 @@ import {
   formatDepartureDateTime,
   formatDuration,
 } from "@/domains/location/utils/format";
+import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
+import {
+  getMapFitPadding,
+  getVisibleCenterOffsetY,
+} from "@/domains/location/utils/map-viewport";
+import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
+import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
+import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
+import { hasVoteId } from "@/domains/meeting/utils/vote-id";
+import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
+import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import {
   ChevronDownIcon,
   LogoPinIcon,
@@ -55,12 +70,52 @@ function fitMapBounds({
     bounds.extend(new maps.LatLng(point.latitude, point.longitude));
   });
 
-  mapInst.fitBounds(bounds, {
-    top: 80,
-    bottom: Math.max(sheetHeight + 20, 140),
-    left: 20,
-    right: 20,
+  const padding = getMapFitPadding({
+    mapHeight: mapInst.getSize().height,
+    sheetHeight,
   });
+  // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
+  // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
+  if (!padding) return;
+
+  mapInst.fitBounds(bounds, padding);
+}
+
+/**
+ * 바텀시트가 지도 아래를 덮고 있으므로, 좌표를 컨테이너 정중앙이 아니라
+ * 시트가 비워둔 영역의 한가운데로 보낸다. 그냥 panTo 하면 fitMapBounds가
+ * 준 하단 패딩이 무시되고 선택한 역이 시트 뒤로 숨는다.
+ */
+function panToVisibleCenter({
+  latitude,
+  longitude,
+  mapInst,
+  sheetHeight,
+}: {
+  latitude: number;
+  longitude: number;
+  mapInst: naver.maps.Map;
+  sheetHeight: number;
+}) {
+  const maps = window.naver?.maps;
+  if (!maps) return;
+
+  const target = new maps.LatLng(latitude, longitude);
+  const projection = mapInst.getProjection();
+  const offset = projection.fromCoordToOffset(target);
+
+  mapInst.panTo(
+    projection.fromOffsetToCoord(
+      new maps.Point(
+        offset.x,
+        getVisibleCenterOffsetY({
+          mapHeight: mapInst.getSize().height,
+          sheetHeight,
+          targetOffsetY: offset.y,
+        }),
+      ),
+    ),
+  );
 }
 
 export function LocationMainPage() {
@@ -71,10 +126,20 @@ export function LocationMainPage() {
   const { mapInst, sheetHeight, setSheetHeight } =
     useOutletContext<MapPageOutletContext>();
 
-  const { data: departures } = useGetDepartures({ meetingId });
+  const { data: departures } = useGetDepartures({
+    meetingId,
+    ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
+  });
+  const { data: myInfo, isLoading: isMyInfoLoading } = useGetMyParticipant({
+    meetingId,
+  });
+  const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
+    meetingId,
+  });
   const { data: midpoint, isLoading: isMidpointLoading } =
     useGetMidpointRecommendations({
       meetingId,
+      ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
     });
 
   const recommendations = midpoint?.recommendations ?? [];
@@ -121,13 +186,26 @@ export function LocationMainPage() {
     fitMapBounds({ mapInst, sheetHeight, points });
   }, [mapInst, sheetHeight, recommendations, departures]);
 
-  useEffect(() => {
-    const maps = window.naver?.maps;
-    if (!mapInst || !selectedStation || !maps) return;
+  /**
+   * sheetHeight를 deps에 넣지 않는다. 넣으면 스냅이 바뀔 때마다 panTo가
+   * 다시 돌아, 시트만 올렸는데 지도가 따라 움직인다. 시트 높이에 맞춘
+   * 재프레이밍은 위의 fitMapBounds가 맡는다.
+   */
+  const sheetHeightRef = useRef(sheetHeight);
 
-    mapInst.panTo(
-      new maps.LatLng(selectedStation.latitude, selectedStation.longitude),
-    );
+  useEffect(() => {
+    sheetHeightRef.current = sheetHeight;
+  }, [sheetHeight]);
+
+  useEffect(() => {
+    if (!mapInst || !selectedStation) return;
+
+    panToVisibleCenter({
+      latitude: selectedStation.latitude,
+      longitude: selectedStation.longitude,
+      mapInst,
+      sheetHeight: sheetHeightRef.current,
+    });
   }, [mapInst, selectedStation]);
 
   const routeByParticipantName = useMemo(() => {
@@ -138,16 +216,37 @@ export function LocationMainPage() {
     );
   }, [selectedStation]);
 
+  /**
+   * myInfo가 도착하기 전에는 hasMyDeparture가 false라 이미 등록한 사람에게도
+   * "내 출발지 등록하기"가 잠깐 떴다가 바뀐다. 빈 상태와 CTA가 둘 다 이 값에
+   * 기대므로 midpoint와 함께 기다렸다가 한 번에 그린다.
+   */
+  const isContentLoading = isMidpointLoading || isMyInfoLoading;
   const hasRecommendations = recommendations.length > 0;
   const departureCount = departures?.length ?? 0;
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
   const hasEnoughDepartures = registeredCount >= 2;
+  const isInsufficientDepartures =
+    !hasRecommendations && !midpoint?.noNearbyStations;
+  const insufficientDepartureContent = isInsufficientDepartures
+    ? getInsufficientDepartureContent({
+        registeredCount,
+        hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
+        departures: departures ?? [],
+        myLocationVoteId: myInfo?.locationVoteId,
+      })
+    : null;
+  const isNearbyDepartures = shouldShowNearbyDepartureNote({
+    resultType: midpoint?.resultType,
+    recommendations,
+    departures: departures ?? [],
+  });
 
   const handleStationClick = (stationId: number) => {
     const next = new URLSearchParams(searchParams);
     next.set(LOCATION_QUERY_PARAMS.stationId, String(stationId));
-    setSearchParams(next);
+    setSearchParams(next, { replace: true });
   };
 
   const handleMoveNearby = () => {
@@ -158,12 +257,17 @@ export function LocationMainPage() {
       longitude: selectedStation.longitude,
     });
 
-    window.location.assign(
+    navigate(
       `/meetings/${meetingId}/location/nearby/${coordsPath}?${LOCATION_QUERY_PARAMS.stationId}=${selectedStation.stationId}`,
     );
   };
 
   const handleVoteAction = () => {
+    if (insufficientDepartureContent?.primaryAction === "share") {
+      share();
+      return;
+    }
+
     if (hasEnoughDepartures) {
       navigate(`/meetings/${meetingId}/location/votes`);
       return;
@@ -174,14 +278,10 @@ export function LocationMainPage() {
 
   return (
     <>
+      <HomeLogoButton className="absolute top-4 left-4" onClick={goHome} />
+
       {selectedStation && (
-        <button
-          type="button"
-          className="absolute top-3 right-5 z-30 rounded-full bg-k-5 px-3 py-2 text-b4 text-k-700 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]"
-          onClick={handleMoveNearby}
-        >
-          주변 <span className="text-primary-main underline">둘러보기</span>
-        </button>
+        <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
 
       {recommendations.map((station) => (
@@ -215,7 +315,7 @@ export function LocationMainPage() {
       ))}
 
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
-        {isMidpointLoading ? null : hasRecommendations && selectedStation ? (
+        {isContentLoading ? null : hasRecommendations && selectedStation ? (
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
             <div className="scrollbar-hide flex gap-2 overflow-x-auto">
               {recommendations.map((station) => (
@@ -261,10 +361,11 @@ export function LocationMainPage() {
               {selectedStation.distanceFromCenter}m
             </p>
 
+            {isNearbyDepartures && <NearbyDeparturesNote />}
+
             <p className="inline-flex items-center gap-1 text-b3 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
-              참여자{" "}
-              <span className="text-primary-main">{registeredCount}</span>/
+              팀원 <span className="text-primary-main">{registeredCount}</span>/
               {totalCount}
             </p>
 
@@ -281,6 +382,7 @@ export function LocationMainPage() {
                     name={locationVote.participantName}
                     address={route.departureAddress}
                     durationMinutes={route.transitDuration}
+                    unreachable={route.transitReachable === false}
                     onClick={() =>
                       navigate(
                         `/meetings/${meetingId}/location/stations/${selectedStation.stationId}/participants/${route.participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${ROUTE_TAB_VALUES.transit}`,
@@ -291,23 +393,55 @@ export function LocationMainPage() {
               })}
             </div>
           </div>
-        ) : (
+        ) : midpoint?.noNearbyStations ? (
           <div className="flex min-h-full flex-col px-5 pb-[106px]">
             <PlaceholderContent
               graphic={<PlaceholderGraphic className="h-[90px] w-[104px]" />}
-              title="출발지가 아직 충분하지 않아요"
-              description={`${registeredCount}명 등록됨 · 최소 2명 이상 출발지를 등록하면 중간지점을 추천해드려요`}
+              title="중간지점을 찾지 못했어요"
+              description="출발지들이 서로 너무 멀리 떨어져 있어요. 출발지를 다시 확인해주세요"
+            />
+          </div>
+        ) : (
+          <div className="flex min-h-full flex-col px-5 pb-[106px]">
+            <InsufficientDeparturesEmptyState
+              content={
+                insufficientDepartureContent ??
+                getInsufficientDepartureContent({
+                  registeredCount,
+                  hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
+                  departures: departures ?? [],
+                  myLocationVoteId: myInfo?.locationVoteId,
+                })
+              }
+              onAddDeparture={() =>
+                navigate(`/meetings/${meetingId}/location/votes/new`)
+              }
+              onShare={share}
             />
           </div>
         )}
       </BottomSheet>
 
-      <BottomActionBarWithButtonAndShare
-        onClick={handleVoteAction}
-        onShare={share}
-      >
-        {hasEnoughDepartures ? "출발지 관리하기" : "출발지 추가하기"}
-      </BottomActionBarWithButtonAndShare>
+      {!isContentLoading && (
+        <BottomActionBarWithButtonAndShare
+          onClick={handleVoteAction}
+          onShare={share}
+          buttonVariant={insufficientDepartureContent ? "blue" : "white"}
+          showShareButton={insufficientDepartureContent === null}
+        >
+          {insufficientDepartureContent?.primaryAction === "share"
+            ? "초대 링크 공유하기"
+            : hasEnoughDepartures
+              ? "출발지 관리하기"
+              : "출발지 추가하기"}
+        </BottomActionBarWithButtonAndShare>
+      )}
+
+      <HomeExitConfirmModal
+        isOpen={isConfirmOpen}
+        onCancel={cancelGoHome}
+        onConfirm={confirmGoHome}
+      />
     </>
   );
 }

@@ -11,6 +11,7 @@ export const toast = {
   success: sonnerToast.success,
   dismiss: sonnerToast.dismiss,
   error: sonnerToast.error,
+  message: sonnerToast.message,
 };
 
 export interface ToastProps extends ToasterProps {}
@@ -43,19 +44,29 @@ export function Toast({
         ...toastOptions,
         classNames: {
           ...toastOptions?.classNames,
+          actionButton: cn(
+            "shrink-0 rounded-full bg-k-5 px-3 py-1.5 text-b4 text-k-800 transition-colors hover:bg-k-100",
+            toastOptions?.classNames?.actionButton,
+          ),
           closeButton: cn(
             "border-none bg-k-750 text-k-300 transition-colors hover:bg-k-800 hover:text-k-100",
             toastOptions?.classNames?.closeButton,
           ),
-          content: cn("items-center gap-1", toastOptions?.classNames?.content),
+          content: cn(
+            "min-w-0 items-center gap-1",
+            toastOptions?.classNames?.content,
+          ),
           icon: cn("size-5 shrink-0", toastOptions?.classNames?.icon),
           toast: cn(
-            "cn-toast inline-flex! items-center! whitespace-nowrap! w-max! max-w-[95vw]! gap-0.5! rounded-full! px-4! py-2! text-b4! text-k-5! shadow-none!",
+            "cn-toast inline-flex! items-center! w-fit! min-w-[min(320px,calc(100vw-40px))]! max-w-[calc(100vw-40px)]! gap-2! rounded-2xl! px-4! py-3! text-b4! text-k-5! shadow-none!",
             "fixed! left-1/2! -translate-x-1/2!",
             "mb-[90px]!",
             toastOptions?.classNames?.toast,
           ),
-          title: cn("text-b4 text-k-5", toastOptions?.classNames?.title),
+          title: cn(
+            "min-w-0 whitespace-normal break-keep text-left text-b4 text-k-5 leading-[1.4]",
+            toastOptions?.classNames?.title,
+          ),
         },
       }}
       className={cn("group toaster", className)}

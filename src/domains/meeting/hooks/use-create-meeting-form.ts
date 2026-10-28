@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import { useCreateMeeting } from "@/domains/meeting/hooks/use-create-meeting";
+import { getCreateMeetingFlow } from "@/domains/meeting/utils/create-meeting-flow";
 import { toast } from "@/shared/components/toast";
 import { getGuestId, setMeetingSession } from "@/shared/utils/auth";
 
@@ -14,7 +15,7 @@ export const createMeetingFormSchema = z.object({
     .string()
     .trim()
     .min(1, "이름을 입력해주세요")
-    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`),
+    .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 입력할 수 있어요`),
   participantCount: z.number().min(2),
 });
 
@@ -44,6 +45,7 @@ export function useCreateMeetingForm(flow?: string) {
       const localStorageKey = getGuestId();
 
       const response = await createMeetingMutation.mutateAsync({
+        flow: getCreateMeetingFlow(flow),
         localStorageKey,
         participantName: data.participantName,
         participantCount: data.participantCount,

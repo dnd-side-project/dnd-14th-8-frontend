@@ -5,6 +5,7 @@ import {
   useMemo,
 } from "react";
 import { toast } from "@/shared/components/toast";
+import { canOpenKakaoShare } from "@/shared/providers/share-sheet-provider/kakao-share-availability";
 import { ShareSheetView } from "@/shared/providers/share-sheet-provider/share-sheet-view";
 import { useShareSheetState } from "@/shared/providers/share-sheet-provider/use-share-sheet-state";
 import { copyTextToClipboard } from "@/shared/utils/clipboard";
@@ -33,11 +34,8 @@ export function ShareSheetProvider({ children }: PropsWithChildren) {
   }, [close]);
 
   const handleKakaoShare = useCallback(() => {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
-
-    if (!isMobile || !isKakaoInApp) {
-      toast.error("모바일 카카오톡 앱에서만 공유할 수 있어요");
+    if (!canOpenKakaoShare(navigator.userAgent)) {
+      toast.error("모바일에서만 카카오톡으로 공유할 수 있어요");
       close();
       // void handleCopyShare();
       return;

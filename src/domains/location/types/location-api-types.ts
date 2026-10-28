@@ -6,6 +6,8 @@ export interface CreateLocationVoteRequest {
   departureLocation: string;
   localStorageKey?: string;
   meetingId: string;
+  /** 출발지를 연결할 기존 참여자 ID (대리 추가 시 지정) */
+  participantId?: number;
   participantName: string;
 }
 
@@ -34,9 +36,13 @@ export interface RouteDto {
   departureName: string;
   drivingDistance: number;
   drivingDuration: number;
+  /** false면 drivingDuration은 999 고정값 */
+  drivingReachable?: boolean;
   participantId: number;
   transitDistance: number;
   transitDuration: number;
+  /** false면 transitDuration은 999 고정값 */
+  transitReachable?: boolean;
 }
 
 export interface StationRecommendationDto {
@@ -51,9 +57,12 @@ export interface StationRecommendationDto {
   stationName: string;
 }
 
+export type MidpointResultType = "NORMAL" | "NEARBY_DEPARTURES";
+
 export interface MidpointRecommendationResponse {
   centerPoint: CenterPointDto;
   departureTime?: string | null;
+  resultType?: MidpointResultType;
   registeredCount: number;
   totalCount: number;
   recommendations: StationRecommendationDto[];

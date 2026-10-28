@@ -23,16 +23,14 @@ export function useReverseGeocode() {
       },
       (status, response) => {
         if (status !== service.Status.OK) {
-          setAddress("주소를 찾을 수 없습니다.");
+          setAddress("주소를 찾을 수 없어요");
           setLoading(false);
           return;
         }
 
         const result = response.v2.address;
         const formattedAddress =
-          result.roadAddress ||
-          result.jibunAddress ||
-          "주소를 찾을 수 없습니다.";
+          result.roadAddress || result.jibunAddress || "주소를 찾을 수 없어요";
 
         setAddress(formattedAddress);
         setLoading(false);

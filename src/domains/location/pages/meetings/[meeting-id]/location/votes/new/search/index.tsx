@@ -5,16 +5,24 @@ import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
+import {
+  isWithinServiceArea,
+  OUT_OF_SERVICE_AREA_MESSAGE,
+} from "@/domains/location/utils/service-area";
 import { SearchIcon, TargetIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PageHeader } from "@/shared/components/page-header";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { TextField } from "@/shared/components/text-field";
+import { toast } from "@/shared/components/toast";
 
 interface VoteSearchLocationState {
   address?: string;
   coords?: [number, number];
   name?: string;
+  // 폼이 기억한 진입 위치다. 검색을 다녀오면 폼이 다시 마운트되면서 위치가
+  // 달라지므로, 원래 값을 잃지 않게 그대로 실어 보낸다.
+  entryIdx?: number | null;
   selectedParticipantId?: string;
 }
 
@@ -55,6 +63,11 @@ export function DepartureNewSearchPage() {
 
   useEffect(() => {
     if (!currentAddress) return;
+
+    if (currentCoords && !isWithinServiceArea(...currentCoords)) {
+      toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
+      return;
+    }
 
     navigate("..", {
       state: {
@@ -101,15 +114,21 @@ export function DepartureNewSearchPage() {
                 text={item.title}
                 description={item.roadAddress || item.address}
                 highlight={keyword}
-                onClick={() =>
+                onClick={() => {
+                  const lat = Number(item.y);
+                  const lng = Number(item.x);
+                  if (!isWithinServiceArea(lat, lng)) {
+                    toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
+                    return;
+                  }
                   navigate("..", {
                     state: {
                       ...location.state,
                       address: item.roadAddress || item.address,
-                      coords: [Number(item.y), Number(item.x)],
+                      coords: [lat, lng],
                     },
-                  })
-                }
+                  });
+                }}
               />
             ))}
 
@@ -117,7 +136,7 @@ export function DepartureNewSearchPage() {
             <div className="mt-25 flex flex-col items-center gap-4 px-5">
               <PlaceholderContent
                 graphic={<Empty2Character />}
-                title="일치하는 주소가 없어요.."
+                title="일치하는 주소가 없어요"
                 description="검색한 지역을 다시 확인해 보세요."
               />
 

@@ -1,4 +1,5 @@
 export interface CreateMeetingRequest {
+  flow?: MeetingFlow;
   localStorageKey: string;
   participantCount?: number;
   participantName: string;
@@ -8,6 +9,21 @@ export interface UpdateMeetingRequest {
   localStorageKey: string;
   meetingId: string;
   participantCount?: number;
+}
+
+export interface LandingStatsResponse {
+  todayCreatedMeetingCount: number;
+}
+
+export type MeetingFlow = "SCHEDULE" | "LOCATION";
+
+export interface MyMeetingResponse {
+  availableFlows?: MeetingFlow[];
+  createdAt: string;
+  hostName: string;
+  isHost: boolean;
+  meetingId: string;
+  participantCount: number;
 }
 
 export interface ScheduleParticipant {

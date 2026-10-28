@@ -16,6 +16,7 @@ interface CreateLocationVoteRequestBody {
   departureLocation: string;
   localStorageKey?: string;
   meetingId: string;
+  participantId?: number;
   participantName: string;
 }
 

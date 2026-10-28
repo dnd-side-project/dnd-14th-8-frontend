@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { DepartureItem } from "@/domains/location/components/departure-item";
+import { LOCATION_DEPARTURE_LIST_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import { useDeleteDeparture } from "@/domains/location/hooks/use-delete-departure";
 import {
   getDeparturesQueryKey,
@@ -25,17 +26,11 @@ export function DepartureListPage() {
   >(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { data: departures, isLoading } = useGetDepartures({ meetingId });
+  const { data: departures, isLoading } = useGetDepartures({
+    meetingId,
+    ...LOCATION_DEPARTURE_LIST_LIVE_QUERY_OPTIONS,
+  });
   const { mutate: deleteDeparture } = useDeleteDeparture();
-
-  const handleGoToResult = () => {
-    if ((departures?.length ?? 0) < 2) {
-      toast.error("최소 2개 이상의 출발지가 필요해요");
-      return;
-    }
-
-    navigate(`/meetings/${meetingId}/location/stations`);
-  };
 
   const handleDelete = () => {
     if (selectedLocationVoteId === null) return;
@@ -85,7 +80,10 @@ export function DepartureListPage() {
         </div>
 
         <div className="mt-auto">
-          <ButtonBottom variant="black" onClick={handleGoToResult}>
+          <ButtonBottom
+            variant="black"
+            onClick={() => navigate(`/meetings/${meetingId}/location/stations`)}
+          >
             중간지점 결과 보러가기
           </ButtonBottom>
         </div>

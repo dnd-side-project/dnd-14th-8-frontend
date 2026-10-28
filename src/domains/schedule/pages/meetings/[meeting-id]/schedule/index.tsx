@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
+import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
+import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
 import { useConfirmSchedulePoll } from "@/domains/schedule/hooks/use-confirm-schedule-poll";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { normalizeScheduleVoteId } from "@/domains/schedule/utils/schedule-vote";
@@ -16,6 +18,9 @@ export function ScheduleMainPage() {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
   const { mutate: confirmSchedule } = useConfirmSchedulePoll();
+  const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
+    meetingId,
+  });
 
   const myParticipantQuery = useGetMyParticipant({ meetingId });
   const hasExistingVote =
@@ -43,7 +48,7 @@ export function ScheduleMainPage() {
           navigate(`/meetings/${meetingId}/location/stations`); // 장소 메인 화면으로 이동
         },
         onError: () => {
-          toast.error("일정을 확정하는 중 오류가 발생했어요");
+          toast.error("일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.");
         },
       },
     );
@@ -61,8 +66,14 @@ export function ScheduleMainPage() {
         onParticipantEdit={() =>
           navigate(`/meetings/${meetingId}/schedule/edit/participants`)
         }
+        onGoHome={goHome}
         onGoToLocation={() => setIsLocationModalOpen(true)}
         onTabChange={handleTabChange}
+      />
+      <HomeExitConfirmModal
+        isOpen={isConfirmOpen}
+        onCancel={cancelGoHome}
+        onConfirm={confirmGoHome}
       />
       <Modal
         isOpen={isLocationModalOpen}

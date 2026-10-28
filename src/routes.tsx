@@ -1,4 +1,5 @@
 import { Outlet, Route, Routes } from "react-router";
+import { AdminDashboardPage } from "@/domains/admin/pages/admin-dashboard-page";
 import {
   MapDefaultPage,
   MapIndexRedirectPage,
@@ -24,6 +25,7 @@ export function CustomRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/admin" element={<AdminDashboardPage />} />
       <Route path="/new/:flow" element={<NewMeetingPage />} />
 
       <Route

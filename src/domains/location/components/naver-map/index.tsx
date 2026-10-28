@@ -52,7 +52,9 @@ export function NaverMap({
         scaleControl: false,
         mapDataControl: false,
         logoControl: true,
-        logoControlOptions: { position: maps.Position.BOTTOM_LEFT },
+        // 하단은 어느 스냅에서든 바텀시트가 덮는다. 약관상 로고는 가려지면
+        // 안 되므로 지도가 항상 보이는 좌상단에 둔다(우상단은 주변 장소 버튼).
+        logoControlOptions: { position: maps.Position.TOP_LEFT },
       });
     } catch {
       initializedRef.current = false;
@@ -101,7 +103,11 @@ export function NaverMap({
 
   return (
     <div className={cn("relative h-full w-full", className)}>
-      <div ref={containerRef} className="h-full w-full" />
+      {/*
+        isolate가 없으면 SDK가 컨트롤·마커 레이어에 심는 z-index 100대가
+        바텀시트(z-20)와 하단 액션바(z-30)를 뚫고 올라온다.
+      */}
+      <div ref={containerRef} className="isolate h-full w-full" />
       <NaverMapCtx.Provider value={map}>{children}</NaverMapCtx.Provider>
     </div>
   );

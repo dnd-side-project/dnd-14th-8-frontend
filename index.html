@@ -3,20 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4181ff" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      ((w, d, s, l, i) => {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": Date.now(), event: "gtm.js" });
+        const f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l !== "dataLayer" ? `&l=${l}` : "";
+        j.async = true;
+        j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-MF3K7JF2");
+    </script>
+    <!-- End Google Tag Manager -->
 
     <title>모여락 | 모임 일정·장소 조율</title>
     <meta
       name="description"
       content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
     />
+    <link rel="canonical" href="https://moyeorak.site/" />
 
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://moyeorak.site/" />
     <meta property="og:title" content="모여락 | 모임 일정·장소 조율" />
     <meta
       property="og:description"
       content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
     />
-    <meta property="og:image" content="%BASE_URL%static/images/share.png" />
+    <meta
+      property="og:image"
+      content="https://moyeorak.site/static/images/share.png"
+    />
     <meta property="og:image:alt" content="모여락 | 모임 일정·장소 조율" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -25,14 +46,41 @@
       name="twitter:description"
       content="모임 일정과 장소를 쉽고 빠르게 정하는 모여락"
     />
-    <meta name="twitter:image" content="%BASE_URL%static/images/share.png" />
+    <meta
+      name="twitter:image"
+      content="https://moyeorak.site/static/images/share.png"
+    />
+
+    <!-- beforeinstallprompt는 앱 번들이 실행되기 전에 발화할 수 있어 여기서 미리 잡아둔다. -->
+    <script>
+      window.__moyeorakInstallPrompt = null;
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        window.__moyeorakInstallPrompt = event;
+        window.dispatchEvent(new Event("moyeorak:installprompt"));
+      });
+    </script>
 
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta
+      name="google-site-verification"
+      content="0MBoLHQrm5dhzHH8YWnXyMHLRjlqk9Gx19XLQQL5Yys"
+    />
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-MF3K7JF2"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="root"></div>
     <script
       type="text/javascript"

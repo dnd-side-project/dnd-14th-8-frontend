@@ -1,23 +1,62 @@
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   LandingMidpointCharacter,
   LandingScheduleCharacter,
 } from "@/assets/characters";
 import MoyeorakLogo from "@/assets/moyeorak-logo.svg?react";
+import { LandingGuideSection } from "@/domains/meeting/components/landing-guide-section";
+import { LandingStatsBadge } from "@/domains/meeting/components/landing-stats-badge";
+import { MyMeetingList } from "@/domains/meeting/components/my-meeting-list";
+import { RecentMeetingFlowDialog } from "@/domains/meeting/components/recent-meeting-flow-dialog";
+import { useMeetingStatsQuery } from "@/domains/meeting/hooks/use-meeting-stats-query";
+import { useMyMeetingsQuery } from "@/domains/meeting/hooks/use-my-meetings-query";
+import type { MyMeetingResponse } from "@/domains/meeting/types/meeting-api-types";
+import { getRecentMeetingNavigationTarget } from "@/domains/meeting/utils/recent-meeting-navigation";
+import { ChevronDownIcon } from "@/shared/components/icons";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const [flowSelectionMeeting, setFlowSelectionMeeting] =
+    useState<MyMeetingResponse | null>(null);
+  const { data: meetingStats } = useMeetingStatsQuery();
+  const { data: myMeetings = [], isError: isMyMeetingsError } =
+    useMyMeetingsQuery();
+  const visibleMyMeetings = isMyMeetingsError ? [] : myMeetings;
+
+  const handleSelectRecentMeeting = (meeting: MyMeetingResponse) => {
+    const target = getRecentMeetingNavigationTarget(meeting);
+    if (target) {
+      navigate(target);
+      return;
+    }
+
+    setFlowSelectionMeeting(meeting);
+  };
+
+  const handleGoToSchedule = () => {
+    if (!flowSelectionMeeting) return;
+    navigate(`/meetings/${flowSelectionMeeting.meetingId}/schedule`);
+  };
+
+  const handleGoToLocation = () => {
+    if (!flowSelectionMeeting) return;
+    navigate(`/meetings/${flowSelectionMeeting.meetingId}/location/stations`);
+  };
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pt-6">
+      <section className="flex min-h-dvh flex-col px-5 pt-6 pb-6">
         <div className="mb-15 flex flex-col items-center">
           <MoyeorakLogo />
           <span className="text-b1 text-gray-750">
             모임을 더 즐겁게, 효율적으로 시작해요
           </span>
+          <LandingStatsBadge
+            todayCreatedMeetingCount={meetingStats?.todayCreatedMeetingCount}
+          />
         </div>
         <div className="flex flex-col gap-4">
           <MainButton
@@ -25,20 +64,61 @@ export function LandingPage() {
             title="일정 조율하기"
             description={"쉽고 빠르게 일정을\n조율하세요!"}
             character={<LandingScheduleCharacter />}
+            characterMotion="float"
             characterClassName="right-[-60px] bottom-[-90px]"
             onClick={() => navigate("/new/schedule")}
           />
 
           <MainButton
             className="bg-sub-main"
-            title="중간 지점 찾기"
+            title="중간지점 찾기"
             description={"공평한 중간지점을\n찾아보세요!"}
             character={<LandingMidpointCharacter />}
+            characterMotion="sway"
             characterClassName="right-[-60px] bottom-[-115px]"
             onClick={() => navigate("/new/location")}
           />
         </div>
+
+        <MyMeetingList
+          meetings={visibleMyMeetings}
+          onSelect={handleSelectRecentMeeting}
+        />
+
+        <button
+          type="button"
+          className="mt-auto flex cursor-pointer flex-col items-center gap-1 pt-10 text-b2 text-gray-750"
+          onClick={() =>
+            document
+              .getElementById("landing-guide")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+        >
+          이용방법 보기
+          <ChevronDownIcon />
+        </button>
       </section>
+
+      <LandingGuideSection />
+
+      <RecentMeetingFlowDialog
+        hostName={flowSelectionMeeting?.hostName ?? ""}
+        isOpen={!!flowSelectionMeeting}
+        onClose={() => setFlowSelectionMeeting(null)}
+        onGoToLocation={handleGoToLocation}
+        onGoToSchedule={handleGoToSchedule}
+      />
+
+      <footer className="px-5 pb-8 text-center text-b2 text-k-500">
+        서비스 이용 중 문의나 오류가 있다면{" "}
+        <a
+          href="mailto:moyeorak.team@gmail.com"
+          className="text-k-700 underline underline-offset-2"
+        >
+          moyeorak.team@gmail.com
+        </a>
+        으로 알려주세요.
+      </footer>
     </MobileLayout>
   );
 }
