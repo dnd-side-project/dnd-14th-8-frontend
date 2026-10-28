@@ -11,20 +11,7 @@ export interface UpdateMeetingRequest {
   participantCount?: number;
 }
 
-export interface LandingStatsResponse {
-  todayCreatedMeetingCount: number;
-}
-
 export type MeetingFlow = "SCHEDULE" | "LOCATION";
-
-export interface MyMeetingResponse {
-  availableFlows?: MeetingFlow[];
-  createdAt: string;
-  hostName: string;
-  isHost: boolean;
-  meetingId: string;
-  participantCount: number;
-}
 
 export interface ScheduleParticipant {
   name: string;

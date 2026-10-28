@@ -2,12 +2,12 @@
 
 ## 기준
 
-- 배포 패키지: `@moyeorak/design-system@0.5.0` (정확한 버전 고정)
+- 배포 패키지: `@moyeorak/design-system@0.5.1` (정확한 버전 고정)
 - 소스: https://github.com/meteorqz6/moyeorakui
 - 컴포넌트와 의미 토큰은 npm 패키지에서 가져온다. 소스 복사나 서비스 내 토큰 재정의는 하지 않는다.
 - 기존 Tailwind v4를 유지한다. 서비스에 Panda codegen은 추가하지 않는다.
 - CSS 진입점에서 layers.css를 가장 먼저 불러오고 Tailwind 플러그인과 styles.css를 함께 로드한다.
-- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.5.0을 고정한다. 다른 패키지의 대기 정책은 유지한다.
+- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.5.1을 고정한다. 다른 패키지의 대기 정책은 유지한다.
 
 ## 1차: 서비스 공통 버튼
 

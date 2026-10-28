@@ -1,72 +1,32 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { LandingPage } from "@/domains/meeting/pages";
 
-const useMyMeetingsQueryMock = vi.fn();
-
-vi.mock("@/domains/meeting/hooks/use-meeting-stats-query", () => ({
-  useMeetingStatsQuery: () => ({
-    data: { todayCreatedMeetingCount: 0 },
-  }),
-}));
-
-vi.mock("@/domains/meeting/hooks/use-my-meetings-query", () => ({
-  useMyMeetingsQuery: () => useMyMeetingsQueryMock(),
-}));
+function renderLandingPage() {
+  return renderToStaticMarkup(
+    <MemoryRouter>
+      <LandingPage />
+    </MemoryRouter>,
+  );
+}
 
 describe("LandingPage", () => {
-  beforeEach(() => {
-    useMyMeetingsQueryMock.mockReturnValue({
-      data: [],
-      isError: false,
-      isPending: false,
-    });
+  it("renders the two main entry cards", () => {
+    const markup = renderLandingPage();
+
+    expect(markup).toContain("모임을 더 즐겁게, 효율적으로");
+    expect(markup).toContain("일정 조율하기");
+    expect(markup).toContain("모두가 가능한 시간 찾기");
+    expect(markup).toContain("중간 장소 찾기");
+    expect(markup).toContain("모두가 효율적인 장소 찾기");
   });
 
-  it("renders recently joined meetings when my meeting data exists", () => {
-    useMyMeetingsQueryMock.mockReturnValue({
-      data: [
-        {
-          createdAt: "2026-07-23T14:10:00",
-          hostName: "민수",
-          isHost: true,
-          meetingId: "meeting-id",
-          participantCount: 4,
-        },
-      ],
-      isError: false,
-      isPending: false,
-    });
-
-    const markup = renderToStaticMarkup(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
-    expect(markup).toContain("최근 모임");
-    expect(markup).toContain("민수님의 모임");
-  });
-
-  it("does not render the recent meetings section when my meeting data is empty", () => {
-    const markup = renderToStaticMarkup(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
+  it("does not render elements removed in the redesign", () => {
+    const markup = renderLandingPage();
 
     expect(markup).not.toContain("최근 모임");
-  });
-
-  it("renders the service contact email on the landing page", () => {
-    const markup = renderToStaticMarkup(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
-    expect(markup).toContain("서비스 이용 중 문의나 오류가 있다면");
-    expect(markup).toContain("moyeorak.team@gmail.com");
+    expect(markup).not.toContain("이용방법 보기");
+    expect(markup).not.toContain("moyeorak.team@gmail.com");
   });
 });
