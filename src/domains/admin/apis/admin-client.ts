@@ -3,6 +3,7 @@ import {
   clearAdminToken,
   getAdminToken,
 } from "@/domains/admin/store/admin-token";
+import { ensureBackendReady } from "@/shared/utils/backend-readiness";
 
 /**
  * 관리자 전용 axios 인스턴스. 모든 요청에 X-Admin-Token 헤더를 부착하고,
@@ -14,10 +15,11 @@ export function createAdminAxiosInstance(): AxiosInstance {
     headers: {
       "Content-Type": "application/json",
     },
-    timeout: 10000,
+    timeout: 30000,
   });
 
-  instance.interceptors.request.use((config) => {
+  instance.interceptors.request.use(async (config) => {
+    await ensureBackendReady();
     const token = getAdminToken();
     if (token) {
       config.headers.set("X-Admin-Token", token);

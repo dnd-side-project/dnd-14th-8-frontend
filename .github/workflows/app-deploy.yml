@@ -32,6 +32,7 @@ jobs:
       - run: pnpm run build
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_READINESS_CHECK: ${{ vars.VITE_API_READINESS_CHECK || 'false' }}
           VITE_NAVER_CLIENT_ID: ${{ secrets.VITE_NAVER_CLIENT_ID }}
           VITE_KAKAO_API_KEY: ${{ secrets.VITE_KAKAO_API_KEY }}
 

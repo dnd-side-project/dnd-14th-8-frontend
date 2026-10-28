@@ -9,3 +9,8 @@ onlyBuiltDependencies:
   - "workerd"
 strictDepBuilds: true
 trustPolicy: no-downgrade
+
+# 기존 전이 의존성의 trustPolicy 거부를 해소한다. 정책 자체는 유지한다.
+overrides:
+  semver: 7.8.5
+  '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0
