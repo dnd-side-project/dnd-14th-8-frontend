@@ -4,6 +4,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { CustomRoutes } from "@/routes";
 import { toast } from "@/shared/components/toast";
+import { BackendConnectionProvider } from "@/shared/providers/backend-connection-provider";
 import { InstallPromptProvider } from "@/shared/providers/install-prompt-provider";
 import { ReactRouterProvider } from "@/shared/providers/react-router-provider";
 import { ShareSheetProvider } from "@/shared/providers/share-sheet-provider";
@@ -33,19 +34,21 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
-      <TanstackQueryProvider>
-        <ReactRouterProvider>
-          <ToastProvider>
-            <ShareSheetProvider>
-              <InstallPromptProvider
-                onVisibilityChange={handleInstallPromptVisibility}
-              >
-                <CustomRoutes />
-              </InstallPromptProvider>
-            </ShareSheetProvider>
-          </ToastProvider>
-        </ReactRouterProvider>
-      </TanstackQueryProvider>
+      <BackendConnectionProvider>
+        <TanstackQueryProvider>
+          <ReactRouterProvider>
+            <ToastProvider>
+              <ShareSheetProvider>
+                <InstallPromptProvider
+                  onVisibilityChange={handleInstallPromptVisibility}
+                >
+                  <CustomRoutes />
+                </InstallPromptProvider>
+              </ShareSheetProvider>
+            </ToastProvider>
+          </ReactRouterProvider>
+        </TanstackQueryProvider>
+      </BackendConnectionProvider>
     </StrictMode>,
   );
 }

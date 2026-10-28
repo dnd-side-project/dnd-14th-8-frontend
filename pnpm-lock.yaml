@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  semver: 7.8.5
+  '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0
+
 importers:
 
   .:
@@ -2260,10 +2264,6 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@trickfilm400/rollup-plugin-off-main-thread@3.0.0-pre1':
-    resolution: {integrity: sha512-/67zpWDBLV+oYAEL682s1ktXL0HgqX76f6gaVGkGnVZlBbm1zd0v4Bz8MFF2GGhoX9rvfq3KSQHubFHwa6w6/Q==}
-    engines: {node: '>=12'}
-
   '@tsconfig/node24@24.0.4':
     resolution: {integrity: sha512-2A933l5P5oCbv6qSxHs7ckKwobs8BDAe9SJ/Xr2Hy+nDlwmLE1GhFh/g/vXGRZWgxBg9nX/5piDtHR9Dkw/XuA==}
 
@@ -3823,10 +3823,6 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
-  semver@6.3.1:
-    resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
-    hasBin: true
-
   semver@7.7.3:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
@@ -4476,6 +4472,20 @@ packages:
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  '@trickfilm400/rollup-plugin-off-main-thread@4.0.0':
+    resolution: {integrity: sha512-rQSqTcqD5c1H1qAR2XO1wHYGtd3NbMdU7oMD0gDW7xkxEIQ/fDe0MCMJtdDqVSrmmznxL2xfcxnGnusXX9JKBQ==}
+    engines: {node: '>=12'}
+
+  ejs@7.0.2:
+    resolution: {integrity: sha512-LcDSEP6Oclb9sTiSyG0MpG0RuKvLDRxCOOt+2sIk+kdk1rMkFU8SRnT0qaNt5zvU0LOV1YXXOvIoZL/sKwabvw==}
+    engines: {node: '>=0.12.18'}
+    hasBin: true
+
 snapshots:
 
   '@adobe/css-tools@4.4.4': {}
@@ -4523,7 +4533,7 @@ snapshots:
       debug: 4.4.3
       gensync: 1.0.0-beta.2
       json5: 2.2.3
-      semver: 6.3.1
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -4553,7 +4563,7 @@ snapshots:
       '@babel/helper-validator-option': 7.27.1
       browserslist: 4.28.1
       lru-cache: 5.1.1
-      semver: 6.3.1
+      semver: 7.8.5
 
   '@babel/helper-compilation-targets@7.29.7':
     dependencies:
@@ -4561,7 +4571,7 @@ snapshots:
       '@babel/helper-validator-option': 7.29.7
       browserslist: 4.28.8
       lru-cache: 5.1.1
-      semver: 6.3.1
+      semver: 7.8.5
 
   '@babel/helper-create-class-features-plugin@7.29.7(@babel/core@7.28.6)':
     dependencies:
@@ -4572,7 +4582,7 @@ snapshots:
       '@babel/helper-replace-supers': 7.29.7(@babel/core@7.28.6)
       '@babel/helper-skip-transparent-expression-wrappers': 7.29.7
       '@babel/traverse': 7.29.8
-      semver: 6.3.1
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -4581,7 +4591,7 @@ snapshots:
       '@babel/core': 7.28.6
       '@babel/helper-annotate-as-pure': 7.29.7
       regexpu-core: 6.4.0
-      semver: 6.3.1
+      semver: 7.8.5
 
   '@babel/helper-define-polyfill-provider@0.6.8(@babel/core@7.28.6)':
     dependencies:
@@ -5170,7 +5180,7 @@ snapshots:
       babel-plugin-polyfill-corejs3: 0.14.2(@babel/core@7.28.6)
       babel-plugin-polyfill-regenerator: 0.6.8(@babel/core@7.28.6)
       core-js-compat: 3.50.0
-      semver: 6.3.1
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6061,7 +6071,7 @@ snapshots:
       jsdoc-type-pratt-parser: 4.8.0
       process: 0.11.10
       recast: 0.23.11
-      semver: 7.7.3
+      semver: 7.8.5
       util: 0.12.5
       ws: 8.19.0
     transitivePeerDependencies:
@@ -6406,13 +6416,6 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.0
 
-  '@trickfilm400/rollup-plugin-off-main-thread@3.0.0-pre1':
-    dependencies:
-      ejs: 3.1.10
-      json5: 2.2.3
-      magic-string: 0.30.21
-      string.prototype.matchall: 4.0.12
-
   '@tsconfig/node24@24.0.4': {}
 
   '@tsconfig/vite-react@7.0.2': {}
@@ -6696,7 +6699,7 @@ snapshots:
       '@babel/compat-data': 7.29.7
       '@babel/core': 7.28.6
       '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.28.6)
-      semver: 6.3.1
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -7720,7 +7723,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.8.5
 
   map-or-similar@1.5.0: {}
 
@@ -8093,8 +8096,6 @@ snapshots:
 
   scheduler@0.27.0: {}
 
-  semver@6.3.1: {}
-
   semver@7.7.3: {}
 
   serialize-javascript@7.1.0: {}
@@ -8127,7 +8128,7 @@ snapshots:
     dependencies:
       '@img/colour': 1.0.0
       detect-libc: 2.1.2
-      semver: 7.7.3
+      semver: 7.8.5
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5
@@ -8227,7 +8228,7 @@ snapshots:
       detect-newline: 4.0.1
       git-hooks-list: 4.2.1
       is-plain-obj: 4.1.0
-      semver: 7.7.3
+      semver: 7.8.5
       sort-object-keys: 2.1.0
       tinyglobby: 0.2.15
 
@@ -8719,7 +8720,7 @@ snapshots:
       '@rollup/plugin-node-resolve': 16.0.3(rollup@4.56.0)
       '@rollup/plugin-replace': 6.0.3(rollup@4.56.0)
       '@rollup/plugin-terser': 1.0.0(rollup@4.56.0)
-      '@trickfilm400/rollup-plugin-off-main-thread': 3.0.0-pre1
+      '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0
       ajv: 8.20.0
       common-tags: 1.8.2
       eta: 4.6.0
@@ -8881,3 +8882,12 @@ snapshots:
       youch-core: 0.3.3
 
   zod@4.3.6: {}
+  semver@7.8.5: {}
+
+  '@trickfilm400/rollup-plugin-off-main-thread@4.0.0':
+    dependencies:
+      ejs: 7.0.2
+      json5: 2.2.3
+      magic-string: 0.30.21
+
+  ejs@7.0.2: {}

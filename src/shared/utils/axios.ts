@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
+import { ensureBackendReady } from "@/shared/utils/backend-readiness";
 
 export type ApiResponse<T> = {
   code: string;
@@ -16,7 +17,12 @@ export function createAxiosInstance(): AxiosInstance {
     headers: {
       "Content-Type": "application/json",
     },
-    timeout: 5000,
+    timeout: 30000,
+  });
+
+  instance.interceptors.request.use(async (config) => {
+    await ensureBackendReady();
+    return config;
   });
 
   instance.interceptors.response.use(undefined, (error) => {
