@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
@@ -14,24 +15,28 @@ export function ButtonSubStroke({
   ...props
 }: ButtonSubStrokeProps) {
   return (
-    <button
+    <Button
+      {...props}
+      type={type}
+      variant="outline"
+      size="lg"
+      display="full"
       className={cn(
-        "inline-flex h-[49px] w-full cursor-pointer items-center justify-center rounded-md border border-k-100 bg-k-5 px-4 text-b4 text-k-750 leading-none",
+        "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
         className,
       )}
-      type={type}
-      {...props}
+      leadingIcon={
+        icon && (
+          <span
+            aria-hidden
+            className="inline-flex shrink-0 items-center justify-center"
+          >
+            {icon}
+          </span>
+        )
+      }
     >
-      {icon && (
-        <span
-          aria-hidden
-          className="inline-flex shrink-0 items-center justify-center"
-        >
-          {icon}
-        </span>
-      )}
-
-      <span className="flex items-center">{children}</span>
-    </button>
+      {children}
+    </Button>
   );
 }

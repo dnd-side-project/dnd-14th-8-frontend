@@ -1,26 +1,24 @@
+import { FloatingButton } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
-import { ChevronLeftIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface FloatingBackProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {}
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type"> {}
 
 export function FloatingBack({
   className,
-  type = "button",
+  "aria-label": label = "뒤로 이동",
   ...props
 }: FloatingBackProps) {
   return (
-    <button
-      aria-label="뒤로 이동"
+    <FloatingButton
+      {...props}
+      type="back"
+      aria-label={label}
       className={cn(
-        "inline-flex size-10 cursor-pointer items-center justify-center rounded-full bg-k-5 text-k-700 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]",
+        "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
         className,
       )}
-      type={type}
-      {...props}
-    >
-      <ChevronLeftIcon aria-hidden className="size-9 shrink-0" />
-    </button>
+    />
   );
 }

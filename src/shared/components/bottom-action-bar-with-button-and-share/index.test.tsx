@@ -9,7 +9,7 @@ vi.mock("@/assets/icons/share.svg?react", () => ({
 }));
 
 describe("BottomActionBarWithButtonAndShare", () => {
-  it("renders share as a primary icon CTA before the secondary action", () => {
+  it("renders the accessible icon share action before the labeled action", () => {
     const markup = renderToStaticMarkup(
       <BottomActionBarWithButtonAndShare
         onClick={() => undefined}
@@ -24,9 +24,8 @@ describe("BottomActionBarWithButtonAndShare", () => {
       markup.indexOf("일정 추가하기"),
     );
     expect(markup).not.toContain("<span>공유하기</span>");
-    expect(markup).toContain("size-[54px]");
-    expect(markup).toContain("bg-primary-main");
-    expect(markup).toContain("border-k-200");
+    expect(markup.match(/<button/g)).toHaveLength(2);
+    expect(markup.match(/type="button"/g)).toHaveLength(2);
   });
 
   it("can hide the icon share CTA when sharing is the main labeled action", () => {

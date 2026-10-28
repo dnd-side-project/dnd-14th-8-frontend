@@ -1,58 +1,80 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { Button, Chip } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/shared/utils/cn";
 
-const chipButtonVariants = cva(
-  "inline-flex w-fit shrink-0 cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-md transition-colors",
-  {
-    variants: {
-      size: {
-        xs: "px-1.5 py-0.5 text-b5",
-        sm: "px-2.5 py-1 text-b4",
-        md: "px-3 py-1.5 text-b4",
-        lg: "px-3.5 py-2 text-b4",
-        xl: "px-3 py-2.5 text-b3",
-      },
-      variant: {
-        primary: "bg-p-50 text-primary-main hover:bg-p-100 active:bg-p-200",
-        outlined: "border border-k-100 bg-k-5 text-k-500",
-        selected: "border border-primary-main bg-p-50 text-primary-main",
-        ghost: "bg-k-5 text-primary-main hover:bg-k-10 active:bg-k-50",
-        floating:
-          "rounded-[30px] bg-k-5 text-k-500 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]",
-        floatingSelected:
-          "rounded-[30px] bg-k-800 text-k-5 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]",
-        midpoint: "rounded-[30px] border border-k-100 bg-k-5 text-k-500",
-        midpointSelected: "rounded-[30px] bg-primary-main text-k-5",
-        locationDelete: "text-k-500 hover:bg-k-10 active:bg-k-50",
-      },
-    },
-    defaultVariants: {
-      size: "sm",
-      variant: "primary",
-    },
-  },
-);
-
 export interface ChipButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    Omit<VariantProps<typeof chipButtonVariants>, "variant"> {
-  size?: NonNullable<VariantProps<typeof chipButtonVariants>["size"]>;
-  variant?: NonNullable<VariantProps<typeof chipButtonVariants>["variant"]>;
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  variant?:
+    | "primary"
+    | "outlined"
+    | "selected"
+    | "ghost"
+    | "floating"
+    | "floatingSelected"
+    | "midpoint"
+    | "midpointSelected"
+    | "locationDelete";
 }
+
+const focus =
+  "shrink-0 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2";
 
 export function ChipButton({
   className,
-  size,
+  size = "sm",
   type = "button",
   variant = "primary",
   ...props
 }: ChipButtonProps) {
+  // 액션에 Toggle을 사용하면 aria-pressed가 잘못 생기므로 Button으로 구분한다.
+  if (
+    variant === "primary" ||
+    variant === "ghost" ||
+    variant === "locationDelete"
+  ) {
+    return (
+      <Button
+        {...props}
+        type={type}
+        variant={
+          variant === "primary"
+            ? "brand-weak"
+            : variant === "ghost"
+              ? "ghost-brand"
+              : "ghost"
+        }
+        size={size === "xl" ? "md" : "sm"}
+        className={cn(focus, className)}
+      />
+    );
+  }
+  const selected =
+    variant === "selected" ||
+    variant === "floatingSelected" ||
+    variant === "midpointSelected";
+  const floating = variant === "floating" || variant === "floatingSelected";
+  const square = variant === "selected" || variant === "outlined";
   return (
-    <button
-      className={cn(chipButtonVariants({ size, variant }), className)}
-      type={type}
+    <Chip
       {...props}
+      type={type}
+      pressed={selected}
+      shape={square ? "square" : "pill"}
+      variant={
+        selected
+          ? square
+            ? "outlined-brand"
+            : floating
+              ? "neutral"
+              : "brand"
+          : "neutral-weak"
+      }
+      className={cn(
+        focus,
+        floating && "shadow-[var(--shadows-strong)]",
+        className,
+      )}
     />
   );
 }

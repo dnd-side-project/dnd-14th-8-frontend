@@ -139,6 +139,7 @@ export function ScheduleEditDatesPage() {
             <div className="mx-auto flex max-w-[335px] items-center justify-between">
               <h2 className="text-k-900 text-t1">시간표 선택범위</h2>
               <IconButton
+                aria-label="시간표 기간 편집 닫기"
                 icon={CloseIcon}
                 size="lg"
                 background="circle"

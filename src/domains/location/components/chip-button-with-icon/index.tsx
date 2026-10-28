@@ -1,56 +1,40 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import { Chip } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
-const chipButtonWithIconVariants = cva(
-  "inline-flex items-center justify-center gap-1 rounded-full px-4 py-2 text-b4 transition-all",
-  {
-    variants: {
-      status: {
-        selected: "bg-primary-main text-k-5",
-        unselected: "bg-k-5 text-k-500",
-      },
-      shadow: {
-        on: "shadow-[0_0_4px_rgba(0,0,0,0.25)]",
-        off: "",
-      },
-    },
-    compoundVariants: [
-      {
-        status: "unselected",
-        shadow: "off",
-        className: "border border-k-100",
-      },
-    ],
-    defaultVariants: {
-      status: "unselected",
-      shadow: "off",
-    },
-  },
-);
-
 export interface ChipButtonWithIconProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof chipButtonWithIconVariants> {
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: ReactNode;
+  status?: "selected" | "unselected" | null;
+  shadow?: "on" | "off" | null;
 }
 
 export function ChipButtonWithIcon({
   icon,
   children,
-  status,
-  shadow,
+  status = "unselected",
+  shadow = "off",
   className,
+  type = "button",
   ...props
 }: ChipButtonWithIconProps) {
   return (
-    <button
-      type="button"
-      className={cn(chipButtonWithIconVariants({ status, shadow }), className)}
+    <Chip
       {...props}
+      type={type}
+      pressed={status === "selected"}
+      variant={status === "selected" ? "brand" : "neutral-weak"}
+      shape="pill"
+      className={cn(
+        "gap-1 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
+        shadow === "on" && "shadow-[var(--shadows-strong)]",
+        className,
+      )}
     >
-      {icon}
+      <span aria-hidden className="inline-flex shrink-0">
+        {icon}
+      </span>
       {children}
-    </button>
+    </Chip>
   );
 }

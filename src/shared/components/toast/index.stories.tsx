@@ -83,6 +83,7 @@ export const Playground: Story = {
 const ShareIconButton = () => {
   return (
     <IconButton
+      aria-label="아이콘 버튼"
       icon={ShareIcon}
       size="2xl"
       background="square"

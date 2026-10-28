@@ -147,6 +147,7 @@ export function TextField({
         {showDelete && (
           <div className="pr-1">
             <IconButton
+              aria-label="입력 지우기"
               icon={CloseIcon}
               size="xl"
               background="circle"

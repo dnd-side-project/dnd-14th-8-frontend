@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
@@ -14,22 +15,26 @@ export function ButtonBottomWithIcon({
   ...props
 }: ButtonBottomWithIconProps) {
   return (
-    <button
+    <Button
+      {...props}
+      type={type}
+      variant="outline"
+      size="md"
+      display="full"
       className={cn(
-        "inline-flex h-[45px] w-full items-center justify-center gap-1.5 rounded-lg border border-k-200 bg-white px-4 text-b3 text-k-800 transition-colors enabled:cursor-pointer disabled:cursor-default",
-        "enabled:active:bg-k-50 enabled:hover:bg-k-10",
+        "gap-1.5 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
         className,
       )}
-      type={type}
-      {...props}
+      trailingIcon={
+        <span
+          aria-hidden
+          className="inline-flex shrink-0 items-center justify-center"
+        >
+          {icon}
+        </span>
+      }
     >
       {children}
-      <span
-        aria-hidden
-        className="inline-flex shrink-0 items-center justify-center"
-      >
-        {icon}
-      </span>
-    </button>
+    </Button>
   );
 }

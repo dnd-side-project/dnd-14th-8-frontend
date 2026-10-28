@@ -15,6 +15,7 @@ const meta = {
   title: "shared/IconButton",
   component: IconButton,
   args: {
+    "aria-label": "추가",
     icon: PlusIcon,
     size: "xl",
     background: "square",
@@ -51,6 +52,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">Square Normal</p>
           <IconButton
+            aria-label="아이콘 버튼"
             icon={PlusIcon}
             size="xl"
             background="square"
@@ -62,6 +64,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">Square Manual Hover</p>
           <IconButton
+            aria-label="아이콘 버튼"
             id="btn-square-manual-hover"
             icon={PlusIcon}
             size="xl"
@@ -74,6 +77,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">Square Dark</p>
           <IconButton
+            aria-label="아이콘 버튼"
             icon={PlusIcon}
             size="xl"
             background="square"
@@ -89,6 +93,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">None Normal</p>
           <IconButton
+            aria-label="아이콘 버튼"
             icon={CloseIcon}
             size="lg"
             background="none"
@@ -99,6 +104,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">None Hover</p>
           <IconButton
+            aria-label="아이콘 버튼"
             id="btn-none-hover"
             icon={CloseIcon}
             size="lg"
@@ -110,6 +116,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">None Neutral</p>
           <IconButton
+            aria-label="아이콘 버튼"
             icon={CloseIcon}
             size="lg"
             background="none"
@@ -124,6 +131,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">Circle Normal</p>
           <IconButton
+            aria-label="아이콘 버튼"
             icon={CloseIcon}
             size="xl"
             background="circle"
@@ -135,6 +143,7 @@ export const PseudoStatesTest: Story = {
         <div className="text-center">
           <p className="mb-2 text-k-600 text-sm">Circle Hover</p>
           <IconButton
+            aria-label="아이콘 버튼"
             id="btn-circle-hover"
             icon={CloseIcon}
             size="xl"
@@ -166,6 +175,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Plus</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={PlusIcon}
           size="xl"
           background="square"
@@ -175,6 +185,7 @@ export const Designs: Story = {
           title="Normal state"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-plus-hover"
           icon={PlusIcon}
           size="xl"
@@ -185,6 +196,7 @@ export const Designs: Story = {
           title="Hover state"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-plus-pressed"
           icon={PlusIcon}
           size="xl"
@@ -199,6 +211,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Minus</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={MinusIcon}
           size="xl"
           background="square"
@@ -207,6 +220,7 @@ export const Designs: Story = {
           variant="surface"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-minus-hover"
           icon={MinusIcon}
           size="xl"
@@ -216,6 +230,7 @@ export const Designs: Story = {
           variant="surface"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-minus-pressed"
           icon={MinusIcon}
           size="xl"
@@ -229,6 +244,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Delete</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={CloseIcon}
           size="xl"
           background="circle"
@@ -237,6 +253,7 @@ export const Designs: Story = {
           variant="gray"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-delete-hover"
           icon={CloseIcon}
           size="xl"
@@ -246,6 +263,7 @@ export const Designs: Story = {
           variant="gray"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-delete-pressed"
           icon={CloseIcon}
           size="xl"
@@ -259,6 +277,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Share</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ShareIcon}
           size="2xl"
           background="square"
@@ -267,6 +286,7 @@ export const Designs: Story = {
           variant="dark"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-share-hover"
           icon={ShareIcon}
           size="2xl"
@@ -276,6 +296,7 @@ export const Designs: Story = {
           variant="dark"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-share-pressed"
           icon={ShareIcon}
           size="2xl"
@@ -289,6 +310,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Close</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={CloseIcon}
           size="lg"
           background="none"
@@ -296,6 +318,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-close-hover"
           icon={CloseIcon}
           size="lg"
@@ -304,6 +327,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-close-pressed"
           icon={CloseIcon}
           size="lg"
@@ -316,6 +340,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Close Circle</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={CloseIcon}
           size="lg"
           background="circle"
@@ -324,6 +349,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-close-circle-hover"
           icon={CloseIcon}
           size="lg"
@@ -333,6 +359,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-close-circle-pressed"
           icon={CloseIcon}
           size="lg"
@@ -346,6 +373,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Chevron Up/Down</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronUpIcon}
           size="sm"
           background="none"
@@ -353,6 +381,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronDownIcon}
           size="sm"
           background="none"
@@ -360,6 +389,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-v-hover"
           icon={ChevronUpIcon}
           size="sm"
@@ -368,6 +398,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-v-pressed"
           icon={ChevronDownIcon}
           size="sm"
@@ -380,6 +411,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Chevron Left/Right</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronLeftIcon}
           size="md"
           background="none"
@@ -387,6 +419,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronRightIcon}
           size="md"
           background="none"
@@ -394,6 +427,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-h-hover"
           icon={ChevronRightIcon}
           size="md"
@@ -402,6 +436,7 @@ export const Designs: Story = {
           variant="neutral"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-h-pressed"
           icon={ChevronLeftIcon}
           size="md"
@@ -414,6 +449,7 @@ export const Designs: Story = {
       <div className="flex items-center gap-2">
         <span className="w-20 text-k-500 text-sm">Chevron Calendar</span>
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronLeftIcon}
           size="md"
           background="square"
@@ -422,6 +458,7 @@ export const Designs: Story = {
           variant="subtle"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           icon={ChevronRightIcon}
           size="md"
           background="square"
@@ -430,6 +467,7 @@ export const Designs: Story = {
           variant="subtle"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-calendar-h-hover"
           icon={ChevronRightIcon}
           size="md"
@@ -439,6 +477,7 @@ export const Designs: Story = {
           variant="subtle"
         />
         <IconButton
+          aria-label="아이콘 버튼"
           id="icon-chevron-calendar-h-pressed"
           icon={ChevronLeftIcon}
           size="md"
