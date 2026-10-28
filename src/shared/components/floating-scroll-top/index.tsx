@@ -1,10 +1,10 @@
+import { FloatingButton } from "@moyeorak/design-system";
 import {
   type HTMLAttributes,
   type TransitionEvent,
   useEffect,
   useState,
 } from "react";
-import { ArrowUpIcon } from "@/shared/components/icons";
 import { useScrollToTop } from "@/shared/hooks/use-scroll-to-top";
 import { useScrolled } from "@/shared/hooks/use-scrolled";
 import { cn } from "@/shared/utils/cn";
@@ -62,18 +62,13 @@ export function FloatingScrollTop({
       )}
       {...props}
     >
-      <button
-        type="button"
+      <FloatingButton
+        type="up"
         onClick={scroll}
         aria-label="맨 위로 이동"
         tabIndex={isVisible ? 0 : -1}
-        className={cn(
-          "inline-flex size-10 items-center justify-center rounded-full border border-k-200 bg-k-5 text-k-700 shadow-[0_4px_8px_0_rgba(0,0,0,0.06)] transition-colors enabled:cursor-pointer",
-          "enabled:active:border-transparent enabled:active:bg-primary-main enabled:active:text-k-5 enabled:hover:bg-k-50",
-        )}
-      >
-        <ArrowUpIcon aria-hidden className="size-6 shrink-0" />
-      </button>
+        className="static focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
+      />
     </div>
   );
 }

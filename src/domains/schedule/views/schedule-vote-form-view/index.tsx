@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
@@ -77,13 +78,15 @@ export function ScheduleVoteFormView({
         onBack={onBack}
         className="px-5"
         rightElement={
-          <button
+          <Button
+            variant="ghost-brand"
+            size="sm"
             type="button"
             onClick={onReset}
-            className="cursor-pointer text-primary-main text-t2 enabled:active:text-p-500 enabled:hover:text-p-450"
+            className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
           >
             초기화
-          </button>
+          </Button>
         }
       />
 
@@ -130,7 +133,7 @@ export function ScheduleVoteFormView({
           className={cn(
             "mt-4",
             isButtonDisabledStyle &&
-              "border-transparent bg-k-100 text-k-400 enabled:active:bg-k-100 enabled:hover:bg-k-100",
+              "bg-fill-neutral-default-disabled text-fg-neutral-subtler enabled:active:bg-fill-neutral-default-disabled",
           )}
           onClick={handleSubmitClick}
           variant="black"

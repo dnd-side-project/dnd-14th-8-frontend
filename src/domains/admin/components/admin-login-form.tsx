@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import { type FormEvent, useState } from "react";
 
 interface AdminLoginFormProps {
@@ -47,13 +48,16 @@ export function AdminLoginForm({ onSubmit, error }: AdminLoginFormProps) {
           </p>
         ) : null}
 
-        <button
+        <Button
+          variant="default"
+          size="md"
+          display="full"
           type="submit"
           disabled={!value.trim()}
-          className="mt-6 w-full rounded-lg bg-neutral-900 py-2.5 font-medium text-sm text-white transition-colors hover:bg-neutral-700 disabled:cursor-not-allowed disabled:bg-neutral-300"
+          className="mt-6 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
         >
           입장
-        </button>
+        </Button>
       </form>
     </div>
   );

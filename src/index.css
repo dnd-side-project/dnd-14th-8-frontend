@@ -1,5 +1,9 @@
+@import "@moyeorak/design-system/layers.css";
 @import "tailwindcss" source(none);
 @source "./**/*.{ts,tsx,js,jsx,html,css}";
+
+@plugin "@moyeorak/design-system/tailwind-plugin";
+@import "@moyeorak/design-system/styles.css";
 
 @import "./font-system.css";
 @import "./color-system.css";

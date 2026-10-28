@@ -1,3 +1,4 @@
+import { IconButton } from "@moyeorak/design-system";
 import type { ReactNode } from "react";
 import { ChevronLeftIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
@@ -19,14 +20,16 @@ export function PageHeader({
     <header className={cn("relative flex h-14 items-center pr-3", className)}>
       <div className="z-10 flex min-w-12 items-center">
         {onBack && (
-          <button
+          <IconButton
+            size="md"
+            variant="clear"
             type="button"
             onClick={onBack}
-            className="flex size-12 cursor-pointer items-center"
+            className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
             aria-label="뒤로가기"
           >
-            <ChevronLeftIcon className="size-6 text-k-900" />
-          </button>
+            <ChevronLeftIcon aria-hidden className="size-6" />
+          </IconButton>
         )}
       </div>
 

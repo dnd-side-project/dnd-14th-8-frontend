@@ -1,6 +1,8 @@
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - "@rollup/*"
+  # 직접 관리하는 디자인 시스템. package.json에서는 0.5.0으로 고정한다.
+  - "@moyeorak/design-system"
 onlyBuiltDependencies:
   - "@swc/core"
   - "esbuild"

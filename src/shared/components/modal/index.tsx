@@ -1,10 +1,6 @@
+import { Button } from "@moyeorak/design-system";
 import { useOutsideClick } from "@/shared/hooks/use-outside-click";
 import { cn } from "@/shared/utils/cn";
-
-const modalButtonStyles = {
-  gray: "h-12 bg-k-50 text-k-750 text-b1 enabled:active:bg-k-200 enabled:hover:bg-k-100",
-  blue: "h-12 bg-primary-main text-b1 text-k-10 enabled:active:bg-p-500 enabled:hover:bg-p-450",
-};
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -54,26 +50,29 @@ export function Modal({
           })}
         >
           {secondaryButton && (
-            <button
+            <Button
+              size="lg"
               type="button"
               onClick={secondaryButton.onClick}
-              className={`flex-1 rounded-md transition-all ${modalButtonStyles[secondaryButton.color]}`}
+              variant={secondaryButton.color === "blue" ? "brand" : "outline"}
+              className="flex-1 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
             >
               {secondaryButton.label}
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
+            size="lg"
             type="button"
             onClick={primaryButton.onClick}
+            variant={primaryButton.color === "blue" ? "brand" : "outline"}
             className={cn(
-              "rounded-md transition-all",
+              "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
               secondaryButton ? "flex-1" : "w-full",
-              modalButtonStyles[primaryButton.color],
             )}
           >
             {primaryButton.label}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

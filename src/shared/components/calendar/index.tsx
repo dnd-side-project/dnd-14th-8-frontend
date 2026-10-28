@@ -42,6 +42,10 @@ function createCalendarNavButton(icon: typeof ChevronLeftIcon) {
     return (
       <IconButton
         {...props}
+        aria-label={
+          props["aria-label"] ??
+          (icon === ChevronLeftIcon ? "이전 달" : "다음 달")
+        }
         size="md"
         background="square"
         backgroundSize="sm"

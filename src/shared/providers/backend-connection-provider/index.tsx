@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import {
   type PropsWithChildren,
   useEffect,
@@ -59,13 +60,15 @@ export function BackendConnectionProvider({ children }: PropsWithChildren) {
               </p>
             </div>
             {failed && (
-              <button
+              <Button
+                variant="brand"
+                size="lg"
                 type="button"
                 onClick={() => window.location.reload()}
-                className="rounded-xl bg-primary-main px-6 py-3 font-semibold text-k-5"
+                className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
               >
                 다시 연결하기
-              </button>
+              </Button>
             )}
           </div>
         </div>

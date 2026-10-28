@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import axios from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -86,13 +87,15 @@ function Dashboard({ onUnauthorized, onLogout }: DashboardProps) {
           </div>
           <div className="flex items-center gap-3">
             <RangeToggle value={range} onChange={setRange} />
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               type="button"
               onClick={onLogout}
-              className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-neutral-600 text-sm hover:text-neutral-900"
+              className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
             >
               로그아웃
-            </button>
+            </Button>
           </div>
         </header>
 
