@@ -1,31 +1,22 @@
-import type { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
 export interface MainButtonProps {
-  title?: string;
-  description?: string;
-  character?: ReactNode;
-  characterClassName?: string;
-  characterMotion?: "float" | "sway";
-  className?: string;
+  title: string;
+  description: string;
+  graphicSrc: string;
+  graphicClassName?: string;
+  titleClassName?: string;
+  descriptionClassName?: string;
   onClick?: () => void;
 }
-
-const characterMotionClassNames: Record<
-  NonNullable<MainButtonProps["characterMotion"]>,
-  string
-> = {
-  float: "animate-main-character-float",
-  sway: "animate-main-character-sway",
-};
 
 export function MainButton({
   title,
   description,
-  character,
-  characterClassName,
-  characterMotion,
-  className,
+  graphicSrc,
+  graphicClassName,
+  titleClassName,
+  descriptionClassName,
   onClick,
 }: MainButtonProps) {
   return (
@@ -33,27 +24,26 @@ export function MainButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "relative h-[160px] w-full cursor-pointer rounded-xl py-[26px] pr-[15px] pl-7 shadow-[0_3px_6px_0_#CACACA]",
-        "group flex items-center justify-between overflow-hidden",
-        className,
+        "relative flex aspect-[335/140] w-full cursor-pointer flex-col rounded-xl text-left",
+        "transition-transform active:scale-[0.98]",
+        "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
       )}
     >
-      <div className="z-10 flex flex-col gap-2 text-left">
-        <h3 className="text-h3 text-k-5">{title}</h3>
-        <p className="whitespace-pre-line text-b2 text-k-5">{description}</p>
+      <img
+        src={graphicSrc}
+        alt=""
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-0 size-full select-none",
+          graphicClassName,
+        )}
+      />
+      <div className="relative flex flex-col gap-1 px-6 pt-6">
+        <h3 className={cn("textStyle_head4", titleClassName)}>{title}</h3>
+        <p className={cn("textStyle_body5", descriptionClassName)}>
+          {description}
+        </p>
       </div>
-
-      {character && (
-        <div
-          className={cn(
-            "absolute shrink-0 leading-0",
-            characterMotion && characterMotionClassNames[characterMotion],
-            characterClassName,
-          )}
-        >
-          {character}
-        </div>
-      )}
     </button>
   );
 }
