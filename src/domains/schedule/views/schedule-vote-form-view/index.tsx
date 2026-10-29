@@ -3,6 +3,7 @@ import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
 import type { ScheduleVoteFormValues } from "@/domains/schedule/hooks/use-schedule-vote-form";
+import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Modal } from "@/shared/components/modal";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
@@ -112,27 +113,26 @@ export function ScheduleVoteFormView({
         />
       </div>
 
-      <FloatingScrollTop top={4} className="bottom-[132px]" />
-
-      <ActionArea
-        type="single"
-        className="fixed inset-x-0 bottom-0 z-30 mx-auto sm:max-w-[375px]"
-        supportingItem={<GuideTimeSelection />}
-        main={
-          <Button
-            size="xl"
-            display="full"
-            variant="default"
-            className={cn(
-              isButtonDisabledStyle &&
-                "bg-fill-neutral-default-disabled text-fg-neutral-subtler enabled:active:bg-fill-neutral-default-disabled",
-            )}
-            onClick={handleSubmitClick}
-          >
-            완료
-          </Button>
-        }
-      />
+      <FixedBottomArea floating={<FloatingScrollTop top={4} />}>
+        <ActionArea
+          type="single"
+          supportingItem={<GuideTimeSelection />}
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              className={cn(
+                isButtonDisabledStyle &&
+                  "bg-fill-neutral-default-disabled text-fg-neutral-subtler enabled:active:bg-fill-neutral-default-disabled",
+              )}
+              onClick={handleSubmitClick}
+            >
+              완료
+            </Button>
+          }
+        />
+      </FixedBottomArea>
 
       <Modal
         isOpen={isResetConfirmOpen}
