@@ -39,7 +39,7 @@ export const NoOverlappingTime: Story = {
   args: {
     graphic: <Empty1Character />,
     title: "아직 겹치는 시간대가 없어요",
-    description: "시간 범위를 넓히거나 팀원들을 기다려 보세요.",
+    description: "시간 범위를 넓히거나 참여자들을 기다려 보세요.",
   },
 };
 

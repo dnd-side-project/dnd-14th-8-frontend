@@ -10,13 +10,13 @@ export function useMeetingAccess(meetingId?: string) {
     refetch: refetchMe,
   } = useGetMyParticipant({ meetingId: meetingId ?? "" });
 
-  // 2. 전체 팀원 목록 조회
+  // 2. 전체 참여자 목록 조회
   const { data: participantsData, isLoading: isParticipantsLoading } =
     useListParticipants({ meetingId: meetingId ?? "" });
 
-  // 팀장 이름 찾기
+  // 모임장 이름 찾기
   const hostName =
-    participantsData?.participants?.find((p) => p.isHost)?.name ?? "팀장";
+    participantsData?.participants?.find((p) => p.isHost)?.name ?? "모임장";
 
   // 멤버 여부 판단
   const isMember = !!(

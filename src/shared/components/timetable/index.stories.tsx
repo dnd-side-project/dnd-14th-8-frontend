@@ -78,7 +78,7 @@ export const Interactive: Story = {
   },
 };
 
-/** 2. 뷰어 모드 및 팀원 일정 확인 (N=3 상황 재현) */
+/** 2. 뷰어 모드 및 참여자 일정 확인 (N=3 상황 재현) */
 export const ViewerMode: Story = {
   name: "뷰어 모드",
   args: {

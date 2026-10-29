@@ -17,7 +17,7 @@ export const OnScheduleHero: Story = {
     <div className="w-[375px] bg-p-50 px-4 pt-4 pb-6">
       <HomeLogoButton {...args} />
       <h1 className="mt-6 whitespace-pre-line text-h2 text-k-900">
-        {"팀원들에게 링크를\n공유해보세요!"}
+        {"참여자들에게 링크를\n공유해보세요!"}
       </h1>
     </div>
   ),

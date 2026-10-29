@@ -37,7 +37,7 @@ export function ScheduleMainView({
 
   // 3. 버튼 텍스트 및 액션 결정 로직
   const getButtonConfig = () => {
-    // 최적일정 탭이면서 팀장인 경우
+    // 최적일정 탭이면서 모임장인 경우
     if (tab === "optimal" && isHost) {
       return {
         text: "장소 정하러 가기",
