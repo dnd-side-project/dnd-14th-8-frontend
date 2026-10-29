@@ -70,11 +70,11 @@ type Story = StoryObj<typeof ScheduleMainVoteContent>;
 
 /**
  * 메인 시간표는 읽기 전용이지만 사용자는 자기 시간을 넣으려고 격자를 누른다.
- * 그 탭은 하단 "일정 추가하기"와 같은 곳으로 가야 한다.
+ * 화면은 그대로 두고, 탭을 알려 하단 버튼을 안내하게 한다.
  */
-export const TapTimetableToVote: Story = {
-  name: "시간표를 탭하면 일정 추가로",
-  args: { onParticipantEdit: fn(), onVoteAction: fn() },
+export const TapTimetableToGuide: Story = {
+  name: "시간표를 탭하면 안내만",
+  args: { onParticipantEdit: fn(), onTimetableTap: fn() },
   play: async ({ args, canvasElement }) => {
     const slot = canvasElement.querySelector<HTMLElement>(
       '[data-date-idx="1"][data-slot-idx="2"]',
@@ -94,6 +94,6 @@ export const TapTimetableToVote: Story = {
       },
     ]);
 
-    await expect(args.onVoteAction).toHaveBeenCalledTimes(1);
+    await expect(args.onTimetableTap).toHaveBeenCalledTimes(1);
   },
 };
