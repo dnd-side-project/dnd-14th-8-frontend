@@ -1,3 +1,4 @@
+import { Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -16,7 +17,6 @@ import { Dropdown, DropdownOption } from "@/shared/components/dropdown";
 import { IconButton } from "@/shared/components/icon-button";
 import { CloseIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { Modal } from "@/shared/components/modal";
 import { toast } from "@/shared/components/toast";
 import { useLockBodyScroll } from "@/shared/hooks/use-lock-body-scroll";
 
@@ -242,45 +242,35 @@ export function ScheduleEditDatesPage() {
       </div>
 
       <Modal
-        isOpen={isExitModalOpen}
-        onClose={() => setIsExitModalOpen(false)}
+        open={isExitModalOpen}
+        onOpenChange={setIsExitModalOpen}
         title="저장하지 않고 나가시겠어요?"
-        caption="수정한 내용이 모두 사라져요."
-        secondaryButton={{
-          label: "취소",
-          color: "gray",
-          onClick: () => setIsExitModalOpen(false),
+        body="입력하신 내용이 모두 사라져요"
+        mainLabel="나가기"
+        onMain={() => {
+          setIsExitModalOpen(false);
+          navigate("..");
         }}
-        primaryButton={{
-          label: "나가기",
-          color: "blue",
-          onClick: () => {
-            setIsExitModalOpen(false);
-            navigate("..");
-          },
-        }}
+        alternativeLabel="취소"
+        onAlternative={() => setIsExitModalOpen(false)}
       />
 
       <Modal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
+        open={isConfirmModalOpen}
+        onOpenChange={setIsConfirmModalOpen}
         title="시간표 범위를 수정할까요?"
-        caption={`기존에 등록된 일정 중 변경된 범위에 포함되지\n않는 시간은 자동으로 삭제돼요.`}
-        secondaryButton={{
-          label: "취소",
-          color: "gray",
-          onClick: () => {
-            setIsConfirmModalOpen(false);
-            navigate("..");
-          },
+        body={
+          "기존에 등록된 일정 중 변경된 범위에\n포함되지 않는 시간은 자동으로 삭제돼요"
+        }
+        mainLabel="수정하기"
+        onMain={() => {
+          setIsConfirmModalOpen(false);
+          requestUpdate();
         }}
-        primaryButton={{
-          label: "변경하기",
-          color: "blue",
-          onClick: () => {
-            setIsConfirmModalOpen(false);
-            requestUpdate();
-          },
+        alternativeLabel="취소"
+        onAlternative={() => {
+          setIsConfirmModalOpen(false);
+          navigate("..");
         }}
       />
     </MobileLayout>

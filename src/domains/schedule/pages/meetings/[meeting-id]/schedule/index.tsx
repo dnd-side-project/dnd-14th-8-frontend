@@ -1,3 +1,4 @@
+import { Modal } from "@moyeorak/design-system";
 import { useMemo, useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
 import { useConfirmSchedulePoll } from "@/domains/schedule/hooks/use-confirm-schedule-poll";
@@ -5,7 +6,6 @@ import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-partici
 import { normalizeScheduleVoteId } from "@/domains/schedule/utils/schedule-vote";
 import { ScheduleMainView } from "@/domains/schedule/views/schedule-main-view";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { Modal } from "@/shared/components/modal";
 import { toast } from "@/shared/components/toast";
 
 export function ScheduleMainPage() {
@@ -65,20 +65,14 @@ export function ScheduleMainPage() {
         onTabChange={handleTabChange}
       />
       <Modal
-        isOpen={isLocationModalOpen}
-        onClose={() => setIsLocationModalOpen(false)}
+        open={isLocationModalOpen}
+        onOpenChange={setIsLocationModalOpen}
         title="장소 정하기로 이동할까요?"
-        caption="이동 후에는 일정을 추가하거나 수정할 수 없어요."
-        primaryButton={{
-          label: "이동하기",
-          color: "blue",
-          onClick: handleConfirmGoToLocation,
-        }}
-        secondaryButton={{
-          label: "취소",
-          color: "gray",
-          onClick: () => setIsLocationModalOpen(false),
-        }}
+        body="이동 후 일정 추가 및 수정이 불가능해요"
+        mainLabel="이동하기"
+        onMain={handleConfirmGoToLocation}
+        alternativeLabel="취소"
+        onAlternative={() => setIsLocationModalOpen(false)}
       />
       <Outlet />
     </MobileLayout>
