@@ -49,7 +49,7 @@ export function getScheduleDateSummary(dates: Date[]): ScheduleDateSummary {
     const from = formatDate(consecutiveDates[0]);
     const to = formatDate(consecutiveDates[consecutiveDates.length - 1]);
     return {
-      label: `${from} - ${to}`,
+      label: `${from}-${to}`,
       overflow: sortedDates.length - consecutiveDates.length,
     };
   }
