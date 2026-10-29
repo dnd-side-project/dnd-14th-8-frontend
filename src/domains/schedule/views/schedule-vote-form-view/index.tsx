@@ -3,7 +3,10 @@ import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
 import type { ScheduleVoteFormValues } from "@/domains/schedule/hooks/use-schedule-vote-form";
-import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
+import {
+  FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING,
+  FixedBottomArea,
+} from "@/shared/components/fixed-bottom-area";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Modal } from "@/shared/components/modal";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
@@ -68,7 +71,11 @@ export function ScheduleVoteFormView({
 
   return (
     <section
-      className={cn("relative min-h-dvh bg-k-5 pb-[152px]", className)}
+      className={cn(
+        "relative min-h-dvh bg-k-5",
+        FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING,
+        className,
+      )}
       {...props}
     >
       <Header

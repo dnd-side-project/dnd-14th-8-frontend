@@ -66,6 +66,7 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 패키지 버튼에는 브랜드 포커스 링이 없어 키보드 포커스 시 브라우저 기본 outline이 보인다. 브랜드 링은 디자인 시스템 레시피에서 다룬다.
 - ActionArea는 배치(px 16, py 12, 버튼 간격 8)와 배경만 맡는다. 화면 하단 고정은 `FixedBottomArea`가 맡는다.
 - 맨 위로 버튼(FloatingScrollTop)은 `FixedBottomArea`의 `floating`에 넣어 하단 영역 위쪽 끝에서 20px, 오른쪽 20px에 둔다(FloatingButton 배치 가이드). 하단 영역 높이가 바뀌어도 함께 따라가므로 `bottom-[…px]` 같은 고정값을 쓰지 않는다.
+- `FixedBottomArea`는 현재 높이를 `--fixed-bottom-area-height`로 알린다. 맨 위로 버튼이 있는 화면의 콘텐츠는 `FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING`(하단 영역 높이 + 80px)을 하단 여백으로 써서, 끝까지 스크롤하면 마지막 줄이 버튼 위로 올라온다.
 - `px-5` 페이지 안에서는 Header와 같이 `-mx-5 w-auto`로 화면 폭까지 펼치고, 섹션의 `pb-5`는 뺀다.
 - 하단 공유 바의 메인 버튼 기본값을 outline에서 default로 바꿨다. 시안 기준이다. `buttonVariant`는 패키지 Button의 variant를 그대로 받는다.
 - 일정 투표 폼은 안내와 버튼 간격이 기존 16px에서 ActionArea 기본값 8px로 줄었다.
