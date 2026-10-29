@@ -3,6 +3,7 @@ import { ScheduleMainOptimalContent } from "@/domains/schedule/components/schedu
 import { ScheduleMainSummary } from "@/domains/schedule/components/schedule-main-summary";
 import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-main-vote-content";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
+import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Tab } from "@/shared/components/tab";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
@@ -87,11 +88,11 @@ export function ScheduleMainView({
         {tab === "optimal" && <ScheduleMainOptimalContent />}
       </section>
 
-      <FloatingScrollTop top={4} className="bottom-[92px]" />
-
-      <BottomActionBarWithButtonAndShare onClick={action} onShare={share}>
-        {text}
-      </BottomActionBarWithButtonAndShare>
+      <FixedBottomArea floating={<FloatingScrollTop top={4} />}>
+        <BottomActionBarWithButtonAndShare onClick={action} onShare={share}>
+          {text}
+        </BottomActionBarWithButtonAndShare>
+      </FixedBottomArea>
     </div>
   );
 }
