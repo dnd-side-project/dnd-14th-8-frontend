@@ -1,10 +1,9 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { useEffect, useMemo, useRef } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
 import { useUpdateDepartureForm } from "@/domains/location/hooks/use-update-departure-form";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { TextField } from "@/shared/components/text-field";
@@ -105,7 +104,7 @@ export function DepartureEditPage() {
   if (!selectedDeparture) {
     return (
       <MobileLayout>
-        <section className="flex min-h-dvh flex-col px-5 pb-5">
+        <section className="flex min-h-dvh flex-col px-5">
           <Header
             title="출발지 수정"
             onBack={leaveForm}
@@ -116,11 +115,20 @@ export function DepartureEditPage() {
             수정할 출발지를 찾을 수 없어요.
           </p>
 
-          <div className="mt-auto">
-            <ButtonBottom variant="black" onClick={leaveForm}>
-              이전으로 돌아가기
-            </ButtonBottom>
-          </div>
+          <ActionArea
+            type="single"
+            className="-mx-5 mt-auto w-auto"
+            main={
+              <Button
+                size="xl"
+                display="full"
+                variant="default"
+                onClick={leaveForm}
+              >
+                이전으로 돌아가기
+              </Button>
+            }
+          />
         </section>
       </MobileLayout>
     );
@@ -128,7 +136,7 @@ export function DepartureEditPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
+      <section className="flex min-h-dvh flex-col px-5">
         <Header
           title="출발지 수정"
           onBack={leaveForm}
@@ -173,15 +181,21 @@ export function DepartureEditPage() {
           />
         </div>
 
-        <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            disabled={!canSubmit || isSubmitPending}
-            onClick={onSubmit}
-          >
-            출발지 수정하기
-          </ButtonBottom>
-        </div>
+        <ActionArea
+          type="single"
+          className="-mx-5 mt-auto w-auto"
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              disabled={!canSubmit || isSubmitPending}
+              onClick={onSubmit}
+            >
+              출발지 수정하기
+            </Button>
+          }
+        />
       </section>
     </MobileLayout>
   );

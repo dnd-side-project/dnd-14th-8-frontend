@@ -1,4 +1,4 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -11,7 +11,6 @@ import {
   useGetDepartures,
 } from "@/domains/location/hooks/use-get-departures";
 import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Modal } from "@/shared/components/modal";
 import { toast } from "@/shared/components/toast";
@@ -59,7 +58,7 @@ export function DepartureListPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
+      <section className="flex min-h-dvh flex-col px-5">
         <Header
           title="출발지 관리"
           onBack={() => navigate(-1)}
@@ -83,14 +82,22 @@ export function DepartureListPage() {
           ))}
         </div>
 
-        <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            onClick={() => navigate(`/meetings/${meetingId}/location/stations`)}
-          >
-            중간지점 결과 보러가기
-          </ButtonBottom>
-        </div>
+        <ActionArea
+          type="single"
+          className="-mx-5 mt-auto w-auto"
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              onClick={() =>
+                navigate(`/meetings/${meetingId}/location/stations`)
+              }
+            >
+              중간지점 결과 보러가기
+            </Button>
+          }
+        />
       </section>
 
       <Modal

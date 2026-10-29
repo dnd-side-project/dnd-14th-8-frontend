@@ -1,8 +1,7 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { useCreateMeetingForm } from "@/domains/meeting/hooks/use-create-meeting-form";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Stepper } from "@/shared/components/stepper";
 import { TextField } from "@/shared/components/text-field";
@@ -22,7 +21,7 @@ export function NewMeetingPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
+      <section className="flex min-h-dvh flex-col px-5">
         <Header
           title="모임 생성"
           onBack={() => navigate("/")}
@@ -64,15 +63,21 @@ export function NewMeetingPage() {
           )}
         />
 
-        <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            disabled={!canSubmit || isSubmitPending}
-            onClick={onSubmit}
-          >
-            모임 생성하기
-          </ButtonBottom>
-        </div>
+        <ActionArea
+          type="single"
+          className="-mx-5 mt-auto w-auto"
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              disabled={!canSubmit || isSubmitPending}
+              onClick={onSubmit}
+            >
+              모임 생성하기
+            </Button>
+          }
+        />
       </section>
     </MobileLayout>
   );

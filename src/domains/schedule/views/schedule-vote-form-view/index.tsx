@@ -1,10 +1,8 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
 import type { ScheduleVoteFormValues } from "@/domains/schedule/hooks/use-schedule-vote-form";
-import { BottomActionBar } from "@/shared/components/bottom-action-bar";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Modal } from "@/shared/components/modal";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
@@ -114,22 +112,27 @@ export function ScheduleVoteFormView({
         />
       </div>
 
-      <FloatingScrollTop top={4} className="bottom-[140px]" />
+      <FloatingScrollTop top={4} className="bottom-[132px]" />
 
-      <BottomActionBar>
-        <GuideTimeSelection />
-        <ButtonBottom
-          className={cn(
-            "mt-4",
-            isButtonDisabledStyle &&
-              "bg-fill-neutral-default-disabled text-fg-neutral-subtler enabled:active:bg-fill-neutral-default-disabled",
-          )}
-          onClick={handleSubmitClick}
-          variant="black"
-        >
-          완료
-        </ButtonBottom>
-      </BottomActionBar>
+      <ActionArea
+        type="single"
+        className="fixed inset-x-0 bottom-0 z-30 mx-auto sm:max-w-[375px]"
+        supportingItem={<GuideTimeSelection />}
+        main={
+          <Button
+            size="xl"
+            display="full"
+            variant="default"
+            className={cn(
+              isButtonDisabledStyle &&
+                "bg-fill-neutral-default-disabled text-fg-neutral-subtler enabled:active:bg-fill-neutral-default-disabled",
+            )}
+            onClick={handleSubmitClick}
+          >
+            완료
+          </Button>
+        }
+      />
 
       <Modal
         isOpen={isResetConfirmOpen}
