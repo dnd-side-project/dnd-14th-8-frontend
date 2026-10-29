@@ -33,14 +33,11 @@ import {
   getVisibleCenterOffsetY,
 } from "@/domains/location/utils/map-viewport";
 import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint-result";
-import { HomeExitConfirmModal } from "@/domains/meeting/components/home-exit-confirm-modal";
-import { useGoHome } from "@/domains/meeting/hooks/use-go-home";
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
 import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
-import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import {
   ChevronDownIcon,
   LogoPinIcon,
@@ -132,9 +129,6 @@ export function LocationMainPage() {
     ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
   });
   const { data: myInfo, isLoading: isMyInfoLoading } = useGetMyParticipant({
-    meetingId,
-  });
-  const { cancelGoHome, confirmGoHome, goHome, isConfirmOpen } = useGoHome({
     meetingId,
   });
   const { data: midpoint, isLoading: isMidpointLoading } =
@@ -279,8 +273,6 @@ export function LocationMainPage() {
 
   return (
     <>
-      <HomeLogoButton className="absolute top-4 left-4" onClick={goHome} />
-
       {selectedStation && (
         <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
@@ -440,12 +432,6 @@ export function LocationMainPage() {
           </BottomActionBarWithButtonAndShare>
         </FixedBottomArea>
       )}
-
-      <HomeExitConfirmModal
-        isOpen={isConfirmOpen}
-        onCancel={cancelGoHome}
-        onConfirm={confirmGoHome}
-      />
     </>
   );
 }
