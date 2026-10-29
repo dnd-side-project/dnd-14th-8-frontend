@@ -15,7 +15,7 @@ const meta: Meta<typeof TimetableSlot> = {
     },
     opacity: {
       control: { type: "range", min: 0, max: 1, step: 0.1 },
-      description: "팀원 선택 인원수에 따른 농도 (0~1)",
+      description: "참여자 선택 인원수에 따른 농도 (0~1)",
     },
     onClick: { action: "clicked" },
   },

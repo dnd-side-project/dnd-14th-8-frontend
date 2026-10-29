@@ -17,19 +17,19 @@ function participant(
 }
 
 describe("canReturnToMeeting", () => {
-  it("팀장은 모임 생성 시 서버에 등록되므로 돌아올 수 있다", () => {
+  it("모임장은 모임 생성 시 서버에 등록되므로 돌아올 수 있다", () => {
     expect(canReturnToMeeting(participant({ isHost: true }))).toBe(true);
   });
 
-  it("일정 투표를 등록한 팀원은 돌아올 수 있다", () => {
+  it("일정 투표를 등록한 참여자는 돌아올 수 있다", () => {
     expect(canReturnToMeeting(participant({ scheduleVoteId: 12 }))).toBe(true);
   });
 
-  it("출발지를 등록한 팀원은 돌아올 수 있다", () => {
+  it("출발지를 등록한 참여자는 돌아올 수 있다", () => {
     expect(canReturnToMeeting(participant({ locationVoteId: 34 }))).toBe(true);
   });
 
-  it("아무것도 등록하지 않은 팀원은 돌아올 수 없다", () => {
+  it("아무것도 등록하지 않은 참여자는 돌아올 수 없다", () => {
     expect(canReturnToMeeting(participant())).toBe(false);
   });
 
