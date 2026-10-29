@@ -24,7 +24,7 @@ export function NewMeetingPage() {
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
         <Header
-          title="모임정보 입력"
+          title="모임 생성"
           onBack={() => navigate("/")}
           className="-mx-5 w-auto"
         />
@@ -50,13 +50,13 @@ export function NewMeetingPage() {
           )}
         />
 
-        {/* 인원 수 */}
+        {/* 인원 */}
         <Controller
           control={control}
           name="participantCount"
           render={({ field }) => (
             <Stepper
-              label="인원 수"
+              label="인원"
               value={field.value}
               onChange={field.onChange}
               className="mt-6"

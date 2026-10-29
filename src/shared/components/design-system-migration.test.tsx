@@ -93,8 +93,8 @@ describe("design system migration contracts", () => {
     expect(markup).not.toContain('type="submit"');
   });
   it("renders only the title when no back or action handler is given", () => {
-    const markup = renderToStaticMarkup(<Header title="모임정보 입력" />);
-    expect(markup).toMatch(/<h1[^>]*>모임정보 입력<\/h1>/);
+    const markup = renderToStaticMarkup(<Header title="모임 생성" />);
+    expect(markup).toMatch(/<h1[^>]*>모임 생성<\/h1>/);
     expect(markup).not.toContain("<button");
   });
 });

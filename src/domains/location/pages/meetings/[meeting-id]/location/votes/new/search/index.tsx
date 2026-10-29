@@ -83,7 +83,7 @@ export function DepartureNewSearchPage() {
       <section className="flex min-h-dvh flex-col pb-5">
         <div className="px-5">
           <Header
-            title="장소 찾기"
+            title="주소 검색"
             onBack={() => navigate(-1)}
             className="-mx-5 w-auto"
           />

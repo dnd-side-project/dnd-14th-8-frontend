@@ -81,7 +81,7 @@ export function MeetingEditParticipantsPage() {
         />
 
         <Stepper
-          label="인원 수"
+          label="인원"
           value={count}
           onChange={(newValue) => {
             if (newValue < initialCount) {
