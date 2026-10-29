@@ -26,32 +26,50 @@ function setStatus(next: BackendStatus) {
   for (const listener of listeners) listener();
 }
 
-// API 요청 직전에만 확인한다. 주기적인 ping으로 무료 서버를 깨워 두지 않는다.
-export function ensureBackendReady(): Promise<void> {
-  if (import.meta.env.VITE_API_READINESS_CHECK !== "true") {
-    return Promise.resolve();
-  }
-  if (status === "ready" && Date.now() - readyAt < READY_CACHE_MS) {
-    return Promise.resolve();
-  }
-  if (pending) return pending;
-  if (failure) return Promise.reject(failure);
+function isReadinessCheckEnabled() {
+  return import.meta.env.VITE_API_READINESS_CHECK === "true";
+}
 
-  setStatus("connecting");
-  pending = probeUntilReady()
+function isRecentlyReady() {
+  return readyAt > 0 && Date.now() - readyAt < READY_CACHE_MS;
+}
+
+// 미리 깨우기와 API 요청이 확인 한 번을 공유한다.
+function startProbe(): Promise<void> {
+  pending ??= probeUntilReady()
     .then(() => {
       readyAt = Date.now();
-      setStatus("ready");
-    })
-    .catch((error: Error) => {
-      failure = error;
-      setStatus("error");
-      throw error;
     })
     .finally(() => {
       pending = null;
     });
   return pending;
+}
+
+// 화면을 막지 않고 서버 기동만 먼저 시작한다. 사용자가 화면을 보는 동안 서버가 깨어난다.
+// 실패해도 기록하지 않고, 실제 API 요청이 다시 확인한다.
+export function warmUpBackend() {
+  if (!isReadinessCheckEnabled() || isRecentlyReady() || failure) return;
+  void startProbe().catch(() => undefined);
+}
+
+// API 요청 직전에 확인하고, 요청이 기다리는 동안에만 연결 안내를 띄운다.
+// 주기적인 ping으로 무료 서버를 깨워 두지 않는다.
+export function ensureBackendReady(): Promise<void> {
+  if (!isReadinessCheckEnabled() || isRecentlyReady()) {
+    return Promise.resolve();
+  }
+  if (failure) return Promise.reject(failure);
+
+  setStatus("connecting");
+  return startProbe().then(
+    () => setStatus("ready"),
+    (error: Error) => {
+      failure = error;
+      setStatus("error");
+      throw error;
+    },
+  );
 }
 
 async function probeUntilReady(): Promise<void> {

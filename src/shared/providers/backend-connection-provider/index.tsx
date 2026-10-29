@@ -6,9 +6,9 @@ import {
   useSyncExternalStore,
 } from "react";
 import {
-  ensureBackendReady,
   getBackendStatus,
   subscribeBackendStatus,
+  warmUpBackend,
 } from "@/shared/utils/backend-readiness";
 
 export function BackendConnectionProvider({ children }: PropsWithChildren) {
@@ -19,8 +19,10 @@ export function BackendConnectionProvider({ children }: PropsWithChildren) {
   );
   const [showConnecting, setShowConnecting] = useState(false);
 
+  // 랜딩처럼 API를 쓰지 않는 화면은 막지 않고, 서버만 미리 깨운다.
+  // 안내 화면은 API 요청이 서버 준비를 기다릴 때만 뜬다.
   useEffect(() => {
-    void ensureBackendReady().catch(() => undefined);
+    warmUpBackend();
   }, []);
 
   useEffect(() => {
