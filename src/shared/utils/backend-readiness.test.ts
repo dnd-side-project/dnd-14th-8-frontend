@@ -115,6 +115,69 @@ describe("backend readiness", () => {
     expect(adapter).toHaveBeenCalledTimes(1);
   });
 
+  it("warms up the server in the background without showing the connecting screen", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("Starting", { status: 503 }))
+      .mockResolvedValueOnce(healthy());
+    vi.stubGlobal("fetch", fetchMock);
+    const { getBackendStatus, warmUpBackend } = await import(
+      "@/shared/utils/backend-readiness"
+    );
+    warmUpBackend();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(getBackendStatus()).toBe("idle");
+    await vi.advanceTimersByTimeAsync(2_000);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(getBackendStatus()).toBe("idle");
+  });
+
+  it("lets an API request join the warm-up probe and shows connecting only while it waits", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("Starting", { status: 503 }))
+      .mockResolvedValueOnce(healthy());
+    vi.stubGlobal("fetch", fetchMock);
+    const { ensureBackendReady, getBackendStatus, warmUpBackend } =
+      await import("@/shared/utils/backend-readiness");
+    warmUpBackend();
+    await vi.advanceTimersByTimeAsync(0);
+    const request = ensureBackendReady();
+    expect(getBackendStatus()).toBe("connecting");
+    await vi.advanceTimersByTimeAsync(2_000);
+    await request;
+    expect(getBackendStatus()).toBe("ready");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("skips the check on the next API request when the warm-up already succeeded", async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => healthy());
+    vi.stubGlobal("fetch", fetchMock);
+    const { ensureBackendReady, getBackendStatus, warmUpBackend } =
+      await import("@/shared/utils/backend-readiness");
+    warmUpBackend();
+    await vi.advanceTimersByTimeAsync(0);
+    await ensureBackendReady();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(getBackendStatus()).toBe("idle");
+  });
+
+  it("does not remember a failed warm-up so the next API request checks again", async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new TypeError("Offline"));
+    vi.stubGlobal("fetch", fetchMock);
+    const { ensureBackendReady, getBackendStatus, warmUpBackend } =
+      await import("@/shared/utils/backend-readiness");
+    warmUpBackend();
+    await vi.advanceTimersByTimeAsync(300_000);
+    expect(getBackendStatus()).toBe("idle");
+    const attempts = fetchMock.mock.calls.length;
+    fetchMock.mockImplementation(async () => healthy());
+    await ensureBackendReady();
+    expect(fetchMock).toHaveBeenCalledTimes(attempts + 1);
+    expect(getBackendStatus()).toBe("ready");
+  });
+
   it("does nothing when readiness checks are disabled", async () => {
     vi.stubEnv("VITE_API_READINESS_CHECK", "false");
     const fetchMock = vi.fn();
