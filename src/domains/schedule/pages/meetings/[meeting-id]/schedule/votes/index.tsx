@@ -7,6 +7,7 @@ export function ScheduleVotesPage() {
     control,
     canSubmit,
     endTime,
+    isExitConfirmOpen,
     isPending,
     isResetConfirmOpen,
     isSubmitPending,
@@ -15,7 +16,9 @@ export function ScheduleVotesPage() {
     startTime,
     timetableDates,
     onBack,
+    onCancelExitConfirm,
     onCancelResetConfirm,
+    onConfirmExit,
     onConfirmReset,
     onReset,
     onSubmit,
@@ -34,9 +37,12 @@ export function ScheduleVotesPage() {
         timetableDates={timetableDates}
         isPending={isPending}
         isSubmitPending={isSubmitPending}
+        isExitConfirmOpen={isExitConfirmOpen}
         isResetConfirmOpen={isResetConfirmOpen}
         onBack={onBack}
+        onCancelExitConfirm={onCancelExitConfirm}
         onCancelResetConfirm={onCancelResetConfirm}
+        onConfirmExit={onConfirmExit}
         onConfirmReset={onConfirmReset}
         onReset={onReset}
         onSubmit={onSubmit}

@@ -18,6 +18,7 @@ export interface ScheduleVoteFormViewProps
   control: Control<ScheduleVoteFormValues>;
   canSubmit: boolean;
   endTime: number;
+  isExitConfirmOpen?: boolean;
   isPending?: boolean;
   isResetConfirmOpen?: boolean;
   isSubmitPending?: boolean;
@@ -26,7 +27,9 @@ export interface ScheduleVoteFormViewProps
   startTime: number;
   timetableDates: Date[];
   onBack: () => void;
+  onCancelExitConfirm: () => void;
   onCancelResetConfirm: () => void;
+  onConfirmExit: () => void;
   onConfirmReset: () => void;
   onReset: () => void;
   onSubmit: () => void;
@@ -38,13 +41,16 @@ export function ScheduleVoteFormView({
   className,
   control,
   endTime,
+  isExitConfirmOpen = false,
   isPending = false,
   isResetConfirmOpen = false,
   isSubmitPending = false,
   maxNameLength,
   title,
   onBack,
+  onCancelExitConfirm,
   onCancelResetConfirm,
+  onConfirmExit,
   onConfirmReset,
   onReset,
   onSubmit,
@@ -149,6 +155,17 @@ export function ScheduleVoteFormView({
         onMain={onConfirmReset}
         alternativeLabel="취소"
         onAlternative={onCancelResetConfirm}
+      />
+
+      <Modal
+        open={isExitConfirmOpen}
+        onOpenChange={onCancelExitConfirm}
+        title="저장하지 않고 나가시겠어요?"
+        body="입력하신 내용이 모두 사라져요"
+        mainLabel="나가기"
+        onMain={onConfirmExit}
+        alternativeLabel="취소"
+        onAlternative={onCancelExitConfirm}
       />
 
       <ReactHookFormDevtools control={control} />

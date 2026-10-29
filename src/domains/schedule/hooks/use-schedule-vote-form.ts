@@ -119,6 +119,7 @@ export function useScheduleVoteForm() {
   });
 
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
 
   // 서버 데이터가 로드되면 form 전체를 초기화하고 검증 실행
   useEffect(() => {
@@ -234,6 +235,20 @@ export function useScheduleVoteForm() {
     toast.success("시간표가 초기화되었어요");
   };
 
+  const handleBack = () => {
+    if (isDirty) {
+      setIsExitConfirmOpen(true);
+      return;
+    }
+
+    leaveForm();
+  };
+
+  const handleConfirmExit = () => {
+    setIsExitConfirmOpen(false);
+    leaveForm();
+  };
+
   const handleSubmitBlocked = () => {
     if (errors.name?.message) {
       toast.error(errors.name.message);
@@ -249,6 +264,7 @@ export function useScheduleVoteForm() {
     // View props
     canSubmit: isValid,
     endTime: initialData?.endTime ?? 24,
+    isExitConfirmOpen,
     isPending,
     isResetConfirmOpen,
     isSubmitPending: isMutating,
@@ -257,8 +273,10 @@ export function useScheduleVoteForm() {
     startTime: initialData?.startTime ?? 9,
     timetableDates: initialData?.timetableDates ?? [],
     // Actions
-    onBack: leaveForm,
+    onBack: handleBack,
+    onCancelExitConfirm: () => setIsExitConfirmOpen(false),
     onCancelResetConfirm: () => setIsResetConfirmOpen(false),
+    onConfirmExit: handleConfirmExit,
     onConfirmReset: () => void handleConfirmReset(),
     onReset: () => setIsResetConfirmOpen(true),
     onSubmit: () => void submitFormHandler(),
