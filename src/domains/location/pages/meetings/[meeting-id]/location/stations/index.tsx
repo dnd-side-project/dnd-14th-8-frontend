@@ -39,6 +39,7 @@ import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { ChipButton } from "@/shared/components/chip-button";
+import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import { HomeLogoButton } from "@/shared/components/home-logo-button";
 import {
   ChevronDownIcon,
@@ -424,18 +425,20 @@ export function LocationMainPage() {
       </BottomSheet>
 
       {!isContentLoading && (
-        <BottomActionBarWithButtonAndShare
-          onClick={handleVoteAction}
-          onShare={share}
-          buttonVariant={insufficientDepartureContent ? "brand" : "default"}
-          showShareButton={insufficientDepartureContent === null}
-        >
-          {insufficientDepartureContent?.primaryAction === "share"
-            ? "초대 링크 공유하기"
-            : hasEnoughDepartures
-              ? "출발지 관리하기"
-              : "출발지 추가하기"}
-        </BottomActionBarWithButtonAndShare>
+        <FixedBottomArea>
+          <BottomActionBarWithButtonAndShare
+            onClick={handleVoteAction}
+            onShare={share}
+            buttonVariant={insufficientDepartureContent ? "brand" : "default"}
+            showShareButton={insufficientDepartureContent === null}
+          >
+            {insufficientDepartureContent?.primaryAction === "share"
+              ? "초대 링크 공유하기"
+              : hasEnoughDepartures
+                ? "출발지 관리하기"
+                : "출발지 추가하기"}
+          </BottomActionBarWithButtonAndShare>
+        </FixedBottomArea>
       )}
 
       <HomeExitConfirmModal

@@ -6,7 +6,6 @@ import {
   IconButton,
 } from "@moyeorak/design-system";
 import type { ReactNode } from "react";
-import { cn } from "@/shared/utils/cn";
 
 export interface BottomActionBarWithButtonAndShareProps {
   onClick: () => void;
@@ -18,7 +17,7 @@ export interface BottomActionBarWithButtonAndShareProps {
   showShareButton?: boolean;
 }
 
-/** 화면 하단에 고정한 ActionArea. 공유 버튼이 있으면 icon, 없으면 single 조합을 쓴다. */
+/** 공유 버튼이 있으면 icon, 없으면 single 조합의 ActionArea. 화면 고정은 FixedBottomArea가 맡는다. */
 export function BottomActionBarWithButtonAndShare({
   onClick,
   onShare,
@@ -39,19 +38,14 @@ export function BottomActionBarWithButtonAndShare({
       {children}
     </Button>
   );
-  const areaClassName = cn(
-    "fixed inset-x-0 bottom-0 z-30 mx-auto sm:max-w-[375px]",
-    className,
-  );
-
   if (!showShareButton) {
-    return <ActionArea type="single" className={areaClassName} main={main} />;
+    return <ActionArea type="single" className={className} main={main} />;
   }
 
   return (
     <ActionArea
       type="icon"
-      className={areaClassName}
+      className={className}
       sub={
         <IconButton
           size="lg"
