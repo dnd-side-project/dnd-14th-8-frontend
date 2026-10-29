@@ -1,11 +1,10 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useCreateDepartureForm } from "@/domains/location/hooks/use-create-departure-form";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Select } from "@/shared/components/select";
@@ -106,7 +105,7 @@ export function DepartureNewPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
+      <section className="flex min-h-dvh flex-col px-5">
         <Header
           title="출발지 추가"
           onBack={leaveForm}
@@ -174,15 +173,21 @@ export function DepartureNewPage() {
           />
         </div>
 
-        <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            disabled={!canSubmit || isSubmitPending}
-            onClick={onSubmit}
-          >
-            출발지 추가하기
-          </ButtonBottom>
-        </div>
+        <ActionArea
+          type="single"
+          className="-mx-5 mt-auto w-auto"
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              disabled={!canSubmit || isSubmitPending}
+              onClick={onSubmit}
+            >
+              출발지 추가하기
+            </Button>
+          }
+        />
       </section>
     </MobileLayout>
   );

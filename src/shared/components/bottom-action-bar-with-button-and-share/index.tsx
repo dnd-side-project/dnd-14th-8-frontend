@@ -1,59 +1,68 @@
-import type { ReactNode } from "react";
 import {
-  BottomActionBar,
-  type BottomActionBarTone,
-} from "@/shared/components/bottom-action-bar";
-import { ButtonBottom } from "@/shared/components/button-bottom";
-import { IconButton } from "@/shared/components/icon-button";
-import { ShareIcon } from "@/shared/components/icons";
+  ActionArea,
+  Button,
+  type ButtonProps,
+  Icon,
+  IconButton,
+} from "@moyeorak/design-system";
+import type { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
 export interface BottomActionBarWithButtonAndShareProps {
-  tone?: BottomActionBarTone;
   onClick: () => void;
   onShare: () => void;
   disabled?: boolean;
   children?: ReactNode;
   className?: string;
-  buttonVariant?: "black" | "blue" | "white";
+  buttonVariant?: ButtonProps["variant"];
   showShareButton?: boolean;
 }
 
+/** 화면 하단에 고정한 ActionArea. 공유 버튼이 있으면 icon, 없으면 single 조합을 쓴다. */
 export function BottomActionBarWithButtonAndShare({
-  tone,
   onClick,
   onShare,
   disabled,
   children,
   className,
-  buttonVariant = "white",
+  buttonVariant = "default",
   showShareButton = true,
 }: BottomActionBarWithButtonAndShareProps) {
-  return (
-    <BottomActionBar
-      tone={tone}
-      className={cn("flex items-center gap-2", className)}
+  const main = (
+    <Button
+      size="xl"
+      display="full"
+      variant={buttonVariant}
+      disabled={disabled}
+      onClick={onClick}
     >
-      {showShareButton && (
+      {children}
+    </Button>
+  );
+  const areaClassName = cn(
+    "fixed inset-x-0 bottom-0 z-30 mx-auto sm:max-w-[375px]",
+    className,
+  );
+
+  if (!showShareButton) {
+    return <ActionArea type="single" className={areaClassName} main={main} />;
+  }
+
+  return (
+    <ActionArea
+      type="icon"
+      className={areaClassName}
+      sub={
         <IconButton
+          size="lg"
+          variant="fill"
           aria-label="공유하기"
-          background="square"
-          backgroundSize="lg"
-          icon={ShareIcon}
-          iconSize="xl"
           onClick={onShare}
-          size="2xl"
-          variant="primary"
-        />
-      )}
-      <ButtonBottom
-        disabled={disabled}
-        onClick={onClick}
-        className="min-w-0 flex-1 px-4"
-        variant={buttonVariant}
-      >
-        {children}
-      </ButtonBottom>
-    </BottomActionBar>
+        >
+          <Icon type="share" size="md" />
+        </IconButton>
+      }
+      main={main}
+    />
   );
 }

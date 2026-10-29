@@ -1,4 +1,4 @@
-import { Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -7,7 +7,6 @@ import {
   getMeetingSchedulesQueryKey,
   useGetMeetingSchedules,
 } from "@/domains/schedule/hooks/use-get-meeting-schedules";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Stepper } from "@/shared/components/stepper";
 import { toast } from "@/shared/components/toast";
@@ -72,7 +71,7 @@ export function MeetingEditParticipantsPage() {
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col px-5 pb-5">
+      <section className="flex min-h-dvh flex-col px-5">
         <Header
           className="-mx-5 w-auto"
           title="모임 인원 수정"
@@ -92,15 +91,21 @@ export function MeetingEditParticipantsPage() {
           }}
         />
 
-        <div className="mt-auto">
-          <ButtonBottom
-            variant="black"
-            disabled={!canSubmit}
-            onClick={handleSubmit}
-          >
-            완료
-          </ButtonBottom>
-        </div>
+        <ActionArea
+          type="single"
+          className="-mx-5 mt-auto w-auto"
+          main={
+            <Button
+              size="xl"
+              display="full"
+              variant="default"
+              disabled={!canSubmit}
+              onClick={handleSubmit}
+            >
+              완료
+            </Button>
+          }
+        />
       </section>
     </MobileLayout>
   );

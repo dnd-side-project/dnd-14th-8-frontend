@@ -427,7 +427,7 @@ export function LocationMainPage() {
         <BottomActionBarWithButtonAndShare
           onClick={handleVoteAction}
           onShare={share}
-          buttonVariant={insufficientDepartureContent ? "blue" : "white"}
+          buttonVariant={insufficientDepartureContent ? "brand" : "default"}
           showShareButton={insufficientDepartureContent === null}
         >
           {insufficientDepartureContent?.primaryAction === "share"

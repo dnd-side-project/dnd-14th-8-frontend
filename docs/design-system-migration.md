@@ -2,12 +2,12 @@
 
 ## 기준
 
-- 배포 패키지: `@moyeorak/design-system@0.6.0` (정확한 버전 고정)
+- 배포 패키지: `@moyeorak/design-system@0.6.1` (정확한 버전 고정)
 - 소스: https://github.com/meteorqz6/moyeorakui
 - 컴포넌트와 의미 토큰은 npm 패키지에서 가져온다. 소스 복사나 서비스 내 토큰 재정의는 하지 않는다.
 - 기존 Tailwind v4를 유지한다. 서비스에 Panda codegen은 추가하지 않는다.
 - CSS 진입점에서 layers.css를 가장 먼저 불러오고 Tailwind 플러그인과 styles.css를 함께 로드한다.
-- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.6.0을 고정한다. 다른 패키지의 대기 정책은 유지한다.
+- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.6.1을 고정한다. 다른 패키지의 대기 정책은 유지한다.
 
 ## 1차: 서비스 공통 버튼
 
@@ -51,6 +51,26 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - Header는 화면 폭 기준 배치(뒤로가기 left 4px, 액션 right 12px)라, `px-5` 안에서는 `-mx-5 w-auto`로 화면 폭까지 펼친다.
 - Header는 배경을 칠하지 않고 페이지 배경을 따른다.
 
+## 3차: 하단 액션 영역
+
+페이지 하단 버튼 영역을 패키지의 `ActionArea`로 바꾸고 서비스 `BottomActionBar`를 삭제한다.
+0.6.1부터 `w: "full"`, `display: "full"`이 올바른 `width: 100%`로 생성된다.
+
+| 기존 | 디자인 시스템 |
+| --- | --- |
+| BottomActionBarWithButtonAndShare (공유 + 메인) | ActionArea icon. 공유 버튼이 없으면 single |
+| BottomActionBar + GuideTimeSelection + 완료 (일정 투표 폼) | ActionArea single, supportingItem |
+| 페이지 하단 `mt-auto` + ButtonBottom | ActionArea single |
+
+- 버튼도 어댑터를 거치지 않고 패키지 컴포넌트를 직접 쓴다. 메인은 `Button size="xl" display="full"`, 공유는 `IconButton size="lg" variant="fill"` + `Icon type="share" size="md"`(Icon에는 variant를 지정하지 않는다).
+- 패키지 버튼에는 브랜드 포커스 링이 없어 키보드 포커스 시 브라우저 기본 outline이 보인다. 브랜드 링은 디자인 시스템 레시피에서 다룬다.
+- ActionArea는 배치(px 16, py 12, 버튼 간격 8)와 배경만 맡는다. 화면 하단 고정은 `fixed inset-x-0 bottom-0 z-30 mx-auto sm:max-w-[375px]`로 붙인다.
+- `px-5` 페이지 안에서는 Header와 같이 `-mx-5 w-auto`로 화면 폭까지 펼치고, 섹션의 `pb-5`는 뺀다.
+- 하단 공유 바의 메인 버튼 기본값을 outline에서 default로 바꿨다. 시안 기준이다. `buttonVariant`는 패키지 Button의 variant를 그대로 받는다.
+- 일정 투표 폼은 안내와 버튼 간격이 16px → 8px로 줄어, 맨 위로 버튼 위치를 `bottom-[132px]`로 맞췄다.
+- 아직 전환하지 않은 곳: 모임 참여 초대(브랜드 배경), 일정 범위 수정 저장 버튼(sticky + 335px 폭). 콘텐츠 안에 놓인 버튼(장소 상세, 경로 상세, 설치 안내)은 ActionArea 대상이 아니다.
+- safe area 여백은 viewport에 `viewport-fit=cover`가 있어야 적용된다. 지금 `index.html`에는 없어서 `env(safe-area-inset-bottom)`이 0이다.
+
 ## 별도 화면 전환 단계
 
 다음 요소는 이번 공통 버튼 교체 범위와 별개로 화면 시안과 함께 전환한다.
@@ -58,10 +78,10 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 랜딩 캐릭터 카드, 로고, 카카오/링크 공유 채널 타일
 - 탭, 셀렉트, 달력 날짜 셀, 시간표 셀, 지도 마커 및 목록 카드
 - TextField, Stepper, Calendar의 본체와 기존 색상·타이포 토큰
-- Modal 전체 구조, Toast 및 ActionArea 레이아웃
+- Modal 전체 구조, Toast
 
 0.5.0에는 TextField·Stepper·Calendar 공개 export가 없어 기존 구현을 유지했다.
-Modal·Toast·ActionArea는 패키지에 존재하지만, 이번에는 버튼 교체에 필요한 부분만 적용한다.
+Modal·Toast는 패키지에 존재하지만, 이번에는 버튼 교체에 필요한 부분만 적용한다.
 기존 color-system.css와 font-system.css를 전체 재매핑하면 미전환 화면까지 함께 바뀌므로 유지한다.
 
 ## 검증
