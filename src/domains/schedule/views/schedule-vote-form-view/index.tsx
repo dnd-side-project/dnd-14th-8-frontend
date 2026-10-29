@@ -1,4 +1,4 @@
-import { Button } from "@moyeorak/design-system";
+import { Header } from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
@@ -7,7 +7,6 @@ import { BottomActionBar } from "@/shared/components/bottom-action-bar";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Modal } from "@/shared/components/modal";
-import { PageHeader } from "@/shared/components/page-header";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
 import { TextField } from "@/shared/components/text-field";
 import { Timetable } from "@/shared/components/timetable";
@@ -73,21 +72,11 @@ export function ScheduleVoteFormView({
       className={cn("relative min-h-dvh bg-k-5 pb-[152px]", className)}
       {...props}
     >
-      <PageHeader
+      <Header
         title={title}
         onBack={onBack}
-        className="px-5"
-        rightElement={
-          <Button
-            variant="ghost-brand"
-            size="sm"
-            type="button"
-            onClick={onReset}
-            className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
-          >
-            초기화
-          </Button>
-        }
+        actionLabel="초기화"
+        onAction={onReset}
       />
 
       <div className="px-5">

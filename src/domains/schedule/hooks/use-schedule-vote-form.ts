@@ -73,7 +73,7 @@ export function useScheduleVoteForm() {
     myParticipantQuery.data?.scheduleVoteId,
   );
   const isEditMode = normalizedVoteId !== undefined;
-  const pageTitle = isEditMode ? "일정 수정하기" : "일정 추가하기";
+  const pageTitle = isEditMode ? "일정 수정" : "일정 추가";
 
   // ── Initial data ──
   const initialData = useMemo<ScheduleVoteFormInitialData | undefined>(() => {

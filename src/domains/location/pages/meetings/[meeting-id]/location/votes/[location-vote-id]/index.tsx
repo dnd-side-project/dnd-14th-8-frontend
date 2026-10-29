@@ -1,3 +1,4 @@
+import { Header } from "@moyeorak/design-system";
 import { useEffect, useMemo, useRef } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -6,7 +7,6 @@ import { useUpdateDepartureForm } from "@/domains/location/hooks/use-update-depa
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 import { TextField } from "@/shared/components/text-field";
 import {
   useFlowEntryIndex,
@@ -106,7 +106,11 @@ export function DepartureEditPage() {
     return (
       <MobileLayout>
         <section className="flex min-h-dvh flex-col px-5 pb-5">
-          <PageHeader title="출발지 수정" onBack={leaveForm} />
+          <Header
+            title="출발지 수정"
+            onBack={leaveForm}
+            className="-mx-5 w-auto"
+          />
 
           <p className="mt-10 text-center text-b2 text-k-500">
             수정할 출발지를 찾을 수 없어요.
@@ -125,7 +129,11 @@ export function DepartureEditPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 수정" onBack={leaveForm} />
+        <Header
+          title="출발지 수정"
+          onBack={leaveForm}
+          className="-mx-5 w-auto"
+        />
 
         <div className="mt-3 flex flex-col gap-6">
           <Controller

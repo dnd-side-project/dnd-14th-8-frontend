@@ -1,3 +1,4 @@
+import { Header } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -13,7 +14,6 @@ import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Modal } from "@/shared/components/modal";
-import { PageHeader } from "@/shared/components/page-header";
 import { toast } from "@/shared/components/toast";
 
 export function DepartureListPage() {
@@ -60,7 +60,11 @@ export function DepartureListPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 관리" onBack={() => navigate(-1)} />
+        <Header
+          title="출발지 관리"
+          onBack={() => navigate(-1)}
+          className="-mx-5 w-auto"
+        />
         <ButtonSubStroke onClick={() => navigate("new")} className="mt-3 mb-3">
           출발지 추가하기
         </ButtonSubStroke>
