@@ -186,8 +186,8 @@ export function Timetable({
   };
 
   /**
-   * 읽기 전용 시간표를 탭하면 편집 화면으로 넘긴다. 사용자는 격자를 눌러
-   * 자기 시간을 넣으려 하는데 지금까지는 아무 반응이 없었다.
+   * 읽기 전용 시간표의 칸 탭을 onDisabledTap으로 알린다. 사용자는 격자를 눌러
+   * 자기 시간을 넣으려 하므로, 아무 반응이 없지 않게 사용처에서 안내한다.
    */
   const handleDisabledTapEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
     const start = disabledTapStartRef.current;

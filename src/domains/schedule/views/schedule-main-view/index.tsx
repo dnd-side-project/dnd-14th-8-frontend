@@ -5,6 +5,7 @@ import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { Tab } from "@/shared/components/tab";
+import { toast } from "@/shared/components/toast";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import { cn } from "@/shared/utils/cn";
 
@@ -53,6 +54,16 @@ export function ScheduleMainView({
 
   const { text, action } = getButtonConfig();
 
+  // 메인 시간표는 읽기 전용이라, 칸을 누르면 하단 버튼으로 안내만 한다.
+  const showVoteGuide = () => {
+    toast.message(
+      hasExistingVote
+        ? "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요"
+        : "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
+      { id: "schedule-main-timetable-guide" },
+    );
+  };
+
   return (
     <div
       className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
@@ -81,7 +92,7 @@ export function ScheduleMainView({
         {tab === "vote" && (
           <ScheduleMainVoteContent
             onParticipantEdit={onParticipantEdit}
-            onVoteAction={onVoteAction}
+            onTimetableTap={showVoteGuide}
           />
         )}
         {tab === "optimal" && <ScheduleMainOptimalContent />}
