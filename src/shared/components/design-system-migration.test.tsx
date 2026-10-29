@@ -1,3 +1,4 @@
+import { Header } from "@moyeorak/design-system";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ChipButtonWithIcon } from "@/domains/location/components/chip-button-with-icon";
@@ -73,5 +74,27 @@ describe("design system migration contracts", () => {
     expect(markup).toContain('aria-label="입력 지우기"');
     expect(markup).toContain('disabled=""');
     expect(markup.match(/<button/g)).toHaveLength(1);
+  });
+  it("renders the page title as h1 with back and reset actions outside form submission", () => {
+    const markup = renderToStaticMarkup(
+      <form>
+        <Header
+          title="일정 추가"
+          onBack={() => undefined}
+          actionLabel="초기화"
+          onAction={() => undefined}
+        />
+      </form>,
+    );
+    expect(markup).toMatch(/<h1[^>]*>일정 추가<\/h1>/);
+    expect(markup).toContain('aria-label="뒤로가기"');
+    expect(markup).toContain(">초기화</button>");
+    expect(markup.match(/type="button"/g)).toHaveLength(2);
+    expect(markup).not.toContain('type="submit"');
+  });
+  it("renders only the title when no back or action handler is given", () => {
+    const markup = renderToStaticMarkup(<Header title="모임정보 입력" />);
+    expect(markup).toMatch(/<h1[^>]*>모임정보 입력<\/h1>/);
+    expect(markup).not.toContain("<button");
   });
 });

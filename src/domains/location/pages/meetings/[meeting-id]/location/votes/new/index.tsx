@@ -1,3 +1,4 @@
+import { Header } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -7,7 +8,6 @@ import { useListParticipants } from "@/domains/schedule/hooks/use-list-participa
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 import { Select } from "@/shared/components/select";
 import { TextField } from "@/shared/components/text-field";
 import {
@@ -107,7 +107,11 @@ export function DepartureNewPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="출발지 추가" onBack={leaveForm} />
+        <Header
+          title="출발지 추가"
+          onBack={leaveForm}
+          className="-mx-5 w-auto"
+        />
 
         <div className="mt-3 flex flex-col gap-6">
           {hasParticipants ? (

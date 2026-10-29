@@ -1,3 +1,4 @@
+import { Header } from "@moyeorak/design-system";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Empty2Character } from "@/assets/characters";
@@ -11,7 +12,6 @@ import {
 } from "@/domains/location/utils/service-area";
 import { SearchIcon, TargetIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { TextField } from "@/shared/components/text-field";
 import { toast } from "@/shared/components/toast";
@@ -82,7 +82,11 @@ export function DepartureNewSearchPage() {
     <MobileLayout>
       <section className="flex min-h-dvh flex-col pb-5">
         <div className="px-5">
-          <PageHeader title="장소 찾기" onBack={() => navigate(-1)} />
+          <Header
+            title="장소 찾기"
+            onBack={() => navigate(-1)}
+            className="-mx-5 w-auto"
+          />
 
           <TextField
             autoFocus

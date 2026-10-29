@@ -1,9 +1,9 @@
+import { Header } from "@moyeorak/design-system";
 import { Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { useCreateMeetingForm } from "@/domains/meeting/hooks/use-create-meeting-form";
 import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { PageHeader } from "@/shared/components/page-header";
 import { Stepper } from "@/shared/components/stepper";
 import { TextField } from "@/shared/components/text-field";
 
@@ -23,7 +23,11 @@ export function NewMeetingPage() {
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5 pb-5">
-        <PageHeader title="모임정보 입력" onBack={() => navigate("/")} />
+        <Header
+          title="모임정보 입력"
+          onBack={() => navigate("/")}
+          className="-mx-5 w-auto"
+        />
 
         {/* 이름 입력 */}
         <Controller

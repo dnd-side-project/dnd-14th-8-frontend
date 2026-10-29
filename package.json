@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@moyeorak/design-system": "0.5.1",
+    "@moyeorak/design-system": "0.6.0",
     "@tanstack/react-query": "^5.90.21",
     "axios": "^1.13.4",
     "class-variance-authority": "^0.7.1",
