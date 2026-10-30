@@ -8,10 +8,10 @@ const meta = {
   title: "domains/schedule/ScheduleMainSummary",
   component: ScheduleMainSummaryContent,
   args: {
+    canEditRange: true,
     dates: toDates([24, 25]),
     endTime: "12:00",
     hostName: "김혜인",
-    isHost: true,
     startTime: "09:00",
     votedParticipantCount: 3,
     onEditSchedule: () => undefined,
@@ -34,7 +34,7 @@ export const Host: Story = {};
 
 export const Participant: Story = {
   args: {
-    isHost: false,
+    canEditRange: false,
   },
 };
 

@@ -2,7 +2,8 @@ import { Chip, Icon, IconButton, Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
+import { useMeetingPermissions } from "@/domains/meeting/hooks/use-meeting-permissions";
 import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-bottom-timetable-edit";
 import {
   DATE_PRESETS,
@@ -29,6 +30,8 @@ export function ScheduleEditDatesPage() {
     meetingId: meetingId || "",
   });
   const { mutate: updateSchedule, isPending } = useUpdateSchedulePoll();
+  const { permissions, isLoading: isPermissionsLoading } =
+    useMeetingPermissions(meetingId || "");
 
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [startTime, setStartTime] = useState("09:00");
@@ -119,7 +122,10 @@ export function ScheduleEditDatesPage() {
     }
   };
 
-  if (isLoading) return null;
+  if (isLoading || isPermissionsLoading) return null;
+
+  // 버튼이 없어도 주소로 들어올 수 있어 화면에서도 막는다.
+  if (!permissions.canEditRange) return <Navigate to=".." replace />;
 
   return (
     <MobileLayout>

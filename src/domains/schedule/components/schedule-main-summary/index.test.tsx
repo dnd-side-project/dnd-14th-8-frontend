@@ -27,10 +27,10 @@ const toDates = (days: number[]) => days.map((day) => new Date(2026, 11, day));
 function renderSummary(props: Partial<ScheduleMainSummaryContentProps> = {}) {
   return renderToStaticMarkup(
     <ScheduleMainSummaryContent
+      canEditRange
       dates={toDates([24, 25])}
       endTime="12:00:00"
       hostName="김혜인"
-      isHost
       startTime="09:00:00"
       votedParticipantCount={3}
       onEditSchedule={() => undefined}
@@ -49,9 +49,9 @@ describe("ScheduleMainSummaryContent", () => {
     expect(markup).toContain("9:00-12:00");
   });
 
-  it("호스트에게만 시간표 수정 버튼을 보여준다", () => {
-    expect(renderSummary({ isHost: true })).toContain("시간표 수정");
-    expect(renderSummary({ isHost: false })).not.toContain("시간표 수정");
+  it("시간표 범위를 고칠 수 있을 때만 시간표 수정 버튼을 보여준다", () => {
+    expect(renderSummary({ canEditRange: true })).toContain("시간표 수정");
+    expect(renderSummary({ canEditRange: false })).not.toContain("시간표 수정");
   });
 
   it("범위 밖 날짜가 있을 때만 개수를 붙인다", () => {
@@ -73,7 +73,7 @@ describe("ScheduleMainSummary", () => {
   it("전체 인원이 아니라 일정을 등록한 인원을 참여 인원으로 표시한다", () => {
     const markup = renderToStaticMarkup(
       <ScheduleMainSummary
-        isHost
+        canEditRange
         meetingId="meeting-1"
         onEditSchedule={() => undefined}
       />,
