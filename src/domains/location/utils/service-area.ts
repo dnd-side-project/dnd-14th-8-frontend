@@ -9,7 +9,7 @@ const SERVICE_AREA = {
 };
 
 export const OUT_OF_SERVICE_AREA_MESSAGE =
-  "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.";
+  "서비스 지역이 아니에요. 다른 곳을 선택해주세요";
 
 export const OUT_OF_SERVICE_AREA_ERROR_CODE = "E427";
 

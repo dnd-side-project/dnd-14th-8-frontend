@@ -67,8 +67,13 @@ export function useCurrentLocation() {
         setCoords(currentCoords);
         reverseGeocode(currentCoords);
       },
-      () => {
-        toast.error("위치 권한이 필요해요");
+      (error: GeolocationPositionError) => {
+        // 권한을 거부했을 때만 설정 안내를 하고, 시간 초과처럼 다시 시도하면 될 수 있는 오류는 따로 알린다.
+        toast.error(
+          error.code === error.PERMISSION_DENIED
+            ? "설정에서 위치 권한을 허용해주세요"
+            : "현재 위치를 찾지 못했어요. 다시 시도해주세요",
+        );
         setLoading(false);
       },
     );

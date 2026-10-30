@@ -25,17 +25,17 @@ export function ShareSheetProvider({ children }: PropsWithChildren) {
   const handleCopyShare = useCallback(async () => {
     const copied = await copyTextToClipboard(window.location.href);
     if (!copied) {
-      toast.error("클립보드 복사에 실패했어요");
+      toast.error("링크를 복사하지 못했어요. 다시 시도해주세요");
       return;
     }
 
-    toast.success("클립보드에 복사되었어요");
+    toast.success("링크가 복사되었어요");
     close();
   }, [close]);
 
   const handleKakaoShare = useCallback(() => {
     if (!canOpenKakaoShare(navigator.userAgent)) {
-      toast.error("모바일에서만 카카오톡으로 공유할 수 있어요");
+      toast.error("PC에서는 링크 복사로 공유해주세요");
       close();
       // void handleCopyShare();
       return;

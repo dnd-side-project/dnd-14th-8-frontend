@@ -104,7 +104,7 @@ export function useUpdateDepartureForm({
         toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
         return;
       }
-      toast.error("출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.");
+      toast.error("출발지를 수정하지 못했어요. 다시 시도해주세요");
     }
   });
 

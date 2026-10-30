@@ -49,9 +49,9 @@ describe("ScheduleMainSummaryContent", () => {
     expect(markup).toContain("9:00-12:00");
   });
 
-  it("호스트에게만 선택범위 수정 버튼을 보여준다", () => {
-    expect(renderSummary({ isHost: true })).toContain("선택범위 수정");
-    expect(renderSummary({ isHost: false })).not.toContain("선택범위 수정");
+  it("호스트에게만 시간표 수정 버튼을 보여준다", () => {
+    expect(renderSummary({ isHost: true })).toContain("시간표 수정");
+    expect(renderSummary({ isHost: false })).not.toContain("시간표 수정");
   });
 
   it("범위 밖 날짜가 있을 때만 개수를 붙인다", () => {

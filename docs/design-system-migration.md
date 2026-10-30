@@ -115,8 +115,26 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 
 - `text-k-500`과 `text-k-600`이 같은 색(`#737a89`)이 된다. 디자이너의 서비스 UI 디자인과 일치하는 쪽으로 골랐다.
 - 위치 지도 화면의 바탕(`bg-k-10`)은 넓은 배경이지만 디자인 시스템 `bg`에 같은 밝기가 없어 `fill.neutral.subtlest`로 두었다. 지도에 가려 보이지 않는다.
-- 토스트는 서비스에서 색을 따로 정의하므로 디자인 시스템 Toast로 교체할 때 바꾼다. 그래서 `color-system.css`와 tailwind-merge의 팔레트 색 목록은 아직 남긴다. 관리자 화면(`/admin`)은 Tailwind 기본 색을 쓰는 내부 도구라 범위에서 뺐다.
+- 토스트는 4차 Toast 단계에서 디자인 시스템 Toast로 바꾸며 함께 정리했다. 관리자 화면(`/admin`)은 Tailwind 기본 색을 쓰는 내부 도구라 범위에서 뺐다.
 - `src/design-tokens-static.test.ts`가 토스트·관리자 화면 밖에서 팔레트 색 클래스, 팔레트 CSS 변수, 기존 글자 클래스가 다시 쓰이면 실패한다.
+
+## 4차: Toast
+
+서비스 토스트(sonner)를 디자인 시스템 `Toast`로 바꾼다. 디자인 시스템 `Toast`는 바꾸지 않고 서비스 쪽에서 맞춘다.
+
+- 기존 호출(`toast.success / error / message / dismiss`)은 그대로 둔다. `shared/components/toast`가 호출을 받아 목록을 관리하고(`toast-store.ts`), `Toaster`가 디자인 시스템 `Toast`로 그린다.
+
+  | 호출 | 디자인 시스템 Toast |
+  | --- | --- |
+  | `toast.success` | `positive` |
+  | `toast.error` | `negative` |
+  | `toast.message` | `neutral` (아이콘 없음) |
+
+- 같은 `id`로 다시 띄우면 하나만 보이고 닫히는 시간이 다시 흐른다. 동시에 최대 3개까지 보인다. 4초 뒤 닫힌다(sonner 기본값과 같음).
+- 위치는 디자인 시스템 가이드(하단 영역 12px 위)를 따른다. `FixedBottomArea`가 알리는 `--fixed-bottom-area-height`를 쓰고, 없는 화면은 페이지 끝 ActionArea(single, 80px)를 기본값으로 둔다.
+- 디자인 시스템 `Toast`는 한 줄 고정이라, 375px에서 넘치던 문구를 줄이고 문구 전체를 규칙에 맞춰 정리했다. 규칙과 용어는 `docs/ux-writing.md`에 있다.
+- 디자인 시스템 `Toast`에는 버튼이 없어, 새 버전 안내("새로고침" 버튼)는 `Modal`로 옮겼다. 제목 "업데이트된 버전으로 새로고침할까요?", 본문 "지금 새로고침하면 입력 중인 내용이 사라질 수 있어요", 버튼 "나중에 / 새로고침". 나중을 고르면 앱을 다시 열 때 대기 중인 워커가 적용된다. 설치 유도 시트가 열려 있는 동안 미루는 동작은 그대로다.
+- sonner와 `color-system.css`, tailwind-merge의 팔레트 색 목록을 지웠다. 정적 검사(`src/design-tokens-static.test.ts`)는 관리자 화면 말고는 예외가 없다.
 
 ## 별도 화면 전환 단계
 
@@ -125,11 +143,10 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 랜딩 캐릭터 카드, 로고, 카카오/링크 공유 채널 타일
 - 탭, 셀렉트, 달력 날짜 셀, 시간표 셀, 지도 마커 및 목록 카드
 - TextField, Stepper, Calendar의 본체와 기존 색상·타이포 토큰
-- Modal 전체 구조, Toast
+- Modal 전체 구조
 
 0.5.0에는 TextField·Stepper·Calendar 공개 export가 없어 기존 구현을 유지했다.
-Modal·Toast는 패키지에 존재하지만, 이번에는 버튼 교체에 필요한 부분만 적용한다.
-기존 color-system.css는 토스트를 디자인 시스템 Toast로 교체할 때까지 유지한다. 서비스 화면의 색과 글자는 기초값 전환에서 모두 디자인 시스템 토큰으로 바꿨다.
+서비스의 색과 글자는 기초값 전환과 4차 Toast 전환으로 모두 디자인 시스템 토큰으로 바꿨고, 기존 color-system.css는 지웠다.
 
 ## 검증
 

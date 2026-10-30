@@ -31,13 +31,18 @@ import { getGuestId } from "@/shared/utils/auth";
 
 const NAME_MAX_LENGTH = 4;
 
+// 검증 메시지는 입력칸 안내와 토스트에 함께 쓰여서, 토스트 문구 검사가 읽을 수 있게 상수로 둔다.
+const NAME_REQUIRED_MESSAGE = "이름을 입력해주세요";
+const NAME_TOO_LONG_MESSAGE = "최대 4자까지 입력할 수 있어요";
+const NO_SELECTED_TIME_MESSAGE = "가능한 시간을 선택해주세요";
+
 const scheduleVoteFormSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, "이름을 입력해주세요")
-    .max(NAME_MAX_LENGTH, "최대 4자까지 입력할 수 있어요"),
-  selectedDates: z.array(z.date()).min(1, "입력된 일정이 없어요"),
+    .min(1, NAME_REQUIRED_MESSAGE)
+    .max(NAME_MAX_LENGTH, NAME_TOO_LONG_MESSAGE),
+  selectedDates: z.array(z.date()).min(1, NO_SELECTED_TIME_MESSAGE),
 });
 
 export type ScheduleVoteFormValues = z.infer<typeof scheduleVoteFormSchema>;
@@ -232,7 +237,7 @@ export function useScheduleVoteForm() {
     const currentName = getValues("name");
     reset({ name: currentName, selectedDates: [] });
     void trigger();
-    toast.success("시간표가 초기화되었어요");
+    toast.success("입력한 일정이 초기화되었어요");
   };
 
   const handleBack = () => {
@@ -255,7 +260,7 @@ export function useScheduleVoteForm() {
       return;
     }
 
-    toast.error(errors.selectedDates?.message ?? "입력된 일정이 없어요");
+    toast.error(errors.selectedDates?.message ?? NO_SELECTED_TIME_MESSAGE);
   };
 
   return {

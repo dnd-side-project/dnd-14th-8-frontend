@@ -5,8 +5,8 @@ import { useInstallPromptState } from "@/shared/providers/install-prompt-provide
 
 interface InstallPromptProviderProps extends PropsWithChildren {
   /**
-   * 시트가 화면 하단을 점유하는 동안 알린다. 업데이트 토스트가 같은 자리를
-   * 쓰기 때문에, 겹치지 않도록 시트가 닫힐 때까지 미뤄두게 한다.
+   * 시트가 화면을 점유하는 동안 알린다. 새 버전 안내 모달이 시트 위에
+   * 겹치지 않도록 시트가 닫힐 때까지 미뤄두게 한다.
    */
   onVisibilityChange?: (isVisible: boolean) => void;
 }

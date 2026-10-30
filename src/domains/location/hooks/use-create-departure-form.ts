@@ -141,7 +141,7 @@ export function useCreateDepartureForm(
         toast.error(DUPLICATE_DEPARTURE_MESSAGE);
         return;
       }
-      toast.error("출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.");
+      toast.error("출발지를 추가하지 못했어요. 다시 시도해주세요");
     }
   });
 

@@ -88,10 +88,10 @@ export function ScheduleEditDatesPage() {
             queryKey: ["meeting", "schedules", meetingId],
           });
           navigate("..");
-          toast.success("시간표 범위가 수정되었어요");
+          toast.success("시간표가 수정되었어요");
         },
         onError: () => {
-          toast.error("일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.");
+          toast.error("시간표를 수정하지 못했어요. 다시 시도해주세요");
         },
       },
     );
@@ -128,7 +128,7 @@ export function ScheduleEditDatesPage() {
     <MobileLayout>
       <div className="fixed inset-0 z-50 flex touch-none items-end bg-overlay-neutral-subtle">
         <button
-          aria-label="시간표 기간 편집 닫기"
+          aria-label="시간표 수정 닫기"
           className="absolute inset-0"
           onClick={handleRequestClose}
           type="button"
@@ -138,10 +138,10 @@ export function ScheduleEditDatesPage() {
           <div className="w-full shrink-0 border-b border-b-stroke-neutral-subtler py-3">
             <div className="mx-auto flex max-w-[335px] items-center justify-between">
               <h2 className="textStyle_title1 text-fg-neutral-stronger">
-                시간표 선택범위
+                시간표 수정
               </h2>
               <IconButton
-                aria-label="시간표 기간 편집 닫기"
+                aria-label="시간표 수정 닫기"
                 icon={CloseIcon}
                 size="lg"
                 background="circle"
@@ -264,7 +264,7 @@ export function ScheduleEditDatesPage() {
       <Modal
         open={isConfirmModalOpen}
         onOpenChange={setIsConfirmModalOpen}
-        title="시간표 범위를 수정할까요?"
+        title="시간표를 수정할까요?"
         body={
           "기존에 등록된 일정 중 변경된 범위에\n포함되지 않는 시간은 자동으로 삭제돼요"
         }
