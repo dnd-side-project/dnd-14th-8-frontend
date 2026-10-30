@@ -1,21 +1,11 @@
+import { ActionArea, Button } from "@moyeorak/design-system";
 import type { Meta, StoryObj } from "@storybook/react";
-import { ButtonBottom } from "@/shared/components/button-bottom";
-import { ChipButton } from "@/shared/components/chip-button";
-import { IconButton } from "@/shared/components/icon-button";
-import { ShareIcon } from "@/shared/components/icons";
-import { Toast, toast } from "@/shared/components/toast";
-
-const DEFAULT_TOASTER_ID = "storybook-toast";
+import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
+import { Toaster, toast } from "@/shared/components/toast";
 
 const meta = {
   title: "shared/Toast",
-  component: Toast,
-  args: {
-    closeButton: false,
-    duration: 2000,
-    id: DEFAULT_TOASTER_ID,
-    position: "bottom-center",
-  },
+  component: Toaster,
   decorators: [
     (Story) => (
       <div className="mx-auto h-dvh w-[375px] px-5">
@@ -24,72 +14,57 @@ const meta = {
     ),
   ],
   parameters: { layout: "fullscreen" },
-} satisfies Meta<typeof Toast>;
+} satisfies Meta<typeof Toaster>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) => {
-    const toasterId = args.id ?? DEFAULT_TOASTER_ID;
+  render: () => (
+    <div className="relative h-full w-full">
+      <Toaster />
 
-    return (
-      <div className="relative h-full w-full">
-        <Toast {...args} />
-
-        <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
-          <ChipButton
-            size="lg"
-            variant="primary"
-            onClick={() => toast.success("완료되었어요", { toasterId })}
-          >
-            완료
-          </ChipButton>
-          <ChipButton
-            size="lg"
-            variant="outlined"
-            onClick={() => toast.error("다시 시도해 주세요", { toasterId })}
-          >
-            오류
-          </ChipButton>
-          <ChipButton
-            size="lg"
-            variant="outlined"
-            onClick={() =>
-              toast.error(
-                "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-                {
-                  toasterId,
-                },
-              )
-            }
-          >
-            긴 오류
-          </ChipButton>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 px-5 py-3">
-          <ShareIconButton />
-          <ButtonBottom className="w-full flex-1" variant="black">
-            일정 수정하기
-          </ButtonBottom>
-        </div>
+      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+        <Button
+          size="sm"
+          variant="brand"
+          onClick={() => toast.success("클립보드에 복사되었어요")}
+        >
+          완료
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            toast.error("서비스 지역이 아니에요. 다른 곳을 선택해주세요")
+          }
+        >
+          오류
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            toast.message("일정 추가하기를 눌러 가능한 시간을 입력해주세요", {
+              id: "guide",
+            })
+          }
+        >
+          안내
+        </Button>
       </div>
-    );
-  },
-};
 
-const ShareIconButton = () => {
-  return (
-    <IconButton
-      aria-label="아이콘 버튼"
-      icon={ShareIcon}
-      size="2xl"
-      background="square"
-      backgroundSize="lg"
-      iconSize="xl"
-      variant="dark"
-    />
-  );
+      <FixedBottomArea>
+        <ActionArea
+          type="single"
+          main={
+            <Button size="xl" display="full">
+              일정 수정하기
+            </Button>
+          }
+        />
+      </FixedBottomArea>
+    </div>
+  ),
 };

@@ -1,75 +1,46 @@
-import type { CSSProperties } from "react";
-import {
-  Toaster as Sonner,
-  toast as sonnerToast,
-  type ToasterProps,
-} from "sonner";
-import { CheckIcon, ErrorIcon } from "@/shared/components/icons";
-import { cn } from "@/shared/utils/cn";
+import { Toast, ToastProvider, ToastViewport } from "@moyeorak/design-system";
+import { useSyncExternalStore } from "react";
+import { createToastStore } from "@/shared/components/toast/toast-store";
+
+const store = createToastStore();
 
 export const toast = {
-  success: sonnerToast.success,
-  dismiss: sonnerToast.dismiss,
-  error: sonnerToast.error,
-  message: sonnerToast.message,
+  success: store.success,
+  error: store.error,
+  message: store.message,
+  dismiss: store.dismiss,
 };
 
-export interface ToastProps extends ToasterProps {}
+// sonner 기본값과 같게 4초 뒤 닫는다.
+const DURATION_MS = 4000;
 
-export function Toast({
-  className,
-  style,
-  toastOptions,
-  ...props
-}: ToastProps) {
+// 디자인 시스템 가이드: 하단 영역 12px 위에 띄운다. FixedBottomArea가 없는 화면은
+// 하단 ActionArea(single, 80px)가 페이지 끝에 놓이므로 그 높이를 기본값으로 둔다.
+const VIEWPORT_BOTTOM = "calc(var(--fixed-bottom-area-height, 80px) + 12px)";
+
+export function Toaster() {
+  const items = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  );
+
   return (
-    <Sonner
-      {...props}
-      position="bottom-center"
-      icons={{
-        error: <ErrorIcon className="size-5 shrink-0 text-action-red" />,
-        success: <CheckIcon className="size-5 shrink-0 text-action-green" />,
-      }}
-      gap={4}
-      style={
-        {
-          "--border-radius": "calc(infinity * 1px)",
-          "--normal-bg": "var(--color-k700)",
-          "--normal-border": "transparent",
-          "--normal-text": "var(--color-k5)",
-          ...style,
-        } as CSSProperties
-      }
-      toastOptions={{
-        ...toastOptions,
-        classNames: {
-          ...toastOptions?.classNames,
-          actionButton: cn(
-            "textStyle_body4 shrink-0 rounded-full bg-k-5 px-3 py-1.5 text-k-800 transition-colors hover:bg-k-100",
-            toastOptions?.classNames?.actionButton,
-          ),
-          closeButton: cn(
-            "border-none bg-k-750 text-k-300 transition-colors hover:bg-k-800 hover:text-k-100",
-            toastOptions?.classNames?.closeButton,
-          ),
-          content: cn(
-            "min-w-0 items-center gap-1",
-            toastOptions?.classNames?.content,
-          ),
-          icon: cn("size-5 shrink-0", toastOptions?.classNames?.icon),
-          toast: cn(
-            "cn-toast inline-flex! items-center! textStyle_body4! w-fit! min-w-[min(320px,calc(100vw-40px))]! max-w-[calc(100vw-40px)]! gap-2! rounded-2xl! px-4! py-3! text-k-5! shadow-none!",
-            "fixed! left-1/2! -translate-x-1/2!",
-            "mb-[90px]!",
-            toastOptions?.classNames?.toast,
-          ),
-          title: cn(
-            "textStyle_body4 min-w-0 whitespace-normal break-keep text-left text-k-5 leading-[1.4]",
-            toastOptions?.classNames?.title,
-          ),
-        },
-      }}
-      className={cn("group toaster", className)}
-    />
+    <ToastProvider duration={DURATION_MS} label="알림">
+      {items.map((item) => (
+        <Toast
+          key={item.key}
+          variant={item.variant}
+          message={item.message}
+          onOpenChange={(open) => {
+            if (!open) store.dismiss(item.id);
+          }}
+        />
+      ))}
+      <ToastViewport
+        label="알림 ({hotkey})"
+        style={{ bottom: VIEWPORT_BOTTOM }}
+      />
+    </ToastProvider>
   );
 }
