@@ -25,11 +25,14 @@ export function Stepper({
   return (
     <div className={cn("flex w-full flex-col gap-2", className)}>
       {label && (
-        <label htmlFor={id} className="textStyle_body3 text-k-900">
+        <label
+          htmlFor={id}
+          className="textStyle_body3 text-fg-neutral-stronger"
+        >
           {label}
         </label>
       )}
-      <div className="flex h-14 w-full items-center justify-between rounded-lg bg-k-50 px-4">
+      <div className="flex h-14 w-full items-center justify-between rounded-lg bg-fill-neutral-subtler px-4">
         <IconButton
           icon={MinusIcon}
           size="xl"
@@ -46,7 +49,7 @@ export function Stepper({
         <span
           id={id}
           role="spinbutton"
-          className="textStyle_body2 text-center text-k-900"
+          className="textStyle_body2 text-center text-fg-neutral-stronger"
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={value}

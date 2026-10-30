@@ -70,7 +70,10 @@ export function ScheduleMainView({
 
   return (
     <div
-      className={cn("relative flex min-h-dvh flex-col bg-k-5", className)}
+      className={cn(
+        "relative flex min-h-dvh flex-col bg-bg-neutral-default",
+        className,
+      )}
       {...props}
     >
       <ScheduleMainSummary
@@ -79,7 +82,7 @@ export function ScheduleMainView({
         onEditSchedule={onEditSchedule}
       />
 
-      <section className="sticky top-0 z-30 shrink-0 bg-k-5">
+      <section className="sticky top-0 z-30 shrink-0 bg-bg-neutral-default">
         <Tab
           tabs={[
             { id: "vote", label: "시간표" },

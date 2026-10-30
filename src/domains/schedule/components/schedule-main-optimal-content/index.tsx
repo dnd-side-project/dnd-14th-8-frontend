@@ -32,7 +32,7 @@ export function ScheduleMainOptimalContent() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="textStyle_body3 mb-2 text-k-800">
+      <div className="textStyle_body3 mb-2 text-fg-neutral-strong">
         총 {results.length}개
       </div>
       {visible.map((recommendation, index) => (
@@ -89,9 +89,9 @@ export function ScheduleMainOptimalContent() {
             className="mt-2"
             icon={
               isExpanded ? (
-                <ChevronUpIcon className="size-4 text-k-400" />
+                <ChevronUpIcon className="size-4 text-fg-neutral-subtler" />
               ) : (
-                <ChevronDownIcon className="size-4 text-k-400" />
+                <ChevronDownIcon className="size-4 text-fg-neutral-subtler" />
               )
             }
             aria-expanded={isExpanded}

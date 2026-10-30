@@ -27,7 +27,7 @@ export function InstallPromptView({
     <section
       aria-label="홈 화면에 추가"
       className={cn(
-        "fixed right-0 bottom-0 left-0 z-100 mx-auto w-full overflow-hidden rounded-t-[20px] bg-k-5",
+        "fixed right-0 bottom-0 left-0 z-100 mx-auto w-full overflow-hidden rounded-t-[20px] bg-bg-neutral-default",
         "shadow-[0_-4px_20px_0_rgba(0,0,0,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] sm:max-w-[375px]",
         isOpen ? "translate-y-0" : "translate-y-full",
       )}
@@ -36,15 +36,15 @@ export function InstallPromptView({
         {/* 홈 화면에 실제로 추가될 아이콘을 그대로 보여준다. */}
         <img
           alt=""
-          className="size-11 shrink-0 rounded-xl border border-k-100"
+          className="size-11 shrink-0 rounded-xl border border-stroke-neutral-subtle"
           src="/favicon-192.png"
         />
 
         <div className="flex flex-col gap-1 break-keep pt-0.5">
-          <h2 className="textStyle_title1 text-k-900">
+          <h2 className="textStyle_title1 text-fg-neutral-stronger">
             홈 화면에 모여락 추가하기
           </h2>
-          <p className="textStyle_body2 text-k-600">
+          <p className="textStyle_body2 text-fg-neutral-subtle">
             앱처럼 바로 열어서 모임 일정과 장소를 확인할 수 있어요
           </p>
         </div>
@@ -64,15 +64,15 @@ export function InstallPromptView({
 
       {mode === "guide" ? (
         <div className="px-5 pt-4 pb-7">
-          <ol className="flex flex-col gap-2 rounded-xl bg-k-10 px-4 py-3.5">
-            <li className="textStyle_body2 flex items-center gap-2 break-keep text-k-700">
-              <span className="text-k-900 text-t3">1</span>
+          <ol className="flex flex-col gap-2 rounded-xl bg-fill-neutral-subtlest px-4 py-3.5">
+            <li className="textStyle_body2 flex items-center gap-2 break-keep text-fg-neutral-default">
+              <span className="text-fg-neutral-stronger text-t3">1</span>
               하단의 공유 버튼
               <ShareIcon className="size-4 shrink-0" aria-hidden="true" />를
               눌러주세요
             </li>
-            <li className="textStyle_body2 flex items-center gap-2 break-keep text-k-700">
-              <span className="text-k-900 text-t3">2</span>
+            <li className="textStyle_body2 flex items-center gap-2 break-keep text-fg-neutral-default">
+              <span className="text-fg-neutral-stronger text-t3">2</span>
               <PlusIcon className="size-4 shrink-0" aria-hidden="true" />
               &lsquo;홈 화면에 추가&rsquo;를 선택해주세요
             </li>

@@ -21,19 +21,19 @@ export function MeetingJoinInvite({
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col bg-p-50 px-5 pb-5">
+      <section className="flex min-h-dvh flex-col bg-fill-brand-subtle px-5 pb-5">
         <div className="mt-11 text-center">
-          <p className="textStyle_head1 mb-4 text-k-900">
-            <span className="text-primary-main">{hostName}</span>님의 모임에{" "}
+          <p className="textStyle_head1 mb-4 text-fg-neutral-stronger">
+            <span className="text-fg-brand-default">{hostName}</span>님의 모임에{" "}
             <br />
             초대되었어요!
           </p>
           {isLocationFlow ? (
-            <p className="textStyle_body1 text-k-800">
+            <p className="textStyle_body1 text-fg-neutral-strong">
               모임에 참여해서 중간지점을 찾아보세요.
             </p>
           ) : (
-            <p className="textStyle_body1 text-k-800">
+            <p className="textStyle_body1 text-fg-neutral-strong">
               모임에 참여해서 일정을 조율해 보세요.
             </p>
           )}

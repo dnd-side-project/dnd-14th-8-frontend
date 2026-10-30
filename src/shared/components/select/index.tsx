@@ -106,7 +106,7 @@ export function Select({
         <div
           id={listboxId}
           role="listbox"
-          className="absolute top-full z-20 mt-[11px] w-full max-w-[250px] overflow-hidden rounded-xl bg-k-5 shadow-[0_0_10px_0_rgba(0,0,0,0.12)]"
+          className="absolute top-full z-20 mt-[11px] w-full max-w-[250px] overflow-hidden rounded-xl bg-bg-neutral-default shadow-[0_0_10px_0_rgba(0,0,0,0.12)]"
         >
           {options.map((option, index) => {
             const isSelected = option.value === selectedValue;
@@ -119,9 +119,9 @@ export function Select({
                 aria-selected={isSelected}
                 disabled={option.disabled}
                 className={cn(
-                  "textStyle_body1 flex w-full cursor-pointer items-center justify-between px-5 py-3 text-left text-k-900 transition-colors",
-                  index > 0 && "border-k-50 border-t",
-                  isSelected && "text-primary-main",
+                  "textStyle_body1 flex w-full cursor-pointer items-center justify-between px-5 py-3 text-left text-fg-neutral-stronger transition-colors",
+                  index > 0 && "border-stroke-neutral-subtler border-t",
+                  isSelected && "text-fg-brand-default",
                 )}
                 onClick={() => handleOptionClick(option.value)}
               >
@@ -129,7 +129,7 @@ export function Select({
                 {isSelected ? (
                   <SelectedCheckIcon
                     aria-hidden
-                    className="size-6 shrink-0 text-primary-main"
+                    className="size-6 shrink-0 text-fg-brand-default"
                   />
                 ) : null}
               </button>

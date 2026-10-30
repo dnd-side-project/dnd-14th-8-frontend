@@ -126,7 +126,7 @@ export function ScheduleEditDatesPage() {
 
   return (
     <MobileLayout>
-      <div className="fixed inset-0 z-50 flex touch-none items-end bg-k-900/40">
+      <div className="fixed inset-0 z-50 flex touch-none items-end bg-overlay-neutral-subtle">
         <button
           aria-label="시간표 기간 편집 닫기"
           className="absolute inset-0"
@@ -134,10 +134,12 @@ export function ScheduleEditDatesPage() {
           type="button"
         />
 
-        <section className="relative z-10 mx-auto flex h-[calc(100dvh-28px)] w-full touch-auto flex-col rounded-t-2xl bg-k-5">
-          <div className="w-full shrink-0 border-b border-b-k-50 py-3">
+        <section className="relative z-10 mx-auto flex h-[calc(100dvh-28px)] w-full touch-auto flex-col rounded-t-2xl bg-bg-neutral-default">
+          <div className="w-full shrink-0 border-b border-b-stroke-neutral-subtler py-3">
             <div className="mx-auto flex max-w-[335px] items-center justify-between">
-              <h2 className="textStyle_title1 text-k-900">시간표 선택범위</h2>
+              <h2 className="textStyle_title1 text-fg-neutral-stronger">
+                시간표 선택범위
+              </h2>
               <IconButton
                 aria-label="시간표 기간 편집 닫기"
                 icon={CloseIcon}
@@ -153,7 +155,9 @@ export function ScheduleEditDatesPage() {
 
           <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
             <div className="mx-auto w-full max-w-[335px]">
-              <h2 className="textStyle_title3 mt-5 mb-1 text-k-900">날짜</h2>
+              <h2 className="textStyle_title3 mt-5 mb-1 text-fg-neutral-stronger">
+                날짜
+              </h2>
               <div className="flex w-full justify-start overflow-hidden">
                 <Calendar
                   selected={selectedDates}
@@ -185,7 +189,9 @@ export function ScheduleEditDatesPage() {
             </div>
 
             <div className="mx-auto w-full max-w-[335px]">
-              <h2 className="textStyle_body3 mb-3 text-k-900">시간범위</h2>
+              <h2 className="textStyle_body3 mb-3 text-fg-neutral-stronger">
+                시간범위
+              </h2>
               <div className="flex items-center gap-[6px]">
                 <Dropdown
                   value={startTime}
@@ -197,7 +203,7 @@ export function ScheduleEditDatesPage() {
                     </DropdownOption>
                   ))}
                 </Dropdown>
-                <span className="text-k-200">-</span>
+                <span className="text-fg-neutral-subtlest">-</span>
                 <Dropdown
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}

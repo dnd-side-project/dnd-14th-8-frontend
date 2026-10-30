@@ -21,7 +21,7 @@ const FacilityIcon = ({
   type: FacilityType;
   className?: string;
 }) => {
-  const iconProps = { className: cn("text-k-5", className) };
+  const iconProps = { className: cn("text-fg-neutral-faintest", className) };
 
   switch (type) {
     case "book":
@@ -39,11 +39,11 @@ export function FacilityPinDefault({ type, className }: FacilityPinProps) {
   return (
     <div
       className={cn(
-        "inline-flex h-7 w-7 items-center justify-center rounded-[7px] bg-k-5 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]",
+        "inline-flex h-7 w-7 items-center justify-center rounded-[7px] bg-fill-neutral-faintest shadow-[0_0_4px_0_rgba(0,0,0,0.25)]",
         className,
       )}
     >
-      <div className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary-main">
+      <div className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-fill-brand-default">
         <FacilityIcon type={type} className="size-5" />
       </div>
     </div>

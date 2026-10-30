@@ -16,15 +16,15 @@ type Story = StoryObj;
 export const Info: Story = {
   render: () => (
     <div className="w-[375px] px-5 py-8">
-      <div className="rounded-lg border border-k-100 bg-k-10 px-4 py-6 text-center">
-        <p className="textStyle_title3 text-k-700">NaverMap</p>
-        <p className="textStyle_body4 mt-2 text-k-500">
-          <code className="text-primary-main">naver.maps.Map</code> SDK
+      <div className="rounded-lg border border-stroke-neutral-subtle bg-fill-neutral-subtlest px-4 py-6 text-center">
+        <p className="textStyle_title3 text-fg-neutral-default">NaverMap</p>
+        <p className="textStyle_body4 mt-2 text-fg-neutral-subtle">
+          <code className="text-fg-brand-default">naver.maps.Map</code> SDK
           래퍼입니다. Storybook에서는 네이버 맵 스크립트가 없어 렌더링이
           불가합니다.
         </p>
-        <p className="textStyle_body5 mt-3 text-k-400">Props:</p>
-        <ul className="textStyle_body5 mt-1 space-y-1 text-left text-k-500">
+        <p className="textStyle_body5 mt-3 text-fg-neutral-subtler">Props:</p>
+        <ul className="textStyle_body5 mt-1 space-y-1 text-left text-fg-neutral-subtle">
           <li>
             <code>center</code> — {"{ latitude, longitude }"}
           </li>

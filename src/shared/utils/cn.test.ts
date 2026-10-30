@@ -22,8 +22,8 @@ describe("cn", () => {
   });
 
   it("does not treat a text style as a text color", () => {
-    expect(cn("textStyle_body4", "text-k-500")).toBe(
-      "textStyle_body4 text-k-500",
+    expect(cn("textStyle_body4", "text-fg-neutral-subtle")).toBe(
+      "textStyle_body4 text-fg-neutral-subtle",
     );
   });
 });

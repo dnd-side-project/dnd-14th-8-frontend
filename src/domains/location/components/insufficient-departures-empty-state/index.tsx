@@ -23,22 +23,31 @@ function FilledSlot({
   isMine: boolean;
 }) {
   return (
-    <div className={cn(SLOT_LAYOUT, "border border-k-100 bg-k-5 text-left")}>
-      <span className="textStyle_caption1 grid size-9 shrink-0 place-items-center rounded-full bg-p-50 text-primary-main">
+    <div
+      className={cn(
+        SLOT_LAYOUT,
+        "border border-stroke-neutral-subtle bg-fill-neutral-faintest text-left",
+      )}
+    >
+      <span className="textStyle_caption1 grid size-9 shrink-0 place-items-center rounded-full bg-fill-brand-subtle text-fg-brand-default">
         {name.slice(0, 1)}
       </span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-1">
-          <span className="textStyle_title3 truncate text-k-800">{name}</span>
+          <span className="textStyle_title3 truncate text-fg-neutral-strong">
+            {name}
+          </span>
           {isMine && (
-            <span className="textStyle_caption1 shrink-0 rounded-[4px] bg-p-50 px-1.5 text-primary-main">
+            <span className="textStyle_caption1 shrink-0 rounded-[4px] bg-fill-brand-subtle px-1.5 text-fg-brand-default">
               나
             </span>
           )}
         </p>
-        <p className="textStyle_body5 truncate text-k-500">{location}</p>
+        <p className="textStyle_body5 truncate text-fg-neutral-subtle">
+          {location}
+        </p>
       </div>
-      <CheckIcon className="size-5 shrink-0 text-primary-main" />
+      <CheckIcon className="size-5 shrink-0 text-fg-brand-default" />
     </div>
   );
 }
@@ -64,14 +73,16 @@ function EmptySlotButton({
         SLOT_LAYOUT,
         "cursor-pointer text-left transition-colors",
         emphasized
-          ? "border border-primary-main bg-p-50 active:bg-p-100"
-          : "border border-k-200 border-dashed bg-transparent active:bg-k-5",
+          ? "border border-stroke-brand-default bg-fill-brand-subtle active:bg-fill-brand-subtle-pressed"
+          : "border border-stroke-neutral-default border-dashed bg-transparent active:bg-fill-neutral-faintest",
       )}
     >
       <span
         className={cn(
           "grid size-9 shrink-0 place-items-center rounded-full",
-          emphasized ? "bg-primary-main text-k-5" : "bg-k-50 text-k-400",
+          emphasized
+            ? "bg-fill-brand-default text-fg-neutral-faintest"
+            : "bg-fill-neutral-subtler text-fg-neutral-subtler",
         )}
       >
         {icon}
@@ -80,12 +91,14 @@ function EmptySlotButton({
         <p
           className={cn(
             "textStyle_title3 truncate",
-            emphasized ? "text-primary-main" : "text-k-700",
+            emphasized ? "text-fg-brand-default" : "text-fg-neutral-default",
           )}
         >
           {label}
         </p>
-        <p className="textStyle_body5 truncate text-k-500">{hint}</p>
+        <p className="textStyle_body5 truncate text-fg-neutral-subtle">
+          {hint}
+        </p>
       </div>
     </button>
   );
@@ -94,12 +107,17 @@ function EmptySlotButton({
 function WaitingSlot() {
   return (
     <div
-      className={cn(SLOT_LAYOUT, "border border-k-200 border-dashed text-left")}
+      className={cn(
+        SLOT_LAYOUT,
+        "border border-stroke-neutral-default border-dashed text-left",
+      )}
     >
-      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-k-50">
-        <MemberIcon className="size-5 text-k-300" />
+      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-fill-neutral-subtler">
+        <MemberIcon className="size-5 text-fg-neutral-subtlest" />
       </span>
-      <p className="textStyle_body4 truncate text-k-400">친구를 기다리는 중</p>
+      <p className="textStyle_body4 truncate text-fg-neutral-subtler">
+        친구를 기다리는 중
+      </p>
     </div>
   );
 }
@@ -179,7 +197,7 @@ export function InsufficientDeparturesEmptyState({
           aria-label="출발지 부족 안내 캐릭터"
           className="h-[72px] w-auto"
         />
-        <p className="textStyle_title1 mt-3 text-balance break-keep text-k-700">
+        <p className="textStyle_title1 mt-3 text-balance break-keep text-fg-neutral-default">
           {content.title}
         </p>
         <div className="mt-5 flex w-full flex-col gap-2">
@@ -195,7 +213,7 @@ export function InsufficientDeparturesEmptyState({
         {secondaryActionLabel && handleSecondaryAction && (
           <button
             type="button"
-            className="textStyle_body3 mt-4 cursor-pointer text-k-500 underline-offset-2 hover:underline active:text-k-700"
+            className="textStyle_body3 mt-4 cursor-pointer text-fg-neutral-subtle underline-offset-2 hover:underline active:text-fg-neutral-default"
             onClick={handleSecondaryAction}
           >
             {secondaryActionLabel}

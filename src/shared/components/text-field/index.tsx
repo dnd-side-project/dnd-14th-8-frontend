@@ -16,13 +16,14 @@ const textFieldVariants = cva(
   {
     variants: {
       variant: {
-        gray: "bg-k-50",
-        outlined: "bg-k-5",
+        gray: "bg-fill-neutral-subtler",
+        outlined: "bg-fill-neutral-faintest",
       },
       status: {
-        default: "hover:border-p-300 active:border-primary-main",
-        error: "border-action-red",
-        focused: "border-primary-main bg-k-5",
+        default:
+          "hover:border-stroke-brand-subtle active:border-stroke-brand-default",
+        error: "border-stroke-negative-default",
+        focused: "border-stroke-brand-default bg-fill-neutral-faintest",
       },
     },
     compoundVariants: [
@@ -34,7 +35,7 @@ const textFieldVariants = cva(
       {
         variant: "outlined",
         status: "default",
-        className: "border-k-100",
+        className: "border-stroke-neutral-subtle",
       },
     ],
     defaultVariants: {
@@ -112,7 +113,10 @@ export function TextField({
   return (
     <div className={cn("flex w-full flex-col gap-2", className)}>
       {label && (
-        <label htmlFor={inputId} className="textStyle_body3 text-k-900">
+        <label
+          htmlFor={inputId}
+          className="textStyle_body3 text-fg-neutral-stronger"
+        >
           {label}
         </label>
       )}
@@ -122,7 +126,10 @@ export function TextField({
       >
         {LeftIcon && (
           <div className="ml-3 flex items-center justify-center">
-            <LeftIcon aria-hidden className="size-6 shrink-0 text-k-500" />
+            <LeftIcon
+              aria-hidden
+              className="size-6 shrink-0 text-fg-neutral-subtle"
+            />
           </div>
         )}
 
@@ -132,8 +139,8 @@ export function TextField({
           id={inputId}
           autoComplete="off"
           className={cn(
-            "textStyle_body2 w-full bg-transparent px-4 py-4 text-k-900 caret-primary-main outline-none",
-            "transition-all placeholder:text-k-400",
+            "textStyle_body2 w-full bg-transparent px-4 py-4 text-fg-neutral-stronger caret-fg-brand-default outline-none",
+            "transition-all placeholder:text-fg-neutral-subtler",
             hidePlaceholderOnFocus && "focus:placeholder:text-transparent",
             !!LeftIcon && "pl-2",
           )}
@@ -162,7 +169,10 @@ export function TextField({
 
         {RightIcon && !showDelete && (
           <div className="mr-3 flex items-center justify-center">
-            <RightIcon aria-hidden className="size-6 shrink-0 text-k-500" />
+            <RightIcon
+              aria-hidden
+              className="size-6 shrink-0 text-fg-neutral-subtle"
+            />
           </div>
         )}
       </div>
@@ -174,7 +184,9 @@ export function TextField({
               isFocused && computedStatus !== "error"
                 ? "opacity-0"
                 : "opacity-100 transition-opacity duration-200",
-              computedStatus === "error" ? "text-action-red" : "text-k-400",
+              computedStatus === "error"
+                ? "text-fg-negative-default"
+                : "text-fg-neutral-subtler",
             )}
           >
             {helperText}
@@ -184,15 +196,15 @@ export function TextField({
               <span
                 className={cn(
                   status === "error" || currentLength > maxLength
-                    ? "text-action-red"
+                    ? "text-fg-negative-default"
                     : isFocused
-                      ? "text-primary-main"
-                      : "text-k-400",
+                      ? "text-fg-brand-default"
+                      : "text-fg-neutral-subtler",
                 )}
               >
                 {currentLength}
               </span>
-              <span className="text-k-400">/{maxLength}</span>
+              <span className="text-fg-neutral-subtler">/{maxLength}</span>
             </div>
           )}
         </div>

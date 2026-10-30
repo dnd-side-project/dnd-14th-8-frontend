@@ -24,9 +24,9 @@ export function TimetableSlot({
 }: TimetableSlotProps) {
   const slotClassName = cn(
     "h-10 w-full rounded-md border transition-all",
-    "border-k-50 bg-k-10",
+    "border-stroke-neutral-subtler bg-fill-neutral-subtlest",
     isDisabled ? "cursor-default" : "cursor-pointer",
-    isSelected && "border-primary-main bg-primary-main",
+    isSelected && "border-stroke-brand-default bg-fill-brand-default",
     className,
   );
 

@@ -26,17 +26,17 @@ type Story = StoryObj<typeof meta>;
 export const BlackStates: Story = {
   render: (args) => (
     <div className="flex w-full flex-col">
-      <div className="border-k-50 border-b py-2 text-center text-k-400 text-xs">
+      <div className="border-stroke-neutral-subtler border-b py-2 text-center text-fg-neutral-subtler text-xs">
         Default
       </div>
       <ButtonBottomTimetableEdit {...args} id="black-default" />
 
-      <div className="border-k-50 border-b py-2 text-center text-k-400 text-xs">
+      <div className="border-stroke-neutral-subtler border-b py-2 text-center text-fg-neutral-subtler text-xs">
         Hover
       </div>
       <ButtonBottomTimetableEdit {...args} id="black-hover" />
 
-      <div className="border-k-50 border-b py-2 text-center text-k-400 text-xs">
+      <div className="border-stroke-neutral-subtler border-b py-2 text-center text-fg-neutral-subtler text-xs">
         Pressed
       </div>
       <ButtonBottomTimetableEdit {...args} id="black-pressed" />

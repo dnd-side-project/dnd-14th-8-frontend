@@ -22,18 +22,20 @@ export function ItemSearchResult({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full flex-col gap-0.5 border-k-100 border-b px-5 py-4 text-left",
-        "bg-k-5 hover:bg-k-10 active:bg-k-50",
+        "flex w-full flex-col gap-0.5 border-stroke-neutral-subtle border-b px-5 py-4 text-left",
+        "bg-bg-neutral-default hover:bg-fill-neutral-subtlest active:bg-fill-neutral-subtler",
         "enabled:cursor-pointer disabled:cursor-default",
         "transition-colors",
         className,
       )}
       {...props}
     >
-      <p className="textStyle_body1 truncate text-k-750">
+      <p className="textStyle_body1 truncate text-fg-neutral-default">
         {renderHighlighted(text, highlight)}
       </p>
-      <p className="textStyle_body5 truncate text-k-500">{description}</p>
+      <p className="textStyle_body5 truncate text-fg-neutral-subtle">
+        {description}
+      </p>
     </button>
   );
 }
@@ -49,7 +51,7 @@ function renderHighlighted(text: string, highlight?: string): ReactNode {
   return parts.map((part, i) =>
     part.toLowerCase() === highlight.toLowerCase() ? (
       // biome-ignore lint/suspicious/noArrayIndexKey: Use index as key for highlighting
-      <span key={i} className="text-primary-main">
+      <span key={i} className="text-fg-brand-default">
         {part}
       </span>
     ) : (

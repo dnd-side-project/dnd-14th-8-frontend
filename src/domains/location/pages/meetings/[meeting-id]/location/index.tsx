@@ -26,7 +26,7 @@ export function MapDefaultPage() {
   }, [mapInst]);
 
   return (
-    <div className="relative mx-auto h-dvh max-w-[375px] overflow-hidden bg-k-10">
+    <div className="relative mx-auto h-dvh max-w-[375px] overflow-hidden bg-fill-neutral-subtlest">
       <NaverMap
         center={DEFAULT_CENTER}
         zoom={11}

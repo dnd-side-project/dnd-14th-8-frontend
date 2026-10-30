@@ -77,7 +77,7 @@ export function ScheduleVoteFormView({
   return (
     <section
       className={cn(
-        "relative min-h-dvh bg-k-5",
+        "relative min-h-dvh bg-bg-neutral-default",
         FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING,
         className,
       )}

@@ -30,15 +30,17 @@ export function ScheduleMainVoteParticipants({
         type="button"
         onClick={handleClickParticipantEdit}
         className={cn(
-          "textStyle_title3 flex items-center py-1 text-k-800",
+          "textStyle_title3 flex items-center py-1 text-fg-neutral-strong",
           data?.isHost && "cursor-pointer",
         )}
       >
         <MemberIcon className="size-5" />
         <span className="mr-0.5">참여자</span>
-        <span className="text-primary-main">{votedParticipantCount}</span>
+        <span className="text-fg-brand-default">{votedParticipantCount}</span>
         <span className="mr-0.5">/{participantCount}</span>
-        {data?.isHost && <ChevronRightIcon className="size-4 text-k-400" />}
+        {data?.isHost && (
+          <ChevronRightIcon className="size-4 text-fg-neutral-subtler" />
+        )}
       </button>
       {votedParticipantNames.length > 0 && (
         <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">

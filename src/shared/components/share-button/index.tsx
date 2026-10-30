@@ -38,14 +38,14 @@ export function ShareButton({
   return (
     <button
       className={cn(
-        "inline-flex cursor-pointer select-none flex-col items-center gap-2 rounded-xl px-3 py-2 transition-colors hover:bg-k-10 active:bg-k-50",
+        "inline-flex cursor-pointer select-none flex-col items-center gap-2 rounded-xl px-3 py-2 transition-colors hover:bg-fill-neutral-subtlest active:bg-fill-neutral-subtler",
         className,
       )}
       type={type}
       {...props}
     >
       <Icon className="size-14 shrink-0" />
-      <span className="textStyle_body4 text-k-700">
+      <span className="textStyle_body4 text-fg-neutral-default">
         {label ?? defaultLabel}
       </span>
     </button>

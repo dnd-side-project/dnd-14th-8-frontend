@@ -176,7 +176,7 @@ export function RouteDetailPage() {
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
         {isLoading ? null : personalRoute ? (
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
-            <h2 className="textStyle_head1 text-k-900">
+            <h2 className="textStyle_head1 text-fg-neutral-stronger">
               {personalRoute.participant.participantName}님의 루트
             </h2>
 
@@ -225,10 +225,10 @@ export function RouteDetailPage() {
 
             <button
               type="button"
-              className="textStyle_body2 inline-flex w-fit items-center gap-0.5 text-k-500"
+              className="textStyle_body2 inline-flex w-fit items-center gap-0.5 text-fg-neutral-subtle"
             >
               {formatDepartureDateTime(personalRoute.departureTime)}
-              <ChevronDownIcon className="size-5 text-k-400" />
+              <ChevronDownIcon className="size-5 text-fg-neutral-subtler" />
             </button>
 
             {activeTab === ROUTE_TAB_VALUES.transit && transit && (
@@ -274,7 +274,7 @@ export function RouteDetailPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
-            <p className="textStyle_body2 text-center text-k-600">
+            <p className="textStyle_body2 text-center text-fg-neutral-subtle">
               루트 정보를 찾을 수 없어요
             </p>
             <ButtonBottom

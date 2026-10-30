@@ -19,12 +19,14 @@ export function ButtonBottomTimetableEdit({
     <div
       className={cn(
         "sticky bottom-0 w-full",
-        "flex flex-col items-center bg-k-5",
+        "flex flex-col items-center bg-bg-neutral-default",
         containerClassName,
       )}
     >
       {description && (
-        <span className="textStyle_body4 text-k-600">{description}</span>
+        <span className="textStyle_body4 text-fg-neutral-subtle">
+          {description}
+        </span>
       )}
       <ButtonBottom {...buttonProps}>{children}</ButtonBottom>
     </div>
