@@ -2,8 +2,19 @@ import { describe, expect, it } from "vitest";
 import { getMeetingPermissions } from "@/domains/meeting/utils/meeting-permissions";
 import { getScheduleMainAction } from "@/domains/schedule/utils/schedule-main-action";
 
-const host = getMeetingPermissions({ role: "host" });
-const participant = getMeetingPermissions({ role: "participant" });
+const host = getMeetingPermissions({ role: "host", phase: "scheduling" });
+const participant = getMeetingPermissions({
+  role: "participant",
+  phase: "scheduling",
+});
+const confirmedHost = getMeetingPermissions({
+  role: "host",
+  phase: "confirmed",
+});
+const confirmedParticipant = getMeetingPermissions({
+  role: "participant",
+  phase: "confirmed",
+});
 
 describe("getScheduleMainAction", () => {
   it.each([
@@ -34,6 +45,20 @@ describe("getScheduleMainAction", () => {
       hasExistingVote: false,
       permissions: participant,
       expected: { type: "vote", label: "일정 추가하기" },
+    },
+    {
+      case: "확정된 뒤 모임장은 다시 확정하지 않고 장소로 간다",
+      tab: "optimal",
+      hasExistingVote: true,
+      permissions: confirmedHost,
+      expected: { type: "move", label: "장소 보러 가기" },
+    },
+    {
+      case: "확정된 뒤 참여자도 시간표 탭에서 장소로 간다",
+      tab: "vote",
+      hasExistingVote: true,
+      permissions: confirmedParticipant,
+      expected: { type: "move", label: "장소 보러 가기" },
     },
   ] as const)("$case", ({ tab, hasExistingVote, permissions, expected }) => {
     expect(

@@ -25,6 +25,7 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   onParticipantEdit: () => void;
   onTabChange: (tab: "optimal" | "vote") => void;
   onGoToLocation?: () => void;
+  onMoveToLocation: () => void;
 }
 
 export function ScheduleMainView({
@@ -37,6 +38,7 @@ export function ScheduleMainView({
   onParticipantEdit,
   onTabChange,
   onGoToLocation,
+  onMoveToLocation,
   tab,
   ...props
 }: ScheduleMainViewProps) {
@@ -47,17 +49,20 @@ export function ScheduleMainView({
     hasExistingVote,
     permissions,
   });
-  const handleMainAction =
-    mainAction.type === "confirm"
-      ? (onGoToLocation ?? onVoteAction)
-      : onVoteAction;
+  const mainActionHandlers = {
+    move: onMoveToLocation,
+    confirm: onGoToLocation ?? onVoteAction,
+    vote: onVoteAction,
+  };
 
   // 메인 시간표는 읽기 전용이라, 칸을 누르면 하단 버튼으로 안내만 한다.
   const showVoteGuide = () => {
     toast.message(
-      hasExistingVote
-        ? "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요"
-        : "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
+      !permissions.canVote
+        ? "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요"
+        : hasExistingVote
+          ? "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요"
+          : "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
       { id: "schedule-main-timetable-guide" },
     );
   };
@@ -106,7 +111,7 @@ export function ScheduleMainView({
 
       <FixedBottomArea floating={<FloatingScrollTop top={4} />}>
         <BottomActionBarWithButtonAndShare
-          onClick={handleMainAction}
+          onClick={mainActionHandlers[mainAction.type]}
           onShare={share}
         >
           {mainAction.label}

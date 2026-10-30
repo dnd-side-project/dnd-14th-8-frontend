@@ -1,6 +1,6 @@
 import type { MeetingPermissions } from "@/domains/meeting/utils/meeting-permissions";
 
-export type ScheduleMainActionType = "confirm" | "vote";
+export type ScheduleMainActionType = "move" | "confirm" | "vote";
 
 export interface ScheduleMainAction {
   type: ScheduleMainActionType;
@@ -17,6 +17,11 @@ export function getScheduleMainAction({
   hasExistingVote: boolean;
   permissions: MeetingPermissions;
 }): ScheduleMainAction {
+  // 확정된 뒤에는 탭과 상관없이 장소로 안내한다.
+  if (permissions.canMoveToLocation) {
+    return { type: "move", label: "장소 보러 가기" };
+  }
+
   if (tab === "optimal" && permissions.canConfirmSchedule) {
     return { type: "confirm", label: "장소 정하러 가기" };
   }
