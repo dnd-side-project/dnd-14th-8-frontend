@@ -1,6 +1,6 @@
+import { Chip } from "@moyeorak/design-system";
 import { FloatingBack } from "@/domains/location/components/floating-back";
 import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
-import { ChipButton } from "@/shared/components/chip-button";
 
 export interface StationBadgesProps {
   recommendations: StationRecommendationDto[];
@@ -22,18 +22,18 @@ export function StationBadges({
 
       <div className="scrollbar-hide flex gap-2 overflow-x-auto">
         {recommendations.map((r) => (
-          <ChipButton
+          <Chip
             key={r.stationId}
-            size="md"
+            shape="pill"
+            pressed={r.stationId === selectedStationId}
             variant={
-              r.stationId === selectedStationId
-                ? "floatingSelected"
-                : "floating"
+              r.stationId === selectedStationId ? "neutral" : "neutral-weak"
             }
+            className="shrink-0 shadow-[var(--shadows-strong)]"
             onClick={() => onStationClick?.(r)}
           >
             {r.stationName}
-          </ChipButton>
+          </Chip>
         ))}
       </div>
     </div>

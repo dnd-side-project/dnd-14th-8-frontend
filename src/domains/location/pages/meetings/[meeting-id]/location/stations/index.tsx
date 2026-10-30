@@ -1,3 +1,4 @@
+import { Chip } from "@moyeorak/design-system";
 import { useEffect, useMemo, useRef } from "react";
 import {
   useNavigate,
@@ -36,7 +37,6 @@ import { shouldShowNearbyDepartureNote } from "@/domains/location/utils/midpoint
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
-import { ChipButton } from "@/shared/components/chip-button";
 import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import {
   ChevronDownIcon,
@@ -312,18 +312,20 @@ export function LocationMainPage() {
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
             <div className="scrollbar-hide flex gap-2 overflow-x-auto">
               {recommendations.map((station) => (
-                <ChipButton
+                <Chip
                   key={station.stationId}
-                  size="lg"
+                  shape="pill"
+                  pressed={station.stationId === selectedStation.stationId}
                   variant={
                     station.stationId === selectedStation.stationId
-                      ? "midpointSelected"
-                      : "midpoint"
+                      ? "brand"
+                      : "neutral-weak"
                   }
+                  className="shrink-0"
                   onClick={() => handleStationClick(station.stationId)}
                 >
                   {station.stationName}
-                </ChipButton>
+                </Chip>
               ))}
             </div>
 

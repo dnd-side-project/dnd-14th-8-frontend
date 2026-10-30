@@ -1,9 +1,10 @@
 import { Header } from "@moyeorak/design-system";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ChipButtonWithIcon } from "@/domains/location/components/chip-button-with-icon";
+import { ItemSavedplace } from "@/domains/location/components/item-savedplace";
+import { StationBadges } from "@/domains/location/components/station-badges";
+import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
 import { ButtonBottom } from "@/shared/components/button-bottom";
-import { ChipButton } from "@/shared/components/chip-button";
 import { IconButton } from "@/shared/components/icon-button";
 
 function TestIcon() {
@@ -32,34 +33,32 @@ describe("design system migration contracts", () => {
   });
   it("keeps edit actions distinct from selection controls", () => {
     const markup = renderToStaticMarkup(
-      <ChipButton variant="primary" aria-controls="editor" aria-expanded>
-        수정
-      </ChipButton>,
+      <ItemSavedplace
+        name="민지"
+        location="강남역"
+        address="서울 강남구"
+        onEdit={() => {}}
+        onDelete={() => {}}
+      />,
     );
+    // 수정, 삭제는 선택 상태가 없는 액션이라 Toggle(aria-pressed)을 쓰지 않는다.
     expect(markup).not.toContain("aria-pressed");
-    expect(markup).toContain('aria-controls="editor"');
-    expect(markup).toContain('aria-expanded="true"');
+    expect(markup.match(/<button[^>]*type="button"/g)).toHaveLength(2);
+    // 참여자 이름은 클릭이 없는 Badge다.
+    expect(markup).toMatch(/<span[^>]*>민지<\/span>/);
   });
   it("exposes the parent-controlled selected state of station chips", () => {
-    const selected = renderToStaticMarkup(
-      <ChipButton variant="midpointSelected">서울역</ChipButton>,
-    );
-    const unselected = renderToStaticMarkup(
-      <ChipButton variant="midpoint">강남역</ChipButton>,
-    );
-    expect(selected).toContain('aria-pressed="true"');
-    expect(unselected).toContain('aria-pressed="false"');
-  });
-  it("preserves the category filter label and controlled state", () => {
+    const station = (stationId: number, stationName: string) =>
+      ({ stationId, stationName }) as StationRecommendationDto;
     const markup = renderToStaticMarkup(
-      <ChipButtonWithIcon icon={<TestIcon />} status="selected" disabled>
-        카페
-      </ChipButtonWithIcon>,
+      <StationBadges
+        recommendations={[station(1, "서울역"), station(2, "강남역")]}
+        selectedStationId={1}
+        onBack={() => {}}
+      />,
     );
-    expect(markup).toContain('aria-pressed="true"');
-    expect(markup).toContain('disabled=""');
-    expect(markup).toContain("카페");
-    expect(markup.match(/<button/g)).toHaveLength(1);
+    expect(markup).toMatch(/aria-pressed="true"[^>]*>서울역</);
+    expect(markup).toMatch(/aria-pressed="false"[^>]*>강남역</);
   });
   it("preserves the accessible name and disabled state of icon actions", () => {
     const markup = renderToStaticMarkup(

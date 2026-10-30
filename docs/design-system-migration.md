@@ -2,12 +2,12 @@
 
 ## 기준
 
-- 배포 패키지: `@moyeorak/design-system@0.6.1` (정확한 버전 고정)
+- 배포 패키지: `@moyeorak/design-system@0.6.2` (정확한 버전 고정)
 - 소스: https://github.com/meteorqz6/moyeorakui
 - 컴포넌트와 의미 토큰은 npm 패키지에서 가져온다. 소스 복사나 서비스 내 토큰 재정의는 하지 않는다.
 - 기존 Tailwind v4를 유지한다. 서비스에 Panda codegen은 추가하지 않는다.
 - CSS 진입점에서 layers.css를 가장 먼저 불러오고 Tailwind 플러그인과 styles.css를 함께 로드한다.
-- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.6.1을 고정한다. 다른 패키지의 대기 정책은 유지한다.
+- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.6.2를 고정한다. 다른 패키지의 대기 정책은 유지한다.
 
 ## 1차: 서비스 공통 버튼
 
@@ -135,6 +135,27 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 디자인 시스템 `Toast`는 한 줄 고정이라, 375px에서 넘치던 문구를 줄이고 문구 전체를 규칙에 맞춰 정리했다. 규칙과 용어는 `docs/ux-writing.md`에 있다.
 - 디자인 시스템 `Toast`에는 버튼이 없어, 새 버전 안내("새로고침" 버튼)는 `Modal`로 옮겼다. 제목 "업데이트된 버전으로 새로고침할까요?", 본문 "지금 새로고침하면 입력 중인 내용이 사라질 수 있어요", 버튼 "나중에 / 새로고침". 나중을 고르면 앱을 다시 열 때 대기 중인 워커가 적용된다. 설치 유도 시트가 열려 있는 동안 미루는 동작은 그대로다.
 - sonner와 `color-system.css`, tailwind-merge의 팔레트 색 목록을 지웠다. 정적 검사(`src/design-tokens-static.test.ts`)는 관리자 화면 말고는 예외가 없다.
+
+## 5차: Chip, Badge
+
+전환용으로 남겨 둔 칩 어댑터(`ChipButton`, `ChipButtonWithIcon`)와 서비스 `Chip`을 지우고, 사용처에서 디자인 시스템 컴포넌트를 바로 쓴다.
+
+| 역할 | 기존 | 디자인 시스템 |
+| --- | --- | --- |
+| 선택 칩 (시간표 수정 프리셋) | ChipButton selected / outlined | Chip square, outlined-brand / neutral-weak |
+| 선택 칩 (추천 역) | ChipButton midpoint 계열 | Chip pill, brand / neutral-weak |
+| 선택 칩 (지도 위 추천 역) | ChipButton floating 계열 | Chip pill, neutral / neutral-weak, 그림자 |
+| 선택 칩 (주변 장소 카테고리) | ChipButtonWithIcon | Chip pill, brand / neutral-weak, 아이콘, 그림자 |
+| 액션 (출발지 수정 / 삭제) | ChipButton ghost / locationDelete | Button sm, ghost-brand / ghost |
+| 라벨 (일정 메인 참여자 이름) | 서비스 Chip xl | Badge md outline (시안) |
+| 라벨 (출발지 목록 참여자 이름) | 서비스 Chip lg | Badge md neutral-weak |
+| 라벨 (출발지 카드 주소) | 서비스 Chip md | Badge md brand-weak |
+| 라벨 (출발지 부족 화면 "나") | 직접 만든 span | Badge sm brand-weak |
+
+- 선택 칩은 부모가 현재 선택값을 `pressed`로 넘기고, 선택 여부에 맞는 `variant`를 고른다. 액션에는 Toggle을 쓰지 않는다.
+- 가로 스크롤 줄에 놓이는 칩과 Badge에는 `shrink-0`을 준다. 디자인 시스템 컴포넌트는 줄어들지 않게 막아 두지 않았다.
+- 선택 칩과 액션은 어댑터가 하던 것과 같아 모양이 그대로다. 어댑터가 붙이던 브랜드 포커스 링은 3차와 같이 빠지고, 키보드 포커스에는 브라우저 기본 outline이 보인다.
+- 라벨은 Badge 규격으로 바뀐다. 일정 메인의 참여자 이름은 시안대로 흰 배경에 테두리가 있는 outline이 되고, 여백이 작아진다(좌우 12 → 8px). 출발지 목록의 참여자 이름은 글자가 `fg.neutral.subtle`로 연해진다. 출발지 카드 주소는 배경이 `fill.brand.subtler`로 연해지고 글자가 500으로 굵어진다.
 
 ## 별도 화면 전환 단계
 

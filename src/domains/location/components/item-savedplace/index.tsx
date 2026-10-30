@@ -1,6 +1,5 @@
+import { Badge, Button } from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
-import { Chip } from "@/shared/components/chip";
-import { ChipButton } from "@/shared/components/chip-button";
 import { cn } from "@/shared/utils/cn";
 
 export interface ItemSavedplaceProps extends HTMLAttributes<HTMLDivElement> {
@@ -29,7 +28,9 @@ export function ItemSavedplace({
       {...props}
     >
       <div className="flex items-center gap-2">
-        <Chip size="lg">{name}</Chip>
+        <Badge size="md" variant="neutral-weak" className="shrink-0">
+          {name}
+        </Badge>
         <span className="textStyle_title3 truncate text-fg-neutral-stronger">
           {location}
         </span>
@@ -40,23 +41,25 @@ export function ItemSavedplace({
       </p>
 
       <div className="flex items-center justify-end gap-1">
-        <ChipButton
-          size="xs"
-          variant="ghost"
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost-brand"
           onClick={onEdit}
           disabled={!onEdit}
         >
           수정
-        </ChipButton>
+        </Button>
         <div className="h-3 w-px self-center bg-stroke-neutral-subtle" />
-        <ChipButton
-          size="xs"
-          variant="locationDelete"
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
           onClick={onDelete}
           disabled={!onDelete}
         >
           삭제
-        </ChipButton>
+        </Button>
       </div>
     </div>
   );

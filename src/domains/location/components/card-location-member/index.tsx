@@ -1,6 +1,6 @@
+import { Badge } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
 import { formatDuration } from "@/domains/location/utils/format";
-import { Chip } from "@/shared/components/chip";
 import { ChevronRightIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
@@ -35,10 +35,9 @@ export function CardLocationMember({
         <p className="textStyle_title3 mb-1 truncate text-fg-neutral-strong">
           {name}
         </p>
-        <Chip size="md">{address}</Chip>
-        {/* <span className="inline-block rounded-[4px] bg-fill-brand-subtle px-2 py-0.5 textStyle_caption1 text-fg-brand-default">
+        <Badge size="md" variant="brand-weak">
           {address}
-        </span> */}
+        </Badge>
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <span
