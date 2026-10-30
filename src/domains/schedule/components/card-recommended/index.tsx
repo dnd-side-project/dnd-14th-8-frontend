@@ -70,7 +70,7 @@ export function CardRecommended({
   return (
     <div
       className={cn(
-        "w-full rounded-[10px] border border-k-100 bg-k-10",
+        "w-full rounded-[10px] border border-stroke-neutral-subtle bg-fill-neutral-subtlest",
         className,
       )}
       {...props}
@@ -82,24 +82,30 @@ export function CardRecommended({
         onClick={handleToggleClick}
         className="flex w-full items-center bg-transparent p-4 text-left enabled:cursor-pointer disabled:cursor-default"
       >
-        <span className="textStyle_body3 w-7 shrink-0 text-primary-main">
+        <span className="textStyle_body3 w-7 shrink-0 text-fg-brand-default">
           {index}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="textStyle_title3 truncate text-k-900">{dateLabel}</p>
-          <p className="textStyle_title3 truncate text-k-900">{timeLabel}</p>
+          <p className="textStyle_title3 truncate text-fg-neutral-stronger">
+            {dateLabel}
+          </p>
+          <p className="textStyle_title3 truncate text-fg-neutral-stronger">
+            {timeLabel}
+          </p>
         </div>
         <div className="flex shrink-0 items-center gap-2.5">
           <p className="textStyle_body1 inline-flex items-center gap-0.5">
-            <MemberIcon className="size-5 shrink-0 text-primary-main" />
+            <MemberIcon className="size-5 shrink-0 text-fg-brand-default" />
             <span className="textStyle_body4">
-              <span className="text-primary-main">{voteCount}</span>
-              <span className="text-k-700">/{participantCount}</span>
+              <span className="text-fg-brand-default">{voteCount}</span>
+              <span className="text-fg-neutral-default">
+                /{participantCount}
+              </span>
             </span>
           </p>
           <ChevronDownIcon
             className={cn(
-              "size-5 shrink-0 text-k-500 transition-transform duration-200 ease-out",
+              "size-5 shrink-0 text-fg-neutral-subtle transition-transform duration-200 ease-out",
               isExpanded ? "rotate-180" : "rotate-0",
             )}
           />
@@ -116,24 +122,24 @@ export function CardRecommended({
           <div
             className={cn(
               "flex flex-col gap-y-5 pt-3 pb-4",
-              isExpanded && "border-k-100 border-t",
+              isExpanded && "border-stroke-neutral-subtle border-t",
             )}
           >
             <div>
-              <p className="textStyle_body4 mb-2 inline-flex items-center text-k-900">
-                <AvailableIcon className="size-5 shrink-0 text-primary-main" />
+              <p className="textStyle_body4 mb-2 inline-flex items-center text-fg-neutral-stronger">
+                <AvailableIcon className="size-5 shrink-0 text-fg-brand-default" />
                 참여가능({availableCount})
               </p>
-              <p className="textStyle_body4 rounded-sm bg-p-50 px-4 py-3 text-primary-main">
+              <p className="textStyle_body4 rounded-sm bg-fill-brand-subtle px-4 py-3 text-fg-brand-default">
                 {availableNames}
               </p>
             </div>
             <div>
-              <p className="textStyle_body4 mb-2 inline-flex items-center text-k-700">
-                <UnavailableIcon className="size-5 shrink-0 text-k-700" />
+              <p className="textStyle_body4 mb-2 inline-flex items-center text-fg-neutral-default">
+                <UnavailableIcon className="size-5 shrink-0 text-fg-neutral-default" />
                 참여불가({unavailableCount})
               </p>
-              <p className="textStyle_body4 rounded-sm bg-k-50 px-4 py-3 text-k-700">
+              <p className="textStyle_body4 rounded-sm bg-fill-neutral-subtler px-4 py-3 text-fg-neutral-default">
                 {unavailableNames}
               </p>
             </div>

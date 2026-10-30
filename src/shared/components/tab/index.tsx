@@ -19,7 +19,10 @@ export interface TabProps {
 export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
   return (
     <div
-      className={cn("flex border-k-400 border-b bg-k-5", className)}
+      className={cn(
+        "flex border-stroke-neutral-strong border-b bg-bg-neutral-default",
+        className,
+      )}
       role="tablist"
     >
       {tabs.map((tab) => {
@@ -35,15 +38,17 @@ export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
             className={cn(
               "-mb-[1px] flex flex-1 cursor-pointer items-center justify-center gap-[1px] border-b-2 py-3 transition-colors",
               isActive
-                ? "textStyle_title3 border-primary-main text-primary-main"
-                : "textStyle_body1 border-transparent text-k-400",
+                ? "textStyle_title3 border-stroke-brand-default text-fg-brand-default"
+                : "textStyle_body1 border-transparent text-fg-neutral-subtler",
             )}
           >
             {tab.icon && (
               <tab.icon
                 className={cn(
                   "size-5 shrink-0 transition-colors",
-                  isActive ? "text-primary-main" : "text-k-400",
+                  isActive
+                    ? "text-fg-brand-default"
+                    : "text-fg-neutral-subtler",
                 )}
               />
             )}

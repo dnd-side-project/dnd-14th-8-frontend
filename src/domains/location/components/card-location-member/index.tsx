@@ -24,7 +24,7 @@ export function CardLocationMember({
     <button
       type="button"
       className={cn(
-        "flex w-full items-center justify-between gap-3 rounded-lg border border-k-100 bg-k-5 p-4 text-left",
+        "flex w-full items-center justify-between gap-3 rounded-lg border border-stroke-neutral-subtle bg-fill-neutral-faintest p-4 text-left",
         "enabled:cursor-pointer disabled:cursor-default",
         "transition-colors",
         className,
@@ -32,9 +32,11 @@ export function CardLocationMember({
       {...props}
     >
       <div className="min-w-0 flex-1">
-        <p className="textStyle_title3 mb-1 truncate text-k-800">{name}</p>
+        <p className="textStyle_title3 mb-1 truncate text-fg-neutral-strong">
+          {name}
+        </p>
         <Chip size="md">{address}</Chip>
-        {/* <span className="inline-block rounded-[4px] bg-p-50 px-2 py-0.5 textStyle_caption1 text-primary-main">
+        {/* <span className="inline-block rounded-[4px] bg-fill-brand-subtle px-2 py-0.5 textStyle_caption1 text-fg-brand-default">
           {address}
         </span> */}
       </div>
@@ -42,13 +44,13 @@ export function CardLocationMember({
         <span
           className={
             unreachable
-              ? "textStyle_body4 text-k-400"
-              : "textStyle_title3 text-k-900"
+              ? "textStyle_body4 text-fg-neutral-subtler"
+              : "textStyle_title3 text-fg-neutral-stronger"
           }
         >
           {unreachable ? "경로 없음" : formatDuration(durationMinutes)}
         </span>
-        <ChevronRightIcon className="size-6 shrink-0 text-k-400" />
+        <ChevronRightIcon className="size-6 shrink-0 text-fg-neutral-subtler" />
       </div>
     </button>
   );

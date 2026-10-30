@@ -271,9 +271,12 @@ export function Timetable({
 
   return (
     <div className={cn("relative w-full select-none", className)}>
-      <div className="sticky z-25 bg-k-5" style={{ top: stickyHeaderTop }}>
+      <div
+        className="sticky z-25 bg-bg-neutral-default"
+        style={{ top: stickyHeaderTop }}
+      >
         <div className="flex gap-1 pt-1 pb-1">
-          <div className="sticky left-0 z-30 h-[58px] w-5 shrink-0 bg-k-5" />
+          <div className="sticky left-0 z-30 h-[58px] w-5 shrink-0 bg-bg-neutral-default" />
 
           <div
             className="min-w-0 flex-1 overflow-hidden"
@@ -290,12 +293,12 @@ export function Timetable({
               {dates.map((date) => (
                 <div
                   key={`header-${date.toISOString()}`}
-                  className="flex h-[54px] flex-col items-center justify-center bg-k-5"
+                  className="flex h-[54px] flex-col items-center justify-center bg-bg-neutral-default"
                 >
-                  <span className="textStyle_body3 text-k-500">
+                  <span className="textStyle_body3 text-fg-neutral-subtle">
                     {getDayName(date)}
                   </span>
-                  <span className="textStyle_body3 text-k-700">
+                  <span className="textStyle_body3 text-fg-neutral-default">
                     {getFormattedDate(date)}
                   </span>
                 </div>
@@ -333,11 +336,11 @@ export function Timetable({
 
             return (
               <Fragment key={`row-${currentHour}-${currentMinutes}`}>
-                <div className="sticky left-0 z-20 -mr-2 h-[40px] w-5 bg-k-5">
+                <div className="sticky left-0 z-20 -mr-2 h-[40px] w-5 bg-bg-neutral-default">
                   {isHourStart && (
                     <span
                       className={cn(
-                        "textStyle_body3 absolute left-0 z-20 w-full bg-k-5 text-k-500",
+                        "textStyle_body3 absolute left-0 z-20 w-full bg-bg-neutral-default text-fg-neutral-subtle",
                         isFirstSlot ? "top-0" : "-top-2.5",
                       )}
                     >
@@ -346,7 +349,7 @@ export function Timetable({
                   )}
 
                   {isLastSlot && endTime % 1 === 0 && (
-                    <span className="textStyle_body3 absolute bottom-0 left-0 z-20 w-full bg-k-5 text-k-500">
+                    <span className="textStyle_body3 absolute bottom-0 left-0 z-20 w-full bg-bg-neutral-default text-fg-neutral-subtle">
                       {String(endTime)}
                     </span>
                   )}

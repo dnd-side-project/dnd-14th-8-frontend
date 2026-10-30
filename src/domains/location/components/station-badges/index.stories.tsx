@@ -44,7 +44,7 @@ const meta = {
   component: StationBadges,
   decorators: [
     (Story) => (
-      <div className="relative mx-auto h-[200px] w-[375px] bg-k-50">
+      <div className="relative mx-auto h-[200px] w-[375px] bg-fill-neutral-subtler">
         <Story />
       </div>
     ),

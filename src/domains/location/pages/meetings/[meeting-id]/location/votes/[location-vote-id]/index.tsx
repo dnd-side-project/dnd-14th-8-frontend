@@ -111,7 +111,7 @@ export function DepartureEditPage() {
             className="-mx-5 w-auto"
           />
 
-          <p className="textStyle_body2 mt-10 text-center text-k-500">
+          <p className="textStyle_body2 mt-10 text-center text-fg-neutral-subtle">
             수정할 출발지를 찾을 수 없어요.
           </p>
 

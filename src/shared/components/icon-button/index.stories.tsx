@@ -50,7 +50,7 @@ export const PseudoStatesTest: Story = {
       {/* Background Square Tests */}
       <div className="flex items-center gap-4">
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">Square Normal</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">Square Normal</p>
           <IconButton
             aria-label="아이콘 버튼"
             icon={PlusIcon}
@@ -62,7 +62,9 @@ export const PseudoStatesTest: Story = {
           />
         </div>
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">Square Manual Hover</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">
+            Square Manual Hover
+          </p>
           <IconButton
             aria-label="아이콘 버튼"
             id="btn-square-manual-hover"
@@ -75,7 +77,7 @@ export const PseudoStatesTest: Story = {
           />
         </div>
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">Square Dark</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">Square Dark</p>
           <IconButton
             aria-label="아이콘 버튼"
             icon={PlusIcon}
@@ -91,7 +93,7 @@ export const PseudoStatesTest: Story = {
       {/* Background None Tests */}
       <div className="flex items-center gap-4">
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">None Normal</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">None Normal</p>
           <IconButton
             aria-label="아이콘 버튼"
             icon={CloseIcon}
@@ -102,7 +104,7 @@ export const PseudoStatesTest: Story = {
           />
         </div>
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">None Hover</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">None Hover</p>
           <IconButton
             aria-label="아이콘 버튼"
             id="btn-none-hover"
@@ -114,7 +116,7 @@ export const PseudoStatesTest: Story = {
           />
         </div>
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">None Neutral</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">None Neutral</p>
           <IconButton
             aria-label="아이콘 버튼"
             icon={CloseIcon}
@@ -129,7 +131,7 @@ export const PseudoStatesTest: Story = {
       {/* Circle Tests */}
       <div className="flex items-center gap-4">
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">Circle Normal</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">Circle Normal</p>
           <IconButton
             aria-label="아이콘 버튼"
             icon={CloseIcon}
@@ -141,7 +143,7 @@ export const PseudoStatesTest: Story = {
           />
         </div>
         <div className="text-center">
-          <p className="mb-2 text-k-600 text-sm">Circle Hover</p>
+          <p className="mb-2 text-fg-neutral-subtle text-sm">Circle Hover</p>
           <IconButton
             aria-label="아이콘 버튼"
             id="btn-circle-hover"
@@ -173,7 +175,7 @@ export const Designs: Story = {
   render: () => (
     <div className="flex w-full flex-col items-start gap-4">
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Plus</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">Plus</span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={PlusIcon}
@@ -209,7 +211,7 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Minus</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">Minus</span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={MinusIcon}
@@ -242,7 +244,7 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Delete</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">Delete</span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={CloseIcon}
@@ -275,7 +277,7 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Share</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">Share</span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={ShareIcon}
@@ -308,7 +310,7 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Close</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">Close</span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={CloseIcon}
@@ -338,7 +340,9 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Close Circle</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">
+          Close Circle
+        </span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={CloseIcon}
@@ -371,7 +375,9 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Chevron Up/Down</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">
+          Chevron Up/Down
+        </span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={ChevronUpIcon}
@@ -409,7 +415,9 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Chevron Left/Right</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">
+          Chevron Left/Right
+        </span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={ChevronLeftIcon}
@@ -447,7 +455,9 @@ export const Designs: Story = {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="w-20 text-k-500 text-sm">Chevron Calendar</span>
+        <span className="w-20 text-fg-neutral-subtle text-sm">
+          Chevron Calendar
+        </span>
         <IconButton
           aria-label="아이콘 버튼"
           icon={ChevronLeftIcon}

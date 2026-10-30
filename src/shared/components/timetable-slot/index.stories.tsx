@@ -37,15 +37,19 @@ export const AllStates: Story = {
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-3 gap-4">
         <div className="flex flex-col items-center gap-2">
-          <span className="font-medium text-k-500 text-xs">Default</span>
+          <span className="font-medium text-fg-neutral-subtle text-xs">
+            Default
+          </span>
           <TimetableSlot {...args} isSelected={false} isDisabled={false} />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="font-medium text-k-500 text-xs">Selected</span>
+          <span className="font-medium text-fg-neutral-subtle text-xs">
+            Selected
+          </span>
           <TimetableSlot {...args} isSelected={true} isDisabled={false} />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="font-medium text-k-500 text-xs">
+          <span className="font-medium text-fg-neutral-subtle text-xs">
             Disabled (Viewer)
           </span>
           <TimetableSlot {...args} isDisabled={true} />
@@ -59,10 +63,12 @@ export const AllStates: Story = {
 export const OccupancyGradients: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
-      <h3 className="font-bold text-k-700 text-sm">Occupancy Gradient (k/N)</h3>
+      <h3 className="font-bold text-fg-neutral-default text-sm">
+        Occupancy Gradient (k/N)
+      </h3>
 
       <div className="flex flex-col gap-2">
-        <span className="text-k-500 text-xs">N=2 (1/2, 2/2)</span>
+        <span className="text-fg-neutral-subtle text-xs">N=2 (1/2, 2/2)</span>
         <div className="flex gap-2">
           <TimetableSlot opacity={0.5} />
           <TimetableSlot opacity={1.0} />
@@ -70,7 +76,9 @@ export const OccupancyGradients: Story = {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-k-500 text-xs">N=3 (1/3, 2/3, 3/3)</span>
+        <span className="text-fg-neutral-subtle text-xs">
+          N=3 (1/3, 2/3, 3/3)
+        </span>
         <div className="flex gap-2">
           <TimetableSlot opacity={0.33} />
           <TimetableSlot opacity={0.67} />

@@ -108,7 +108,7 @@ export function DepartureNewSearchPage() {
 
         <div className="mt-4 flex-1 overflow-y-auto">
           {isSearching && (
-            <p className="textStyle_body4 mt-10 text-center text-k-400">
+            <p className="textStyle_body4 mt-10 text-center text-fg-neutral-subtler">
               검색 중...
             </p>
           )}

@@ -1,6 +1,6 @@
 export function NearbyDeparturesNote() {
   return (
-    <p className="textStyle_body4 text-k-500">
+    <p className="textStyle_body4 text-fg-neutral-subtle">
       가까운 출발지예요 · 후보역 이동 시간이 비슷해요
     </p>
   );

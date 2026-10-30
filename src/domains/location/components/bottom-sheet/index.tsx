@@ -105,7 +105,7 @@ export function BottomSheet({
     <div
       ref={sheetRef}
       className={cn(
-        "absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-2xl bg-k-5",
+        "absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-2xl bg-bg-neutral-default",
         "shadow-[0_-4px_20px_rgba(0,0,0,0.12)]",
         !dragging && "transition-[height] duration-300 ease-out",
         className,
@@ -120,7 +120,7 @@ export function BottomSheet({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        <div className="h-1 w-9 rounded-full bg-k-200" />
+        <div className="h-1 w-9 rounded-full bg-fill-neutral-subtle" />
       </div>
 
       <div className="flex-1 overflow-y-auto overscroll-contain">

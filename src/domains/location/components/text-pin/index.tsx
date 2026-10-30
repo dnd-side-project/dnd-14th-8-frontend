@@ -13,17 +13,21 @@ export function TextPin({ text, variant, className }: TextPinProps) {
       <div
         className={cn(
           "flex h-[33px] min-w-[49px] items-center justify-center rounded-[30px] px-3 py-1.5 shadow-[0_0_4px_rgba(0,0,0,0.25)]",
-          variant === "blue" ? "bg-primary-main" : "bg-k-800",
+          variant === "blue"
+            ? "bg-fill-brand-default"
+            : "bg-fill-neutral-default",
         )}
       >
-        <span className="textStyle_body3 whitespace-nowrap text-k-5 leading-none">
+        <span className="textStyle_body3 whitespace-nowrap text-fg-neutral-faintest leading-none">
           {text}
         </span>
       </div>
       <PolygonIcon
         className={cn(
           "mt-[-2px]",
-          variant === "blue" ? "text-primary-main" : "text-k-800",
+          variant === "blue"
+            ? "text-fg-brand-default"
+            : "text-fg-neutral-strong",
         )}
       />
     </div>

@@ -64,7 +64,7 @@ export const Interactive: Story = {
     const [selected, setSelected] = useState<Date[]>([]);
     return (
       <div className="flex flex-col gap-4">
-        <p className="font-medium text-k-500 text-sm">
+        <p className="font-medium text-fg-neutral-subtle text-sm">
           드래그하여 시간을 선택해보세요. (선택된 슬롯: {selected.length}개)
         </p>
         <Timetable {...args} selected={selected} onSelect={setSelected} />
@@ -108,7 +108,7 @@ export const HalfHourBoundary: Story = {
     const [selected, setSelected] = useState<Date[]>([]);
     return (
       <div className="flex flex-col gap-4">
-        <p className="font-medium text-k-500 text-sm">
+        <p className="font-medium text-fg-neutral-subtle text-sm">
           21:30 시작 · 선택된 슬롯: {selected.length}개
         </p>
         <Timetable {...args} selected={selected} onSelect={setSelected} />
@@ -129,7 +129,7 @@ export const HalfHourBoth: Story = {
     const [selected, setSelected] = useState<Date[]>([]);
     return (
       <div className="flex flex-col gap-4">
-        <p className="font-medium text-k-500 text-sm">
+        <p className="font-medium text-fg-neutral-subtle text-sm">
           9:30 ~ 18:30 · 선택된 슬롯: {selected.length}개
         </p>
         <Timetable {...args} selected={selected} onSelect={setSelected} />

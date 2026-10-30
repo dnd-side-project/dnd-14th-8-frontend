@@ -3,13 +3,13 @@ import * as Icons from ".";
 
 const SIZE_VARIANTS = [16, 20, 24, 28, 32, 48, 76];
 const COLOR_VARIANTS = [
-  { label: "k-5", value: "var(--color-k-5)" },
-  { label: "k-500", value: "var(--color-k-500)" },
-  { label: "k-800", value: "var(--color-k-800)" },
-  { label: "k-700", value: "var(--color-k-700)" },
-  { label: "p-400", value: "var(--color-p-400)" },
-  { label: "action-green", value: "var(--color-action-green)" },
-  { label: "action-red", value: "var(--color-action-red)" },
+  { label: "fg.neutral.faintest", value: "var(--colors-fg-neutral-faintest)" },
+  { label: "fg.neutral.subtle", value: "var(--colors-fg-neutral-subtle)" },
+  { label: "fg.neutral.strong", value: "var(--colors-fg-neutral-strong)" },
+  { label: "fg.neutral.default", value: "var(--colors-fg-neutral-default)" },
+  { label: "fg.brand.default", value: "var(--colors-fg-brand-default)" },
+  { label: "fg.positive.default", value: "var(--colors-fg-positive-default)" },
+  { label: "fg.negative.default", value: "var(--colors-fg-negative-default)" },
 ] as const;
 
 interface IconPreviewProps {
@@ -37,7 +37,11 @@ const meta = {
     ),
   ],
   parameters: { layout: "centered" },
-  args: { iconName: "CalendarIcon", size: 20, color: "var(--color-k-800)" },
+  args: {
+    iconName: "CalendarIcon",
+    size: 20,
+    color: "var(--colors-fg-neutral-strong)",
+  },
   argTypes: {
     iconName: { control: "select", options: Object.keys(Icons) },
     size: { control: { type: "range", min: 12, max: 48, step: 2 } },
@@ -60,13 +64,15 @@ export const SizeVariants: Story = {
         {SIZE_VARIANTS.map((size) => (
           <div className="flex flex-col items-center gap-1" key={size}>
             <Icon aria-hidden color={color} height={size} width={size} />
-            <span className="text-[11px] text-k-700">{size}px</span>
+            <span className="text-[11px] text-fg-neutral-default">
+              {size}px
+            </span>
           </div>
         ))}
       </div>
     );
   },
-  args: { iconName: "TimeIcon", color: "var(--color-k-800)" },
+  args: { iconName: "TimeIcon", color: "var(--colors-fg-neutral-strong)" },
   argTypes: {
     size: { table: { disable: true } },
   },
@@ -84,7 +90,9 @@ export const ColorVariants: Story = {
             key={label}
           >
             <Icon aria-hidden color={value} height={size} width={size} />
-            <span className="text-center text-[10px] text-k-700">{label}</span>
+            <span className="text-center text-[10px] text-fg-neutral-default">
+              {label}
+            </span>
           </div>
         ))}
       </div>
@@ -104,11 +112,11 @@ export const AllIcons: Story = {
       <ul className="grid grid-cols-3 gap-3">
         {Object.entries(Icons).map(([iconName, Icon]) => (
           <li
-            className="flex flex-col items-center gap-2 rounded-lg border border-k-100 bg-white p-2"
+            className="flex flex-col items-center gap-2 rounded-lg border border-stroke-neutral-subtle bg-white p-2"
             key={iconName}
           >
             <Icon aria-hidden color={color} height={size} width={size} />
-            <span className="textStyle_caption3 text-k-700">
+            <span className="textStyle_caption3 text-fg-neutral-default">
               {toLabel(iconName)}
             </span>
           </li>
@@ -116,7 +124,7 @@ export const AllIcons: Story = {
       </ul>
     );
   },
-  args: { size: 20, color: "var(--color-k-800)" },
+  args: { size: 20, color: "var(--colors-fg-neutral-strong)" },
   argTypes: {
     iconName: { table: { disable: true } },
   },

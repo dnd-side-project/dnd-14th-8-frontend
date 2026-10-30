@@ -22,7 +22,7 @@ function GuideLegendItem({
   return (
     <span
       className={cn(
-        "textStyle_body5 inline-flex w-fit select-none items-center gap-1.5 text-k-500",
+        "textStyle_body5 inline-flex w-fit select-none items-center gap-1.5 text-fg-neutral-subtle",
         className,
       )}
       {...props}
@@ -31,8 +31,8 @@ function GuideLegendItem({
         aria-hidden
         className={cn(
           "inline-flex size-3 shrink-0 rounded-[3.43px] border transition-colors",
-          checked && "border-primary-main bg-primary-main",
-          !checked && "border-k-100 bg-k-10",
+          checked && "border-stroke-brand-default bg-fill-brand-default",
+          !checked && "border-stroke-neutral-subtle bg-fill-neutral-subtlest",
         )}
       />
       {children}
@@ -56,7 +56,7 @@ export function GuideTimeSelection({
       data-slot="guide-time-selection"
       {...props}
     >
-      <p className="textStyle_body4 text-k-600">{description}</p>
+      <p className="textStyle_body4 text-fg-neutral-subtle">{description}</p>
       <div className="flex items-center gap-3">
         <GuideLegendItem checked={true}>{availableLabel}</GuideLegendItem>
         <GuideLegendItem checked={false}>{unavailableLabel}</GuideLegendItem>

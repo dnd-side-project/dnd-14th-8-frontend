@@ -11,7 +11,7 @@ type CalendarClassNamesParams = {
 };
 
 const buttonBaseClassName = cn(
-  "relative isolate text-k-700 aria-disabled:pointer-events-none aria-disabled:cursor-default aria-disabled:text-k-200",
+  "relative isolate text-fg-neutral-default aria-disabled:pointer-events-none aria-disabled:cursor-default aria-disabled:text-fg-neutral-subtlest",
 );
 
 export function getCalendarClassNames({
@@ -27,7 +27,7 @@ export function getCalendarClassNames({
       defaultClassNames.month_caption,
     ),
     caption_label: cn(
-      "textStyle_title3 text-k-700",
+      "textStyle_title3 text-fg-neutral-default",
       defaultClassNames.caption_label,
     ),
     nav: cn(
@@ -42,16 +42,16 @@ export function getCalendarClassNames({
     ),
     weekdays: cn("h-11", defaultClassNames.weekdays),
     weekday: cn(
-      "textStyle_body4 h-11 p-0 text-center align-middle text-k-500",
+      "textStyle_body4 h-11 p-0 text-center align-middle text-fg-neutral-subtle",
       defaultClassNames.weekday,
     ),
     week: cn("h-11", defaultClassNames.week),
     day: cn(
-      "group/day relative h-11 p-0 text-center align-middle text-k-900 before:pointer-events-none before:absolute before:top-1/2 before:left-1/2 before:size-10 before:-translate-x-1/2 before:-translate-y-1/2 before:scale-[0.96] before:rounded-lg before:bg-primary-main before:opacity-0 before:transition-[transform,opacity] before:duration-140 before:ease-[cubic-bezier(0.2,0.8,0.2,1)] data-[disabled=true]:text-k-200 data-[outside=true]:text-k-200 data-[selected=true]:before:scale-100 data-[selected=true]:before:opacity-100",
+      "group/day relative h-11 p-0 text-center align-middle text-fg-neutral-stronger before:pointer-events-none before:absolute before:top-1/2 before:left-1/2 before:size-10 before:-translate-x-1/2 before:-translate-y-1/2 before:scale-[0.96] before:rounded-lg before:bg-fill-brand-default before:opacity-0 before:transition-[transform,opacity] before:duration-140 before:ease-[cubic-bezier(0.2,0.8,0.2,1)] data-[disabled=true]:text-fg-neutral-subtlest data-[outside=true]:text-fg-neutral-subtlest data-[selected=true]:before:scale-100 data-[selected=true]:before:opacity-100",
       defaultClassNames.day,
     ),
     day_button: cn(
-      "textStyle_body2 relative z-1 mx-auto inline-flex size-10 cursor-pointer items-center justify-center rounded-lg p-0 outline-none transition-colors focus:outline-none focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 disabled:cursor-default disabled:text-k-200 aria-disabled:cursor-default aria-disabled:text-k-200 group-data-[selected=true]/day:text-k-5",
+      "textStyle_body2 relative z-1 mx-auto inline-flex size-10 cursor-pointer items-center justify-center rounded-lg p-0 outline-none transition-colors focus:outline-none focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 disabled:cursor-default disabled:text-fg-neutral-subtlest aria-disabled:cursor-default aria-disabled:text-fg-neutral-subtlest group-data-[selected=true]/day:text-fg-neutral-faintest",
       defaultClassNames.day_button,
     ),
     outside: defaultClassNames.outside,

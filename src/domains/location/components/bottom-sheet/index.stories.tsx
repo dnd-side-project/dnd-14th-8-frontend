@@ -7,10 +7,10 @@ const meta = {
   decorators: [
     (Story, context) => (
       <div
-        className="relative mx-auto w-[375px] overflow-hidden bg-k-50"
+        className="relative mx-auto w-[375px] overflow-hidden bg-fill-neutral-subtler"
         style={{ height: context.parameters.containerHeight ?? 812 }}
       >
-        <div className="textStyle_body4 flex h-full items-center justify-center text-k-400">
+        <div className="textStyle_body4 flex h-full items-center justify-center text-fg-neutral-subtler">
           지도 영역
         </div>
         <Story />
@@ -29,8 +29,8 @@ export const Peek: Story = {
     defaultSnap: "peek",
     children: (
       <div className="px-5 py-4">
-        <h2 className="textStyle_title1 text-k-900">Peek 상태</h2>
-        <p className="textStyle_body4 mt-2 text-k-500">
+        <h2 className="textStyle_title1 text-fg-neutral-stronger">Peek 상태</h2>
+        <p className="textStyle_body4 mt-2 text-fg-neutral-subtle">
           content 219px + handle
         </p>
       </div>
@@ -43,17 +43,19 @@ export const Half: Story = {
     defaultSnap: "half",
     children: (
       <div className="px-5 py-4">
-        <h2 className="textStyle_title1 text-k-900">Half 상태</h2>
-        <p className="textStyle_body4 mt-2 text-k-500">
+        <h2 className="textStyle_title1 text-fg-neutral-stronger">Half 상태</h2>
+        <p className="textStyle_body4 mt-2 text-fg-neutral-subtle">
           content 494px + handle
         </p>
         <div className="mt-4 flex flex-col gap-2">
           {Array.from({ length: 5 }, (_, i) => (
             <div
               key={`item-${i + 1}`}
-              className="h-16 rounded-lg bg-k-50 px-4 py-3"
+              className="h-16 rounded-lg bg-fill-neutral-subtler px-4 py-3"
             >
-              <p className="textStyle_body4 text-k-700">리스트 항목 {i + 1}</p>
+              <p className="textStyle_body4 text-fg-neutral-default">
+                리스트 항목 {i + 1}
+              </p>
             </div>
           ))}
         </div>
@@ -67,17 +69,19 @@ export const Full: Story = {
     defaultSnap: "full",
     children: (
       <div className="px-5 py-4">
-        <h2 className="textStyle_title1 text-k-900">Full 상태</h2>
-        <p className="textStyle_body4 mt-2 text-k-500">
+        <h2 className="textStyle_title1 text-fg-neutral-stronger">Full 상태</h2>
+        <p className="textStyle_body4 mt-2 text-fg-neutral-subtle">
           content 711px + handle
         </p>
         <div className="mt-4 flex flex-col gap-2">
           {Array.from({ length: 12 }, (_, i) => (
             <div
               key={`item-${i + 1}`}
-              className="h-16 rounded-lg bg-k-50 px-4 py-3"
+              className="h-16 rounded-lg bg-fill-neutral-subtler px-4 py-3"
             >
-              <p className="textStyle_body4 text-k-700">리스트 항목 {i + 1}</p>
+              <p className="textStyle_body4 text-fg-neutral-default">
+                리스트 항목 {i + 1}
+              </p>
             </div>
           ))}
         </div>
@@ -95,8 +99,10 @@ export const SmallScreenFull: Story = {
     defaultSnap: "full",
     children: (
       <div className="px-5 py-4">
-        <h2 className="textStyle_title1 text-k-900">작은 화면 Full 상태</h2>
-        <p className="textStyle_body4 mt-2 text-k-500">
+        <h2 className="textStyle_title1 text-fg-neutral-stronger">
+          작은 화면 Full 상태
+        </h2>
+        <p className="textStyle_body4 mt-2 text-fg-neutral-subtle">
           뷰포트 667px — 핸들이 화면 안에 남아야 한다
         </p>
       </div>

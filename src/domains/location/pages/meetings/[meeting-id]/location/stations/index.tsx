@@ -329,10 +329,10 @@ export function LocationMainPage() {
 
             <div className="flex items-end justify-between gap-3">
               <div>
-                <p className="textStyle_head3 text-k-800">
+                <p className="textStyle_head3 text-fg-neutral-strong">
                   {selectedStation.stationName}
                 </p>
-                <p className="textStyle_head1 mt-0.5 text-k-900">
+                <p className="textStyle_head1 mt-0.5 text-fg-neutral-stronger">
                   평균{" "}
                   {formatDuration(
                     Math.round(selectedStation.avgTransitDuration),
@@ -342,24 +342,24 @@ export function LocationMainPage() {
 
               <button
                 type="button"
-                className="textStyle_body2 inline-flex items-center gap-0.5 text-k-500"
+                className="textStyle_body2 inline-flex items-center gap-0.5 text-fg-neutral-subtle"
               >
                 {formatDepartureDateTime(midpoint?.departureTime)}
-                <ChevronDownIcon className="size-5 text-k-400" />
+                <ChevronDownIcon className="size-5 text-fg-neutral-subtler" />
               </button>
             </div>
 
-            <p className="textStyle_body4 text-k-400">
+            <p className="textStyle_body4 text-fg-neutral-subtler">
               {selectedStation.line} · 중심에서{" "}
               {selectedStation.distanceFromCenter}m
             </p>
 
             {isNearbyDepartures && <NearbyDeparturesNote />}
 
-            <p className="textStyle_body3 inline-flex items-center gap-1 text-k-500">
-              <MemberIcon className="size-4 text-k-500" />
+            <p className="textStyle_body3 inline-flex items-center gap-1 text-fg-neutral-subtle">
+              <MemberIcon className="size-4 text-fg-neutral-subtle" />
               참여자{" "}
-              <span className="text-primary-main">{registeredCount}</span>/
+              <span className="text-fg-brand-default">{registeredCount}</span>/
               {totalCount}
             </p>
 

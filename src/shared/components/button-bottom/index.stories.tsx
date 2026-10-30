@@ -57,7 +57,7 @@ export const BlueStates: Story = {
 
 export const WhiteStates: Story = {
   render: () => (
-    <div className="flex w-full flex-col gap-2 bg-k-10 p-3">
+    <div className="flex w-full flex-col gap-2 bg-fill-neutral-subtlest p-3">
       <ButtonBottom id="white-default" variant="white">
         White / Default
       </ButtonBottom>
