@@ -204,7 +204,7 @@ export function PlaceDetailPage() {
             </>
           ) : (
             <>
-              <p className="text-center text-b2 text-k-600">
+              <p className="textStyle_body2 text-center text-k-600">
                 요청한 장소 정보를 찾을 수 없어요
               </p>
               <ButtonBottom

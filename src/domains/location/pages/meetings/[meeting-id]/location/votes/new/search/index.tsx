@@ -108,7 +108,9 @@ export function DepartureNewSearchPage() {
 
         <div className="mt-4 flex-1 overflow-y-auto">
           {isSearching && (
-            <p className="mt-10 text-center text-b4 text-k-400">검색 중...</p>
+            <p className="textStyle_body4 mt-10 text-center text-k-400">
+              검색 중...
+            </p>
           )}
 
           {!isSearching &&
@@ -162,7 +164,7 @@ export function DepartureNewSearchPage() {
         </div>
 
         {(searchError || locationError) && (
-          <p className="mt-2 px-5 text-b4 text-red-500">
+          <p className="textStyle_body4 mt-2 px-5 text-red-500">
             {searchError || locationError}
           </p>
         )}

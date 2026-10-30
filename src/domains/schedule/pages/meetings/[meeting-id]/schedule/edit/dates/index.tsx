@@ -137,7 +137,7 @@ export function ScheduleEditDatesPage() {
         <section className="relative z-10 mx-auto flex h-[calc(100dvh-28px)] w-full touch-auto flex-col rounded-t-2xl bg-k-5">
           <div className="w-full shrink-0 border-b border-b-k-50 py-3">
             <div className="mx-auto flex max-w-[335px] items-center justify-between">
-              <h2 className="text-k-900 text-t1">시간표 선택범위</h2>
+              <h2 className="textStyle_title1 text-k-900">시간표 선택범위</h2>
               <IconButton
                 aria-label="시간표 기간 편집 닫기"
                 icon={CloseIcon}
@@ -153,7 +153,7 @@ export function ScheduleEditDatesPage() {
 
           <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
             <div className="mx-auto w-full max-w-[335px]">
-              <h2 className="mt-5 mb-1 text-k-900 text-t2">날짜</h2>
+              <h2 className="textStyle_title3 mt-5 mb-1 text-k-900">날짜</h2>
               <div className="flex w-full justify-start overflow-hidden">
                 <Calendar
                   selected={selectedDates}
@@ -185,7 +185,7 @@ export function ScheduleEditDatesPage() {
             </div>
 
             <div className="mx-auto w-full max-w-[335px]">
-              <h2 className="mb-3 text-b3 text-k-900">시간범위</h2>
+              <h2 className="textStyle_body3 mb-3 text-k-900">시간범위</h2>
               <div className="flex items-center gap-[6px]">
                 <Dropdown
                   value={startTime}

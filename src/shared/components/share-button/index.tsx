@@ -45,7 +45,9 @@ export function ShareButton({
       {...props}
     >
       <Icon className="size-14 shrink-0" />
-      <span className="text-b4 text-k-700">{label ?? defaultLabel}</span>
+      <span className="textStyle_body4 text-k-700">
+        {label ?? defaultLabel}
+      </span>
     </button>
   );
 }

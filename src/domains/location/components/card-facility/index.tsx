@@ -34,26 +34,26 @@ export function CardFacility({
       {...props}
     >
       <div className="min-w-0 flex-1">
-        <p className="mb-4 truncate text-k-900 text-t2">{name}</p>
+        <p className="textStyle_title3 mb-4 truncate text-k-900">{name}</p>
         <div className="mb-1 flex items-center gap-0.5">
           <LocationIcon className="size-5 shrink-0" />
-          <span className="text-b5 text-k-600">
+          <span className="textStyle_body5 text-k-600">
             추천장소에서 {distanceFromBase}m
           </span>
         </div>
         <div className="flex items-center gap-0.5">
           <TimeIcon className="size-5 shrink-0 text-k-500" />
           {isOpen == null ? (
-            <span className="text-b5 text-k-600">영업정보 없음</span>
+            <span className="textStyle_body5 text-k-600">영업정보 없음</span>
           ) : isOpen ? (
-            <span className="text-b5 text-primary-main">영업중</span>
+            <span className="textStyle_body5 text-primary-main">영업중</span>
           ) : (
-            <span className="text-b5 text-k-600">영업종료</span>
+            <span className="textStyle_body5 text-k-600">영업종료</span>
           )}
           {businessStatusMessage && (
             <>
-              <span className="text-b5 text-k-200">·</span>
-              <span className="text-b5 text-k-600">
+              <span className="textStyle_body5 text-k-200">·</span>
+              <span className="textStyle_body5 text-k-600">
                 {businessStatusMessage}
               </span>
             </>

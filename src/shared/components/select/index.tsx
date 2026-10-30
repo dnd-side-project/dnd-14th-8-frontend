@@ -119,7 +119,7 @@ export function Select({
                 aria-selected={isSelected}
                 disabled={option.disabled}
                 className={cn(
-                  "flex w-full cursor-pointer items-center justify-between px-5 py-3 text-left text-b1 text-k-900 transition-colors",
+                  "textStyle_body1 flex w-full cursor-pointer items-center justify-between px-5 py-3 text-left text-k-900 transition-colors",
                   index > 0 && "border-k-50 border-t",
                   isSelected && "text-primary-main",
                 )}

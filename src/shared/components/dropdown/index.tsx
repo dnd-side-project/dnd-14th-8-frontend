@@ -13,7 +13,7 @@ export function Dropdown({ className, ...props }: DropdownProps) {
     >
       <select
         className={cn(
-          "h-[52px] w-full cursor-pointer appearance-none rounded-lg border border-transparent bg-k-50 pr-12 pl-4 text-b2 text-k-900 outline-none transition-colors invalid:text-k-500 [&::-ms-expand]:hidden [&>option[value='']]:text-k-500 [&>option]:text-k-900",
+          "textStyle_body2 h-[52px] w-full cursor-pointer appearance-none rounded-lg border border-transparent bg-k-50 pr-12 pl-4 text-k-900 outline-none transition-colors invalid:text-k-500 [&::-ms-expand]:hidden [&>option[value='']]:text-k-500 [&>option]:text-k-900",
           "focus:border-primary-main active:border-primary-main",
         )}
         data-slot="dropdown"

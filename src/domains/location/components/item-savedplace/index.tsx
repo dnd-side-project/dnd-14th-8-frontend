@@ -30,10 +30,10 @@ export function ItemSavedplace({
     >
       <div className="flex items-center gap-2">
         <Chip size="lg">{name}</Chip>
-        <span className="truncate text-k-900 text-t2">{location}</span>
+        <span className="textStyle_title3 truncate text-k-900">{location}</span>
       </div>
 
-      <p className="truncate text-b5 text-k-500">{address}</p>
+      <p className="textStyle_body5 truncate text-k-500">{address}</p>
 
       <div className="flex items-center justify-end gap-1">
         <ChipButton

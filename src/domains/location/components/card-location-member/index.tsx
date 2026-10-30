@@ -32,15 +32,19 @@ export function CardLocationMember({
       {...props}
     >
       <div className="min-w-0 flex-1">
-        <p className="mb-1 truncate text-k-800 text-t2">{name}</p>
+        <p className="textStyle_title3 mb-1 truncate text-k-800">{name}</p>
         <Chip size="md">{address}</Chip>
-        {/* <span className="inline-block rounded-[4px] bg-p-50 px-2 py-0.5 text-c1 text-primary-main">
+        {/* <span className="inline-block rounded-[4px] bg-p-50 px-2 py-0.5 textStyle_caption1 text-primary-main">
           {address}
         </span> */}
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <span
-          className={unreachable ? "text-b4 text-k-400" : "text-k-900 text-t2"}
+          className={
+            unreachable
+              ? "textStyle_body4 text-k-400"
+              : "textStyle_title3 text-k-900"
+          }
         >
           {unreachable ? "경로 없음" : formatDuration(durationMinutes)}
         </span>

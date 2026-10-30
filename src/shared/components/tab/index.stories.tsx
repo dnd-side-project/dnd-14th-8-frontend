@@ -53,12 +53,12 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
       <section className="space-y-2">
-        <p className="text-b2 text-k-400"># Case 1: 2 Tabs (Default)</p>
+        <p className="textStyle_body2 text-k-400"># Case 1: 2 Tabs (Default)</p>
         <Tab tabs={mockTabs} activeTabId="tab1" onTabChange={() => {}} />
       </section>
 
       <section className="space-y-2">
-        <p className="text-b2 text-k-400">
+        <p className="textStyle_body2 text-k-400">
           # Case 2: Transportation (With Icon)
         </p>
 

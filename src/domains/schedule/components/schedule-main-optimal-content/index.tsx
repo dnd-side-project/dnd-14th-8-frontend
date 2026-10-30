@@ -32,7 +32,9 @@ export function ScheduleMainOptimalContent() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="mb-2 text-b3 text-k-800">총 {results.length}개</div>
+      <div className="textStyle_body3 mb-2 text-k-800">
+        총 {results.length}개
+      </div>
       {visible.map((recommendation, index) => (
         <CardRecommended
           key={`${recommendation.scheduleDate}-${recommendation.startTime}-${recommendation.endTime}`}

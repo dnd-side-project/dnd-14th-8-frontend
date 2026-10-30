@@ -108,7 +108,9 @@ export const AllIcons: Story = {
             key={iconName}
           >
             <Icon aria-hidden color={color} height={size} width={size} />
-            <span className="text-c3 text-k-700">{toLabel(iconName)}</span>
+            <span className="textStyle_caption3 text-k-700">
+              {toLabel(iconName)}
+            </span>
           </li>
         ))}
       </ul>

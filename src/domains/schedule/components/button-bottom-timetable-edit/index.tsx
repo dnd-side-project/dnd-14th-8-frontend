@@ -23,7 +23,9 @@ export function ButtonBottomTimetableEdit({
         containerClassName,
       )}
     >
-      {description && <span className="text-b4 text-k-600">{description}</span>}
+      {description && (
+        <span className="textStyle_body4 text-k-600">{description}</span>
+      )}
       <ButtonBottom {...buttonProps}>{children}</ButtonBottom>
     </div>
   );

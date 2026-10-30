@@ -35,8 +35,8 @@ export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
             className={cn(
               "-mb-[1px] flex flex-1 cursor-pointer items-center justify-center gap-[1px] border-b-2 py-3 transition-colors",
               isActive
-                ? "border-primary-main text-primary-main text-t2"
-                : "border-transparent text-b1 text-k-400",
+                ? "textStyle_title3 border-primary-main text-primary-main"
+                : "textStyle_body1 border-transparent text-k-400",
             )}
           >
             {tab.icon && (

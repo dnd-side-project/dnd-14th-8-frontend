@@ -26,7 +26,10 @@ export function getCalendarClassNames({
       "relative flex h-11 items-center justify-start",
       defaultClassNames.month_caption,
     ),
-    caption_label: cn("text-k-700 text-t2", defaultClassNames.caption_label),
+    caption_label: cn(
+      "textStyle_title3 text-k-700",
+      defaultClassNames.caption_label,
+    ),
     nav: cn(
       "absolute top-[18px] right-[6px] z-1 flex -translate-y-1/2 items-center gap-1",
       defaultClassNames.nav,
@@ -39,7 +42,7 @@ export function getCalendarClassNames({
     ),
     weekdays: cn("h-11", defaultClassNames.weekdays),
     weekday: cn(
-      "h-11 p-0 text-center align-middle text-b4 text-k-500",
+      "textStyle_body4 h-11 p-0 text-center align-middle text-k-500",
       defaultClassNames.weekday,
     ),
     week: cn("h-11", defaultClassNames.week),
@@ -48,7 +51,7 @@ export function getCalendarClassNames({
       defaultClassNames.day,
     ),
     day_button: cn(
-      "relative z-1 mx-auto inline-flex size-10 cursor-pointer items-center justify-center rounded-lg p-0 text-b2 outline-none transition-colors focus:outline-none focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 disabled:cursor-default disabled:text-k-200 aria-disabled:cursor-default aria-disabled:text-k-200 group-data-[selected=true]/day:text-k-5",
+      "textStyle_body2 relative z-1 mx-auto inline-flex size-10 cursor-pointer items-center justify-center rounded-lg p-0 outline-none transition-colors focus:outline-none focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 disabled:cursor-default disabled:text-k-200 aria-disabled:cursor-default aria-disabled:text-k-200 group-data-[selected=true]/day:text-k-5",
       defaultClassNames.day_button,
     ),
     outside: defaultClassNames.outside,

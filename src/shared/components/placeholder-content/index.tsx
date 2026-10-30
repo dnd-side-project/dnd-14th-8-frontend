@@ -14,8 +14,8 @@ export function PlaceholderContent({
       <div className="flex flex-col items-center text-center">
         {graphic}
         <div className="mt-4 flex flex-col gap-3">
-          <p className="text-k-700 text-t1">{title}</p>
-          <p className="text-b4 text-k-500">{description}</p>
+          <p className="textStyle_title1 text-k-700">{title}</p>
+          <p className="textStyle_body4 text-k-500">{description}</p>
         </div>
       </div>
     </div>

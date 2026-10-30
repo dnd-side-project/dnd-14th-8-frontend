@@ -292,8 +292,10 @@ export function Timetable({
                   key={`header-${date.toISOString()}`}
                   className="flex h-[54px] flex-col items-center justify-center bg-k-5"
                 >
-                  <span className="text-b3 text-k-500">{getDayName(date)}</span>
-                  <span className="text-b3 text-k-700">
+                  <span className="textStyle_body3 text-k-500">
+                    {getDayName(date)}
+                  </span>
+                  <span className="textStyle_body3 text-k-700">
                     {getFormattedDate(date)}
                   </span>
                 </div>
@@ -335,7 +337,7 @@ export function Timetable({
                   {isHourStart && (
                     <span
                       className={cn(
-                        "absolute left-0 z-20 w-full bg-k-5 text-b3 text-k-500",
+                        "textStyle_body3 absolute left-0 z-20 w-full bg-k-5 text-k-500",
                         isFirstSlot ? "top-0" : "-top-2.5",
                       )}
                     >
@@ -344,7 +346,7 @@ export function Timetable({
                   )}
 
                   {isLastSlot && endTime % 1 === 0 && (
-                    <span className="absolute bottom-0 left-0 z-20 w-full bg-k-5 text-b3 text-k-500">
+                    <span className="textStyle_body3 absolute bottom-0 left-0 z-20 w-full bg-k-5 text-k-500">
                       {String(endTime)}
                     </span>
                   )}

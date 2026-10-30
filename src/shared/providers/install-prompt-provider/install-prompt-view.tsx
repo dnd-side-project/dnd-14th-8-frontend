@@ -41,8 +41,10 @@ export function InstallPromptView({
         />
 
         <div className="flex flex-col gap-1 break-keep pt-0.5">
-          <h2 className="text-k-900 text-t1">홈 화면에 모여락 추가하기</h2>
-          <p className="text-b2 text-k-600">
+          <h2 className="textStyle_title1 text-k-900">
+            홈 화면에 모여락 추가하기
+          </h2>
+          <p className="textStyle_body2 text-k-600">
             앱처럼 바로 열어서 모임 일정과 장소를 확인할 수 있어요
           </p>
         </div>
@@ -63,13 +65,13 @@ export function InstallPromptView({
       {mode === "guide" ? (
         <div className="px-5 pt-4 pb-7">
           <ol className="flex flex-col gap-2 rounded-xl bg-k-10 px-4 py-3.5">
-            <li className="flex items-center gap-2 break-keep text-b2 text-k-700">
+            <li className="textStyle_body2 flex items-center gap-2 break-keep text-k-700">
               <span className="text-k-900 text-t3">1</span>
               하단의 공유 버튼
               <ShareIcon className="size-4 shrink-0" aria-hidden="true" />를
               눌러주세요
             </li>
-            <li className="flex items-center gap-2 break-keep text-b2 text-k-700">
+            <li className="textStyle_body2 flex items-center gap-2 break-keep text-k-700">
               <span className="text-k-900 text-t3">2</span>
               <PlusIcon className="size-4 shrink-0" aria-hidden="true" />
               &lsquo;홈 화면에 추가&rsquo;를 선택해주세요

@@ -112,7 +112,7 @@ export function TextField({
   return (
     <div className={cn("flex w-full flex-col gap-2", className)}>
       {label && (
-        <label htmlFor={inputId} className="text-b3 text-k-900">
+        <label htmlFor={inputId} className="textStyle_body3 text-k-900">
           {label}
         </label>
       )}
@@ -132,7 +132,7 @@ export function TextField({
           id={inputId}
           autoComplete="off"
           className={cn(
-            "w-full bg-transparent px-4 py-4 text-b2 text-k-900 caret-primary-main outline-none",
+            "textStyle_body2 w-full bg-transparent px-4 py-4 text-k-900 caret-primary-main outline-none",
             "transition-all placeholder:text-k-400",
             hidePlaceholderOnFocus && "focus:placeholder:text-transparent",
             !!LeftIcon && "pl-2",
@@ -168,7 +168,7 @@ export function TextField({
       </div>
 
       {(helperText || maxLength) && (
-        <div className="flex justify-between px-1 text-c3">
+        <div className="textStyle_caption3 flex justify-between px-1">
           <span
             className={cn(
               isFocused && computedStatus !== "error"
