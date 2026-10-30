@@ -74,7 +74,7 @@ export function ShareSheetView({
         role="dialog"
       >
         <div className="flex items-center border-k-50 border-b px-5 py-3">
-          <h2 className="text-k-900 text-t1">공유하기</h2>
+          <h2 className="textStyle_title1 text-k-900">공유하기</h2>
           <IconButton
             icon={CloseIcon}
             size="lg"

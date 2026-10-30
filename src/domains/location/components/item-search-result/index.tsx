@@ -30,10 +30,10 @@ export function ItemSearchResult({
       )}
       {...props}
     >
-      <p className="truncate text-b1 text-k-750">
+      <p className="textStyle_body1 truncate text-k-750">
         {renderHighlighted(text, highlight)}
       </p>
-      <p className="truncate text-b5 text-k-500">{description}</p>
+      <p className="textStyle_body5 truncate text-k-500">{description}</p>
     </button>
   );
 }

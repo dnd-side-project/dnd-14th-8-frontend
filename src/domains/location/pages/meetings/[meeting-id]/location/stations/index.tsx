@@ -329,10 +329,10 @@ export function LocationMainPage() {
 
             <div className="flex items-end justify-between gap-3">
               <div>
-                <p className="text-h2 text-k-800">
+                <p className="textStyle_head3 text-k-800">
                   {selectedStation.stationName}
                 </p>
-                <p className="mt-0.5 text-h1 text-k-900">
+                <p className="textStyle_head1 mt-0.5 text-k-900">
                   평균{" "}
                   {formatDuration(
                     Math.round(selectedStation.avgTransitDuration),
@@ -342,21 +342,21 @@ export function LocationMainPage() {
 
               <button
                 type="button"
-                className="inline-flex items-center gap-0.5 text-b2 text-k-500"
+                className="textStyle_body2 inline-flex items-center gap-0.5 text-k-500"
               >
                 {formatDepartureDateTime(midpoint?.departureTime)}
                 <ChevronDownIcon className="size-5 text-k-400" />
               </button>
             </div>
 
-            <p className="text-b4 text-k-400">
+            <p className="textStyle_body4 text-k-400">
               {selectedStation.line} · 중심에서{" "}
               {selectedStation.distanceFromCenter}m
             </p>
 
             {isNearbyDepartures && <NearbyDeparturesNote />}
 
-            <p className="inline-flex items-center gap-1 text-b3 text-k-500">
+            <p className="textStyle_body3 inline-flex items-center gap-1 text-k-500">
               <MemberIcon className="size-4 text-k-500" />
               참여자{" "}
               <span className="text-primary-main">{registeredCount}</span>/

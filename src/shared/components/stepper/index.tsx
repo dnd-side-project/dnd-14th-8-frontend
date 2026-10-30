@@ -25,7 +25,7 @@ export function Stepper({
   return (
     <div className={cn("flex w-full flex-col gap-2", className)}>
       {label && (
-        <label htmlFor={id} className="text-b3 text-k-900">
+        <label htmlFor={id} className="textStyle_body3 text-k-900">
           {label}
         </label>
       )}
@@ -46,7 +46,7 @@ export function Stepper({
         <span
           id={id}
           role="spinbutton"
-          className="text-center text-b2 text-k-900"
+          className="textStyle_body2 text-center text-k-900"
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={value}

@@ -22,7 +22,7 @@ function GuideLegendItem({
   return (
     <span
       className={cn(
-        "inline-flex w-fit select-none items-center gap-1.5 text-b5 text-k-500",
+        "textStyle_body5 inline-flex w-fit select-none items-center gap-1.5 text-k-500",
         className,
       )}
       {...props}
@@ -56,7 +56,7 @@ export function GuideTimeSelection({
       data-slot="guide-time-selection"
       {...props}
     >
-      <p className="text-b4 text-k-600">{description}</p>
+      <p className="textStyle_body4 text-k-600">{description}</p>
       <div className="flex items-center gap-3">
         <GuideLegendItem checked={true}>{availableLabel}</GuideLegendItem>
         <GuideLegendItem checked={false}>{unavailableLabel}</GuideLegendItem>

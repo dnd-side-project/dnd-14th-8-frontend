@@ -24,19 +24,19 @@ function FilledSlot({
 }) {
   return (
     <div className={cn(SLOT_LAYOUT, "border border-k-100 bg-k-5 text-left")}>
-      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-p-50 text-c1 text-primary-main">
+      <span className="textStyle_caption1 grid size-9 shrink-0 place-items-center rounded-full bg-p-50 text-primary-main">
         {name.slice(0, 1)}
       </span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-1">
-          <span className="truncate text-k-800 text-t2">{name}</span>
+          <span className="textStyle_title3 truncate text-k-800">{name}</span>
           {isMine && (
-            <span className="shrink-0 rounded-[4px] bg-p-50 px-1.5 text-c1 text-primary-main">
+            <span className="textStyle_caption1 shrink-0 rounded-[4px] bg-p-50 px-1.5 text-primary-main">
               나
             </span>
           )}
         </p>
-        <p className="truncate text-b5 text-k-500">{location}</p>
+        <p className="textStyle_body5 truncate text-k-500">{location}</p>
       </div>
       <CheckIcon className="size-5 shrink-0 text-primary-main" />
     </div>
@@ -79,13 +79,13 @@ function EmptySlotButton({
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            "truncate text-t2",
+            "textStyle_title3 truncate",
             emphasized ? "text-primary-main" : "text-k-700",
           )}
         >
           {label}
         </p>
-        <p className="truncate text-b5 text-k-500">{hint}</p>
+        <p className="textStyle_body5 truncate text-k-500">{hint}</p>
       </div>
     </button>
   );
@@ -99,7 +99,7 @@ function WaitingSlot() {
       <span className="grid size-9 shrink-0 place-items-center rounded-full bg-k-50">
         <MemberIcon className="size-5 text-k-300" />
       </span>
-      <p className="truncate text-b4 text-k-400">친구를 기다리는 중</p>
+      <p className="textStyle_body4 truncate text-k-400">친구를 기다리는 중</p>
     </div>
   );
 }
@@ -179,7 +179,7 @@ export function InsufficientDeparturesEmptyState({
           aria-label="출발지 부족 안내 캐릭터"
           className="h-[72px] w-auto"
         />
-        <p className="mt-3 text-balance break-keep text-k-700 text-t1">
+        <p className="textStyle_title1 mt-3 text-balance break-keep text-k-700">
           {content.title}
         </p>
         <div className="mt-5 flex w-full flex-col gap-2">
@@ -195,7 +195,7 @@ export function InsufficientDeparturesEmptyState({
         {secondaryActionLabel && handleSecondaryAction && (
           <button
             type="button"
-            className="mt-4 cursor-pointer text-b3 text-k-500 underline-offset-2 hover:underline active:text-k-700"
+            className="textStyle_body3 mt-4 cursor-pointer text-k-500 underline-offset-2 hover:underline active:text-k-700"
             onClick={handleSecondaryAction}
           >
             {secondaryActionLabel}

@@ -30,7 +30,7 @@ export function ScheduleMainVoteParticipants({
         type="button"
         onClick={handleClickParticipantEdit}
         className={cn(
-          "flex items-center py-1 text-k-800 text-t2",
+          "textStyle_title3 flex items-center py-1 text-k-800",
           data?.isHost && "cursor-pointer",
         )}
       >

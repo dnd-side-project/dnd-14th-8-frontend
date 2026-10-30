@@ -33,20 +33,20 @@ export function CardTraffic({
     >
       {/* 상단: 출발지 → 도착지 + km */}
       <div className="mb-0.5 flex items-center justify-between">
-        <div className="flex items-center gap-0.5 text-b4 text-k-700">
+        <div className="textStyle_body4 flex items-center gap-0.5 text-k-700">
           <span className="truncate">{departure}</span>
           <ArrowRightIcon className="size-4 shrink-0 text-k-400" />
           <span className="truncate">{arrival}</span>
         </div>
         {distanceMeters != null && (
-          <span className="text-b4 text-primary-main">
+          <span className="textStyle_body4 text-primary-main">
             {formatDistance(distanceMeters)}
           </span>
         )}
       </div>
 
       {/* 메인: 소요 시간 */}
-      <p className="mb-4 text-h2 text-k-900">
+      <p className="textStyle_head3 mb-4 text-k-900">
         {formatDuration(durationMinutes)}
       </p>
 
@@ -55,8 +55,8 @@ export function CardTraffic({
           <Fragment key={guide.label}>
             {i !== 0 && <div className="h-2.5 w-px self-center bg-k-100" />}
             <div className="flex items-baseline justify-center gap-1">
-              <span className="text-b4 text-k-500">{guide.label}</span>
-              <span className="text-b4 text-k-700">{guide.value}</span>
+              <span className="textStyle_body4 text-k-500">{guide.label}</span>
+              <span className="textStyle_body4 text-k-700">{guide.value}</span>
             </div>
           </Fragment>
         ))}

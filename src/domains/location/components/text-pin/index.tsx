@@ -16,7 +16,7 @@ export function TextPin({ text, variant, className }: TextPinProps) {
           variant === "blue" ? "bg-primary-main" : "bg-k-800",
         )}
       >
-        <span className="whitespace-nowrap text-b3 text-k-5 leading-none">
+        <span className="textStyle_body3 whitespace-nowrap text-k-5 leading-none">
           {text}
         </span>
       </div>

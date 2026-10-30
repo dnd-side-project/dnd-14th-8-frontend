@@ -45,7 +45,7 @@ export function Toast({
         classNames: {
           ...toastOptions?.classNames,
           actionButton: cn(
-            "shrink-0 rounded-full bg-k-5 px-3 py-1.5 text-b4 text-k-800 transition-colors hover:bg-k-100",
+            "textStyle_body4 shrink-0 rounded-full bg-k-5 px-3 py-1.5 text-k-800 transition-colors hover:bg-k-100",
             toastOptions?.classNames?.actionButton,
           ),
           closeButton: cn(
@@ -58,13 +58,13 @@ export function Toast({
           ),
           icon: cn("size-5 shrink-0", toastOptions?.classNames?.icon),
           toast: cn(
-            "cn-toast inline-flex! items-center! w-fit! min-w-[min(320px,calc(100vw-40px))]! max-w-[calc(100vw-40px)]! gap-2! rounded-2xl! px-4! py-3! text-b4! text-k-5! shadow-none!",
+            "cn-toast inline-flex! items-center! textStyle_body4! w-fit! min-w-[min(320px,calc(100vw-40px))]! max-w-[calc(100vw-40px)]! gap-2! rounded-2xl! px-4! py-3! text-k-5! shadow-none!",
             "fixed! left-1/2! -translate-x-1/2!",
             "mb-[90px]!",
             toastOptions?.classNames?.toast,
           ),
           title: cn(
-            "min-w-0 whitespace-normal break-keep text-left text-b4 text-k-5 leading-[1.4]",
+            "textStyle_body4 min-w-0 whitespace-normal break-keep text-left text-k-5 leading-[1.4]",
             toastOptions?.classNames?.title,
           ),
         },
