@@ -93,6 +93,31 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - `textStyle_*` 뒤에 쓴 `leading-*`, `font-{weight}`는 그대로 덮어쓴다. 두 클래스 모두 Tailwind `utilities` 레이어에 있고 `textStyle_*`가 먼저 생성되기 때문이다.
 - 관리자 화면(`/admin`)은 Tailwind 기본 크기를 쓰는 내부 도구라 범위에서 뺐다.
 
+## 기초값: Colors
+
+팔레트 번호 색 클래스를 디자인 시스템 의미 토큰으로 바꾼다. 기존 회색(무채색 13단계)과 디자인 시스템 회색(푸른 회색 11단계)은 단계가 일대일로 맞지 않아, 대응표를 먼저 만들고 두 곳은 디자이너와 확정했다.
+
+요소에 따라 토큰 계열을 고른다. 페이지·섹션·시트처럼 넓은 배경은 `bg`, 카드·칩·입력칸처럼 독립된 면은 `fill`, 테두리와 구분선은 `stroke`, 글자와 아이콘은 `fg`다.
+
+| 기존 | 디자인 시스템 |
+| --- | --- |
+| `text-k-900` / `800` / `750`·`700` | `fg.neutral.stronger` / `strong` / `default` |
+| `text-k-600`·`500` | `fg.neutral.subtle` (디자이너 확정) |
+| `text-k-400` / `300`·`200` / `5` | `fg.neutral.subtler` / `subtlest` / `faintest` |
+| `text-primary-main` / `text-action-red` | `fg.brand.default` / `fg.negative.default` |
+| `bg-k-5` | 넓은 배경 `bg.neutral.default`, 독립된 면 `fill.neutral.faintest` |
+| `bg-k-10` / `50` / `200` / `800` | `fill.neutral.subtlest` / `subtler` / `subtle` / `default` |
+| `bg-k-100` (1px 구분선) | `stroke.neutral.subtle` |
+| `bg-p-50` / `bg-p-100` (눌림) / `bg-primary-main` | `fill.brand.subtle` / `subtle-pressed` / `default` |
+| `border-k-50` / `100` / `200` / `400` | `stroke.neutral.subtler` / `subtle` / `default` / `strong` |
+| `border-primary-main` / `border-p-300` / `border-action-red` | `stroke.brand.default` / `subtle` / `stroke.negative.default` |
+| `bg-k-900/70` / `bg-k-900/40` | `overlay.neutral.default` / `subtle` (디자이너 확정) |
+
+- `text-k-500`과 `text-k-600`이 같은 색(`#737a89`)이 된다. 디자이너의 서비스 UI 디자인과 일치하는 쪽으로 골랐다.
+- 위치 지도 화면의 바탕(`bg-k-10`)은 넓은 배경이지만 디자인 시스템 `bg`에 같은 밝기가 없어 `fill.neutral.subtlest`로 두었다. 지도에 가려 보이지 않는다.
+- 토스트는 서비스에서 색을 따로 정의하므로 디자인 시스템 Toast로 교체할 때 바꾼다. 그래서 `color-system.css`와 tailwind-merge의 팔레트 색 목록은 아직 남긴다. 관리자 화면(`/admin`)은 Tailwind 기본 색을 쓰는 내부 도구라 범위에서 뺐다.
+- `src/design-tokens-static.test.ts`가 토스트·관리자 화면 밖에서 팔레트 색 클래스, 팔레트 CSS 변수, 기존 글자 클래스가 다시 쓰이면 실패한다.
+
 ## 별도 화면 전환 단계
 
 다음 요소는 이번 공통 버튼 교체 범위와 별개로 화면 시안과 함께 전환한다.
@@ -104,7 +129,7 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 
 0.5.0에는 TextField·Stepper·Calendar 공개 export가 없어 기존 구현을 유지했다.
 Modal·Toast는 패키지에 존재하지만, 이번에는 버튼 교체에 필요한 부분만 적용한다.
-기존 color-system.css는 디자이너와 색상 대응표를 확정할 때까지 유지한다. font-system.css의 글자 토큰은 기초값 전환에서 지웠다.
+기존 color-system.css는 토스트를 디자인 시스템 Toast로 교체할 때까지 유지한다. 서비스 화면의 색과 글자는 기초값 전환에서 모두 디자인 시스템 토큰으로 바꿨다.
 
 ## 검증
 
