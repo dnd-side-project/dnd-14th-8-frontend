@@ -1,3 +1,4 @@
+import { Badge } from "@moyeorak/design-system";
 import { Empty1Character } from "@/assets/characters";
 import type {
   DepartureSlot,
@@ -38,9 +39,9 @@ function FilledSlot({
             {name}
           </span>
           {isMine && (
-            <span className="textStyle_caption1 shrink-0 rounded-[4px] bg-fill-brand-subtle px-1.5 text-fg-brand-default">
+            <Badge size="sm" variant="brand-weak" className="shrink-0">
               나
-            </span>
+            </Badge>
           )}
         </p>
         <p className="textStyle_body5 truncate text-fg-neutral-subtle">

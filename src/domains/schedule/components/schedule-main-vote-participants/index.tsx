@@ -1,5 +1,5 @@
+import { Badge } from "@moyeorak/design-system";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
-import { Chip } from "@/shared/components/chip";
 import { ChevronRightIcon, MemberIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
@@ -45,9 +45,14 @@ export function ScheduleMainVoteParticipants({
       {votedParticipantNames.length > 0 && (
         <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">
           {votedParticipantNames.map((name) => (
-            <Chip size="xl" key={name}>
+            <Badge
+              key={name}
+              size="md"
+              variant="neutral-weak"
+              className="shrink-0"
+            >
               {name}
-            </Chip>
+            </Badge>
           ))}
         </div>
       )}
