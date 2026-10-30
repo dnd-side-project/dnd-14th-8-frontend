@@ -1,4 +1,4 @@
-import { ActionArea, Button, Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header, Modal } from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
@@ -8,7 +8,6 @@ import {
   FixedBottomArea,
 } from "@/shared/components/fixed-bottom-area";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
-import { Modal } from "@/shared/components/modal";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
 import { TextField } from "@/shared/components/text-field";
 import { Timetable } from "@/shared/components/timetable";
@@ -19,6 +18,7 @@ export interface ScheduleVoteFormViewProps
   control: Control<ScheduleVoteFormValues>;
   canSubmit: boolean;
   endTime: number;
+  isExitConfirmOpen?: boolean;
   isPending?: boolean;
   isResetConfirmOpen?: boolean;
   isSubmitPending?: boolean;
@@ -27,7 +27,9 @@ export interface ScheduleVoteFormViewProps
   startTime: number;
   timetableDates: Date[];
   onBack: () => void;
+  onCancelExitConfirm: () => void;
   onCancelResetConfirm: () => void;
+  onConfirmExit: () => void;
   onConfirmReset: () => void;
   onReset: () => void;
   onSubmit: () => void;
@@ -39,13 +41,16 @@ export function ScheduleVoteFormView({
   className,
   control,
   endTime,
+  isExitConfirmOpen = false,
   isPending = false,
   isResetConfirmOpen = false,
   isSubmitPending = false,
   maxNameLength,
   title,
   onBack,
+  onCancelExitConfirm,
   onCancelResetConfirm,
+  onConfirmExit,
   onConfirmReset,
   onReset,
   onSubmit,
@@ -142,20 +147,25 @@ export function ScheduleVoteFormView({
       </FixedBottomArea>
 
       <Modal
-        isOpen={isResetConfirmOpen}
-        onClose={onCancelResetConfirm}
-        title="입력한 일정을 모두 지울까요?"
-        caption="입력한 내용이 모두 사라져요."
-        secondaryButton={{
-          label: "취소",
-          onClick: onCancelResetConfirm,
-          color: "gray",
-        }}
-        primaryButton={{
-          label: "초기화",
-          onClick: onConfirmReset,
-          color: "blue",
-        }}
+        open={isResetConfirmOpen}
+        onOpenChange={onCancelResetConfirm}
+        title="입력한 내용을 모두 삭제할까요?"
+        body="초기화 후에는 복구할 수 없어요"
+        mainLabel="초기화"
+        onMain={onConfirmReset}
+        alternativeLabel="취소"
+        onAlternative={onCancelResetConfirm}
+      />
+
+      <Modal
+        open={isExitConfirmOpen}
+        onOpenChange={onCancelExitConfirm}
+        title="저장하지 않고 나가시겠어요?"
+        body="입력하신 내용이 모두 사라져요"
+        mainLabel="나가기"
+        onMain={onConfirmExit}
+        alternativeLabel="취소"
+        onAlternative={onCancelExitConfirm}
       />
 
       <ReactHookFormDevtools control={control} />

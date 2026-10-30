@@ -1,4 +1,4 @@
-import { ActionArea, Button, Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header, Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -12,7 +12,6 @@ import {
 } from "@/domains/location/hooks/use-get-departures";
 import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { Modal } from "@/shared/components/modal";
 import { toast } from "@/shared/components/toast";
 
 export function DepartureListPage() {
@@ -101,20 +100,14 @@ export function DepartureListPage() {
       </section>
 
       <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
         title="해당 출발지를 삭제할까요?"
-        caption="삭제 후에는 복구할 수 없어요."
-        secondaryButton={{
-          label: "취소",
-          color: "gray",
-          onClick: () => setIsDeleteModalOpen(false),
-        }}
-        primaryButton={{
-          label: "삭제하기",
-          color: "blue",
-          onClick: handleDelete,
-        }}
+        body="삭제 후에는 복구할 수 없어요"
+        mainLabel="삭제"
+        onMain={handleDelete}
+        alternativeLabel="취소"
+        onAlternative={() => setIsDeleteModalOpen(false)}
       />
     </MobileLayout>
   );
