@@ -5,11 +5,7 @@ import { ItemSavedplace } from "@/domains/location/components/item-savedplace";
 import { StationBadges } from "@/domains/location/components/station-badges";
 import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
 import { ButtonBottom } from "@/shared/components/button-bottom";
-import { IconButton } from "@/shared/components/icon-button";
-
-function TestIcon() {
-  return <svg aria-hidden="true" />;
-}
+import { Calendar } from "@/shared/components/calendar";
 
 describe("design system migration contracts", () => {
   it("keeps ordinary actions out of native form submission", () => {
@@ -60,19 +56,10 @@ describe("design system migration contracts", () => {
     expect(markup).toMatch(/aria-pressed="true"[^>]*>서울역</);
     expect(markup).toMatch(/aria-pressed="false"[^>]*>강남역</);
   });
-  it("preserves the accessible name and disabled state of icon actions", () => {
-    const markup = renderToStaticMarkup(
-      <IconButton
-        aria-label="입력 지우기"
-        icon={TestIcon}
-        size="xl"
-        iconSize="sm"
-        disabled
-      />,
-    );
-    expect(markup).toContain('aria-label="입력 지우기"');
-    expect(markup).toContain('disabled=""');
-    expect(markup.match(/<button/g)).toHaveLength(1);
+  it("names the calendar navigation icon buttons", () => {
+    const markup = renderToStaticMarkup(<Calendar />);
+    expect(markup).toMatch(/<button[^>]*aria-label="이전 달"/);
+    expect(markup).toMatch(/<button[^>]*aria-label="다음 달"/);
   });
   it("renders the page title as h1 with back and reset actions outside form submission", () => {
     const markup = renderToStaticMarkup(

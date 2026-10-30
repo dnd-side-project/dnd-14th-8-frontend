@@ -1,6 +1,5 @@
-import { Badge } from "@moyeorak/design-system";
+import { Badge, Icon } from "@moyeorak/design-system";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
-import { ChevronRightIcon, MemberIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export function ScheduleMainVoteParticipants({
@@ -34,13 +33,11 @@ export function ScheduleMainVoteParticipants({
           data?.isHost && "cursor-pointer",
         )}
       >
-        <MemberIcon className="size-5" />
+        <Icon type="member" size="sm" />
         <span className="mr-0.5">참여자</span>
         <span className="text-fg-brand-default">{votedParticipantCount}</span>
         <span className="mr-0.5">/{participantCount}</span>
-        {data?.isHost && (
-          <ChevronRightIcon className="size-4 text-fg-neutral-subtler" />
-        )}
+        {data?.isHost && <Icon type="chevron_right" size="xs" variant="weak" />}
       </button>
       {votedParticipantNames.length > 0 && (
         <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">

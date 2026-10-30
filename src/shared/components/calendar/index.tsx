@@ -1,11 +1,10 @@
+import { Icon, IconButton } from "@moyeorak/design-system";
 import { format } from "date-fns";
 import type { Locale } from "date-fns/locale";
 import { ko } from "date-fns/locale";
 import { type ComponentProps, useId } from "react";
 import type { Matcher, PropsBase } from "react-day-picker";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
-import { IconButton } from "@/shared/components/icon-button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 import { getCalendarClassNames } from "./class-names";
 import { useCalendarSelection } from "./use-calendar-selection";
@@ -33,7 +32,7 @@ function toMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
-function createCalendarNavButton(icon: typeof ChevronLeftIcon) {
+function createCalendarNavButton(icon: "chevron_left" | "chevron_right") {
   return function CalendarNavButton({
     className,
     type = "button",
@@ -42,26 +41,21 @@ function createCalendarNavButton(icon: typeof ChevronLeftIcon) {
     return (
       <IconButton
         {...props}
-        aria-label={
-          props["aria-label"] ??
-          (icon === ChevronLeftIcon ? "이전 달" : "다음 달")
-        }
-        size="md"
-        background="square"
-        backgroundSize="sm"
-        icon={icon}
-        iconSize="lg"
-        iconClassName="relative z-1"
+        // react-day-picker가 넘기는 영어 이름("Go to the Previous Month") 대신 한국어 이름을 쓴다.
+        aria-label={icon === "chevron_left" ? "이전 달" : "다음 달"}
+        size="sm"
+        variant="clear"
         type={type}
-        variant="subtle"
         className={className}
-      />
+      >
+        <Icon type={icon} size="md" className="relative z-1" />
+      </IconButton>
     );
   };
 }
 
-const CalendarNextMonthButton = createCalendarNavButton(ChevronRightIcon);
-const CalendarPreviousMonthButton = createCalendarNavButton(ChevronLeftIcon);
+const CalendarNextMonthButton = createCalendarNavButton("chevron_right");
+const CalendarPreviousMonthButton = createCalendarNavButton("chevron_left");
 
 export function Calendar({
   className,

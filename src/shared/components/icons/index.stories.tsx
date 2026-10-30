@@ -38,7 +38,7 @@ const meta = {
   ],
   parameters: { layout: "centered" },
   args: {
-    iconName: "CalendarIcon",
+    iconName: "MemberIcon",
     size: 20,
     color: "var(--colors-fg-neutral-strong)",
   },
@@ -98,7 +98,7 @@ export const ColorVariants: Story = {
       </div>
     );
   },
-  args: { iconName: "CalendarIcon", size: 20 },
+  args: { iconName: "MemberIcon", size: 20 },
   argTypes: {
     color: { table: { disable: true } },
   },

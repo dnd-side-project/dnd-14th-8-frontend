@@ -16,8 +16,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.2(react@19.2.3))
       '@moyeorak/design-system':
-        specifier: 0.6.2
-        version: 0.6.2(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)
+        specifier: 0.7.0
+        version: 0.7.0(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.3)
@@ -1594,8 +1594,8 @@ packages:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@moyeorak/design-system@0.6.2':
-    resolution: {integrity: sha512-fd4kIkB5ToypvPn0jUpAHmxYFPMZhPUTavxU3/a0pfoyzoN/FwNRYri81j07Np2top3pnId/n2w6WfsCBoHTmA==}
+  '@moyeorak/design-system@0.7.0':
+    resolution: {integrity: sha512-EtEs+5AHiYrAZDK0aV4P1ERK0PilJV3lmGW8QtDuOntJ0uCCV8tqz4aK/10ySg/EW3xf/ISd76OST4vlWASs9A==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -5806,7 +5806,7 @@ snapshots:
       '@types/react': 19.2.9
       react: 19.2.3
 
-  '@moyeorak/design-system@0.6.2(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)':
+  '@moyeorak/design-system@0.7.0(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)':
     dependencies:
       '@radix-ui/react-dialog': 1.3.1(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@radix-ui/react-slot': 1.5.0(@types/react@19.2.9)(react@19.2.3)

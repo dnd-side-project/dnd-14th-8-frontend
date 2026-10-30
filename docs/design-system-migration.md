@@ -2,12 +2,12 @@
 
 ## 기준
 
-- 배포 패키지: `@moyeorak/design-system@0.6.2` (정확한 버전 고정)
+- 배포 패키지: `@moyeorak/design-system@0.7.0` (정확한 버전 고정)
 - 소스: https://github.com/meteorqz6/moyeorakui
 - 컴포넌트와 의미 토큰은 npm 패키지에서 가져온다. 소스 복사나 서비스 내 토큰 재정의는 하지 않는다.
 - 기존 Tailwind v4를 유지한다. 서비스에 Panda codegen은 추가하지 않는다.
 - CSS 진입점에서 layers.css를 가장 먼저 불러오고 Tailwind 플러그인과 styles.css를 함께 로드한다.
-- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.6.2를 고정한다. 다른 패키지의 대기 정책은 유지한다.
+- 직접 관리하는 새 패키지를 바로 사용하기 위해 minimumReleaseAgeExclude에 해당 패키지 이름만 추가했다. 현재 pnpm 10.17은 버전별 예외를 지원하지 않아 package.json에서 0.7.0을 고정한다. 다른 패키지의 대기 정책은 유지한다.
 
 ## 1차: 서비스 공통 버튼
 
@@ -156,6 +156,24 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 가로 스크롤 줄에 놓이는 칩과 Badge에는 `shrink-0`을 준다. 디자인 시스템 컴포넌트는 줄어들지 않게 막아 두지 않았다.
 - 선택 칩과 액션은 어댑터가 하던 것과 같아 모양이 그대로다. 어댑터가 붙이던 브랜드 포커스 링은 3차와 같이 빠지고, 키보드 포커스에는 브라우저 기본 outline이 보인다.
 - 라벨은 Badge 규격으로 바뀐다. 일정 메인의 참여자 이름은 시안대로 흰 배경에 테두리가 있는 outline이 되고, 여백이 작아진다(좌우 12 → 8px). 출발지 목록의 참여자 이름은 글자가 `fg.neutral.subtle`로 연해진다. 출발지 카드 주소는 배경이 `fill.brand.subtler`로 연해지고 글자가 500으로 굵어진다.
+
+## 6차: Icon
+
+모임 일정 흐름과 공통 컴포넌트의 서비스 아이콘을 디자인 시스템 `Icon`으로 바꾸고, 아이콘을 받던 서비스 `IconButton` 어댑터를 지운다. 장소 조율 화면의 아이콘은 장소 조율을 점검할 때 다룬다.
+
+| 서비스 아이콘 | 디자인 시스템 Icon |
+| --- | --- |
+| ChevronRight, ChevronLeft, ChevronDown, ChevronUp | `chevron_right`, `chevron_left`, `chevron_down`, `chevron_up` |
+| Member | `member` |
+| Available, Unavailable | `valid`, `invalid` (색이 고정된 Semantic 아이콘) |
+| Close | `x_circle` |
+
+- 크기는 디자인 시스템 단계(16px `xs`, 20px `sm`, 24px `md`, 32px `lg`)로, 색은 `variant`로 맞춘다. `variant`가 없으면 부모의 글자 색을 따른다. 디자인 시스템 `Button`, `IconButton` 안의 아이콘은 `variant` 없이 버튼 색을 따른다.
+- 아이콘 버튼은 디자인 시스템 `IconButton` 규격을 그대로 쓴다. 시트 닫기(시간표 수정, 공유, 설치 안내)는 `sm`(36px)에 24px `x_circle`, 입력칸 지우기는 `md`(48px)에 24px `x_circle`, 달력 이동은 `sm`에 24px chevron이다.
+- 달력 이동 버튼은 react-day-picker가 넘기는 영어 이름 대신 "이전 달", "다음 달"을 쓴다.
+- 인원 선택은 스테퍼에서 `Chip` 가로 스크롤(2명부터 20명)로 바꿨다(`ParticipantCountChips`). 모임 인원 수정에서 현재 인원보다 적은 칩은 `aria-disabled`로 비활성처럼 보이고, 누르면 이유를 토스트로 알린다.
+- 설치 안내의 공유, 추가 아이콘은 iOS 시스템 버튼 모양을 보여 주는 안내라 서비스 아이콘을 유지한다. 장소 조율에서만 쓰는 아이콘도 서비스 아이콘으로 남아 있다.
+- 디자인 시스템 `Icon`은 `aria-hidden`을 받지 않는다. 아이콘은 버튼 이름이나 옆 글자와 함께 쓰여 따로 읽힐 필요가 없다.
 
 ## 별도 화면 전환 단계
 

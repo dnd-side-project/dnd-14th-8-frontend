@@ -1,11 +1,6 @@
+import { Icon } from "@moyeorak/design-system";
 import type { HTMLAttributes, MouseEvent } from "react";
 import { useId, useState } from "react";
-import {
-  AvailableIcon,
-  ChevronDownIcon,
-  MemberIcon,
-  UnavailableIcon,
-} from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface CardRecommendedProps extends HTMLAttributes<HTMLDivElement> {
@@ -95,7 +90,7 @@ export function CardRecommended({
         </div>
         <div className="flex shrink-0 items-center gap-2.5">
           <p className="textStyle_body1 inline-flex items-center gap-0.5">
-            <MemberIcon className="size-5 shrink-0 text-fg-brand-default" />
+            <Icon type="member" size="sm" variant="brand" />
             <span className="textStyle_body4">
               <span className="text-fg-brand-default">{voteCount}</span>
               <span className="text-fg-neutral-default">
@@ -103,9 +98,12 @@ export function CardRecommended({
               </span>
             </span>
           </p>
-          <ChevronDownIcon
+          <Icon
+            type="chevron_down"
+            size="sm"
+            variant="default"
             className={cn(
-              "size-5 shrink-0 text-fg-neutral-subtle transition-transform duration-200 ease-out",
+              "transition-transform duration-200 ease-out",
               isExpanded ? "rotate-180" : "rotate-0",
             )}
           />
@@ -127,7 +125,7 @@ export function CardRecommended({
           >
             <div>
               <p className="textStyle_body4 mb-2 inline-flex items-center text-fg-neutral-stronger">
-                <AvailableIcon className="size-5 shrink-0 text-fg-brand-default" />
+                <Icon type="valid" size="sm" />
                 참여가능({availableCount})
               </p>
               <p className="textStyle_body4 rounded-sm bg-fill-brand-subtle px-4 py-3 text-fg-brand-default">
@@ -136,7 +134,7 @@ export function CardRecommended({
             </div>
             <div>
               <p className="textStyle_body4 mb-2 inline-flex items-center text-fg-neutral-default">
-                <UnavailableIcon className="size-5 shrink-0 text-fg-neutral-default" />
+                <Icon type="invalid" size="sm" />
                 참여불가({unavailableCount})
               </p>
               <p className="textStyle_body4 rounded-sm bg-fill-neutral-subtler px-4 py-3 text-fg-neutral-default">
