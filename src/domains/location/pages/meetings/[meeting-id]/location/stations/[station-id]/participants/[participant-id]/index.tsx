@@ -1,3 +1,4 @@
+import { Chip } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import {
   useNavigate,
@@ -23,7 +24,6 @@ import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[me
 import { formatDepartureDateTime } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import { ButtonBottom } from "@/shared/components/button-bottom";
-import { ChipButton } from "@/shared/components/chip-button";
 import {
   CarIcon,
   ChevronDownIcon,
@@ -182,14 +182,16 @@ export function RouteDetailPage() {
 
             <div className="scrollbar-hide flex gap-2 overflow-x-auto">
               {recommendations.map((station) => (
-                <ChipButton
+                <Chip
                   key={station.stationId}
-                  size="lg"
+                  shape="pill"
+                  pressed={station.stationId === selectedStation?.stationId}
                   variant={
                     station.stationId === selectedStation?.stationId
-                      ? "midpointSelected"
-                      : "midpoint"
+                      ? "brand"
+                      : "neutral-weak"
                   }
+                  className="shrink-0"
                   onClick={() =>
                     navigate(
                       `/meetings/${meetingId}/location/stations/${station.stationId}/participants/${participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${activeTab}`,
@@ -198,7 +200,7 @@ export function RouteDetailPage() {
                   }
                 >
                   {station.stationName}
-                </ChipButton>
+                </Chip>
               ))}
             </div>
 

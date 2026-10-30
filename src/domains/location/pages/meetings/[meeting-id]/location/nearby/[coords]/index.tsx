@@ -1,3 +1,4 @@
+import { Chip } from "@moyeorak/design-system";
 import { useEffect } from "react";
 import {
   useNavigate,
@@ -7,7 +8,6 @@ import {
 } from "react-router";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardFacility } from "@/domains/location/components/card-facility";
-import { ChipButtonWithIcon } from "@/domains/location/components/chip-button-with-icon";
 import {
   FacilityPinDefault,
   type FacilityType,
@@ -210,15 +210,16 @@ export function NearbySearchPage() {
         <div className="flex flex-col gap-4 px-5 pb-6">
           <div className="scrollbar-hide flex gap-2 overflow-x-auto">
             {categoryPlacesList.map((categoryPlaces) => (
-              <ChipButtonWithIcon
+              <Chip
                 key={categoryPlaces.category}
-                icon={categoryToIcon(categoryPlaces.category)}
-                status={
+                shape="pill"
+                pressed={categoryPlaces.category === selectedCategory}
+                variant={
                   categoryPlaces.category === selectedCategory
-                    ? "selected"
-                    : "unselected"
+                    ? "brand"
+                    : "neutral-weak"
                 }
-                shadow="on"
+                className="shrink-0 gap-1 shadow-[var(--shadows-strong)]"
                 onClick={() => {
                   const next = new URLSearchParams(searchParams);
                   next.set(
@@ -228,8 +229,11 @@ export function NearbySearchPage() {
                   setSearchParams(next, { replace: true });
                 }}
               >
+                <span aria-hidden className="inline-flex shrink-0">
+                  {categoryToIcon(categoryPlaces.category)}
+                </span>
                 {categoryPlaces.category}
-              </ChipButtonWithIcon>
+              </Chip>
             ))}
           </div>
 

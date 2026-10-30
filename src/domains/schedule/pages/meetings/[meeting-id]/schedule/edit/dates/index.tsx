@@ -1,4 +1,4 @@
-import { Modal } from "@moyeorak/design-system";
+import { Chip, Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -12,7 +12,6 @@ import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting
 import { useUpdateSchedulePoll } from "@/domains/schedule/hooks/use-update-schedule-poll";
 import { areDatesEqual, timeOptions } from "@/domains/schedule/utils/date";
 import { Calendar } from "@/shared/components/calendar";
-import { ChipButton } from "@/shared/components/chip-button";
 import { Dropdown, DropdownOption } from "@/shared/components/dropdown";
 import { IconButton } from "@/shared/components/icon-button";
 import { CloseIcon } from "@/shared/components/icons";
@@ -169,13 +168,14 @@ export function ScheduleEditDatesPage() {
               </div>
               <div className="mt-5 mb-20 flex justify-start gap-2">
                 {DATE_PRESETS.map((preset) => (
-                  <ChipButton
+                  <Chip
                     key={preset.label}
-                    size="md"
+                    shape="square"
+                    pressed={areDatesEqual(selectedDates, preset.dates)}
                     variant={
                       areDatesEqual(selectedDates, preset.dates)
-                        ? "selected"
-                        : "outlined"
+                        ? "outlined-brand"
+                        : "neutral-weak"
                     }
                     onClick={() => {
                       setSelectedDates(preset.dates);
@@ -183,7 +183,7 @@ export function ScheduleEditDatesPage() {
                     }}
                   >
                     {preset.label}
-                  </ChipButton>
+                  </Chip>
                 ))}
               </div>
             </div>
@@ -217,20 +217,23 @@ export function ScheduleEditDatesPage() {
               </div>
               <div className="mt-5 mb-20 flex justify-start gap-2">
                 {TIME_PRESETS.map((preset) => (
-                  <ChipButton
+                  <Chip
                     key={preset.label}
-                    size="lg"
+                    shape="square"
+                    pressed={
+                      startTime === preset.start && endTime === preset.end
+                    }
                     variant={
                       startTime === preset.start && endTime === preset.end
-                        ? "selected"
-                        : "outlined"
+                        ? "outlined-brand"
+                        : "neutral-weak"
                     }
                     onClick={() =>
                       handleTimePresetClick(preset.start, preset.end)
                     }
                   >
                     {preset.label}
-                  </ChipButton>
+                  </Chip>
                 ))}
               </div>
             </div>
