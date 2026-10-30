@@ -2,13 +2,13 @@ import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { ParticipantCountChips } from "@/domains/meeting/components/participant-count-chips";
 import { useUpdateMeeting } from "@/domains/meeting/hooks/use-update-meeting";
 import {
   getMeetingSchedulesQueryKey,
   useGetMeetingSchedules,
 } from "@/domains/schedule/hooks/use-get-meeting-schedules";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { Stepper } from "@/shared/components/stepper";
 import { toast } from "@/shared/components/toast";
 import { getGuestId } from "@/shared/utils/auth";
 
@@ -77,16 +77,15 @@ export function MeetingEditParticipantsPage() {
           onBack={() => navigate(`/meetings/${currentMeetingId}/schedule`)}
         />
 
-        <Stepper
-          label="인원"
+        <ParticipantCountChips
           value={count}
-          onChange={(newValue) => {
-            if (newValue < initialCount) {
-              toast.error("현재 참여 인원보다 적게 설정할 수 없어요");
-              return;
-            }
-            setCount(newValue);
-          }}
+          onChange={setCount}
+          selectableMin={initialCount}
+          onBlockedSelect={() =>
+            toast.error("현재 참여 인원보다 적게 설정할 수 없어요", {
+              id: "participant-count-min",
+            })
+          }
         />
 
         <ActionArea

@@ -1,9 +1,9 @@
 import { ActionArea, Button, Header } from "@moyeorak/design-system";
 import { Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
+import { ParticipantCountChips } from "@/domains/meeting/components/participant-count-chips";
 import { useCreateMeetingForm } from "@/domains/meeting/hooks/use-create-meeting-form";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { Stepper } from "@/shared/components/stepper";
 import { TextField } from "@/shared/components/text-field";
 
 export function NewMeetingPage() {
@@ -54,8 +54,7 @@ export function NewMeetingPage() {
           control={control}
           name="participantCount"
           render={({ field }) => (
-            <Stepper
-              label="인원"
+            <ParticipantCountChips
               value={field.value}
               onChange={field.onChange}
               className="mt-6"
