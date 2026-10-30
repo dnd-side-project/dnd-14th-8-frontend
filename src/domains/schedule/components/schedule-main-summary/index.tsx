@@ -80,7 +80,7 @@ export function ScheduleMainSummaryContent({
             className="shrink-0"
             onClick={onEditSchedule}
           >
-            선택범위 수정
+            시간표 수정
           </Button>
         )}
       </div>

@@ -29,7 +29,7 @@ export const Playground: Story = {
         <Button
           size="sm"
           variant="brand"
-          onClick={() => toast.success("클립보드에 복사되었어요")}
+          onClick={() => toast.success("링크가 복사되었어요")}
         >
           완료
         </Button>

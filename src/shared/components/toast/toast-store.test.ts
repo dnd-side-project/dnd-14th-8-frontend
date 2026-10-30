@@ -6,7 +6,7 @@ describe("createToastStore", () => {
     const store = createToastStore();
 
     store.success("출발지가 추가되었어요");
-    store.error("출발지 추가에 실패했어요. 다시 시도해주세요");
+    store.error("출발지를 추가하지 못했어요. 다시 시도해주세요");
     store.message("일정 추가하기를 눌러 가능한 시간을 입력해주세요");
 
     expect(store.getSnapshot().map((item) => item.variant)).toEqual([

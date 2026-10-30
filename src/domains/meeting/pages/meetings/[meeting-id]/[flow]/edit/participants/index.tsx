@@ -59,7 +59,7 @@ export function MeetingEditParticipantsPage() {
           toast.success("모임 인원이 수정되었어요");
         },
         onError: () => {
-          toast.error("모임 인원 수정에 실패했어요. 다시 시도해주세요");
+          toast.error("모임 인원을 수정하지 못했어요. 다시 시도해주세요");
         },
       },
     );

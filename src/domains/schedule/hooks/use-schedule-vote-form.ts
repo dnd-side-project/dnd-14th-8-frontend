@@ -37,7 +37,7 @@ const scheduleVoteFormSchema = z.object({
     .trim()
     .min(1, "이름을 입력해주세요")
     .max(NAME_MAX_LENGTH, "최대 4자까지 입력할 수 있어요"),
-  selectedDates: z.array(z.date()).min(1, "입력된 일정이 없어요"),
+  selectedDates: z.array(z.date()).min(1, "가능한 시간을 선택해주세요"),
 });
 
 export type ScheduleVoteFormValues = z.infer<typeof scheduleVoteFormSchema>;
@@ -232,7 +232,7 @@ export function useScheduleVoteForm() {
     const currentName = getValues("name");
     reset({ name: currentName, selectedDates: [] });
     void trigger();
-    toast.success("시간표가 초기화되었어요");
+    toast.success("입력한 일정이 초기화되었어요");
   };
 
   const handleBack = () => {
@@ -255,7 +255,7 @@ export function useScheduleVoteForm() {
       return;
     }
 
-    toast.error(errors.selectedDates?.message ?? "입력된 일정이 없어요");
+    toast.error(errors.selectedDates?.message ?? "가능한 시간을 선택해주세요");
   };
 
   return {
