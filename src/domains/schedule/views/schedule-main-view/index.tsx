@@ -1,7 +1,9 @@
 import type { HTMLAttributes } from "react";
+import type { MeetingPermissions } from "@/domains/meeting/utils/meeting-permissions";
 import { ScheduleMainOptimalContent } from "@/domains/schedule/components/schedule-main-optimal-content";
 import { ScheduleMainSummary } from "@/domains/schedule/components/schedule-main-summary";
 import { ScheduleMainVoteContent } from "@/domains/schedule/components/schedule-main-vote-content";
+import { getScheduleMainAction } from "@/domains/schedule/utils/schedule-main-action";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import {
   FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING,
@@ -17,7 +19,7 @@ export interface ScheduleMainViewProps extends HTMLAttributes<HTMLDivElement> {
   meetingId: string;
   tab: "optimal" | "vote";
   hasExistingVote: boolean;
-  isHost: boolean;
+  permissions: MeetingPermissions;
   onVoteAction: () => void;
   onEditSchedule: () => void;
   onParticipantEdit: () => void;
@@ -29,7 +31,7 @@ export function ScheduleMainView({
   className,
   meetingId,
   hasExistingVote,
-  isHost,
+  permissions,
   onVoteAction,
   onEditSchedule,
   onParticipantEdit,
@@ -40,23 +42,15 @@ export function ScheduleMainView({
 }: ScheduleMainViewProps) {
   const { share } = useShareSheet();
 
-  // 3. 버튼 텍스트 및 액션 결정 로직
-  const getButtonConfig = () => {
-    // 최적일정 탭이면서 모임장인 경우
-    if (tab === "optimal" && isHost) {
-      return {
-        text: "장소 정하러 가기",
-        action: onGoToLocation ?? onVoteAction,
-      };
-    }
-    // 그 외
-    return {
-      text: hasExistingVote ? "일정 수정하기" : "일정 추가하기",
-      action: onVoteAction,
-    };
-  };
-
-  const { text, action } = getButtonConfig();
+  const mainAction = getScheduleMainAction({
+    tab,
+    hasExistingVote,
+    permissions,
+  });
+  const handleMainAction =
+    mainAction.type === "confirm"
+      ? (onGoToLocation ?? onVoteAction)
+      : onVoteAction;
 
   // 메인 시간표는 읽기 전용이라, 칸을 누르면 하단 버튼으로 안내만 한다.
   const showVoteGuide = () => {
@@ -78,7 +72,7 @@ export function ScheduleMainView({
     >
       <ScheduleMainSummary
         meetingId={meetingId}
-        isHost={isHost}
+        canEditRange={permissions.canEditRange}
         onEditSchedule={onEditSchedule}
       />
 
@@ -111,8 +105,11 @@ export function ScheduleMainView({
       </section>
 
       <FixedBottomArea floating={<FloatingScrollTop top={4} />}>
-        <BottomActionBarWithButtonAndShare onClick={action} onShare={share}>
-          {text}
+        <BottomActionBarWithButtonAndShare
+          onClick={handleMainAction}
+          onShare={share}
+        >
+          {mainAction.label}
         </BottomActionBarWithButtonAndShare>
       </FixedBottomArea>
     </div>

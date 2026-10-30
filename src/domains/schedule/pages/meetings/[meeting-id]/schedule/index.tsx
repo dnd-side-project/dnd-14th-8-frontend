@@ -1,6 +1,7 @@
 import { Modal } from "@moyeorak/design-system";
 import { useMemo, useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
+import { useMeetingPermissions } from "@/domains/meeting/hooks/use-meeting-permissions";
 import { useConfirmSchedulePoll } from "@/domains/schedule/hooks/use-confirm-schedule-poll";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { normalizeScheduleVoteId } from "@/domains/schedule/utils/schedule-vote";
@@ -21,7 +22,7 @@ export function ScheduleMainPage() {
   const hasExistingVote =
     normalizeScheduleVoteId(myParticipantQuery.data?.scheduleVoteId) !==
     undefined;
-  const isHost = !!myParticipantQuery.data?.isHost;
+  const { permissions } = useMeetingPermissions(meetingId);
 
   const tab = useMemo(
     () => (searchParams.get("tab") === "optimal" ? "optimal" : "vote"),
@@ -55,7 +56,7 @@ export function ScheduleMainPage() {
         meetingId={meetingId}
         tab={tab}
         hasExistingVote={hasExistingVote}
-        isHost={isHost}
+        permissions={permissions}
         onVoteAction={() => navigate(`/meetings/${meetingId}/schedule/votes`)}
         onEditSchedule={() => navigate("edit/dates")}
         onParticipantEdit={() =>
