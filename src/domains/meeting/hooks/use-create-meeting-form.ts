@@ -63,7 +63,7 @@ export function useCreateMeetingForm(flow?: string) {
       navigate(targetPath);
     } catch (error) {
       console.error("모임 생성 실패:", error);
-      toast.error("모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.");
+      toast.error("모임 생성에 실패했어요. 다시 시도해주세요");
     }
   });
 
