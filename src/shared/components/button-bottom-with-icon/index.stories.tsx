@@ -1,11 +1,11 @@
+import { Icon } from "@moyeorak/design-system";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ButtonBottomWithIcon } from "@/shared/components/button-bottom-with-icon";
-import { PlaceholderIcon } from "@/shared/components/icons";
 
 const meta = {
   title: "shared/ButtonBottomWithIcon",
   component: ButtonBottomWithIcon,
-  args: { children: "Button", icon: <PlaceholderIcon /> },
+  args: { children: "Button", icon: <Icon type="blank" size="xs" /> },
   argTypes: { icon: { control: false } },
   decorators: [
     (Story) => (
@@ -25,7 +25,7 @@ export const Playground: Story = {};
 
 export const States: Story = {
   render: () => {
-    const icon = <PlaceholderIcon />;
+    const icon = <Icon type="blank" size="xs" />;
     return (
       <div className="flex w-full flex-col gap-2">
         <ButtonBottomWithIcon icon={icon} id="icon-default">
