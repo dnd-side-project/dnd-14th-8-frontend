@@ -4,12 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const srcDir = join(process.cwd(), "src");
 
-// 토스트는 디자인 시스템 Toast로 교체할 때, 관리자 화면은 범위 밖이라 기존 체계를 유지한다.
-const allowed = [
-  "src/domains/admin/",
-  "src/shared/components/toast/index.tsx",
-  "src/shared/utils/tw-merge.ts",
-];
+// 관리자 화면은 Tailwind 기본 색을 쓰는 내부 도구라 범위에서 뺀다.
+const allowed = ["src/domains/admin/"];
 
 const legacyColorClass =
   /(?<![\w-])(?:[\w[\]&-]+:)*(?:text|bg|border(?:-[trblxy])?|caret|fill|stroke|ring|outline|divide)-(?:k-\d+|p-\d+|primary-main|sub-main|action-(?:red|green))(?![\w-])/g;

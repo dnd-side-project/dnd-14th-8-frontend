@@ -6,7 +6,6 @@
 @import "@moyeorak/design-system/styles.css";
 
 @import "./font-system.css";
-@import "./color-system.css";
 
 @layer utilities {
   .scrollbar-hide {
