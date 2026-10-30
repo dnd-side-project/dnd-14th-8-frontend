@@ -1,3 +1,4 @@
+import { Icon } from "@moyeorak/design-system";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { CardRecommended } from "@/domains/schedule/components/card-recommended";
@@ -5,7 +6,6 @@ import { ScheduleMainOptimalPlaceholder } from "@/domains/schedule/components/sc
 import { splitResults } from "@/domains/schedule/components/schedule-main-optimal-content/split-results";
 import { useGetMeetingScheduleVoteResults } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
 import { ButtonBottomWithIcon } from "@/shared/components/button-bottom-with-icon";
-import { ChevronDownIcon, ChevronUpIcon } from "@/shared/components/icons";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { cn } from "@/shared/utils/cn";
 
@@ -88,11 +88,10 @@ export function ScheduleMainOptimalContent() {
           <ButtonBottomWithIcon
             className="mt-2"
             icon={
-              isExpanded ? (
-                <ChevronUpIcon className="size-4 text-fg-neutral-subtler" />
-              ) : (
-                <ChevronDownIcon className="size-4 text-fg-neutral-subtler" />
-              )
+              <Icon
+                type={isExpanded ? "chevron_up" : "chevron_down"}
+                size="xs"
+              />
             }
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded((prev) => !prev)}

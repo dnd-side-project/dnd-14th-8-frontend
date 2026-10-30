@@ -1,5 +1,5 @@
+import { Icon } from "@moyeorak/design-system";
 import type { ComponentProps } from "react";
-import { ChevronDownIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface DropdownProps
@@ -19,11 +19,13 @@ export function Dropdown({ className, ...props }: DropdownProps) {
         data-slot="dropdown"
         {...props}
       />
-      <ChevronDownIcon
+      <span
         aria-hidden
-        className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-fg-neutral-subtle"
+        className="pointer-events-none absolute top-1/2 right-4 flex -translate-y-1/2"
         data-slot="dropdown-icon"
-      />
+      >
+        <Icon type="chevron_down" size="sm" variant="default" />
+      </span>
     </div>
   );
 }
