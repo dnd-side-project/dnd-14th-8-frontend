@@ -73,6 +73,26 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 - 아직 전환하지 않은 곳: 모임 참여 초대(브랜드 배경), 일정 범위 수정 저장 버튼(sticky + 335px 폭). 콘텐츠 안에 놓인 버튼(장소 상세, 경로 상세, 설치 안내)은 ActionArea 대상이 아니다.
 - safe area 여백은 viewport에 `viewport-fit=cover`가 있어야 적용된다. 지금 `index.html`에는 없어서 `env(safe-area-inset-bottom)`이 0이다.
 
+## 기초값: Typography
+
+디자인 시스템의 Colors·Typography가 확정돼, 기초값은 컴포넌트 전환과 별개로 서비스 전체를 한 번에 맞춘다. 글자부터 바꾸고, 색상은 디자이너와 대응표를 확정한 뒤 진행한다.
+
+| 기존 | 디자인 시스템 |
+| --- | --- |
+| `text-h1` (28 / 600) | `textStyle_head1` |
+| `text-h2` (24 / 600) | `textStyle_head3` |
+| `text-h3` (22 / 700) | 대응 없음. 유일한 사용처인 서버 연결 대기 화면 제목은 `textStyle_title1`(20 / 600) |
+| `text-t1` (20 / 600) | `textStyle_title1` |
+| `text-t2` (16 / 600) | `textStyle_title3` |
+| `text-b1` ~ `text-b5` | `textStyle_body1` ~ `body5` |
+| `text-c1` ~ `text-c3` | `textStyle_caption1` ~ `caption3` |
+
+- 글자 크기·굵기·자간은 같고 줄 간격만 디자인 시스템 값(피그마 px ÷ 글자 크기)으로 바뀐다. 14px 본문 1.5 → 1.57, 16px 제목 1.35 → 1.38 등.
+- `font-system.css`에는 폰트 로드(`@font-face`)와 `body` 글꼴 지정만 남기고 `text-*` 토큰은 지웠다. 기존 클래스를 다시 쓰면 스타일이 생성되지 않는다.
+- `cn()`(tailwind-merge)은 `textStyle_*`를 하나의 그룹으로 본다. 여러 개를 함께 쓰면 뒤에 온 값만 남고, 앞에 온 `text-{size}`·`leading-*`·`font-{weight}`·`tracking-*`를 대체한다.
+- `textStyle_*` 뒤에 쓴 `leading-*`, `font-{weight}`는 그대로 덮어쓴다. 두 클래스 모두 Tailwind `utilities` 레이어에 있고 `textStyle_*`가 먼저 생성되기 때문이다.
+- 관리자 화면(`/admin`)은 Tailwind 기본 크기를 쓰는 내부 도구라 범위에서 뺐다.
+
 ## 별도 화면 전환 단계
 
 다음 요소는 이번 공통 버튼 교체 범위와 별개로 화면 시안과 함께 전환한다.
@@ -84,7 +104,7 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 
 0.5.0에는 TextField·Stepper·Calendar 공개 export가 없어 기존 구현을 유지했다.
 Modal·Toast는 패키지에 존재하지만, 이번에는 버튼 교체에 필요한 부분만 적용한다.
-기존 color-system.css와 font-system.css를 전체 재매핑하면 미전환 화면까지 함께 바뀌므로 유지한다.
+기존 color-system.css는 디자이너와 색상 대응표를 확정할 때까지 유지한다. font-system.css의 글자 토큰은 기초값 전환에서 지웠다.
 
 ## 검증
 
