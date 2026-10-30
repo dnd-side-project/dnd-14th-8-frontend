@@ -1,3 +1,4 @@
+import { Icon, IconButton } from "@moyeorak/design-system";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
   type ComponentType,
@@ -7,8 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { IconButton } from "@/shared/components/icon-button";
-import { CloseIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 const textFieldVariants = cva(
@@ -155,15 +154,13 @@ export function TextField({
           <div className="pr-1">
             <IconButton
               aria-label="입력 지우기"
-              icon={CloseIcon}
-              size="xl"
-              background="circle"
-              backgroundSize="xs"
-              iconSize="xs"
-              variant="gray"
+              size="md"
+              variant="clear"
               onClick={handleClear}
               type="button"
-            />
+            >
+              <Icon type="x_circle" size="md" />
+            </IconButton>
           </div>
         )}
 

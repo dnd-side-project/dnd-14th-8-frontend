@@ -1,6 +1,6 @@
+import { Icon, IconButton } from "@moyeorak/design-system";
 import { ButtonBottom } from "@/shared/components/button-bottom";
-import { IconButton } from "@/shared/components/icon-button";
-import { CloseIcon, PlusIcon, ShareIcon } from "@/shared/components/icons";
+import { PlusIcon, ShareIcon } from "@/shared/components/icons";
 import type { InstallPromptMode } from "@/shared/providers/install-prompt-provider/install-availability";
 import { cn } from "@/shared/utils/cn";
 
@@ -51,15 +51,13 @@ export function InstallPromptView({
 
         <IconButton
           aria-label="닫기"
-          background="circle"
-          backgroundSize="sm"
           className="ml-auto shrink-0"
-          icon={CloseIcon}
-          iconSize="sm"
           onClick={onClose}
-          size="lg"
-          variant="neutral"
-        />
+          size="sm"
+          variant="clear"
+        >
+          <Icon type="x_circle" size="md" />
+        </IconButton>
       </div>
 
       {mode === "guide" ? (

@@ -1,4 +1,4 @@
-import { Chip, Modal } from "@moyeorak/design-system";
+import { Chip, Icon, IconButton, Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -13,8 +13,6 @@ import { useUpdateSchedulePoll } from "@/domains/schedule/hooks/use-update-sched
 import { areDatesEqual, timeOptions } from "@/domains/schedule/utils/date";
 import { Calendar } from "@/shared/components/calendar";
 import { Dropdown, DropdownOption } from "@/shared/components/dropdown";
-import { IconButton } from "@/shared/components/icon-button";
-import { CloseIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { toast } from "@/shared/components/toast";
 import { useLockBodyScroll } from "@/shared/hooks/use-lock-body-scroll";
@@ -141,14 +139,12 @@ export function ScheduleEditDatesPage() {
               </h2>
               <IconButton
                 aria-label="시간표 수정 닫기"
-                icon={CloseIcon}
-                size="lg"
-                background="circle"
-                backgroundSize="sm"
-                iconSize="sm"
-                variant="neutral"
+                size="sm"
+                variant="clear"
                 onClick={handleRequestClose}
-              />
+              >
+                <Icon type="x_circle" size="md" />
+              </IconButton>
             </div>
           </div>
 

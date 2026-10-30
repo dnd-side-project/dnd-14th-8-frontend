@@ -1,5 +1,4 @@
-import { IconButton } from "@/shared/components/icon-button";
-import { CloseIcon } from "@/shared/components/icons";
+import { Icon, IconButton } from "@moyeorak/design-system";
 import {
   ShareButton,
   type ShareChannel,
@@ -78,16 +77,14 @@ export function ShareSheetView({
             공유하기
           </h2>
           <IconButton
-            icon={CloseIcon}
-            size="lg"
-            background="circle"
-            backgroundSize="sm"
-            iconSize="sm"
-            variant="neutral"
+            size="sm"
+            variant="clear"
             className="ml-auto"
             aria-label="닫기"
             onClick={onClose}
-          />
+          >
+            <Icon type="x_circle" size="md" />
+          </IconButton>
         </div>
 
         <div className="flex items-start justify-center gap-4 px-5 pt-3.5 pb-7">
