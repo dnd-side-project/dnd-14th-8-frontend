@@ -45,12 +45,7 @@ export function ScheduleMainVoteParticipants({
       {votedParticipantNames.length > 0 && (
         <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">
           {votedParticipantNames.map((name) => (
-            <Badge
-              key={name}
-              size="md"
-              variant="neutral-weak"
-              className="shrink-0"
-            >
+            <Badge key={name} size="md" variant="outline" className="shrink-0">
               {name}
             </Badge>
           ))}

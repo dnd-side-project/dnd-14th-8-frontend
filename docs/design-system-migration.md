@@ -147,14 +147,15 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 | 선택 칩 (지도 위 추천 역) | ChipButton floating 계열 | Chip pill, neutral / neutral-weak, 그림자 |
 | 선택 칩 (주변 장소 카테고리) | ChipButtonWithIcon | Chip pill, brand / neutral-weak, 아이콘, 그림자 |
 | 액션 (출발지 수정 / 삭제) | ChipButton ghost / locationDelete | Button sm, ghost-brand / ghost |
-| 라벨 (참여자 이름) | 서비스 Chip xl, lg | Badge md neutral-weak |
+| 라벨 (일정 메인 참여자 이름) | 서비스 Chip xl | Badge md outline (시안) |
+| 라벨 (출발지 목록 참여자 이름) | 서비스 Chip lg | Badge md neutral-weak |
 | 라벨 (출발지 카드 주소) | 서비스 Chip md | Badge md brand-weak |
 | 라벨 (출발지 부족 화면 "나") | 직접 만든 span | Badge sm brand-weak |
 
 - 선택 칩은 부모가 현재 선택값을 `pressed`로 넘기고, 선택 여부에 맞는 `variant`를 고른다. 액션에는 Toggle을 쓰지 않는다.
 - 가로 스크롤 줄에 놓이는 칩과 Badge에는 `shrink-0`을 준다. 디자인 시스템 컴포넌트는 줄어들지 않게 막아 두지 않았다.
 - 선택 칩과 액션은 어댑터가 하던 것과 같아 모양이 그대로다. 어댑터가 붙이던 브랜드 포커스 링은 3차와 같이 빠지고, 키보드 포커스에는 브라우저 기본 outline이 보인다.
-- 라벨은 Badge 규격으로 바뀐다. 참여자 이름은 글자가 `fg.neutral.subtle`로 연해지고 여백이 작아진다(일정 메인 좌우 12 → 8px). 출발지 카드 주소는 배경이 `fill.brand.subtler`로 연해지고 글자가 500으로 굵어진다.
+- 라벨은 Badge 규격으로 바뀐다. 일정 메인의 참여자 이름은 시안대로 흰 배경에 테두리가 있는 outline이 되고, 여백이 작아진다(좌우 12 → 8px). 출발지 목록의 참여자 이름은 글자가 `fg.neutral.subtle`로 연해진다. 출발지 카드 주소는 배경이 `fill.brand.subtler`로 연해지고 글자가 500으로 굵어진다.
 
 ## 별도 화면 전환 단계
 
