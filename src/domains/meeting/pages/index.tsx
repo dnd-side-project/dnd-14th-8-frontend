@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import mainLocationGraphic from "@/assets/graphic/main-location.webp";
 import mainScheduleGraphic from "@/assets/graphic/main-schedule.webp";
 import MoyeorakLogo from "@/assets/moyeorak-logo-white.svg?react";
-import { MainButton } from "@/shared/components/main-button";
+import { FlowSelectCard } from "@/domains/meeting/components/flow-select-card";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
 export function LandingPage() {
@@ -18,7 +18,7 @@ export function LandingPage() {
           </span>
         </div>
         <div className="flex flex-col gap-5">
-          <MainButton
+          <FlowSelectCard
             title="일정 조율하기"
             description="모두가 가능한 시간 찾기"
             graphicSrc={mainScheduleGraphic}
@@ -27,7 +27,7 @@ export function LandingPage() {
             onClick={() => navigate("/new/schedule")}
           />
 
-          <MainButton
+          <FlowSelectCard
             title="중간 장소 찾기"
             description="모두가 효율적인 장소 찾기"
             graphicSrc={mainLocationGraphic}

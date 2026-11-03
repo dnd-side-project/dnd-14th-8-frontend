@@ -1,6 +1,7 @@
+import { useId } from "react";
 import { cn } from "@/shared/utils/cn";
 
-export interface MainButtonProps {
+export interface FlowSelectCardProps {
   title: string;
   description: string;
   graphicSrc: string;
@@ -10,7 +11,7 @@ export interface MainButtonProps {
   onClick?: () => void;
 }
 
-export function MainButton({
+export function FlowSelectCard({
   title,
   description,
   graphicSrc,
@@ -18,11 +19,17 @@ export function MainButton({
   titleClassName,
   descriptionClassName,
   onClick,
-}: MainButtonProps) {
+}: FlowSelectCardProps) {
+  const titleId = useId();
+  const descriptionId = useId();
+
   return (
     <button
       type="button"
       onClick={onClick}
+      // 이름은 제목만 쓰고, 설명은 이름 뒤에 따로 읽히게 연결한다.
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
       className={cn(
         "relative flex aspect-[335/140] w-full cursor-pointer flex-col rounded-xl text-left",
         "transition-transform active:scale-[0.98]",
@@ -36,12 +43,17 @@ export function MainButton({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 size-full select-none rounded-xl"
       />
-      <div className="relative flex flex-col gap-1 px-6 pt-6">
-        <h3 className={cn("textStyle_head4", titleClassName)}>{title}</h3>
-        <p className={cn("textStyle_body5", descriptionClassName)}>
+      <span className="relative flex flex-col gap-1 px-6 pt-6">
+        <span id={titleId} className={cn("textStyle_head4", titleClassName)}>
+          {title}
+        </span>
+        <span
+          id={descriptionId}
+          className={cn("textStyle_body5", descriptionClassName)}
+        >
           {description}
-        </p>
-      </div>
+        </span>
+      </span>
     </button>
   );
 }
