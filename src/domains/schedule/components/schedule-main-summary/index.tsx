@@ -13,11 +13,11 @@ function formatScheduleTime(value: string) {
 }
 
 export interface ScheduleMainSummaryContentProps {
+  canEditRange: boolean;
   className?: string;
   dates: Date[];
   endTime: string;
   hostName: string;
-  isHost: boolean;
   startTime: string;
   votedParticipantCount: number;
   onEditSchedule: () => void;
@@ -29,11 +29,11 @@ export interface ScheduleMainSummaryContentProps {
  * Figma: HomeHeader
  */
 export function ScheduleMainSummaryContent({
+  canEditRange,
   className,
   dates,
   endTime,
   hostName,
-  isHost,
   startTime,
   votedParticipantCount,
   onEditSchedule,
@@ -73,7 +73,7 @@ export function ScheduleMainSummaryContent({
             </dd>
           </div>
         </dl>
-        {isHost && (
+        {canEditRange && (
           <Button
             variant="brand"
             size="sm"
@@ -89,15 +89,15 @@ export function ScheduleMainSummaryContent({
 }
 
 export interface ScheduleMainSummaryProps {
+  canEditRange: boolean;
   className?: string;
-  isHost: boolean;
   meetingId: string;
   onEditSchedule: () => void;
 }
 
 export function ScheduleMainSummary({
+  canEditRange,
   className,
-  isHost,
   meetingId,
   onEditSchedule,
 }: ScheduleMainSummaryProps) {
@@ -113,11 +113,11 @@ export function ScheduleMainSummary({
 
   return (
     <ScheduleMainSummaryContent
+      canEditRange={canEditRange}
       className={className}
       dates={dates}
       endTime={data.endTime}
       hostName={hostName}
-      isHost={isHost}
       startTime={data.startTime}
       votedParticipantCount={data.votedParticipantCount}
       onEditSchedule={onEditSchedule}

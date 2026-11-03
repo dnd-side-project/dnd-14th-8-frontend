@@ -1,5 +1,5 @@
 import { Badge, Icon } from "@moyeorak/design-system";
-import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
+import { useMeetingPermissions } from "@/domains/meeting/hooks/use-meeting-permissions";
 import { cn } from "@/shared/utils/cn";
 
 export function ScheduleMainVoteParticipants({
@@ -15,10 +15,11 @@ export function ScheduleMainVoteParticipants({
   votedParticipantNames: string[];
   onParticipantEdit: () => void;
 }) {
-  const { data } = useGetMyParticipant({ meetingId });
+  const { permissions } = useMeetingPermissions(meetingId);
+  const canEdit = permissions.canEditParticipantCount;
 
   const handleClickParticipantEdit = () => {
-    if (data?.isHost) {
+    if (canEdit) {
       onParticipantEdit();
     }
   };
@@ -30,14 +31,14 @@ export function ScheduleMainVoteParticipants({
         onClick={handleClickParticipantEdit}
         className={cn(
           "textStyle_title3 flex items-center py-1 text-fg-neutral-strong",
-          data?.isHost && "cursor-pointer",
+          canEdit && "cursor-pointer",
         )}
       >
         <Icon type="member" size="sm" />
         <span className="mr-0.5">참여자</span>
         <span className="text-fg-brand-default">{votedParticipantCount}</span>
         <span className="mr-0.5">/{participantCount}</span>
-        {data?.isHost && <Icon type="chevron_right" size="xs" variant="weak" />}
+        {canEdit && <Icon type="chevron_right" size="xs" variant="weak" />}
       </button>
       {votedParticipantNames.length > 0 && (
         <div className="scrollbar-hide flex gap-1.5 overflow-x-auto">

@@ -1,4 +1,4 @@
-import { hasVoteId } from "@/domains/meeting/utils/vote-id";
+import { getMeetingRole } from "@/domains/meeting/utils/meeting-permissions";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
 
@@ -19,12 +19,7 @@ export function useMeetingAccess(meetingId?: string) {
     participantsData?.participants?.find((p) => p.isHost)?.name ?? "모임장";
 
   // 멤버 여부 판단
-  const isMember = !!(
-    myInfo &&
-    (myInfo.isHost ||
-      hasVoteId(myInfo.scheduleVoteId) ||
-      hasVoteId(myInfo.locationVoteId))
-  );
+  const isMember = getMeetingRole(myInfo) !== "visitor";
 
   return {
     isMember,
