@@ -92,7 +92,6 @@ function Dashboard({ onUnauthorized, onLogout }: DashboardProps) {
               size="sm"
               type="button"
               onClick={onLogout}
-              className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
             >
               로그아웃
             </Button>

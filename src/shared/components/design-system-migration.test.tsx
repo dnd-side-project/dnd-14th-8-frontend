@@ -73,7 +73,7 @@ describe("design system migration contracts", () => {
       </form>,
     );
     expect(markup).toMatch(/<h1[^>]*>일정 추가<\/h1>/);
-    expect(markup).toContain('aria-label="뒤로가기"');
+    expect(markup).toContain('aria-label="뒤로 가기"');
     expect(markup).toContain(">초기화</button>");
     expect(markup.match(/type="button"/g)).toHaveLength(2);
     expect(markup).not.toContain('type="submit"');

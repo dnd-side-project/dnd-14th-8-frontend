@@ -21,10 +21,7 @@ export function ButtonBottomWithIcon({
       variant="outline"
       size="md"
       display="full"
-      className={cn(
-        "gap-1.5 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
-        className,
-      )}
+      className={cn("gap-1.5", className)}
       trailingIcon={
         <span
           aria-hidden

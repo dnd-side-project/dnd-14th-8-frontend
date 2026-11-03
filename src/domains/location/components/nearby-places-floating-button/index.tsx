@@ -22,7 +22,7 @@ export function NearbyPlacesFloatingButton({
         <SearchIcon aria-hidden className="size-4 text-fg-brand-default" />
       }
       className={cn(
-        "absolute top-4 right-4 z-30 h-10 gap-1.5 rounded-full shadow-[var(--shadows-strong)] focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
+        "absolute top-4 right-4 z-30 h-10 gap-1.5 rounded-full shadow-[var(--shadows-strong)]",
         className,
       )}
     >

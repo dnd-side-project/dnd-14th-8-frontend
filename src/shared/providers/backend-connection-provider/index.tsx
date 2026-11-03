@@ -67,7 +67,6 @@ export function BackendConnectionProvider({ children }: PropsWithChildren) {
                 size="lg"
                 type="button"
                 onClick={() => window.location.reload()}
-                className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
               >
                 다시 연결하기
               </Button>

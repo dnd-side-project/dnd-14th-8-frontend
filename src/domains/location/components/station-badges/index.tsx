@@ -1,5 +1,4 @@
-import { Chip } from "@moyeorak/design-system";
-import { FloatingBack } from "@/domains/location/components/floating-back";
+import { Chip, FloatingButton } from "@moyeorak/design-system";
 import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
 
 export interface StationBadgesProps {
@@ -18,7 +17,12 @@ export function StationBadges({
 }: StationBadgesProps) {
   return (
     <div className="absolute top-[52px] right-0 left-0 z-30 flex items-center gap-2 px-5">
-      <FloatingBack onClick={onBack} className="shrink-0" />
+      <FloatingButton
+        type="back"
+        aria-label="뒤로 가기"
+        onClick={onBack}
+        className="shrink-0"
+      />
 
       <div className="scrollbar-hide flex gap-2 overflow-x-auto">
         {recommendations.map((r) => (
