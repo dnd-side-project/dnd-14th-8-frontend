@@ -49,7 +49,7 @@ AI 도구로 작업할 때도 같은 순서를 따른다. 담당은 사람이 �
 
 ### 3. 디자인 시스템 구현
 
-moyeorakui의 `AGENTS.md`를 따른다. 컴포넌트, 스토리, MDX 문서, 테스트를 한 PR에 담는다. 2단계 결정에 없는 prop이나 variant는 더하지 않는다.
+moyeorakui 저장소 main 브랜치의 `AGENTS.md`(meteorqz6/moyeorakui#15)를 따른다. 패키지에 들어가지 않는 저장소 작업 규칙이라, 서비스가 고정한 패키지 버전과 묶지 않고 main의 최신 규칙을 따른다. 컴포넌트, 스토리, MDX 문서, 테스트를 한 PR에 담는다. 2단계 결정에 없는 prop이나 variant는 더하지 않는다.
 
 ### 4. 배포
 
