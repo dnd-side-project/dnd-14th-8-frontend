@@ -54,7 +54,7 @@ export function AdminLoginForm({ onSubmit, error }: AdminLoginFormProps) {
           display="full"
           type="submit"
           disabled={!value.trim()}
-          className="mt-6 focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
+          className="mt-6"
         >
           입장
         </Button>

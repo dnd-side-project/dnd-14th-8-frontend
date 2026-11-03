@@ -1,6 +1,5 @@
 import { Button } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/shared/utils/cn";
 
 export interface ButtonSubStrokeProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -21,10 +20,7 @@ export function ButtonSubStroke({
       variant="outline"
       size="lg"
       display="full"
-      className={cn(
-        "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
-        className,
-      )}
+      className={className}
       leadingIcon={
         icon && (
           <span

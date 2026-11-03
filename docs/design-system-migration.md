@@ -2,7 +2,7 @@
 
 ## 기준
 
-- 배포 패키지: `@moyeorak/design-system@0.8.0` (정확한 버전 고정)
+- 배포 패키지: `@moyeorak/design-system@0.9.0` (정확한 버전 고정)
 - 소스: https://github.com/meteorqz6/moyeorakui
 - 컴포넌트와 의미 토큰은 npm 패키지에서 가져온다. 소스 복사나 서비스 내 토큰 재정의는 하지 않는다.
 - 기존 Tailwind v4를 유지한다. 서비스에 Panda codegen은 추가하지 않는다.
@@ -98,7 +98,7 @@ PR 본문에 왜 이렇게 했는지, 검증, 측정, 한계를 쓴다. CodeRabb
 | ChipButton selected / outlined | controlled Chip outlined-brand / neutral-weak |
 | ChipButton floating / midpoint 계열 | controlled Chip, pill |
 | ChipButtonWithIcon | controlled Chip, pill |
-| FloatingBack / FloatingScrollTop | FloatingButton back / up |
+| FloatingBack / FloatingScrollTop | FloatingButton back / up. FloatingBack 어댑터는 0.9.0에서 지우고 패키지를 직접 쓴다 |
 | NearbyPlacesFloatingButton | Button outline |
 | Modal 내부 확인·취소 | Button brand / outline |
 | 연결 실패 재시도, 투표 초기화, 관리자 입장·로그아웃 | Button |
@@ -109,8 +109,8 @@ PR 본문에 왜 이렇게 했는지, 검증, 측정, 한계를 쓴다. CodeRabb
 아이콘 버튼의 backgroundSize는 전환용 deprecated prop이며 새 디자인에서는 버튼 전체 배경을 사용한다.
 기존 size는 달력·하단 바 배치를 유지하기 위한 어댑터 값이다. 새 사용처는 패키지의 sm/md/lg를 사용한다.
 
-키보드 포커스 링은 패키지의 stroke-brand-default 토큰을 사용한다.
-FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 FloatingButton의 fixed 위치만 static으로 바꾼다.
+키보드 포커스 링은 0.9.0부터 패키지(Button, IconButton, Chip, FloatingButton)에 들어 있다(`stroke.brand.default`, 2px, 간격 2px). 서비스에서 덮어쓰지 않는다.
+FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. FloatingScrollTop은 덮어쓰기 없이 기존 모바일 컨테이너 안에 놓인다.
 
 ## 2차: 페이지 헤더
 
@@ -137,7 +137,7 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 | 페이지 하단 `mt-auto` + ButtonBottom | ActionArea single |
 
 - 버튼도 어댑터를 거치지 않고 패키지 컴포넌트를 직접 쓴다. 메인은 `Button size="xl" display="full"`, 공유는 `IconButton size="lg" variant="fill"` + `Icon type="share" size="md"`(Icon에는 variant를 지정하지 않는다).
-- 패키지 버튼에는 브랜드 포커스 링이 없어 키보드 포커스 시 브라우저 기본 outline이 보인다. 브랜드 링은 디자인 시스템 레시피에서 다룬다.
+- 키보드 포커스 시 패키지 버튼의 브랜드 포커스 링이 보인다(0.9.0).
 - ActionArea는 배치(px 16, py 12, 버튼 간격 8)와 배경만 맡는다. 화면 하단 고정은 `FixedBottomArea`가 맡는다.
 - 맨 위로 버튼(FloatingScrollTop)은 `FixedBottomArea`의 `floating`에 넣어 하단 영역 위쪽 끝에서 20px, 오른쪽 20px에 둔다(FloatingButton 배치 가이드). 하단 영역 높이가 바뀌어도 함께 따라가므로 `bottom-[…px]` 같은 고정값을 쓰지 않는다.
 - `FixedBottomArea`는 현재 높이를 `--fixed-bottom-area-height`로 알린다. 맨 위로 버튼이 있는 화면의 콘텐츠는 `FIXED_BOTTOM_AREA_PADDING_WITH_FLOATING`(하단 영역 높이 + 80px)을 하단 여백으로 써서, 끝까지 스크롤하면 마지막 줄이 버튼 위로 올라온다.
@@ -228,7 +228,7 @@ FloatingScrollTop은 기존 모바일 컨테이너 안에 배치되도록 Floati
 
 - 선택 칩은 부모가 현재 선택값을 `pressed`로 넘기고, 선택 여부에 맞는 `variant`를 고른다. 액션에는 Toggle을 쓰지 않는다.
 - 가로 스크롤 줄에 놓이는 칩과 Badge에는 `shrink-0`을 준다. 디자인 시스템 컴포넌트는 줄어들지 않게 막아 두지 않았다.
-- 선택 칩과 액션은 어댑터가 하던 것과 같아 모양이 그대로다. 어댑터가 붙이던 브랜드 포커스 링은 3차와 같이 빠지고, 키보드 포커스에는 브라우저 기본 outline이 보인다.
+- 선택 칩과 액션은 어댑터가 하던 것과 같아 모양이 그대로다. 어댑터가 붙이던 브랜드 포커스 링은 0.9.0부터 패키지 Chip에 들어 있다.
 - 라벨은 Badge 규격으로 바뀐다. 일정 메인의 참여자 이름은 시안대로 흰 배경에 테두리가 있는 outline이 되고, 여백이 작아진다(좌우 12 → 8px). 출발지 목록의 참여자 이름은 글자가 `fg.neutral.subtle`로 연해진다. 출발지 카드 주소는 배경이 `fill.brand.subtler`로 연해지고 글자가 500으로 굵어진다.
 
 ## 6차: Icon

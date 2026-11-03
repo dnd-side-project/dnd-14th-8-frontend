@@ -19,7 +19,6 @@ export function RangeToggle({ value, onChange }: RangeToggleProps) {
           key={range}
           type="button"
           onClick={() => onChange(range)}
-          className="focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
         >
           {range}
         </Chip>

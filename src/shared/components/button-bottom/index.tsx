@@ -1,6 +1,5 @@
 import { Button, type ButtonProps } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
-import { cn } from "@/shared/utils/cn";
 
 export interface ButtonBottomProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -27,10 +26,7 @@ export function ButtonBottom({
       variant={variants[variant ?? "black"]}
       size="xl"
       display="full"
-      className={cn(
-        "focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2",
-        className,
-      )}
+      className={className}
     />
   );
 }

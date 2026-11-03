@@ -67,7 +67,6 @@ export function FloatingScrollTop({
         onClick={scroll}
         aria-label="맨 위로 이동"
         tabIndex={isVisible ? 0 : -1}
-        className="static focus-visible:outline-2 focus-visible:outline-stroke-brand-default focus-visible:outline-offset-2"
       />
     </div>
   );
