@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import mainLocationGraphic from "@/assets/graphic/main-location.png";
-import mainScheduleGraphic from "@/assets/graphic/main-schedule.png";
+import mainLocationGraphic from "@/assets/graphic/main-location.webp";
+import mainScheduleGraphic from "@/assets/graphic/main-schedule.webp";
 import MoyeorakLogo from "@/assets/moyeorak-logo-white.svg?react";
 import { MainButton } from "@/shared/components/main-button";
 import { MobileLayout } from "@/shared/components/mobile-layout";
