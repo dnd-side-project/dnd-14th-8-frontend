@@ -42,5 +42,6 @@ pnpm build       # tsc 타입 검사와 운영 빌드
 
 - 브랜치: `{type}/{이슈 번호}-{설명}` (예: `refactor/203-meeting-permissions`)
 - 커밋: `type(scope): 한국어 요약 (#이슈)`. type은 feat, fix, refactor, docs, chore, test를 쓴다.
-- PR 본문에는 왜 이렇게 했는지, 검증, 측정, 한계, 리뷰어가 확인할 것을 쓴다.
+- PR 본문에는 왜 이렇게 했는지, 검증, 측정, 한계를 쓴다.
+- PR 리뷰는 CodeRabbit이 맡는다. 지적마다 반영하거나 반려한 이유를 답글로 남긴다.
 - push, PR 생성, 머지는 사람이 요청할 때만 한다.
