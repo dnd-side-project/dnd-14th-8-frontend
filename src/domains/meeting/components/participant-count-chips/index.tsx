@@ -1,4 +1,4 @@
-import { Chip } from "@moyeorak/design-system";
+import { Chip, Fieldset } from "@moyeorak/design-system";
 import { useEffect, useRef } from "react";
 import { cn } from "@/shared/utils/cn";
 
@@ -11,6 +11,7 @@ export interface ParticipantCountChipsProps {
   /** 이보다 적은 인원은 비활성으로 보이고, 누르면 onBlockedSelect를 부른다. */
   selectableMin?: number;
   onBlockedSelect?: () => void;
+  helperText?: string;
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export function ParticipantCountChips({
   onChange,
   selectableMin = PARTICIPANT_COUNT_MIN,
   onBlockedSelect,
+  helperText,
   className,
 }: ParticipantCountChipsProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -44,11 +46,11 @@ export function ParticipantCountChips({
   }, []);
 
   return (
-    // fieldset은 기본으로 내용 폭보다 줄어들지 않아, 가로 스크롤이 되도록 min-w-0을 준다.
-    <fieldset className={cn("w-full min-w-0", className)}>
-      <legend className="textStyle_body3 mb-2 text-fg-neutral-stronger">
-        인원
-      </legend>
+    <Fieldset
+      label="인원"
+      helperText={helperText}
+      className={cn("w-full", className)}
+    >
       <div
         ref={scrollerRef}
         className="scrollbar-hide -mx-5 flex gap-2 overflow-x-auto px-5"
@@ -80,6 +82,6 @@ export function ParticipantCountChips({
           );
         })}
       </div>
-    </fieldset>
+    </Fieldset>
   );
 }

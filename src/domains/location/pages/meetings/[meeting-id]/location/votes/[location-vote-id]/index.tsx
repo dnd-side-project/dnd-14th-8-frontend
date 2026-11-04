@@ -1,4 +1,4 @@
-import { ActionArea, Button, Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header, TextField } from "@moyeorak/design-system";
 import { useEffect, useMemo, useRef } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -6,7 +6,8 @@ import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
 import { useUpdateDepartureForm } from "@/domains/location/hooks/use-update-departure-form";
 import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { TextField } from "@/shared/components/text-field";
+// 출발지는 FieldButton 전환 전까지 서비스 TextField를 쓴다.
+import { TextField as LegacyTextField } from "@/shared/components/text-field";
 import {
   useFlowEntryIndex,
   useFlowReturn,
@@ -152,13 +153,11 @@ export function DepartureEditPage() {
                 {...field}
                 label="이름"
                 placeholder="이름을 입력해주세요"
-                maxLength={maxNameLength}
-                status={errors.participantName ? "error" : "default"}
+                autoComplete="off"
+                maxCharacterCount={maxNameLength}
                 onClear={() => field.onChange("")}
-                helperText={
-                  errors.participantName?.message ||
-                  `최대 ${maxNameLength}자까지 적을 수 있어요`
-                }
+                helperText={`최대 ${maxNameLength}자까지 입력할 수 있어요`}
+                errorMessage={errors.participantName?.message}
               />
             )}
           />
@@ -167,7 +166,7 @@ export function DepartureEditPage() {
             control={control}
             name="departureLocation"
             render={({ field }) => (
-              <TextField
+              <LegacyTextField
                 {...field}
                 label="출발지"
                 placeholder="출발장소"

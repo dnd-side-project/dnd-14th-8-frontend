@@ -1,10 +1,13 @@
-import { ActionArea, Button, Header } from "@moyeorak/design-system";
+import { ActionArea, Button, Header, TextField } from "@moyeorak/design-system";
 import { Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
-import { ParticipantCountChips } from "@/domains/meeting/components/participant-count-chips";
+import {
+  PARTICIPANT_COUNT_MAX,
+  PARTICIPANT_COUNT_MIN,
+  ParticipantCountChips,
+} from "@/domains/meeting/components/participant-count-chips";
 import { useCreateMeetingForm } from "@/domains/meeting/hooks/use-create-meeting-form";
 import { MobileLayout } from "@/shared/components/mobile-layout";
-import { TextField } from "@/shared/components/text-field";
 
 export function NewMeetingPage() {
   const navigate = useNavigate();
@@ -37,14 +40,12 @@ export function NewMeetingPage() {
               {...field}
               label="모임장 이름"
               placeholder="이름을 입력해주세요"
-              maxLength={maxNameLength}
+              autoComplete="off"
+              maxCharacterCount={maxNameLength}
               className="mt-3"
-              status={errors.participantName ? "error" : "default"}
               onClear={() => field.onChange("")}
-              helperText={
-                errors.participantName?.message ||
-                `최대 ${maxNameLength}자까지 입력할 수 있어요`
-              }
+              helperText={`최대 ${maxNameLength}자까지 입력할 수 있어요`}
+              errorMessage={errors.participantName?.message}
             />
           )}
         />
@@ -57,6 +58,7 @@ export function NewMeetingPage() {
             <ParticipantCountChips
               value={field.value}
               onChange={field.onChange}
+              helperText={`${PARTICIPANT_COUNT_MIN}명부터 ${PARTICIPANT_COUNT_MAX}명까지 고를 수 있어요`}
               className="mt-6"
             />
           )}

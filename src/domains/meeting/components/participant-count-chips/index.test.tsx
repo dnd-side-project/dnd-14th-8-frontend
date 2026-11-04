@@ -22,4 +22,20 @@ describe("ParticipantCountChips", () => {
     expect(markup).not.toMatch(/aria-disabled="true"[^>]*>5명</);
     expect(markup).not.toContain('disabled=""');
   });
+
+  it("names the chip group and links the helper text to it", () => {
+    const markup = renderToStaticMarkup(
+      <ParticipantCountChips
+        value={2}
+        onChange={() => {}}
+        helperText="2명부터 20명까지 고를 수 있어요"
+      />,
+    );
+    expect(markup).toMatch(/<legend[^>]*>인원<\/legend>/);
+    // 묶음의 aria-describedby가 가리키는 요소에 안내문이 있어야 한다.
+    const describedBy = markup.match(/aria-describedby="([^"]+)"/)?.[1];
+    expect(markup).toMatch(
+      new RegExp(`id="${describedBy}"[^>]*>2명부터 20명까지 고를 수 있어요<`),
+    );
+  });
 });
