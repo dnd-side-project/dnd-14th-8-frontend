@@ -21,8 +21,7 @@ const textFieldVariants = cva(
         outlined: "bg-fill-neutral-faintest",
       },
       status: {
-        default:
-          "hover:border-stroke-brand-subtle active:border-stroke-brand-default",
+        default: "",
         error: "border-stroke-negative-default",
         focused: "border-stroke-brand-default bg-fill-neutral-faintest",
       },
