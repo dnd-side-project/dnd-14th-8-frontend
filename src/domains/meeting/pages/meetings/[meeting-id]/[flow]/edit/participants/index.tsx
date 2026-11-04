@@ -5,6 +5,10 @@ import { useNavigate, useParams } from "react-router";
 import { ParticipantCountChips } from "@/domains/meeting/components/participant-count-chips";
 import { useUpdateMeeting } from "@/domains/meeting/hooks/use-update-meeting";
 import {
+  getParticipantCountHelperText,
+  getSelectableParticipantCountMin,
+} from "@/domains/meeting/utils/participant-count-limit";
+import {
   getMeetingSchedulesQueryKey,
   useGetMeetingSchedules,
 } from "@/domains/schedule/hooks/use-get-meeting-schedules";
@@ -24,6 +28,8 @@ export function MeetingEditParticipantsPage() {
 
   const [count, setCount] = useState(2);
   const initialCount = meetingData?.participantCount ?? 2;
+  const joinedCount = meetingData?.participants.length ?? 0;
+  const selectableMin = getSelectableParticipantCountMin(joinedCount);
 
   useEffect(() => {
     if (meetingData?.participantCount) {
@@ -33,7 +39,7 @@ export function MeetingEditParticipantsPage() {
 
   const { mutate: updateMeeting, isPending: isUpdating } = useUpdateMeeting();
 
-  const isInvalid = count < initialCount;
+  const isInvalid = count < selectableMin;
   const isUnchanged = count === initialCount;
   const canSubmit = !isInvalid && !isUnchanged && !isUpdating;
 
@@ -80,7 +86,8 @@ export function MeetingEditParticipantsPage() {
         <ParticipantCountChips
           value={count}
           onChange={setCount}
-          selectableMin={initialCount}
+          selectableMin={selectableMin}
+          helperText={getParticipantCountHelperText(joinedCount)}
           onBlockedSelect={() =>
             toast.error("현재 참여 인원보다 적게 설정할 수 없어요", {
               id: "participant-count-min",
