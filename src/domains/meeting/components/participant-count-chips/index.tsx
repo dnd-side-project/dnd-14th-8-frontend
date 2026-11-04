@@ -6,7 +6,8 @@ export const PARTICIPANT_COUNT_MIN = 2;
 export const PARTICIPANT_COUNT_MAX = 20;
 
 export interface ParticipantCountChipsProps {
-  value: number;
+  /** 아직 고르지 않았으면 비워 둔다. */
+  value?: number;
   onChange: (value: number) => void;
   /** 이보다 적은 인원은 비활성으로 보이고, 누르면 onBlockedSelect를 부른다. */
   selectableMin?: number;
