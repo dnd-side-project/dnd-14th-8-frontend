@@ -23,8 +23,8 @@ AI 도구로 작업할 때도 같은 순서를 따른다. 담당은 사람이 �
 | --- | --- | --- | --- |
 | 1. 쓰임 조사 | AI | 조사 이슈 | 사용처를 빠짐없이 적었다 |
 | 2. 설계 결정 | 사람 | 같은 이슈의 Decision | 선택지와 고른 이유가 있다 |
-| 3. 디자인 시스템 구현 | AI | moyeorakui PR | typecheck, test, lint, build 통과와 CodeRabbit 지적 처리 |
-| 4. 배포 | 사람 | 새 버전 | npmjs.com에서 2FA 승인 |
+| 3. 디자인 시스템 구현 | AI | moyeorakui PR | typecheck, test, build, 바꾼 파일의 prettier 통과와 CodeRabbit 지적 처리 |
+| 4. 배포 | AI, 승인은 사람 | 새 버전 | npmjs.com에서 2FA 승인 |
 | 5. 서비스 적용 | AI | 이 저장소 PR | check, test:unit, build 통과 |
 | 6. 화면 확인 | 스크립트와 사람 | 전후 캡처와 차이 | 차이가 모두 의도한 것이다 |
 | 7. PR 정리 | AI 초안, 사람 확정 | PR 본문과 바퀴 기록 | CodeRabbit 지적을 모두 반영하거나 반려 이유를 남겼다 |
@@ -53,12 +53,13 @@ moyeorakui 저장소 main 브랜치의 `AGENTS.md`(meteorqz6/moyeorakui#15)를 �
 
 ### 4. 배포
 
-버전을 올리고 태그를 push하면 staged publish가 된다. 공개는 npmjs.com에서 2FA로 승인해야 한다. 태그 push와 승인은 사람이 한다.
+버전을 올리고 태그를 push하면 staged publish가 된다. 공개는 npmjs.com에서 2FA로 승인해야 한다. 태그 push는 AI가 하고, 승인은 사람이 한다.
 
 ### 5. 서비스 적용
 
 - `package.json`의 디자인 시스템 버전과 이 문서 "기준"의 버전을 함께 올린다.
 - 2단계에서 정한 대응표대로 사용처를 바꾸고, 쓰지 않게 된 서비스 컴포넌트를 지운다.
+- 바꾸기 전에 옛 컴포넌트가 내부에서 해 주던 동작을 코드로 읽어 확인한다. 예를 들어 서비스 `TextField`는 `autoComplete="off"`를 항상 넣었는데, 빠져도 타입 검사와 테스트는 통과한다(#215).
 - 지운 컴포넌트를 다시 import하면 실패하는 정적 검사를 추가한다. `src/design-tokens-static.test.ts`와 같은 방식이다.
 - 이 문서에 차수 절을 추가해 대응표와 바뀌는 모양을 적는다.
 
@@ -66,6 +67,7 @@ moyeorakui 저장소 main 브랜치의 `AGENTS.md`(meteorqz6/moyeorakui#15)를 �
 
 - 전환 전(main)과 전환 후의 운영 빌드를 각각 띄우고 같은 화면을 캡처해 비교한다.
 - 차이가 난 화면은 직접 열어 의도한 변화인지 본다. 의도하지 않은 차이는 5단계로 돌아가 고친다.
+- 포커스나 터치를 다루는 동작을 바꿨으면 WebKit에서 터치로도 확인한다. `onPointerDown`의 `preventDefault`로 포커스를 지키는 코드가 WebKit 터치에서만 동작하지 않았다(meteorqz6/moyeorakui#17).
 - 비교 스크립트(`compare-screens.mjs`)는 아직 이 저장소 밖에 있고 로컬 백엔드와 시드 데이터가 필요하다. 팀원도 쓸 수 있게 저장소로 옮길지는 첫 바퀴를 돈 뒤 정한다.
 
 ### 7. PR 정리
