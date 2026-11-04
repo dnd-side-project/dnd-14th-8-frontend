@@ -53,7 +53,7 @@ moyeorakui 저장소 main 브랜치의 `AGENTS.md`(meteorqz6/moyeorakui#15)를 �
 
 ### 4. 배포
 
-버전을 올리고 태그를 push하면 staged publish가 된다. 공개는 npmjs.com에서 2FA로 승인해야 한다. 태그 push는 AI가 하고, 승인은 사람이 한다.
+버전을 올리고 태그를 push하면 staged publish가 된다. 공개는 npmjs.com에서 2FA로 승인해야 한다. 사람이 릴리스를 요청하면 AI가 태그를 push한다. 승인은 사람이 한다.
 
 ### 5. 서비스 적용
 
@@ -68,7 +68,7 @@ moyeorakui 저장소 main 브랜치의 `AGENTS.md`(meteorqz6/moyeorakui#15)를 �
 - 전환 전(main)과 전환 후의 운영 빌드를 각각 띄우고 같은 화면을 캡처해 비교한다.
 - 차이가 난 화면은 직접 열어 의도한 변화인지 본다. 의도하지 않은 차이는 5단계로 돌아가 고친다.
 - 포커스나 터치를 다루는 동작을 바꿨으면 WebKit에서 터치로도 확인한다. `onPointerDown`의 `preventDefault`로 포커스를 지키는 코드가 WebKit 터치에서만 동작하지 않았다(meteorqz6/moyeorakui#17).
-- 비교 스크립트(`compare-screens.mjs`)는 아직 이 저장소 밖에 있고 로컬 백엔드와 시드 데이터가 필요하다. 팀원도 쓸 수 있게 저장소로 옮길지는 첫 바퀴를 돈 뒤 정한다.
+- 비교 스크립트(`compare-screens.mjs`)는 이 저장소 밖에 있고 로컬 백엔드와 시드 데이터가 필요하다. 지금은 혼자 작업해 옮기지 않는다. 함께 쓸 사람이 생기면 다시 본다.
 
 ### 7. PR 정리
 
