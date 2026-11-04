@@ -13,6 +13,14 @@ describe("ParticipantCountChips", () => {
     expect(markup).toMatch(/>20명</);
   });
 
+  it("selects nothing when no count has been chosen", () => {
+    const markup = renderToStaticMarkup(
+      <ParticipantCountChips onChange={() => {}} />,
+    );
+    expect(markup.match(/<button/g)).toHaveLength(19);
+    expect(markup).not.toContain('aria-pressed="true"');
+  });
+
   it("marks counts below the selectable minimum as disabled but still pressable", () => {
     const markup = renderToStaticMarkup(
       <ParticipantCountChips value={5} onChange={() => {}} selectableMin={5} />,

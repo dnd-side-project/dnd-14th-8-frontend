@@ -35,7 +35,6 @@ export function useCreateMeetingForm(flow?: string) {
     resolver: zodResolver(createMeetingFormSchema),
     defaultValues: {
       participantName: "",
-      participantCount: 2,
     },
     mode: "onChange",
   });
