@@ -10,12 +10,14 @@ import {
 } from "react";
 import { cn } from "@/shared/utils/cn";
 
+// 출발지, 이름 선택, 주소 검색이 디자인 시스템으로 옮겨 갈 때까지 쓴다. 같은 화면의
+// 디자인 시스템 TextField와 어긋나지 않도록 gray도 흰 바탕과 회색 테두리로 맞춘다(#215).
 const textFieldVariants = cva(
   "flex w-full items-center rounded-xl border transition-colors",
   {
     variants: {
       variant: {
-        gray: "bg-fill-neutral-subtler",
+        gray: "bg-fill-neutral-faintest",
         outlined: "bg-fill-neutral-faintest",
       },
       status: {
@@ -29,7 +31,7 @@ const textFieldVariants = cva(
       {
         variant: "gray",
         status: "default",
-        className: "border-transparent",
+        className: "border-stroke-neutral-default",
       },
       {
         variant: "outlined",

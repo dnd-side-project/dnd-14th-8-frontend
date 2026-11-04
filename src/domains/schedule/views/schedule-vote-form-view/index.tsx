@@ -1,4 +1,10 @@
-import { ActionArea, Button, Header, Modal } from "@moyeorak/design-system";
+import {
+  ActionArea,
+  Button,
+  Header,
+  Modal,
+  TextField,
+} from "@moyeorak/design-system";
 import type { HTMLAttributes } from "react";
 import { type Control, Controller } from "react-hook-form";
 import { GuideTimeSelection } from "@/domains/schedule/components/guide-time-selection";
@@ -9,7 +15,6 @@ import {
 } from "@/shared/components/fixed-bottom-area";
 import { FloatingScrollTop } from "@/shared/components/floating-scroll-top";
 import { ReactHookFormDevtools } from "@/shared/components/react-hook-form-devtools";
-import { TextField } from "@/shared/components/text-field";
 import { Timetable } from "@/shared/components/timetable";
 import { cn } from "@/shared/utils/cn";
 
@@ -98,9 +103,9 @@ export function ScheduleVoteFormView({
             <TextField
               label="이름"
               value={field.value}
-              helperText={fieldState.error?.message}
-              status={fieldState.error ? "error" : undefined}
-              maxLength={maxNameLength}
+              autoComplete="off"
+              errorMessage={fieldState.error?.message}
+              maxCharacterCount={maxNameLength}
               onChange={(event) => field.onChange(event.target.value)}
               onClear={() => field.onChange("")}
               className="mt-1"

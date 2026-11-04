@@ -52,7 +52,7 @@ export const createDepartureFormSchema = z
     participantName: z
       .string()
       .trim()
-      .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 적을 수 있어요`)
+      .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 입력할 수 있어요`)
       .optional(),
     participantId: z.string().optional(),
     departureLocation: z.string().min(1, "출발지를 선택해주세요"),
