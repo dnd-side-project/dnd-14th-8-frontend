@@ -1,15 +1,18 @@
-import { ActionArea, Button, Header, TextField } from "@moyeorak/design-system";
+import {
+  ActionArea,
+  Button,
+  FieldButton,
+  Header,
+  TextField,
+} from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useCreateDepartureForm } from "@/domains/location/hooks/use-create-departure-form";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { useListParticipants } from "@/domains/schedule/hooks/use-list-participants";
-import { SearchIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { Select } from "@/shared/components/select";
-// 출발지는 FieldButton 전환 전까지 서비스 TextField를 쓴다.
-import { TextField as LegacyTextField } from "@/shared/components/text-field";
 import {
   useFlowEntryIndex,
   useFlowReturn,
@@ -158,15 +161,11 @@ export function DepartureNewPage() {
             control={control}
             name="departureLocation"
             render={({ field }) => (
-              <LegacyTextField
-                {...field}
+              <FieldButton
                 label="출발지"
-                placeholder="출발장소"
-                readOnly
-                rightIcon={SearchIcon}
+                placeholder="주소를 검색해주세요"
+                value={field.value}
                 onClick={handleSearchNavigate}
-                status={errors.departureLocation ? "error" : "default"}
-                helperText={errors.departureLocation?.message}
               />
             )}
           />
