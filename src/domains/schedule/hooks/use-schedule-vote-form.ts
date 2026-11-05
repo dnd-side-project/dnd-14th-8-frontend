@@ -112,7 +112,8 @@ export function useScheduleVoteForm() {
   // ── Form state ──
   const {
     control,
-    formState: { errors, isDirty, isValid },
+    formState: { isDirty, isValid },
+    getFieldState,
     getValues,
     handleSubmit,
     reset,
@@ -126,7 +127,8 @@ export function useScheduleVoteForm() {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [isExitConfirmOpen, setIsExitConfirmOpen] = useState(false);
 
-  // 서버 데이터가 로드되면 form 전체를 초기화하고 검증 실행
+  // 서버 데이터가 로드되면 form 전체를 초기화한다. 입력을 시작하기 전에 에러가
+  // 보이지 않도록 여기서는 검증하지 않는다(handleSubmitBlocked 참고).
   useEffect(() => {
     if (!initialData) {
       return;
@@ -136,8 +138,7 @@ export function useScheduleVoteForm() {
       name: initialData.participantName,
       selectedDates: initialData.selectedDates,
     });
-    void trigger();
-  }, [initialData, reset, trigger]);
+  }, [initialData, reset]);
 
   // ── Mutations ──
   const createVoteMutation = useCreateScheduleVote();
@@ -233,10 +234,10 @@ export function useScheduleVoteForm() {
       await invalidateScheduleQueries();
     }
 
-    // 이름은 유지하고 selectedDates만 초기화, isDirty = false로 기준점 재설정
+    // 이름은 유지하고 selectedDates만 초기화, isDirty = false로 기준점 재설정.
+    // 이름 칸에 보이던 에러는 이름이 그대로이므로 함께 유지한다.
     const currentName = getValues("name");
-    reset({ name: currentName, selectedDates: [] });
-    void trigger();
+    reset({ name: currentName, selectedDates: [] }, { keepErrors: true });
     toast.success("입력한 일정이 초기화되었어요");
   };
 
@@ -254,13 +255,20 @@ export function useScheduleVoteForm() {
     leaveForm();
   };
 
-  const handleSubmitBlocked = () => {
-    if (errors.name?.message) {
-      toast.error(errors.name.message);
+  const handleSubmitBlocked = async () => {
+    // 미리 검증하지 않으므로 누른 시점에 검증한다. 렌더 시점의 errors는 이전 값이라
+    // getFieldState로 방금 나온 결과를 읽는다.
+    await trigger();
+
+    const nameErrorMessage = getFieldState("name").error?.message;
+    if (nameErrorMessage) {
+      toast.error(nameErrorMessage);
       return;
     }
 
-    toast.error(errors.selectedDates?.message ?? NO_SELECTED_TIME_MESSAGE);
+    toast.error(
+      getFieldState("selectedDates").error?.message ?? NO_SELECTED_TIME_MESSAGE,
+    );
   };
 
   return {
@@ -285,6 +293,6 @@ export function useScheduleVoteForm() {
     onConfirmReset: () => void handleConfirmReset(),
     onReset: () => setIsResetConfirmOpen(true),
     onSubmit: () => void submitFormHandler(),
-    onSubmitBlocked: handleSubmitBlocked,
+    onSubmitBlocked: () => void handleSubmitBlocked(),
   };
 }
