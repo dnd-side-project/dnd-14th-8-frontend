@@ -72,41 +72,6 @@ function createFallbackPlace(query: string): PlaceItem[] {
   ];
 }
 
-function searchByNaverGeocode(query: string): Promise<PlaceItem[]> {
-  return new Promise((resolve, reject) => {
-    const geocode = window.naver?.maps?.Service?.geocode;
-    if (!geocode) {
-      reject(new Error("NAVER_GEOCODE_UNAVAILABLE"));
-      return;
-    }
-
-    geocode(
-      { query },
-      (
-        status: naver.maps.Service.Status,
-        response: naver.maps.Service.GeocodeResponse,
-      ) => {
-        if (status !== window.naver.maps.Service.Status.OK) {
-          reject(new Error("NAVER_GEOCODE_FAILED"));
-          return;
-        }
-
-        const addresses = response.v2.addresses ?? [];
-
-        resolve(
-          addresses.map((address) => ({
-            title: address.roadAddress || address.jibunAddress || query,
-            address: address.jibunAddress || "",
-            roadAddress: address.roadAddress || "",
-            x: address.x,
-            y: address.y,
-          })),
-        );
-      },
-    );
-  });
-}
-
 export function usePlaceSearch() {
   const [results, setResults] = useState<PlaceItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -152,15 +117,6 @@ export function usePlaceSearch() {
       });
 
       return;
-    }
-
-    try {
-      const naverPlaces = await searchByNaverGeocode(query);
-      setResults(naverPlaces);
-      setLoading(false);
-      return;
-    } catch {
-      // pass
     }
 
     try {
