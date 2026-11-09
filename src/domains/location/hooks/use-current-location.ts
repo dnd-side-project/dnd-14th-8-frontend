@@ -1,7 +1,11 @@
 import { useCallback, useState } from "react";
+import { findAddressByCoords } from "@/domains/location/utils/find-address-by-coords";
 import { toast } from "@/shared/components/toast";
 
 type Coordinates = [number, number];
+
+const CURRENT_LOCATION_FAILED_MESSAGE =
+  "현 위치를 불러오지 못했어요. 다시 시도해주세요";
 
 export function useCurrentLocation() {
   const [coords, setCoords] = useState<Coordinates | null>(null);
@@ -10,42 +14,18 @@ export function useCurrentLocation() {
   const [error, setError] = useState<string | null>(null);
 
   const reverseGeocode = useCallback((coords: Coordinates) => {
-    const naverMaps = window.naver?.maps;
-    const service = naverMaps?.Service;
-    const LatLng = naverMaps?.LatLng;
-
-    if (!service || !LatLng) {
-      setError("지도를 아직 불러오는 중이에요. 잠시 후 다시 시도해주세요.");
-      setLoading(false);
-      return;
-    }
-
     const [lat, lng] = coords;
 
-    service.reverseGeocode(
-      {
-        coords: new LatLng(lat, lng),
-        orders: [service.OrderType.ADDR, service.OrderType.ROAD_ADDR].join(","),
-      },
-      (
-        status: naver.maps.Service.Status,
-        response: naver.maps.Service.ReverseGeocodeResponse,
-      ) => {
-        if (status !== service.Status.OK) {
-          setError("주소를 찾을 수 없어요");
-          setLoading(false);
-          return;
+    findAddressByCoords(lat, lng)
+      .then((found) => {
+        if (found) {
+          setAddress(found);
+        } else {
+          setError(CURRENT_LOCATION_FAILED_MESSAGE);
         }
-
-        const resolvedAddress =
-          response.v2.address?.roadAddress ||
-          response.v2.address?.jibunAddress ||
-          "주소를 찾을 수 없어요";
-
-        setAddress(resolvedAddress);
-        setLoading(false);
-      },
-    );
+      })
+      .catch(() => setError(CURRENT_LOCATION_FAILED_MESSAGE))
+      .finally(() => setLoading(false));
   }, []);
 
   const getCurrentLocation = useCallback(() => {
