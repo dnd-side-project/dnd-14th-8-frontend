@@ -36,7 +36,7 @@ export function DepartureNewSearchPage() {
   const {
     results,
     loading: isSearching,
-    error: searchError,
+    failed: searchFailed,
     search,
   } = usePlaceSearch();
 
@@ -44,7 +44,6 @@ export function DepartureNewSearchPage() {
     address: currentAddress,
     coords: currentCoords,
     loading: isFetchingLocation,
-    error: locationError,
     getCurrentLocation,
   } = useCurrentLocation();
 
@@ -138,36 +137,33 @@ export function DepartureNewSearchPage() {
               />
             ))}
 
-          {!isSearching && results.length === 0 && keyword.length > 1 && (
-            <div className="mt-25 flex flex-col items-center gap-4 px-5">
-              <PlaceholderContent
-                graphic={<Empty2Character />}
-                title="일치하는 주소가 없어요"
-                description="검색한 지역을 다시 확인해 보세요."
-              />
+          {!isSearching &&
+            !searchFailed &&
+            results.length === 0 &&
+            keyword.length > 1 && (
+              <div className="mt-25 flex flex-col items-center gap-4 px-5">
+                <PlaceholderContent
+                  graphic={<Empty2Character />}
+                  title="일치하는 주소가 없어요"
+                  description="검색한 지역을 다시 확인해 보세요."
+                />
 
-              <ButtonSubStroke
-                onClick={() =>
-                  navigate("..", {
-                    state: {
-                      ...location.state,
-                      address: keyword.trim(),
-                      coords: FALLBACK_COORDS,
-                    },
-                  })
-                }
-              >
-                입력한 주소로 직접 등록하기
-              </ButtonSubStroke>
-            </div>
-          )}
+                <ButtonSubStroke
+                  onClick={() =>
+                    navigate("..", {
+                      state: {
+                        ...location.state,
+                        address: keyword.trim(),
+                        coords: FALLBACK_COORDS,
+                      },
+                    })
+                  }
+                >
+                  입력한 주소로 직접 등록하기
+                </ButtonSubStroke>
+              </div>
+            )}
         </div>
-
-        {(searchError || locationError) && (
-          <p className="textStyle_body4 mt-2 px-5 text-red-500">
-            {searchError || locationError}
-          </p>
-        )}
       </section>
     </MobileLayout>
   );
