@@ -8,11 +8,12 @@ type Coordinates = [number, number];
 const CURRENT_LOCATION_FAILED_MESSAGE =
   "현 위치를 불러오지 못했어요. 다시 시도해주세요";
 
+const showFailure = () => toast.error(CURRENT_LOCATION_FAILED_MESSAGE);
+
 export function useCurrentLocation() {
   const [coords, setCoords] = useState<Coordinates | null>(null);
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const reverseGeocode = useCallback((coords: Coordinates) => {
     const [lat, lng] = coords;
@@ -22,21 +23,20 @@ export function useCurrentLocation() {
         if (found) {
           setAddress(found);
         } else {
-          setError(CURRENT_LOCATION_FAILED_MESSAGE);
+          showFailure();
         }
       })
-      .catch(() => setError(CURRENT_LOCATION_FAILED_MESSAGE))
+      .catch(showFailure)
       .finally(() => setLoading(false));
   }, []);
 
   const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("이 브라우저에서는 위치를 가져올 수 없어요.");
+      toast.error("이 브라우저에서는 현 위치를 불러올 수 없어요");
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
@@ -64,7 +64,6 @@ export function useCurrentLocation() {
     coords,
     address,
     loading,
-    error,
     getCurrentLocation,
   };
 }

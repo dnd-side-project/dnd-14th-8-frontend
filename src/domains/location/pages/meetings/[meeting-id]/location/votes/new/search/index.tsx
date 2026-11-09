@@ -33,18 +33,12 @@ export function DepartureNewSearchPage() {
   const location = useLocation() as { state: VoteSearchLocationState | null };
   const [keyword, setKeyword] = useState("");
 
-  const {
-    results,
-    loading: isSearching,
-    error: searchError,
-    search,
-  } = usePlaceSearch();
+  const { results, loading: isSearching, search } = usePlaceSearch();
 
   const {
     address: currentAddress,
     coords: currentCoords,
     loading: isFetchingLocation,
-    error: locationError,
     getCurrentLocation,
   } = useCurrentLocation();
 
@@ -162,12 +156,6 @@ export function DepartureNewSearchPage() {
             </div>
           )}
         </div>
-
-        {(searchError || locationError) && (
-          <p className="textStyle_body4 mt-2 px-5 text-red-500">
-            {searchError || locationError}
-          </p>
-        )}
       </section>
     </MobileLayout>
   );

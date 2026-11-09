@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { toast } from "@/shared/components/toast";
 
 export interface PlaceItem {
   title: string;
@@ -72,20 +73,20 @@ function createFallbackPlace(query: string): PlaceItem[] {
   ];
 }
 
+// 검색은 입력할 때마다 돌아서, 실패 토스트가 쌓이지 않도록 같은 id로 바꿔 띄운다.
+const SEARCH_ERROR_TOAST_ID = "place-search-error";
+
 export function usePlaceSearch() {
   const [results, setResults] = useState<PlaceItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const search = useCallback(async (query: string) => {
     if (!query.trim()) {
       setResults([]);
-      setError(null);
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     // biome-ignore lint/suspicious/noExplicitAny: Kakao SDK access
     const kakao = (window as any).kakao;
@@ -110,7 +111,9 @@ export function usePlaceSearch() {
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
           setResults([]);
         } else {
-          setError("장소 검색에 실패했어요");
+          toast.error("장소를 검색하지 못했어요. 다시 시도해주세요", {
+            id: SEARCH_ERROR_TOAST_ID,
+          });
         }
 
         setLoading(false);
@@ -123,12 +126,14 @@ export function usePlaceSearch() {
       const kakaoPlaces = await searchByKakaoRestApi(query);
       setResults(kakaoPlaces);
     } catch {
-      setError("검색 SDK가 불안정해 직접 입력 좌표를 사용해요");
+      toast.error("장소를 검색하지 못해 입력한 글자로 보여 드려요", {
+        id: SEARCH_ERROR_TOAST_ID,
+      });
       setResults(createFallbackPlace(query));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  return { results, loading, error, search };
+  return { results, loading, search };
 }
