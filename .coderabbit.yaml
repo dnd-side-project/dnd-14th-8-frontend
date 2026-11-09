@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# 리뷰 기준은 AGENTS.md다. 여기서는 저장소 규칙과 맞지 않아 반복해서 반려한 기본 검사만 끈다.
+reviews:
+  pre_merge_checks:
+    # 이 저장소는 함수 docstring 기준을 두지 않는다. #231, #235, #237에서 같은 이유로 반려했다(#238).
+    docstrings:
+      mode: "off"
