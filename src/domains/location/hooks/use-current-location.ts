@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { findAddressByCoords } from "@/domains/location/utils/find-address-by-coords";
+import { getLocationPermissionDeniedMessage } from "@/domains/location/utils/location-permission-message";
 import { toast } from "@/shared/components/toast";
 
 type Coordinates = [number, number];
@@ -48,10 +49,10 @@ export function useCurrentLocation() {
         reverseGeocode(currentCoords);
       },
       (error: GeolocationPositionError) => {
-        // 권한을 거부했을 때만 설정 안내를 하고, 시간 초과처럼 다시 시도하면 될 수 있는 오류는 따로 알린다.
+        // 권한을 거부했을 때만 다시 허용하는 방법을 안내하고, 시간 초과처럼 다시 시도하면 될 수 있는 오류는 따로 알린다.
         toast.error(
           error.code === error.PERMISSION_DENIED
-            ? "설정에서 위치 권한을 허용해주세요"
+            ? getLocationPermissionDeniedMessage(navigator.userAgent)
             : "현재 위치를 찾지 못했어요. 다시 시도해주세요",
         );
         setLoading(false);
