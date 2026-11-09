@@ -33,7 +33,12 @@ export function DepartureNewSearchPage() {
   const location = useLocation() as { state: VoteSearchLocationState | null };
   const [keyword, setKeyword] = useState("");
 
-  const { results, loading: isSearching, search } = usePlaceSearch();
+  const {
+    results,
+    loading: isSearching,
+    failed: searchFailed,
+    search,
+  } = usePlaceSearch();
 
   const {
     address: currentAddress,
@@ -132,29 +137,32 @@ export function DepartureNewSearchPage() {
               />
             ))}
 
-          {!isSearching && results.length === 0 && keyword.length > 1 && (
-            <div className="mt-25 flex flex-col items-center gap-4 px-5">
-              <PlaceholderContent
-                graphic={<Empty2Character />}
-                title="일치하는 주소가 없어요"
-                description="검색한 지역을 다시 확인해 보세요."
-              />
+          {!isSearching &&
+            !searchFailed &&
+            results.length === 0 &&
+            keyword.length > 1 && (
+              <div className="mt-25 flex flex-col items-center gap-4 px-5">
+                <PlaceholderContent
+                  graphic={<Empty2Character />}
+                  title="일치하는 주소가 없어요"
+                  description="검색한 지역을 다시 확인해 보세요."
+                />
 
-              <ButtonSubStroke
-                onClick={() =>
-                  navigate("..", {
-                    state: {
-                      ...location.state,
-                      address: keyword.trim(),
-                      coords: FALLBACK_COORDS,
-                    },
-                  })
-                }
-              >
-                입력한 주소로 직접 등록하기
-              </ButtonSubStroke>
-            </div>
-          )}
+                <ButtonSubStroke
+                  onClick={() =>
+                    navigate("..", {
+                      state: {
+                        ...location.state,
+                        address: keyword.trim(),
+                        coords: FALLBACK_COORDS,
+                      },
+                    })
+                  }
+                >
+                  입력한 주소로 직접 등록하기
+                </ButtonSubStroke>
+              </div>
+            )}
         </div>
       </section>
     </MobileLayout>

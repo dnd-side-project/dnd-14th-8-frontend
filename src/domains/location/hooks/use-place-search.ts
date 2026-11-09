@@ -57,36 +57,30 @@ async function searchByKakaoRestApi(query: string) {
   return mapPlaceItems(payload.documents);
 }
 
-function createFallbackPlace(query: string): PlaceItem[] {
-  const seed = Array.from(query).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const latitude = 37.5 + (seed % 100) * 0.0005;
-  const longitude = 126.9 + (seed % 100) * 0.0005;
-
-  return [
-    {
-      title: query,
-      address: query,
-      roadAddress: "",
-      x: String(longitude),
-      y: String(latitude),
-    },
-  ];
-}
-
 // 검색은 입력할 때마다 돌아서, 실패 토스트가 쌓이지 않도록 같은 id로 바꿔 띄운다.
 const SEARCH_ERROR_TOAST_ID = "place-search-error";
+
+function showSearchFailure() {
+  toast.error("장소를 검색하지 못했어요. 다시 시도해주세요", {
+    id: SEARCH_ERROR_TOAST_ID,
+  });
+}
 
 export function usePlaceSearch() {
   const [results, setResults] = useState<PlaceItem[]>([]);
   const [loading, setLoading] = useState(false);
+  // 실패는 결과 없음과 다르다. 화면이 "일치하는 주소가 없어요"를 띄우지 않도록 따로 둔다.
+  const [failed, setFailed] = useState(false);
 
   const search = useCallback(async (query: string) => {
     if (!query.trim()) {
       setResults([]);
+      setFailed(false);
       return;
     }
 
     setLoading(true);
+    setFailed(false);
 
     // biome-ignore lint/suspicious/noExplicitAny: Kakao SDK access
     const kakao = (window as any).kakao;
@@ -111,9 +105,10 @@ export function usePlaceSearch() {
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
           setResults([]);
         } else {
-          toast.error("장소를 검색하지 못했어요. 다시 시도해주세요", {
-            id: SEARCH_ERROR_TOAST_ID,
-          });
+          // 앞 검색어의 결과가 남아 고를 수 있게 되지 않도록 비운다.
+          setResults([]);
+          setFailed(true);
+          showSearchFailure();
         }
 
         setLoading(false);
@@ -126,14 +121,14 @@ export function usePlaceSearch() {
       const kakaoPlaces = await searchByKakaoRestApi(query);
       setResults(kakaoPlaces);
     } catch {
-      toast.error("장소를 검색하지 못해 입력한 글자로 보여 드려요", {
-        id: SEARCH_ERROR_TOAST_ID,
-      });
-      setResults(createFallbackPlace(query));
+      // 예전에는 입력한 글자로 좌표를 계산한 가짜 장소를 보여 줬다. 고르면 엉뚱한 좌표가 저장되어 실패로 처리한다.
+      setResults([]);
+      setFailed(true);
+      showSearchFailure();
     } finally {
       setLoading(false);
     }
   }, []);
 
-  return { results, loading, search };
+  return { results, loading, failed, search };
 }
