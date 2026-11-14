@@ -26,8 +26,6 @@ interface VoteSearchLocationState {
   selectedParticipantId?: string;
 }
 
-const FALLBACK_COORDS: [number, number] = [37.5665, 126.978];
-
 export function DepartureNewSearchPage() {
   const navigate = useNavigate();
   const location = useLocation() as { state: VoteSearchLocationState | null };
@@ -115,9 +113,14 @@ export function DepartureNewSearchPage() {
           {!isSearching &&
             results.map((item) => (
               <ItemSearchResult
-                key={`${item.x}-${item.y}`}
+                key={`${item.x}-${item.y}-${item.title}`}
                 text={item.title}
-                description={item.roadAddress || item.address}
+                // 주소 검색 결과는 이름이 없어 주소 한 줄만 보인다.
+                description={
+                  item.kind === "place"
+                    ? item.roadAddress || item.address
+                    : undefined
+                }
                 highlight={keyword}
                 onClick={() => {
                   const lat = Number(item.y);
@@ -141,26 +144,12 @@ export function DepartureNewSearchPage() {
             !searchFailed &&
             results.length === 0 &&
             keyword.length > 1 && (
-              <div className="mt-25 flex flex-col items-center gap-4 px-5">
+              <div className="mt-25 flex flex-col items-center px-5">
                 <PlaceholderContent
                   graphic={<Empty2Character />}
                   title="일치하는 주소가 없어요"
                   description="검색한 지역을 다시 확인해 보세요."
                 />
-
-                <ButtonSubStroke
-                  onClick={() =>
-                    navigate("..", {
-                      state: {
-                        ...location.state,
-                        address: keyword.trim(),
-                        coords: FALLBACK_COORDS,
-                      },
-                    })
-                  }
-                >
-                  입력한 주소로 직접 등록하기
-                </ButtonSubStroke>
               </div>
             )}
         </div>

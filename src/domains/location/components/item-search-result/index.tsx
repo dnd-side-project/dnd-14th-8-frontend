@@ -5,7 +5,8 @@ export interface ItemSearchResultProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   highlight?: string;
   text: string;
-  description: string;
+  // 없으면 설명 줄을 그리지 않는다(주소 검색 결과처럼 한 줄만 보일 때).
+  description?: string;
   onClick?: () => void;
 }
 
@@ -33,9 +34,11 @@ export function ItemSearchResult({
       <p className="textStyle_body1 truncate text-fg-neutral-default">
         {renderHighlighted(text, highlight)}
       </p>
-      <p className="textStyle_body5 truncate text-fg-neutral-subtle">
-        {description}
-      </p>
+      {description && (
+        <p className="textStyle_body5 truncate text-fg-neutral-subtle">
+          {description}
+        </p>
+      )}
     </button>
   );
 }
