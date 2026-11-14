@@ -56,6 +56,7 @@ export const createDepartureFormSchema = z
       .optional(),
     participantId: z.string().optional(),
     departureLocation: z.string().min(1, "출발지를 선택해주세요"),
+    departureAddress: z.string().optional(),
     departureLat: z.string().min(1),
     departureLng: z.string().min(1),
   })
@@ -91,6 +92,7 @@ export function useCreateDepartureForm(
       participantName: initialValues?.participantName || "",
       participantId: initialValues?.participantId || "",
       departureLocation: initialValues?.departureLocation || "",
+      departureAddress: initialValues?.departureAddress || "",
       departureLat: initialValues?.departureLat || "",
       departureLng: initialValues?.departureLng || "",
     },
@@ -106,6 +108,7 @@ export function useCreateDepartureForm(
         participantId: data.participantId,
         participantName: data.participantName || "",
         departureLocation: data.departureLocation,
+        departureAddress: data.departureAddress,
         departureLat: data.departureLat,
         departureLng: data.departureLng,
         guestId,

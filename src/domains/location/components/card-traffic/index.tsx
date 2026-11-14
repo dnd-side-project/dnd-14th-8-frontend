@@ -32,14 +32,15 @@ export function CardTraffic({
       {...props}
     >
       {/* 상단: 출발지 → 도착지 + km */}
-      <div className="mb-0.5 flex items-center justify-between">
-        <div className="textStyle_body4 flex items-center gap-0.5 text-fg-neutral-default">
-          <span className="truncate">{departure}</span>
+      {/* 출발지는 장소 이름이 길 수 있어 말줄임하고, 도착역과 거리는 항상 보인다(#230) */}
+      <div className="mb-0.5 flex items-center justify-between gap-2">
+        <div className="textStyle_body4 flex min-w-0 items-center gap-0.5 text-fg-neutral-default">
+          <span className="min-w-0 truncate">{departure}</span>
           <ArrowRightIcon className="size-4 shrink-0 text-fg-neutral-subtler" />
-          <span className="truncate">{arrival}</span>
+          <span className="shrink-0">{arrival}</span>
         </div>
         {distanceMeters != null && (
-          <span className="textStyle_body4 text-fg-brand-default">
+          <span className="textStyle_body4 shrink-0 text-fg-brand-default">
             {formatDistance(distanceMeters)}
           </span>
         )}

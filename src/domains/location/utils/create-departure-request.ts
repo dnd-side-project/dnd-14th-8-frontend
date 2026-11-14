@@ -8,6 +8,7 @@ const DUPLICATE_DEPARTURE_ERROR_CODES = ["E413", "E430"];
 export const DUPLICATE_DEPARTURE_MESSAGE = "이미 출발지를 등록한 참여자예요";
 
 interface BuildCreateDepartureRequestParams {
+  departureAddress?: string;
   departureLat: string;
   departureLng: string;
   departureLocation: string;
@@ -25,6 +26,7 @@ interface BuildCreateDepartureRequestParams {
  * - 미지정 + 내 출발지 없음: 본인 첫 등록 (localStorageKey 전송)
  */
 export function buildCreateDepartureRequest({
+  departureAddress,
   departureLat,
   departureLng,
   departureLocation,
@@ -35,6 +37,8 @@ export function buildCreateDepartureRequest({
   participantName,
 }: BuildCreateDepartureRequestParams): CreateLocationVoteRequest {
   const base: CreateLocationVoteRequest = {
+    // 장소 이름을 고른 경우에만 주소가 있다. 빈 값은 보내지 않아 백엔드가 null로 저장한다.
+    ...(departureAddress ? { departureAddress } : {}),
     departureLat,
     departureLng,
     departureLocation,
