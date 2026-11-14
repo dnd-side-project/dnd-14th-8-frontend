@@ -54,3 +54,12 @@ export const Showcase: Story = {
     </div>
   ),
 };
+
+// 출발지에 긴 장소 이름이 들어와도 칩 안에서 말줄임해 소요 시간을 덮지 않는다(#230).
+export const LongAddress: Story = {
+  args: {
+    name: "김수빈",
+    address: "청주시청 (2029년 3월 예정) 임시청사 민원실 앞 버스정류장",
+    durationMinutes: 87,
+  },
+};
