@@ -279,6 +279,18 @@ describe("createLatestPlaceSearch", () => {
     await expect(first).resolves.toEqual({ type: "stale" });
   });
 
+  it("입력이 바뀌어 invalidate하면 debounce 중에 도착한 앞 검색의 응답을 쓰지 않는다", async () => {
+    const { search, respond } = createControlledSearch();
+    const runLatest = createLatestPlaceSearch(search);
+
+    const first = runLatest("연희");
+    // 입력이 "연희동"으로 바뀌었고, 새 검색은 debounce 300ms 뒤에 부른다.
+    runLatest.invalidate();
+    respond("연희").resolve([item("연희동 주민센터")]);
+
+    await expect(first).resolves.toEqual({ type: "stale" });
+  });
+
   it("마지막 검색이 실패하면 failed다", async () => {
     const { search, respond } = createControlledSearch();
     const runLatest = createLatestPlaceSearch(search);

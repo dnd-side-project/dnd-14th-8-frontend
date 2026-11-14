@@ -166,10 +166,12 @@ export type PlaceSearchOutcome =
 // 입력할 때마다 검색이 돌아서, 앞 검색어의 응답이 뒤 검색어의 응답보다 늦게 올 수 있다.
 // 주소 검색까지 하면 그 틈이 더 길어진다. 마지막으로 부른 검색의 응답만 쓰고,
 // 그 사이에 다른 검색(빈 검색어 포함)을 불렀으면 stale로 돌려줘 버리게 한다.
+// 입력이 바뀌면 debounce를 기다리지 않고 invalidate()로 진행 중인 검색을 바로 무효로 한다.
+// 그러지 않으면 debounce 동안 앞 검색의 응답이 도착해 지금 입력과 다른 결과가 보인다.
 export function createLatestPlaceSearch(search = searchPlaces) {
   let latestId = 0;
 
-  return async function runLatest(query: string): Promise<PlaceSearchOutcome> {
+  async function runLatest(query: string): Promise<PlaceSearchOutcome> {
     latestId += 1;
     const id = latestId;
 
@@ -183,5 +185,11 @@ export function createLatestPlaceSearch(search = searchPlaces) {
     } catch {
       return id === latestId ? { type: "failed" } : { type: "stale" };
     }
-  };
+  }
+
+  function invalidate() {
+    latestId += 1;
+  }
+
+  return Object.assign(runLatest, { invalidate });
 }

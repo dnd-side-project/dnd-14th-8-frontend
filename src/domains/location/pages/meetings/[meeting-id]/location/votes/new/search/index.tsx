@@ -36,6 +36,7 @@ export function DepartureNewSearchPage() {
     loading: isSearching,
     failed: searchFailed,
     search,
+    cancel: cancelSearch,
   } = usePlaceSearch();
 
   const {
@@ -51,12 +52,14 @@ export function DepartureNewSearchPage() {
       return;
     }
 
+    // 기다리는 동안 앞 검색어의 응답이 도착해도 쓰지 않게 바로 무효로 한다.
+    cancelSearch();
     const timer = setTimeout(() => {
       search(keyword);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [keyword, search]);
+  }, [keyword, search, cancelSearch]);
 
   useEffect(() => {
     if (!currentAddress) return;

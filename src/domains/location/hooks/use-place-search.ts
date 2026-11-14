@@ -48,5 +48,8 @@ export function usePlaceSearch() {
     [runLatest],
   );
 
-  return { results, loading, failed, search };
+  // 입력이 바뀐 순간 부른다. 진행 중인 검색의 응답이 debounce 동안 화면을 덮지 않는다.
+  const cancel = useCallback(() => runLatest.invalidate(), [runLatest]);
+
+  return { results, loading, failed, search, cancel };
 }
