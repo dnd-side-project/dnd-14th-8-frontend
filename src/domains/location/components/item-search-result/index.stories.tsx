@@ -57,6 +57,14 @@ export const NoHighlight: Story = {
   },
 };
 
+// 주소 검색 결과처럼 장소 이름 없이 주소 한 줄만 보일 때
+export const WithoutDescription: Story = {
+  args: {
+    highlight: "연희동 123-4",
+    text: "서울 서대문구 연희동 123-4",
+  },
+};
+
 export const Showcase: Story = {
   args: {
     highlight: "강남",
