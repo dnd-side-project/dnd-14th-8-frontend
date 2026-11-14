@@ -68,14 +68,20 @@ export function DepartureEditPage() {
   useEffect(() => {
     if (!selectedDeparture || initializedRef.current) return;
 
-    setValue("participantName", selectedDeparture.participantName);
-    setValue("departureLocation", selectedDeparture.departureLocation);
-    setValue("departureAddress", selectedDeparture.departureAddress ?? "");
-    setValue("departureLat", String(selectedDeparture.departureLat));
-    setValue("departureLng", String(selectedDeparture.departureLng));
+    // 검색에서 고르고 돌아온 값이 있으면 저장된 값으로 덮지 않는다.
+    // 새로고침으로 캐시가 비면 저장된 출발지가 검색 값보다 늦게 도착한다.
+    if (!state?.name) {
+      setValue("participantName", selectedDeparture.participantName);
+    }
+    if (!state?.address) {
+      setValue("departureLocation", selectedDeparture.departureLocation);
+      setValue("departureAddress", selectedDeparture.departureAddress ?? "");
+      setValue("departureLat", String(selectedDeparture.departureLat));
+      setValue("departureLng", String(selectedDeparture.departureLng));
+    }
 
     initializedRef.current = true;
-  }, [selectedDeparture, setValue]);
+  }, [selectedDeparture, setValue, state?.name, state?.address]);
 
   useEffect(() => {
     if (state?.address) {
