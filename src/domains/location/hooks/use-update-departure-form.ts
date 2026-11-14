@@ -26,6 +26,7 @@ export const updateDepartureFormSchema = z
       .min(1, "이름을 입력해주세요")
       .max(NAME_MAX_LENGTH, `최대 ${NAME_MAX_LENGTH}자까지 입력할 수 있어요`),
     departureLocation: z.string().min(1, "출발지를 선택해주세요"),
+    departureAddress: z.string().optional(),
     departureLat: z.string().min(1),
     departureLng: z.string().min(1),
   })
@@ -64,6 +65,7 @@ export function useUpdateDepartureForm({
     defaultValues: {
       participantName: initialValues?.participantName ?? "",
       departureLocation: initialValues?.departureLocation ?? "",
+      departureAddress: initialValues?.departureAddress ?? "",
       departureLat: initialValues?.departureLat ?? "",
       departureLng: initialValues?.departureLng ?? "",
     },
@@ -75,6 +77,10 @@ export function useUpdateDepartureForm({
       const requestPayload: UpdateLocationVoteRequest = {
         participantName: data.participantName,
         departureLocation: data.departureLocation,
+        // 수정은 모든 값을 덮어쓴다. 주소가 없으면 보내지 않아 백엔드가 null로 바꾼다.
+        ...(data.departureAddress
+          ? { departureAddress: data.departureAddress }
+          : {}),
         departureLat: data.departureLat,
         departureLng: data.departureLng,
       };

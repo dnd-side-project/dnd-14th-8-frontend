@@ -18,6 +18,8 @@ import {
 
 interface VoteSearchLocationState {
   address?: string;
+  // 검색에서 장소를 골랐을 때만 있다. 출발지 칸 둘째 줄이다.
+  departureAddress?: string;
   coords?: [number, number];
   // 폼이 기억한 진입 위치. 검색을 다녀와도 잃지 않게 그대로 실어 보낸다.
   entryIdx?: number | null;
@@ -68,6 +70,7 @@ export function DepartureEditPage() {
 
     setValue("participantName", selectedDeparture.participantName);
     setValue("departureLocation", selectedDeparture.departureLocation);
+    setValue("departureAddress", selectedDeparture.departureAddress ?? "");
     setValue("departureLat", String(selectedDeparture.departureLat));
     setValue("departureLng", String(selectedDeparture.departureLng));
 
@@ -77,6 +80,7 @@ export function DepartureEditPage() {
   useEffect(() => {
     if (state?.address) {
       setValue("departureLocation", state.address);
+      setValue("departureAddress", state.departureAddress ?? "");
     }
 
     if (state?.coords && Array.isArray(state.coords)) {
@@ -173,6 +177,7 @@ export function DepartureEditPage() {
                 label="출발지"
                 placeholder="주소를 검색해주세요"
                 value={field.value}
+                description={watch("departureAddress") || undefined}
                 onClick={handleSearchNavigate}
               />
             )}

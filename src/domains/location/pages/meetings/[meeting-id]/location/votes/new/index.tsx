@@ -20,6 +20,8 @@ import {
 
 interface VoteSearchLocationState {
   address?: string;
+  // 검색에서 장소를 골랐을 때만 있다. 출발지 칸 둘째 줄이다.
+  departureAddress?: string;
   coords?: [number, number];
   name?: string;
   entryIdx?: number | null;
@@ -53,6 +55,7 @@ export function DepartureNewPage() {
     meetingId,
     {
       departureLocation: state?.address,
+      departureAddress: state?.departureAddress,
       departureLat: state?.coords ? String(state.coords[0]) : undefined,
       departureLng: state?.coords ? String(state.coords[1]) : undefined,
       participantName: state?.name,
@@ -64,6 +67,7 @@ export function DepartureNewPage() {
   useEffect(() => {
     if (state?.address) {
       setValue("departureLocation", state.address);
+      setValue("departureAddress", state.departureAddress ?? "");
     }
 
     if (state?.coords && Array.isArray(state.coords)) {
@@ -165,6 +169,7 @@ export function DepartureNewPage() {
                 label="출발지"
                 placeholder="주소를 검색해주세요"
                 value={field.value}
+                description={watch("departureAddress") || undefined}
                 onClick={handleSearchNavigate}
               />
             )}
