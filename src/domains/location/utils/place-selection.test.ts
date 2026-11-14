@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { getPlaceSelection } from "@/domains/location/utils/place-selection";
+import type { PlaceItem } from "@/domains/location/utils/search-places";
 
-const seodaemun = {
+const seodaemun: PlaceItem = {
+  kind: "place",
   title: "서대문역 5호선",
   roadAddress: "서울 종로구 통일로 지하 126",
   address: "서울 종로구 평동 210",
@@ -21,5 +23,18 @@ describe("getPlaceSelection", () => {
     expect(
       getPlaceSelection({ ...seodaemun, roadAddress: "" }).departureAddress,
     ).toBe("서울 종로구 평동 210");
+  });
+
+  it("주소 검색 결과는 주소를 첫 줄로만 저장하고 둘째 줄을 두지 않는다", () => {
+    expect(
+      getPlaceSelection({
+        kind: "address",
+        title: "서울 서대문구 연희동 123-4",
+        address: "서울 서대문구 연희동 123-4",
+        roadAddress: "",
+        x: "126.93055705469",
+        y: "37.5692301084045",
+      }),
+    ).toEqual({ departureLocation: "서울 서대문구 연희동 123-4" });
   });
 });
