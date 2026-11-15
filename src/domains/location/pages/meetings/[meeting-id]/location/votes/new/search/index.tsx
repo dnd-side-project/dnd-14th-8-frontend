@@ -6,6 +6,7 @@ import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
+import { getPlaceSelection } from "@/domains/location/utils/place-selection";
 import {
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
@@ -73,6 +74,8 @@ export function DepartureNewSearchPage() {
       state: {
         ...location.state,
         address: currentAddress,
+        // 현 위치는 첫 줄이 이미 주소라 둘째 줄이 없다. 앞에서 고른 장소의 주소가 남지 않게 비운다.
+        departureAddress: undefined,
         coords: currentCoords,
       },
     });
@@ -132,10 +135,13 @@ export function DepartureNewSearchPage() {
                     toast.error(OUT_OF_SERVICE_AREA_MESSAGE);
                     return;
                   }
+                  const { departureLocation, departureAddress } =
+                    getPlaceSelection(item);
                   navigate("..", {
                     state: {
                       ...location.state,
-                      address: item.roadAddress || item.address,
+                      address: departureLocation,
+                      departureAddress,
                       coords: [lat, lng],
                     },
                   });

@@ -11,6 +11,7 @@ import type {
 import { type ApiResponse, api } from "@/shared/utils/axios";
 
 interface CreateLocationVoteRequestBody {
+  departureAddress?: string;
   departureLat: string;
   departureLng: string;
   departureLocation: string;
@@ -21,6 +22,7 @@ interface CreateLocationVoteRequestBody {
 }
 
 interface UpdateLocationVoteRequestBody {
+  departureAddress?: string;
   departureLat: string;
   departureLng: string;
   departureLocation: string;

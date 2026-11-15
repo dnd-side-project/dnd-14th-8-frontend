@@ -1,6 +1,8 @@
 export type CoordinateValue = number | string;
 
 export interface CreateLocationVoteRequest {
+  /** 검색에서 장소를 골랐을 때 그 장소의 주소. 현 위치나 주소로 고르면 없다 */
+  departureAddress?: string;
   departureLat: CoordinateValue;
   departureLng: CoordinateValue;
   departureLocation: string;
@@ -12,6 +14,8 @@ export interface CreateLocationVoteRequest {
 }
 
 export interface UpdateLocationVoteRequest {
+  /** 검색에서 장소를 골랐을 때 그 장소의 주소. 현 위치나 주소로 고르면 없다 */
+  departureAddress?: string;
   departureLat: CoordinateValue;
   departureLng: CoordinateValue;
   departureLocation: string;
@@ -19,6 +23,8 @@ export interface UpdateLocationVoteRequest {
 }
 
 export interface LocationVote {
+  /** 검색에서 장소를 골랐을 때 그 장소의 주소. 없으면 null(백엔드 #180 전 출발지 포함) */
+  departureAddress?: string | null;
   departureLat: number;
   departureLng: number;
   departureLocation: string;

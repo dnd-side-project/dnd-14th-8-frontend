@@ -35,8 +35,9 @@ export function CardLocationMember({
         <p className="textStyle_title3 mb-1 truncate text-fg-neutral-strong">
           {name}
         </p>
-        <Badge size="md" variant="brand-weak">
-          {address}
+        {/* 장소 이름이 길면 칩 안에서 말줄임해 오른쪽 소요 시간을 덮지 않는다(#230) */}
+        <Badge size="md" variant="brand-weak" className="max-w-full">
+          <span className="min-w-0 truncate">{address}</span>
         </Badge>
       </div>
       <div className="flex shrink-0 items-center gap-1">

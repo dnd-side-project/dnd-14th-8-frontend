@@ -36,9 +36,12 @@ export function ItemSavedplace({
         </span>
       </div>
 
-      <p className="textStyle_body5 truncate text-fg-neutral-subtle">
-        {address}
-      </p>
+      {/* 주소가 없는 출발지(현 위치, 기존 출발지)는 빈 줄을 남기지 않는다 */}
+      {address && (
+        <p className="textStyle_body5 truncate text-fg-neutral-subtle">
+          {address}
+        </p>
+      )}
 
       <div className="flex items-center justify-end gap-1">
         <Button

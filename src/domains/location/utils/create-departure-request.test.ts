@@ -73,6 +73,25 @@ describe("buildCreateDepartureRequest", () => {
     expect(request.departureLat).toBe("37.5145430");
     expect(request.departureLng).toBe("127.1058860");
   });
+
+  it("장소를 고른 주소가 있으면 departureAddress로 담는다", () => {
+    const request = buildCreateDepartureRequest({
+      ...baseParams,
+      departureLocation: "서대문역 5호선",
+      departureAddress: "서울 종로구 통일로 지하 126",
+    });
+
+    expect(request.departureAddress).toBe("서울 종로구 통일로 지하 126");
+  });
+
+  it("주소가 비어 있으면 departureAddress를 보내지 않는다", () => {
+    const request = buildCreateDepartureRequest({
+      ...baseParams,
+      departureAddress: "",
+    });
+
+    expect(request).not.toHaveProperty("departureAddress");
+  });
 });
 
 describe("isDuplicateDepartureError", () => {
