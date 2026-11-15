@@ -1,7 +1,10 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 # 리뷰 기준은 AGENTS.md다. 여기서는 저장소 규칙과 맞지 않아 반복해서 반려한 기본 검사만 끈다.
-# 적지 않은 설정(리뷰 언어 등)은 CodeRabbit UI 설정을 이어받는다. 빼면 기본값(영어)으로 돌아간다(#238).
-inheritance: true
+# 이 저장소의 CodeRabbit 설정 층은 이 파일 하나뿐이다(UI, 조직 설정 없음). 적지 않은 값은 기본값이다(#244).
+
+# 리뷰 언어. 적지 않으면 기본값 en-US라 리뷰가 영어로 달린다.
+language: "ko-KR"
+
 reviews:
   pre_merge_checks:
     # 이 저장소는 함수 docstring 기준을 두지 않는다. #231, #235, #237에서 같은 이유로 반려했다(#238).
