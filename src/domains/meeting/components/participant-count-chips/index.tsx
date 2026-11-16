@@ -52,9 +52,10 @@ export function ParticipantCountChips({
       helperText={helperText}
       className={cn("w-full", className)}
     >
+      {/* 스크롤 영역은 세로로도 잘라내서, 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 위아래에 두고 margin으로 되돌린다. */}
       <div
         ref={scrollerRef}
-        className="scrollbar-hide -mx-5 flex gap-2 overflow-x-auto px-5"
+        className="scrollbar-hide -mx-5 -my-1 flex gap-2 overflow-x-auto px-5 py-1"
       >
         {COUNTS.map((count) => {
           const blocked = count < selectableMin;
