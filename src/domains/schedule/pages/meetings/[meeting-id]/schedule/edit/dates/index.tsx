@@ -256,7 +256,7 @@ export function ScheduleEditDatesPage() {
             className="shrink-0"
             supportingItem={
               <p className="textStyle_body4 text-center text-fg-neutral-subtle">
-                최대 30일, 0 ~ 24시까지 선택가능해요.
+                최대 30일, 0 ~ 24시까지 선택 가능해요
               </p>
             }
             main={
