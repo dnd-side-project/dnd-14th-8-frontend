@@ -1,8 +1,7 @@
-import { Header } from "@moyeorak/design-system";
+import { Button, Header } from "@moyeorak/design-system";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Empty2Character } from "@/assets/characters";
-import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
@@ -100,13 +99,23 @@ export function DepartureNewSearchPage() {
             className="mt-3 mb-3"
           />
 
-          <ButtonSubStroke
-            icon={<TargetIcon />}
+          <Button
+            variant="outline"
+            size="lg"
+            display="full"
+            leadingIcon={
+              <span
+                aria-hidden
+                className="inline-flex shrink-0 items-center justify-center"
+              >
+                <TargetIcon />
+              </span>
+            }
             onClick={getCurrentLocation}
             disabled={isFetchingLocation}
           >
             {isFetchingLocation ? "불러오는 중..." : "현 위치 불러오기"}
-          </ButtonSubStroke>
+          </Button>
         </div>
 
         <div className="mt-4 flex-1 overflow-y-auto">

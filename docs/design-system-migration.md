@@ -110,9 +110,9 @@ PR 본문에 왜 이렇게 했는지, 검증, 측정, 한계를 쓴다. CodeRabb
 
 | 서비스 컴포넌트 | 디자인 시스템 연결 |
 | --- | --- |
-| ButtonBottom black / blue / white | Button default / brand / outline, xl, full |
-| ButtonBottomWithIcon | Button outline, trailingIcon |
-| ButtonSubStroke | Button outline, leadingIcon |
+| ButtonBottom black / blue / white | Button default / brand / outline, xl, full. 9차에서 어댑터를 지웠다 |
+| ButtonBottomWithIcon | Button outline, trailingIcon. 9차에서 어댑터를 지웠다 |
+| ButtonSubStroke | Button outline, leadingIcon. 9차에서 어댑터를 지웠다 |
 | IconButton | IconButton clear / fill. 기존 배치 크기·아이콘은 유지 |
 | ChipButton primary / ghost / locationDelete | Button brand-weak / ghost-brand / ghost. 선택 상태 없는 액션 |
 | ChipButton selected / outlined | controlled Chip outlined-brand / neutral-weak |
@@ -317,6 +317,23 @@ FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. Floati
 - 서비스 `TextField`는 이름 선택과 주소 검색이 아직 쓰므로 남긴다.
 - 검색에서 장소를 고르면 칸에 장소 이름과 주소를 두 줄로 보여 준다(`description`, #230). 첫 줄 `departureLocation`에는 장소 이름을, 둘째 줄 `departureAddress`에는 고를 때 본 주소를 저장한다(백엔드 dnd-side-project/dnd-14th-8-backend#180). 현 위치와 기존 출발지는 주소가 첫 줄이라 한 줄이다.
 - 처음 설계(#211 결정 2-11)는 주소를 저장하지 않고 좌표로 다시 찾는 것이었다. 카카오로 확인하니 다시 찾은 주소가 고를 때와 달랐다. 표기가 다르거나("서울"과 "서울특별시"), 좌표가 옆 건물 필지에 찍혀 다른 주소가 나왔다(판교역). 그래서 고를 때 본 주소를 저장하도록 바꿨다.
+
+## 9차: 남은 버튼 어댑터
+
+1차에서 남겨 둔 버튼 어댑터 `ButtonBottom`, `ButtonBottomWithIcon`, `ButtonSubStroke`와, 시간표 수정 저장 버튼을 감싸던 `ButtonBottomTimetableEdit`를 지우고 사용처에서 디자인 시스템 컴포넌트를 바로 쓴다(#184). 디자인 시스템은 바꾸지 않아 전환 절차 3, 4단계는 없다.
+
+| 화면 | 기존 | 디자인 시스템 |
+| --- | --- | --- |
+| 모임 참여 초대, 참여자 경로, 장소 상세, 앱 설치 안내 | ButtonBottom black / blue / white | Button default / brand / outline, xl, full |
+| 최적일정 더보기 | ButtonBottomWithIcon | Button outline, md, full, trailingIcon |
+| 출발지 관리, 출발지 검색(현 위치 불러오기) | ButtonSubStroke | Button outline, lg, full, leadingIcon |
+| 시간표 수정 저장 | ButtonBottomTimetableEdit (ButtonBottom과 안내 문구) | ActionArea single, supportingItem |
+
+- 바뀐 화면은 시간표 수정 저장뿐이다. 나머지 11곳은 어댑터가 넘기던 값을 그대로 넘겨, main과 전후 캡처를 비교했을 때 다른 픽셀이 없었다.
+- 시간표 수정 저장은 하단 바가 다른 화면과 같은 `ActionArea` 규격이 된다. 375px 화면에서 버튼 폭이 335px에서 343px로 넓어지고(좌우 여백 20px에서 16px), 안내 문구와 버튼 사이가 12px에서 8px로, 하단 바 높이가 100px에서 108px로 바뀐다. 스크롤은 위 칸 안에서만 일어나므로 하단 바를 줄어들지 않는 마지막 칸(`shrink-0`)으로 두어 sticky 없이도 시트 아래에 붙어 있다.
+- 모임 참여 초대는 `ActionArea`를 쓰지 않는다. `ActionArea`는 배경을 항상 `bg.neutral.default`로 채우는데, 이 화면은 배경이 `fill.brand.subtle`이고 버튼 뒤로 지나가는 내용이 없다(#184 결정 1).
+- 디자인 시스템 `Button`은 기본 `type`이 `button`이라, 어댑터가 넣던 `type="button"`은 따로 적지 않는다. 폼 제출, disabled, `aria-busy` 전달 약속은 `design-system-migration.test.tsx`가 `Button`으로 확인한다.
+- 아이콘은 어댑터처럼 `aria-hidden` span으로 감싸 `leadingIcon`, `trailingIcon`에 넘긴다.
 
 ## 별도 화면 전환 단계
 

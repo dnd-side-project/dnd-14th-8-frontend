@@ -1,11 +1,10 @@
-import { Icon } from "@moyeorak/design-system";
+import { Button, Icon } from "@moyeorak/design-system";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { CardRecommended } from "@/domains/schedule/components/card-recommended";
 import { ScheduleMainOptimalPlaceholder } from "@/domains/schedule/components/schedule-main-optimal-content/placeholder";
 import { splitResults } from "@/domains/schedule/components/schedule-main-optimal-content/split-results";
 import { useGetMeetingScheduleVoteResults } from "@/domains/schedule/hooks/use-get-meeting-schedule-vote-results";
-import { ButtonBottomWithIcon } from "@/shared/components/button-bottom-with-icon";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { cn } from "@/shared/utils/cn";
 
@@ -85,19 +84,27 @@ export function ScheduleMainOptimalContent() {
             </div>
           </div>
 
-          <ButtonBottomWithIcon
-            className="mt-2"
-            icon={
-              <Icon
-                type={isExpanded ? "chevron_up" : "chevron_down"}
-                size="xs"
-              />
+          <Button
+            variant="outline"
+            size="md"
+            display="full"
+            className="mt-2 gap-1.5"
+            trailingIcon={
+              <span
+                aria-hidden
+                className="inline-flex shrink-0 items-center justify-center"
+              >
+                <Icon
+                  type={isExpanded ? "chevron_up" : "chevron_down"}
+                  size="xs"
+                />
+              </span>
             }
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded((prev) => !prev)}
           >
             {isExpanded ? "더보기 접기" : "최적일정 더보기"}
-          </ButtonBottomWithIcon>
+          </Button>
         </>
       )}
     </div>

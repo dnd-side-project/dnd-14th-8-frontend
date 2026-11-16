@@ -2,7 +2,6 @@ import { ActionArea, Button, Header, Modal } from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ButtonSubStroke } from "@/domains/location/components/button-sub-stroke";
 import { DepartureItem } from "@/domains/location/components/departure-item";
 import { LOCATION_DEPARTURE_LIST_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import { useDeleteDeparture } from "@/domains/location/hooks/use-delete-departure";
@@ -78,9 +77,15 @@ export function DepartureListPage() {
           onBack={() => navigate(-1)}
           className="-mx-5 w-auto"
         />
-        <ButtonSubStroke onClick={() => navigate("new")} className="mt-3 mb-3">
+        <Button
+          variant="outline"
+          size="lg"
+          display="full"
+          onClick={() => navigate("new")}
+          className="mt-3 mb-3"
+        >
           출발지 추가하기
-        </ButtonSubStroke>
+        </Button>
 
         <div className="flex flex-col">
           {departures?.map((item) => (

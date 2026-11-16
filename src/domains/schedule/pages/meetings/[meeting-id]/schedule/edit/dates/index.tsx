@@ -1,10 +1,16 @@
-import { Chip, Icon, IconButton, Modal } from "@moyeorak/design-system";
+import {
+  ActionArea,
+  Button,
+  Chip,
+  Icon,
+  IconButton,
+  Modal,
+} from "@moyeorak/design-system";
 import { useQueryClient } from "@tanstack/react-query";
 import { format, parseISO, startOfDay } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { useMeetingPermissions } from "@/domains/meeting/hooks/use-meeting-permissions";
-import { ButtonBottomTimetableEdit } from "@/domains/schedule/components/button-bottom-timetable-edit";
 import {
   DATE_PRESETS,
   TIME_PRESETS,
@@ -241,14 +247,30 @@ export function ScheduleEditDatesPage() {
             </div>
           </div>
 
-          <ButtonBottomTimetableEdit
-            className="mx-auto my-3 w-full max-w-[335px] shrink-0"
-            description="최대 30일, 0 ~ 24시까지 선택가능해요."
-            disabled={!isDirty || isPending || selectedDates.length === 0}
-            onClick={handleSave}
-          >
-            {isPending ? "저장 중..." : "저장하기"}
-          </ButtonBottomTimetableEdit>
+          {/*
+            스크롤은 위 칸 안에서만 일어나므로, 줄어들지 않는 마지막 칸으로 두면
+            버튼이 늘 시트 아래에 붙어 있다.
+          */}
+          <ActionArea
+            type="single"
+            className="shrink-0"
+            supportingItem={
+              <p className="textStyle_body4 text-center text-fg-neutral-subtle">
+                최대 30일, 0 ~ 24시까지 선택가능해요.
+              </p>
+            }
+            main={
+              <Button
+                size="xl"
+                display="full"
+                variant="default"
+                disabled={!isDirty || isPending || selectedDates.length === 0}
+                onClick={handleSave}
+              >
+                {isPending ? "저장 중..." : "저장하기"}
+              </Button>
+            }
+          />
         </section>
       </div>
 

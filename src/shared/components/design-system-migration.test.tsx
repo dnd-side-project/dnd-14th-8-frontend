@@ -1,17 +1,16 @@
-import { Header } from "@moyeorak/design-system";
+import { Button, Header } from "@moyeorak/design-system";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ItemSavedplace } from "@/domains/location/components/item-savedplace";
 import { StationBadges } from "@/domains/location/components/station-badges";
 import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { Calendar } from "@/shared/components/calendar";
 
 describe("design system migration contracts", () => {
   it("keeps ordinary actions out of native form submission", () => {
     const markup = renderToStaticMarkup(
       <form>
-        <ButtonBottom>저장</ButtonBottom>
+        <Button>저장</Button>
       </form>,
     );
     expect(markup).toContain('type="button"');
@@ -19,9 +18,9 @@ describe("design system migration contracts", () => {
   });
   it("preserves explicit submission, disabled and busy state", () => {
     const markup = renderToStaticMarkup(
-      <ButtonBottom type="submit" disabled aria-busy="true">
+      <Button type="submit" disabled aria-busy="true">
         저장 중
-      </ButtonBottom>,
+      </Button>,
     );
     expect(markup).toContain('type="submit"');
     expect(markup).toContain('disabled=""');
