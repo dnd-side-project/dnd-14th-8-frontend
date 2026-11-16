@@ -6,10 +6,10 @@ import {
   useParams,
   useSearchParams,
 } from "react-router";
+import { Empty1Character } from "@/assets/characters";
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
-import { InsufficientDeparturesEmptyState } from "@/domains/location/components/insufficient-departures-empty-state";
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { NearbyDeparturesNote } from "@/domains/location/components/nearby-departures-note";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
@@ -28,7 +28,10 @@ import {
   formatDepartureDateTime,
   formatDuration,
 } from "@/domains/location/utils/format";
-import { getInsufficientDepartureContent } from "@/domains/location/utils/insufficient-departures";
+import {
+  canManageDepartures,
+  getInsufficientDepartureCopy,
+} from "@/domains/location/utils/insufficient-departures";
 import {
   getMapFitPadding,
   getVisibleCenterOffsetY,
@@ -38,13 +41,13 @@ import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
 import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
-import {
-  ChevronDownIcon,
-  LogoPinIcon,
-  MemberIcon,
-} from "@/shared/components/icons";
+import { ChevronDownIcon, LogoPinIcon } from "@/shared/components/icons";
+import { ParticipantCount } from "@/shared/components/participant-count";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
+
+/** 점이 하나일 때의 확대 단계. 핀 옆 역 이름과 동 이름이 읽히는 정도다. */
+const SINGLE_POINT_ZOOM = 15;
 
 function fitMapBounds({
   mapInst,
@@ -59,6 +62,20 @@ function fitMapBounds({
   if (!maps || points.length === 0) return;
 
   const [firstPoint] = points;
+
+  // 점이 하나면 bounds 크기가 0이라 fitBounds가 최대 확대(20)까지 들어가
+  // 건물만 보인다. 확대 단계를 고정하고 시트가 비워 둔 영역의 가운데로 보낸다.
+  if (points.length === 1) {
+    mapInst.setZoom(SINGLE_POINT_ZOOM, false);
+    panToVisibleCenter({
+      latitude: firstPoint.latitude,
+      longitude: firstPoint.longitude,
+      mapInst,
+      sheetHeight,
+    });
+    return;
+  }
+
   const bounds = new maps.LatLngBounds(
     new maps.LatLng(firstPoint.latitude, firstPoint.longitude),
     new maps.LatLng(firstPoint.latitude, firstPoint.longitude),
@@ -121,13 +138,25 @@ export function LocationMainPage() {
   const { share } = useShareSheet();
   const { meetingId = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { mapInst, sheetHeight, setSheetHeight } =
+  const { mapInst, sheetHeight, setSheetHeight, setMapBlurred } =
     useOutletContext<MapPageOutletContext>();
 
   const { data: departures } = useGetDepartures({
     meetingId,
     ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
   });
+
+  // 출발지가 하나도 없으면 지도에 보여 줄 것이 없으니 흐리게 배경으로만 둔다.
+  // 목록을 받기 전(undefined)에는 흐리게 하지 않는다. 다른 화면으로 가면 되돌린다.
+  const hasNoDepartures = departures?.length === 0;
+
+  useEffect(() => {
+    setMapBlurred(hasNoDepartures);
+
+    return () => {
+      setMapBlurred(false);
+    };
+  }, [hasNoDepartures, setMapBlurred]);
   const { data: myInfo, isLoading: isMyInfoLoading } = useGetMyParticipant({
     meetingId,
   });
@@ -212,26 +241,24 @@ export function LocationMainPage() {
   }, [selectedStation]);
 
   /**
-   * myInfo가 도착하기 전에는 hasMyDeparture가 false라 이미 등록한 사람에게도
-   * "내 출발지 등록하기"가 잠깐 떴다가 바뀐다. 빈 상태와 CTA가 둘 다 이 값에
-   * 기대므로 midpoint와 함께 기다렸다가 한 번에 그린다.
+   * myInfo가 오기 전에는 hasMyDeparture가 false라, 이미 등록한 사람에게도
+   * "출발지 추가하기"가 잠깐 떴다가 "출발지 관리하기"로 바뀐다. 문구와 하단
+   * 버튼이 둘 다 이 값에 기대므로 midpoint와 함께 기다렸다가 한 번에 그린다.
    */
   const isContentLoading = isMidpointLoading || isMyInfoLoading;
   const hasRecommendations = recommendations.length > 0;
   const departureCount = departures?.length ?? 0;
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
-  const hasEnoughDepartures = registeredCount >= 2;
-  const isInsufficientDepartures =
-    !hasRecommendations && !midpoint?.noNearbyStations;
-  const insufficientDepartureContent = isInsufficientDepartures
-    ? getInsufficientDepartureContent({
-        registeredCount,
-        hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
-        departures: departures ?? [],
-        myLocationVoteId: myInfo?.locationVoteId,
-      })
-    : null;
+  const hasMyDeparture = hasVoteId(myInfo?.locationVoteId);
+  const shouldManageDepartures = canManageDepartures({
+    registeredCount,
+    hasMyDeparture,
+  });
+  const insufficientDepartureCopy = getInsufficientDepartureCopy({
+    registeredCount,
+    hasMyDeparture,
+  });
   const isNearbyDepartures = shouldShowNearbyDepartureNote({
     resultType: midpoint?.resultType,
     recommendations,
@@ -258,12 +285,7 @@ export function LocationMainPage() {
   };
 
   const handleVoteAction = () => {
-    if (insufficientDepartureContent?.primaryAction === "share") {
-      share();
-      return;
-    }
-
-    if (hasEnoughDepartures) {
+    if (shouldManageDepartures) {
       navigate(`/meetings/${meetingId}/location/votes`);
       return;
     }
@@ -352,18 +374,13 @@ export function LocationMainPage() {
             </div>
 
             <p className="textStyle_body4 text-fg-neutral-subtler">
-              {selectedStation.line} · 중심에서{" "}
+              {selectedStation.line}, 중심에서{" "}
               {selectedStation.distanceFromCenter}m
             </p>
 
             {isNearbyDepartures && <NearbyDeparturesNote />}
 
-            <p className="textStyle_body3 inline-flex items-center gap-1 text-fg-neutral-subtle">
-              <MemberIcon className="size-4 text-fg-neutral-subtle" />
-              참여자{" "}
-              <span className="text-fg-brand-default">{registeredCount}</span>/
-              {totalCount}
-            </p>
+            <ParticipantCount count={registeredCount} total={totalCount} />
 
             <div className="flex flex-col gap-2">
               {(departures ?? []).map((locationVote) => {
@@ -399,20 +416,11 @@ export function LocationMainPage() {
           </div>
         ) : (
           <div className="flex min-h-full flex-col px-5 pb-[106px]">
-            <InsufficientDeparturesEmptyState
-              content={
-                insufficientDepartureContent ??
-                getInsufficientDepartureContent({
-                  registeredCount,
-                  hasMyDeparture: hasVoteId(myInfo?.locationVoteId),
-                  departures: departures ?? [],
-                  myLocationVoteId: myInfo?.locationVoteId,
-                })
-              }
-              onAddDeparture={() =>
-                navigate(`/meetings/${meetingId}/location/votes/new`)
-              }
-              onShare={share}
+            <ParticipantCount count={registeredCount} total={totalCount} />
+            <PlaceholderContent
+              graphic={<Empty1Character />}
+              title={insufficientDepartureCopy.title}
+              description={insufficientDepartureCopy.description}
             />
           </div>
         )}
@@ -423,14 +431,8 @@ export function LocationMainPage() {
           <BottomActionBarWithButtonAndShare
             onClick={handleVoteAction}
             onShare={share}
-            buttonVariant={insufficientDepartureContent ? "brand" : "default"}
-            showShareButton={insufficientDepartureContent === null}
           >
-            {insufficientDepartureContent?.primaryAction === "share"
-              ? "초대 링크 공유하기"
-              : hasEnoughDepartures
-                ? "출발지 관리하기"
-                : "출발지 추가하기"}
+            {shouldManageDepartures ? "출발지 관리하기" : "출발지 추가하기"}
           </BottomActionBarWithButtonAndShare>
         </FixedBottomArea>
       )}

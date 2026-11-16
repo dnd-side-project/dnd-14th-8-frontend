@@ -21,6 +21,8 @@ export interface NaverMapProps {
   className?: string;
   children?: ReactNode;
   onMapReady?: (map: naver.maps.Map | null) => void;
+  /** 보여 줄 정보가 없을 때 지도를 흐리게 배경으로만 둔다. 조작도 막는다. */
+  blurred?: boolean;
 }
 
 export function NaverMap({
@@ -29,6 +31,7 @@ export function NaverMap({
   className,
   children,
   onMapReady,
+  blurred = false,
 }: NaverMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<naver.maps.Map | null>(null);
@@ -106,8 +109,21 @@ export function NaverMap({
       {/*
         isolate가 없으면 SDK가 컨트롤·마커 레이어에 심는 z-index 100대가
         바텀시트(z-20)와 하단 액션바(z-30)를 뚫고 올라온다.
+
+        흐리게 할 때는 지도 위에 막(backdrop-filter)을 얹지 않고 지도 요소에
+        직접 filter를 준다. 막을 얹으면 화면 가장자리 글자가 선명하게 남는다.
+        filter는 가장자리를 투명하게 번지게 하므로 1.08배 키워 화면 밖으로 민다.
+        SDK가 이 요소에 tabindex를 넣으므로, 흐린 동안은 inert로 포커스와
+        끌기를 함께 막고 화면 낭독기에서도 뺀다.
       */}
-      <div ref={containerRef} className="isolate h-full w-full" />
+      <div
+        ref={containerRef}
+        className={cn(
+          "isolate h-full w-full transition-[filter,scale] duration-300 ease-out",
+          blurred && "scale-[1.08] blur-[8px]",
+        )}
+        inert={blurred}
+      />
       <NaverMapCtx.Provider value={map}>{children}</NaverMapCtx.Provider>
     </div>
   );

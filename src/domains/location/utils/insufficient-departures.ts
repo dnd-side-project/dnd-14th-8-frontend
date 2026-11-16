@@ -1,122 +1,51 @@
-const MIN_DEPARTURE_COUNT = 2;
-
-export type InsufficientDepartureAction = "add" | "share";
-
-export interface DepartureSummary {
-  locationVoteId: number;
-  participantName: string;
-  departureLocation: string;
-}
-
-/**
- * 빈 상태를 문장으로 설명하는 대신 자리(슬롯)로 그린다. 채워진 자리와 남은
- * 자리를 나란히 보여주면 "몇 명 중 몇 명"을 따로 읽어줄 필요가 없다.
- */
-export type DepartureSlot =
-  | {
-      key: string;
-      kind: "filled";
-      name: string;
-      location: string;
-      isMine: boolean;
-    }
-  | { key: string; kind: "add-mine" }
-  | { key: string; kind: "invite" }
-  | { key: string; kind: "waiting" };
-
-export interface GetInsufficientDepartureContentParams {
-  registeredCount: number;
-  hasMyDeparture: boolean;
-  departures?: DepartureSummary[];
-  myLocationVoteId?: number | null;
-}
-
-export interface InsufficientDepartureContent {
+export interface InsufficientDepartureCopy {
   title: string;
-  slots: DepartureSlot[];
-  primaryAction: InsufficientDepartureAction;
-  secondaryAction: InsufficientDepartureAction | null;
-}
-
-function getFilledSlots({
-  departures,
-  slotCount,
-  myLocationVoteId,
-}: {
-  departures: DepartureSummary[];
-  slotCount: number;
-  myLocationVoteId?: number | null;
-}): DepartureSlot[] {
-  return departures.slice(0, slotCount).map((departure) => ({
-    key: `departure-${departure.locationVoteId}`,
-    kind: "filled",
-    name: departure.participantName,
-    location: departure.departureLocation,
-    isMine:
-      myLocationVoteId != null && departure.locationVoteId === myLocationVoteId,
-  }));
+  description: string;
 }
 
 /**
- * 빈 자리는 첫 칸에만 다음 행동을 붙인다. 모든 칸이 버튼이면 무엇부터
- * 해야 하는지가 흐려진다.
+ * 출발지가 2개 미만일 때 바텀시트 문구. 출발지가 하나 있으면 하단 버튼이
+ * 내 출발지 여부에 따라 "출발지 관리하기"와 "출발지 추가하기"로 갈리므로,
+ * 설명도 그 사람이 보는 버튼에 맞춘다.
  */
-function getEmptySlots({
-  emptyCount,
+export function getInsufficientDepartureCopy({
+  registeredCount,
   hasMyDeparture,
 }: {
-  emptyCount: number;
+  registeredCount: number;
   hasMyDeparture: boolean;
-}): DepartureSlot[] {
-  return Array.from({ length: emptyCount }, (_, index) => {
-    if (index > 0) return { key: `empty-${index}`, kind: "waiting" as const };
-
+}): InsufficientDepartureCopy {
+  if (registeredCount <= 0) {
     return {
-      key: `empty-${index}`,
-      kind: hasMyDeparture ? ("invite" as const) : ("add-mine" as const),
+      title: "두 명 이상의 출발지가 필요해요",
+      description: "링크를 공유하거나 직접 출발지를 추가해 보세요",
     };
-  });
+  }
+
+  if (hasMyDeparture) {
+    return {
+      title: "출발지가 하나 더 필요해요",
+      description: "링크를 공유하면 다른 참여자도 출발지를 추가할 수 있어요",
+    };
+  }
+
+  return {
+    title: "출발지가 하나 더 필요해요",
+    description: "출발지를 추가하면 중간 지점을 찾을 수 있어요",
+  };
 }
 
-function getTitle({
+/**
+ * 내 출발지가 있거나 출발지가 이미 충분하면 관리 화면으로 보낸다. 관리 화면
+ * 맨 위에 "출발지 추가하기"가 있어서 거기서도 새 출발지를 넣을 수 있다.
+ * 아직 내 출발지가 없으면 등록 화면으로 바로 보내서 한 단계를 줄인다.
+ */
+export function canManageDepartures({
   registeredCount,
   hasMyDeparture,
 }: {
   registeredCount: number;
   hasMyDeparture: boolean;
 }) {
-  if (registeredCount === 0) return "2명이 모이면 중간지점을 찾아드려요";
-  if (!hasMyDeparture) return "내 출발지를 추가하면 중간지점을 찾을 수 있어요";
-
-  return "한 명만 더 등록하면 중간지점을 찾을 수 있어요";
-}
-
-export function getInsufficientDepartureContent({
-  registeredCount,
-  hasMyDeparture,
-  departures = [],
-  myLocationVoteId,
-}: GetInsufficientDepartureContentParams): InsufficientDepartureContent {
-  const normalizedRegisteredCount = Math.max(registeredCount, 0);
-  const slotCount = Math.max(MIN_DEPARTURE_COUNT, normalizedRegisteredCount);
-  const filledSlots = getFilledSlots({
-    departures,
-    slotCount,
-    myLocationVoteId,
-  });
-  const emptySlots = getEmptySlots({
-    emptyCount: slotCount - filledSlots.length,
-    hasMyDeparture,
-  });
-  const canRegisterMine = normalizedRegisteredCount > 0 && !hasMyDeparture;
-
-  return {
-    title: getTitle({
-      registeredCount: normalizedRegisteredCount,
-      hasMyDeparture,
-    }),
-    slots: [...filledSlots, ...emptySlots],
-    primaryAction: hasMyDeparture && !canRegisterMine ? "share" : "add",
-    secondaryAction: hasMyDeparture && !canRegisterMine ? "add" : "share",
-  };
+  return registeredCount >= 2 || hasMyDeparture;
 }
