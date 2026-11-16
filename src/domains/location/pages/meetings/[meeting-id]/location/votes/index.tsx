@@ -11,6 +11,7 @@ import {
   useGetDepartures,
 } from "@/domains/location/hooks/use-get-departures";
 import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
+import { hasEnoughDepartures } from "@/domains/location/utils/insufficient-departures";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { toast } from "@/shared/components/toast";
 
@@ -55,6 +56,10 @@ export function DepartureListPage() {
 
   if (isLoading) return null;
 
+  // 출발지가 2개 미만이면 결과 화면에 가도 "출발지가 하나 더 필요해요"만 보인다.
+  // 목록을 5초마다 다시 받으므로 다른 참여자가 추가하면 버튼이 저절로 켜진다.
+  const canViewMidpoint = hasEnoughDepartures(departures?.length ?? 0);
+
   return (
     <MobileLayout>
       <section className="flex min-h-dvh flex-col px-5">
@@ -89,6 +94,7 @@ export function DepartureListPage() {
               size="xl"
               display="full"
               variant="default"
+              disabled={!canViewMidpoint}
               onClick={() =>
                 navigate(`/meetings/${meetingId}/location/stations`)
               }

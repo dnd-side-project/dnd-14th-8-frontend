@@ -2,7 +2,20 @@ import { describe, expect, it } from "vitest";
 import {
   canManageDepartures,
   getInsufficientDepartureCopy,
+  hasEnoughDepartures,
 } from "@/domains/location/utils/insufficient-departures";
+
+describe("hasEnoughDepartures", () => {
+  it("출발지가 2개 미만이면 중간지점을 볼 수 없다", () => {
+    expect(hasEnoughDepartures(0)).toBe(false);
+    expect(hasEnoughDepartures(1)).toBe(false);
+  });
+
+  it("출발지가 2개 이상이면 중간지점을 볼 수 있다", () => {
+    expect(hasEnoughDepartures(2)).toBe(true);
+    expect(hasEnoughDepartures(5)).toBe(true);
+  });
+});
 
 describe("getInsufficientDepartureCopy", () => {
   it("출발지가 없으면 두 명 이상이 필요하다고 안내한다", () => {

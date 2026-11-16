@@ -36,6 +36,16 @@ export function getInsufficientDepartureCopy({
 }
 
 /**
+ * 중간지점을 계산하려면 출발지가 이만큼 있어야 한다. 서버도 이보다 적으면
+ * 계산하지 않고 E425를 돌려준다.
+ */
+export const MIN_DEPARTURES_FOR_MIDPOINT = 2;
+
+export function hasEnoughDepartures(count: number) {
+  return count >= MIN_DEPARTURES_FOR_MIDPOINT;
+}
+
+/**
  * 내 출발지가 있거나 출발지가 이미 충분하면 관리 화면으로 보낸다. 관리 화면
  * 맨 위에 "출발지 추가하기"가 있어서 거기서도 새 출발지를 넣을 수 있다.
  * 아직 내 출발지가 없으면 등록 화면으로 바로 보내서 한 단계를 줄인다.
@@ -47,5 +57,5 @@ export function canManageDepartures({
   registeredCount: number;
   hasMyDeparture: boolean;
 }) {
-  return registeredCount >= 2 || hasMyDeparture;
+  return hasEnoughDepartures(registeredCount) || hasMyDeparture;
 }
