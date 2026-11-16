@@ -30,6 +30,7 @@ import {
   TrafficIcon,
 } from "@/shared/components/icons";
 import { Tab } from "@/shared/components/tab";
+import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
 function formatWon(value: number) {
   return `약 ${value.toLocaleString()}원`;
@@ -181,7 +182,10 @@ export function RouteDetailPage() {
             </h2>
 
             {/* 스크롤 영역에 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 둔다. 위, 아래, 왼쪽은 음수 margin으로 되돌려 칩 위치를 그대로 두고, 오른쪽은 되돌리지 않아 평소에 잘리는 위치도 그대로 둔다. */}
-            <div className="scrollbar-hide -my-1 -ml-1 flex gap-2 overflow-x-auto p-1">
+            <div
+              className="scrollbar-hide -my-1 -ml-1 flex gap-2 overflow-x-auto p-1"
+              ref={attachRevealFocusedChip}
+            >
               {recommendations.map((station) => (
                 <Chip
                   key={station.stationId}
