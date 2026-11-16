@@ -31,7 +31,7 @@ export function getInsufficientDepartureCopy({
 
   return {
     title: "출발지가 하나 더 필요해요",
-    description: "출발지를 추가하면 중간 지점을 찾을 수 있어요",
+    description: "출발지를 추가하면 중간지점을 찾을 수 있어요",
   };
 }
 

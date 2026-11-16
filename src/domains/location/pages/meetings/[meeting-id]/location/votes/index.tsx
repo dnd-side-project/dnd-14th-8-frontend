@@ -99,7 +99,7 @@ export function DepartureListPage() {
                 navigate(`/meetings/${meetingId}/location/stations`)
               }
             >
-              중간지점 결과 보러가기
+              중간지점 결과 보러 가기
             </Button>
           }
         />
