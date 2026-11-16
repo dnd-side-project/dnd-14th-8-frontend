@@ -1,10 +1,4 @@
-import {
-  ActionArea,
-  Button,
-  type ButtonProps,
-  Icon,
-  IconButton,
-} from "@moyeorak/design-system";
+import { ActionArea, Button, Icon, IconButton } from "@moyeorak/design-system";
 import type { ReactNode } from "react";
 
 export interface BottomActionBarWithButtonAndShareProps {
@@ -13,35 +7,16 @@ export interface BottomActionBarWithButtonAndShareProps {
   disabled?: boolean;
   children?: ReactNode;
   className?: string;
-  buttonVariant?: ButtonProps["variant"];
-  showShareButton?: boolean;
 }
 
-/** 공유 버튼이 있으면 icon, 없으면 single 조합의 ActionArea. 화면 고정은 FixedBottomArea가 맡는다. */
+/** 공유 아이콘 버튼과 메인 버튼을 나란히 둔 icon 조합의 ActionArea. 화면 고정은 FixedBottomArea가 맡는다. */
 export function BottomActionBarWithButtonAndShare({
   onClick,
   onShare,
   disabled,
   children,
   className,
-  buttonVariant = "default",
-  showShareButton = true,
 }: BottomActionBarWithButtonAndShareProps) {
-  const main = (
-    <Button
-      size="xl"
-      display="full"
-      variant={buttonVariant}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
-  );
-  if (!showShareButton) {
-    return <ActionArea type="single" className={className} main={main} />;
-  }
-
   return (
     <ActionArea
       type="icon"
@@ -56,7 +31,17 @@ export function BottomActionBarWithButtonAndShare({
           <Icon type="share" size="md" />
         </IconButton>
       }
-      main={main}
+      main={
+        <Button
+          size="xl"
+          display="full"
+          variant="default"
+          disabled={disabled}
+          onClick={onClick}
+        >
+          {children}
+        </Button>
+      }
     />
   );
 }

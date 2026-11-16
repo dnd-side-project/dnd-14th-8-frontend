@@ -12,11 +12,14 @@ export interface MapPageOutletContext {
   mapInst: naver.maps.Map | null;
   sheetHeight: number;
   setSheetHeight: (height: number) => void;
+  /** 하위 화면이 지도를 흐리게 할지 정한다. 화면을 떠날 때 false로 되돌린다. */
+  setMapBlurred: (blurred: boolean) => void;
 }
 
 export function MapDefaultPage() {
   const [mapInst, setMapInst] = useState<naver.maps.Map | null>(null);
   const [sheetHeight, setSheetHeight] = useState(0);
+  const [isMapBlurred, setMapBlurred] = useState(false);
 
   useEffect(() => {
     const maps = window.naver?.maps;
@@ -32,8 +35,11 @@ export function MapDefaultPage() {
         zoom={11}
         className="absolute inset-0"
         onMapReady={setMapInst}
+        blurred={isMapBlurred}
       >
-        <Outlet context={{ mapInst, sheetHeight, setSheetHeight }} />
+        <Outlet
+          context={{ mapInst, sheetHeight, setSheetHeight, setMapBlurred }}
+        />
       </NaverMap>
     </div>
   );

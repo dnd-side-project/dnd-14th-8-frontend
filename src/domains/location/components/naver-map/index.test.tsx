@@ -11,4 +11,20 @@ describe("NaverMap", () => {
 
     expect(markup).toContain("isolate");
   });
+
+  it("흐리게 하면 지도 요소에 블러와 확대를 주고 조작을 막는다", () => {
+    const markup = renderToStaticMarkup(<NaverMap blurred />);
+
+    expect(markup).toContain("blur-[8px]");
+    expect(markup).toContain("scale-[1.08]");
+    // SDK가 지도 요소에 tabindex를 넣으므로 inert로 포커스와 조작을 함께 막는다.
+    expect(markup).toContain("inert");
+  });
+
+  it("기본으로는 흐리게 하지 않는다", () => {
+    const markup = renderToStaticMarkup(<NaverMap />);
+
+    expect(markup).not.toContain("blur-[8px]");
+    expect(markup).not.toContain("inert");
+  });
 });
