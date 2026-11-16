@@ -12,8 +12,10 @@ import {
 } from "@/domains/location/hooks/use-get-departures";
 import { getMidpointRecommendationsQueryKey } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { hasEnoughDepartures } from "@/domains/location/utils/insufficient-departures";
+import { getMyParticipantQueryKey } from "@/domains/schedule/hooks/use-get-my-participant";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { toast } from "@/shared/components/toast";
+import { getGuestId } from "@/shared/utils/auth";
 
 export function DepartureListPage() {
   const navigate = useNavigate();
@@ -38,13 +40,21 @@ export function DepartureListPage() {
       { locationVoteId: selectedLocationVoteId },
       {
         onSuccess: () => {
-          // 목록 새로고침
+          // 목록 새로고침. 내 참여 정보도 다시 받는다. 내 출발지를 지웠는데
+          // 예전 locationVoteId가 캐시(30초)에 남으면, 장소 화면이 "출발지 추가하기"
+          // 대신 "출발지 관리하기"를 띄운다. 출발지 추가 화면과 같은 처리다.
           void Promise.all([
             queryClient.invalidateQueries({
               queryKey: getDeparturesQueryKey({ meetingId }),
             }),
             queryClient.invalidateQueries({
               queryKey: getMidpointRecommendationsQueryKey({ meetingId }),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: getMyParticipantQueryKey({
+                localStorageKey: getGuestId(),
+                meetingId,
+              }),
             }),
           ]);
           setIsDeleteModalOpen(false);
