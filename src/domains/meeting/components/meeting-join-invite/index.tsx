@@ -34,7 +34,7 @@ export function MeetingJoinInvite({
             </p>
           ) : (
             <p className="textStyle_body1 text-fg-neutral-strong">
-              모임에 참여해서 일정을 조율해 보세요.
+              모임에 참여해서 일정을 조율해 보세요
             </p>
           )}
         </div>
