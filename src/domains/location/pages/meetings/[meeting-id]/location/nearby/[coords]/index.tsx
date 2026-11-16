@@ -27,6 +27,7 @@ import {
   MeetingRoomIcon,
   RestaurantIcon,
 } from "@/shared/components/icons";
+import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
 function categoryToFacilityType(category: string): FacilityType {
   if (category.includes("카페")) return "cafe";
@@ -209,7 +210,10 @@ export function NearbySearchPage() {
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
         <div className="flex flex-col gap-4 px-5 pt-1 pb-6">
           {/* 스크롤 영역에 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 둔다. 위, 아래, 왼쪽은 음수 margin으로 되돌려 칩 위치를 그대로 두고, 오른쪽은 되돌리지 않아 평소에 잘리는 위치도 그대로 둔다. 시트 스크롤 영역도 링 위쪽을 잘라서, 감싸는 div의 pt-1로 칩 줄을 시트 맨 위에서 4px 띄운다. */}
-          <div className="scrollbar-hide -my-1 -ml-1 flex gap-2 overflow-x-auto p-1">
+          <div
+            className="scrollbar-hide -my-1 -ml-1 flex gap-2 overflow-x-auto p-1"
+            ref={attachRevealFocusedChip}
+          >
             {categoryPlacesList.map((categoryPlaces) => (
               <Chip
                 key={categoryPlaces.category}

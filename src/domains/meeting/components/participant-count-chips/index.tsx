@@ -1,6 +1,10 @@
 import { Chip, Fieldset } from "@moyeorak/design-system";
 import { useEffect, useRef } from "react";
 import { cn } from "@/shared/utils/cn";
+import {
+  attachRevealFocusedChip,
+  revealInScroller,
+} from "@/shared/utils/reveal-in-scroller";
 
 export const PARTICIPANT_COUNT_MIN = 2;
 export const PARTICIPANT_COUNT_MAX = 20;
@@ -31,20 +35,25 @@ export function ParticipantCountChips({
   className,
 }: ParticipantCountChipsProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  // 칩을 눌러 값이 바뀌었는지. 누른 칩은 줄을 움직이지 않는다(반쯤 보이는 칩을 눌러도 그대로).
+  const changedByChipRef = useRef(false);
 
-  // 선택한 인원이 화면 밖에 있으면(예: 인원 수정에서 15명) 보이도록 가로로만 스크롤한다.
+  // 바깥에서 정한 인원이 다 보이지 않으면(예: 인원 수정에서 15명) 가운데로 가로로만 스크롤해,
+  // 늘리거나 줄일 양옆 인원도 함께 보이게 한다. 인원 수정은 임시 값(2명)으로 먼저 그린 뒤
+  // 서버 값으로 바꾸므로, 처음 한 번이 아니라 값이 바뀔 때마다 본다.
   useEffect(() => {
+    if (changedByChipRef.current) {
+      changedByChipRef.current = false;
+      return;
+    }
+    if (value === undefined) return;
     const scroller = scrollerRef.current;
     const chip = scroller?.querySelector<HTMLElement>('[aria-pressed="true"]');
     if (!chip || !scroller) return;
-    const left = chip.offsetLeft - scroller.offsetLeft;
-    const right = left + chip.offsetWidth;
-    if (left < scroller.scrollLeft) {
-      scroller.scrollLeft = left;
-    } else if (right > scroller.scrollLeft + scroller.clientWidth) {
-      scroller.scrollLeft = right - scroller.clientWidth;
-    }
-  }, []);
+    revealInScroller(scroller, chip, { align: "center" });
+  }, [value]);
+
+  useEffect(() => attachRevealFocusedChip(scrollerRef.current), []);
 
   return (
     <Fieldset
@@ -76,6 +85,7 @@ export function ParticipantCountChips({
                   onBlockedSelect?.();
                   return;
                 }
+                if (count !== value) changedByChipRef.current = true;
                 onChange(count);
               }}
             >
