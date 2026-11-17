@@ -1,5 +1,4 @@
-import { Icon, IconButton } from "@moyeorak/design-system";
-import { ButtonBottom } from "@/shared/components/button-bottom";
+import { Button, Icon, IconButton } from "@moyeorak/design-system";
 import { PlusIcon, ShareIcon } from "@/shared/components/icons";
 import type { InstallPromptMode } from "@/shared/providers/install-prompt-provider/install-availability";
 import { cn } from "@/shared/utils/cn";
@@ -76,18 +75,24 @@ export function InstallPromptView({
             </li>
           </ol>
 
-          <ButtonBottom className="mt-4" onClick={onClose} variant="white">
+          <Button
+            className="mt-4"
+            onClick={onClose}
+            variant="outline"
+            size="xl"
+            display="full"
+          >
             확인했어요
-          </ButtonBottom>
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col gap-2 px-5 pt-4 pb-7">
-          <ButtonBottom onClick={onInstall} variant="blue">
+          <Button onClick={onInstall} variant="brand" size="xl" display="full">
             홈 화면에 추가
-          </ButtonBottom>
-          <ButtonBottom onClick={onClose} variant="white">
+          </Button>
+          <Button onClick={onClose} variant="outline" size="xl" display="full">
             다음에 할게요
-          </ButtonBottom>
+          </Button>
         </div>
       )}
     </section>

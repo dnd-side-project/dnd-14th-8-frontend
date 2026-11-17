@@ -1,4 +1,4 @@
-import { Chip } from "@moyeorak/design-system";
+import { Button, Chip } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import {
   useNavigate,
@@ -23,7 +23,6 @@ import { useGetPersonalRoute } from "@/domains/location/hooks/use-get-personal-r
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { formatDepartureDateTime } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import {
   CarIcon,
   ChevronDownIcon,
@@ -267,8 +266,10 @@ export function RouteDetailPage() {
               />
             )}
 
-            <ButtonBottom
-              variant="black"
+            <Button
+              variant="default"
+              size="xl"
+              display="full"
               onClick={() =>
                 navigate(
                   `/meetings/${meetingId}/location/stations?${LOCATION_QUERY_PARAMS.stationId}=${personalRoute.station.stationId}`,
@@ -277,15 +278,17 @@ export function RouteDetailPage() {
               }
             >
               지도에서 보기
-            </ButtonBottom>
+            </Button>
           </div>
         ) : (
           <div className="flex flex-col gap-4 px-5 pb-[106px]">
             <p className="textStyle_body2 text-center text-fg-neutral-subtle">
               루트 정보를 찾을 수 없어요
             </p>
-            <ButtonBottom
-              variant="black"
+            <Button
+              variant="default"
+              size="xl"
+              display="full"
               onClick={() =>
                 navigate(
                   `/meetings/${meetingId}/location/stations?${LOCATION_QUERY_PARAMS.stationId}=${stationId}`,
@@ -294,7 +297,7 @@ export function RouteDetailPage() {
               }
             >
               추천역 목록으로 돌아가기
-            </ButtonBottom>
+            </Button>
           </div>
         )}
       </BottomSheet>

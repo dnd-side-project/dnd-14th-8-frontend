@@ -1,9 +1,9 @@
+import { Button } from "@moyeorak/design-system";
 import { useLocation } from "react-router";
 import {
   InvitationMidpointCharacter,
   InvitationScheduleCharacter,
 } from "@/assets/characters";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 
 interface MeetingJoinInviteProps {
@@ -30,11 +30,11 @@ export function MeetingJoinInvite({
           </p>
           {isLocationFlow ? (
             <p className="textStyle_body1 text-fg-neutral-strong">
-              모임에 참여해서 중간지점을 찾아보세요.
+              모임에 참여해서 중간지점을 찾아보세요
             </p>
           ) : (
             <p className="textStyle_body1 text-fg-neutral-strong">
-              모임에 참여해서 일정을 조율해 보세요.
+              모임에 참여해서 일정을 조율해 보세요
             </p>
           )}
         </div>
@@ -48,9 +48,9 @@ export function MeetingJoinInvite({
         </div>
 
         <div className="mt-auto">
-          <ButtonBottom variant="blue" onClick={onJoin}>
+          <Button variant="brand" size="xl" display="full" onClick={onJoin}>
             모임 참여하기
-          </ButtonBottom>
+          </Button>
         </div>
       </section>
     </MobileLayout>

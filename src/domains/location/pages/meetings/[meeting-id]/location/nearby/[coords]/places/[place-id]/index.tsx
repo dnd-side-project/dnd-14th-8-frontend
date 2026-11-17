@@ -1,3 +1,4 @@
+import { Button } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import {
   useNavigate,
@@ -21,7 +22,6 @@ import { useNearbyPlaceSearch } from "@/domains/location/hooks/use-nearby-place-
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-import { ButtonBottom } from "@/shared/components/button-bottom";
 
 function categoryToFacilityType(category: string): FacilityType {
   if (category.includes("카페")) return "cafe";
@@ -193,22 +193,26 @@ export function PlaceDetailPage() {
                 className="border-none px-0 py-0"
               />
 
-              <ButtonBottom
-                variant="black"
+              <Button
+                variant="default"
+                size="xl"
+                display="full"
                 onClick={() =>
                   window.open(selectedPlace.kakaoPlaceUrl, "_blank")
                 }
               >
                 자세히 보기
-              </ButtonBottom>
+              </Button>
             </>
           ) : (
             <>
               <p className="textStyle_body2 text-center text-fg-neutral-subtle">
                 요청한 장소 정보를 찾을 수 없어요
               </p>
-              <ButtonBottom
-                variant="black"
+              <Button
+                variant="default"
+                size="xl"
+                display="full"
                 onClick={() =>
                   navigate(
                     `/meetings/${meetingId}/location/nearby/${coordsPath}?${searchParams.toString()}`,
@@ -217,7 +221,7 @@ export function PlaceDetailPage() {
                 }
               >
                 주변 장소 목록으로
-              </ButtonBottom>
+              </Button>
             </>
           )}
         </div>
