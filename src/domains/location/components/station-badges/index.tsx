@@ -25,9 +25,9 @@ export function StationBadges({
         className="shrink-0"
       />
 
-      {/* 스크롤 영역에 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 둔다. 위, 아래, 왼쪽은 음수 margin으로 되돌려 칩 위치를 그대로 두고, 오른쪽은 되돌리지 않아 평소에 잘리는 위치도 그대로 둔다. */}
+      {/* SEED 안전 영역 패턴(스크롤되는 콘텐츠)처럼 칩 줄의 오른쪽을 화면 끝까지 잇는다. 왼쪽은 뒤로 가기 버튼 옆에서 시작한다. 왼쪽과 위아래는 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 두고 margin으로 되돌리고, 오른쪽 20px는 링 자리도 맡는다. */}
       <div
-        className="scrollbar-hide -my-1 -ml-1 flex gap-2 overflow-x-auto p-1"
+        className="scrollbar-hide -my-1 -mr-5 -ml-1 flex gap-2 overflow-x-auto py-1 pr-5 pl-1"
         ref={attachRevealFocusedChip}
       >
         {recommendations.map((r) => (
