@@ -21,6 +21,7 @@ import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-
 import { useNearbyPlaceSearch } from "@/domains/location/hooks/use-nearby-place-search";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
+import { formatStationName } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 
 function categoryToFacilityType(category: string): FacilityType {
@@ -152,7 +153,7 @@ export function PlaceDetailPage() {
           zIndex={station.stationId === selectedStation?.stationId ? 120 : 100}
         >
           <TextPin
-            text={station.stationName}
+            text={formatStationName(station.stationName)}
             variant={
               station.stationId === selectedStation?.stationId
                 ? "blue"

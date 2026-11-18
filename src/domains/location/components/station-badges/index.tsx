@@ -1,5 +1,6 @@
 import { Chip, FloatingButton } from "@moyeorak/design-system";
 import type { StationRecommendationDto } from "@/domains/location/types/location-api-types";
+import { formatStationName } from "@/domains/location/utils/format";
 import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
 export interface StationBadgesProps {
@@ -41,7 +42,7 @@ export function StationBadges({
             className="shrink-0 shadow-[var(--shadows-strong)]"
             onClick={() => onStationClick?.(r)}
           >
-            {r.stationName}
+            {formatStationName(r.stationName)}
           </Chip>
         ))}
       </div>
