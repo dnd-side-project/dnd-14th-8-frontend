@@ -57,6 +57,8 @@ export function StationCard({
         </span>
       </span>
       <span className="mt-4 flex items-baseline gap-1 whitespace-nowrap text-fg-neutral-strong">
+        {/* 이 시간은 참여자들의 대중교통 시간 평균이다. 적지 않으면 내 시간으로 읽힌다. */}
+        <span className="textStyle_caption1">평균</span>
         {getDurationParts(durationMinutes).map(({ value, unit }) => (
           <span key={unit}>
             <span className="textStyle_head2">{value}</span>

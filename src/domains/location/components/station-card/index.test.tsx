@@ -8,14 +8,14 @@ function textOf(markup: string) {
 }
 
 describe("StationCard", () => {
-  it("순위, 역 이름, 시간을 버튼 하나에 담는다", () => {
+  it("순위, 역 이름, 평균 시간을 버튼 하나에 담는다", () => {
     const markup = renderToStaticMarkup(
       <StationCard rank={2} name="충무로역" durationMinutes={28} />,
     );
 
     expect(markup.match(/<button/g)).toHaveLength(1);
     expect(markup).toContain('type="button"');
-    expect(textOf(markup)).toBe("2위충무로역28분");
+    expect(textOf(markup)).toBe("2위충무로역평균28분");
   });
 
   it("1시간이 넘으면 시간과 분을 나눠 보여 준다", () => {
@@ -23,7 +23,7 @@ describe("StationCard", () => {
       <StationCard rank={1} name="서울역" durationMinutes={70} />,
     );
 
-    expect(textOf(markup)).toBe("1위서울역1시간10분");
+    expect(textOf(markup)).toBe("1위서울역평균1시간10분");
   });
 
   it("분이 0으로 떨어지면 시간만 보여 준다", () => {
@@ -31,7 +31,7 @@ describe("StationCard", () => {
       <StationCard rank={1} name="서울역" durationMinutes={60} />,
     );
 
-    expect(textOf(markup)).toBe("1위서울역1시간");
+    expect(textOf(markup)).toBe("1위서울역평균1시간");
   });
 
   it("고른 상태를 aria-pressed로 알린다", () => {
