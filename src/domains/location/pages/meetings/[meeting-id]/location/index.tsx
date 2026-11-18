@@ -29,7 +29,9 @@ export function MapDefaultPage() {
   }, [mapInst]);
 
   return (
-    <div className="relative mx-auto h-dvh max-w-[375px] overflow-hidden bg-fill-neutral-subtlest">
+    // 공통 틀(MobileLayout), 하단 버튼 영역(FixedBottomArea)과 같은 규칙으로,
+    // 휴대폰에서는 화면 전체 폭을 쓰고 640px 이상에서만 가운데 375px로 줄인다.
+    <div className="relative mx-auto h-dvh overflow-hidden bg-fill-neutral-subtlest sm:max-w-[375px]">
       <NaverMap
         center={DEFAULT_CENTER}
         zoom={11}
