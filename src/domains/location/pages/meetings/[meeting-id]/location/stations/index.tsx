@@ -9,8 +9,8 @@ import { Empty1Character } from "@/assets/characters";
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
+import { LayeredMarker } from "@/domains/location/components/layered-marker";
 import { MapMarker } from "@/domains/location/components/map-marker";
-import { Marker } from "@/domains/location/components/marker";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
 import { StationCard } from "@/domains/location/components/station-card";
 import { TextPin } from "@/domains/location/components/text-pin";
@@ -334,19 +334,16 @@ export function LocationMainPage() {
         <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
 
-      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 검은 이름표다. 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
+      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 검은 이름표다. 겹치면 역 이름표, 사람 이름표, 모여락 핀 순서로 위에 온다. 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
       {selectedStation && (
-        <MapMarker
+        <LayeredMarker
           latitude={selectedStation.latitude}
           longitude={selectedStation.longitude}
           zIndex={120}
-        >
-          <Marker
-            text={formatStationName(selectedStation.stationName)}
-            variant="blue"
-            size="sm"
-          />
-        </MapMarker>
+          text={formatStationName(selectedStation.stationName)}
+          variant="blue"
+          size="sm"
+        />
       )}
 
       {(departures ?? []).map((locationVote) => (

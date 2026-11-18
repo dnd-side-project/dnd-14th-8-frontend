@@ -8,8 +8,8 @@ import {
 } from "react-router";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardTraffic } from "@/domains/location/components/card-traffic";
+import { LayeredMarker } from "@/domains/location/components/layered-marker";
 import { MapMarker } from "@/domains/location/components/map-marker";
-import { Marker } from "@/domains/location/components/marker";
 import { StationBadges } from "@/domains/location/components/station-badges";
 import { TextPin } from "@/domains/location/components/text-pin";
 import {
@@ -163,17 +163,14 @@ export function RouteDetailPage() {
       ))}
 
       {selectedDeparture && personalRoute && (
-        <MapMarker
+        <LayeredMarker
           latitude={selectedDeparture.departureLat}
           longitude={selectedDeparture.departureLng}
           zIndex={130}
-        >
-          <Marker
-            text={personalRoute.participant.participantName}
-            variant="blue"
-            size="sm"
-          />
-        </MapMarker>
+          text={personalRoute.participant.participantName}
+          variant="blue"
+          size="sm"
+        />
       )}
 
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
