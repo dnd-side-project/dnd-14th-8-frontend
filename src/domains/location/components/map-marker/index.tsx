@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNaverMap } from "@/domains/location/components/naver-map";
 
+const ANCHOR_TRANSFORM = {
+  bottom: "translate(-50%, -100%)",
+  center: "translate(-50%, -50%)",
+} as const;
+
 export interface MapMarkerProps {
   latitude: number;
   longitude: number;
@@ -13,6 +18,11 @@ export interface MapMarkerProps {
    * 보이는 것보다 상자가 큰 핀이 아래 핀을 막지 않게 할 때 쓴다.
    */
   interactive?: boolean;
+  /**
+   * 좌표에 맞출 자리. bottom은 아래 가운데라 꼬리가 있는 이름표와 핀에 쓰고,
+   * center는 한가운데라 꼬리가 없는 점에 쓴다.
+   */
+  anchor?: keyof typeof ANCHOR_TRANSFORM;
 }
 
 /** OverlayView 기반 React 마커 */
@@ -23,6 +33,7 @@ export function MapMarker({
   onClick,
   zIndex = 100,
   interactive = true,
+  anchor = "bottom",
 }: MapMarkerProps) {
   const map = useNaverMap();
   const elRef = useRef<HTMLDivElement | null>(null);
@@ -69,7 +80,7 @@ export function MapMarker({
         );
         el.style.left = `${pt.x}px`;
         el.style.top = `${pt.y}px`;
-        el.style.transform = "translate(-50%, -100%)";
+        el.style.transform = ANCHOR_TRANSFORM[anchor];
       } catch {
         // ignore draw errors from unstable map SDK state
       }
@@ -99,7 +110,7 @@ export function MapMarker({
       elRef.current = null;
       setPortal(null);
     };
-  }, [map, latitude, longitude, onClick, zIndex, interactive]);
+  }, [map, latitude, longitude, onClick, zIndex, interactive, anchor]);
 
   if (!portal) return null;
   return createPortal(children, portal);

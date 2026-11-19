@@ -80,4 +80,41 @@ describe("LayeredMarker", () => {
       "false",
     ]);
   });
+
+  it("이름표를 보일 때는 이름을 화면 낭독기용 글자로 따로 두지 않는다", () => {
+    expect(markup).not.toContain("sr-only");
+  });
+});
+
+describe("LayeredMarker hideLabel", () => {
+  const markup = renderToStaticMarkup(
+    <LayeredMarker
+      latitude={37.5}
+      longitude={127}
+      zIndex={120}
+      text="어린이대공원역"
+      variant="blue"
+      size="sm"
+      hideLabel
+    />,
+  );
+  const layers = layersOf(markup);
+  const iconLayer = layers.find(
+    (layer) => layer.zIndex === MARKER_ICON_Z_INDEX,
+  );
+  const labelLayer = layers.find((layer) => layer.zIndex === 120);
+
+  it("이름표 층은 지도에 남기고 비우기만 한다", () => {
+    expect(layers).toHaveLength(2);
+    expect(labelLayer?.inner).toBe("");
+  });
+
+  it("아이콘은 그대로 보이고, 이름은 화면 낭독기용 글자로 한 번만 남긴다", () => {
+    expect(iconLayer?.inner).toContain('data-icon="logo-pin"');
+    expect(iconLayer?.inner).not.toContain("invisible");
+    expect(iconLayer?.inner).toContain(
+      '<span class="sr-only">어린이대공원역</span>',
+    );
+    expect(markup.match(/어린이대공원역/g)).toHaveLength(1);
+  });
 });
