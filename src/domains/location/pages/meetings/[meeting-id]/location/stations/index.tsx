@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import {
   useNavigate,
   useOutletContext,
@@ -281,6 +282,7 @@ export function LocationMainPage() {
    * 기준은 ref로 두고 모양만 state로 둬서, 확대가 바뀌어도 모양이 그대로면 다시 그리지 않는다.
    */
   const fitZoomRef = useRef<number | null>(null);
+  const isFittingRef = useRef(false);
   const [pinShape, setPinShape] = useState<PinShape>("label");
 
   useEffect(() => {
@@ -288,9 +290,18 @@ export function LocationMainPage() {
     if (!mapInst || !maps) return;
 
     const listener = maps.Event.addListener(mapInst, "zoom_changed", () => {
-      setPinShape(
-        getPinShape({ zoom: mapInst.getZoom(), fitZoom: fitZoomRef.current }),
-      );
+      // 지도를 맞추는 중이면 아래 효과가 기준과 모양을 새로 정한다. 효과 안에서는
+      // flushSync를 부를 수 없어서 여기서 건너뛴다.
+      if (isFittingRef.current) return;
+
+      // 네이버 지도는 확대 단계를 바꾸는 동안 핀 층을 숨기고, zoom_changed 바로 뒤에
+      // 다시 보인다. 평소처럼 React가 나중에 그리면 층이 먼저 보여 예전 모양이 한
+      // 프레임 비친다. 층이 숨어 있는 동안 바로 그려 둔다.
+      flushSync(() => {
+        setPinShape(
+          getPinShape({ zoom: mapInst.getZoom(), fitZoom: fitZoomRef.current }),
+        );
+      });
     });
 
     return () => {
@@ -312,11 +323,19 @@ export function LocationMainPage() {
       })),
     ];
 
-    // 맞추지 않고 그대로 뒀으면(시트를 끝까지 올렸을 때) 기준도 그대로 둔다.
-    if (!fitMapBounds({ mapInst, sheetHeight, points })) return;
+    // 맞추는 도중에도 zoom_changed가 나지만, 위 리스너는 건너뛰고 아래에서 정한다.
+    isFittingRef.current = true;
+    let fitted: boolean;
+    try {
+      fitted = fitMapBounds({ mapInst, sheetHeight, points });
+    } finally {
+      isFittingRef.current = false;
+    }
 
-    // 맞추는 도중에도 zoom_changed가 나서 옛 기준으로 점을 고를 수 있다. 같은 흐름에서
-    // 기준을 새로 잡고 이름표로 되돌려, 맞춘 직후에 점이 잠깐 보이지 않게 한다.
+    // 맞추지 않고 그대로 뒀으면(시트를 끝까지 올렸을 때) 기준도 그대로 둔다.
+    if (!fitted) return;
+
+    // 맞춘 확대 단계를 새 기준으로 잡고 이름표로 되돌린다.
     fitZoomRef.current = mapInst.getZoom();
     setPinShape("label");
   }, [mapInst, sheetHeight, recommendations, departures]);
