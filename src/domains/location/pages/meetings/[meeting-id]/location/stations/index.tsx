@@ -72,6 +72,9 @@ const PIN_Z_INDEX = {
   stationLabel: 120,
 } as const;
 
+/** 추천이 없을 때 쓰는 빈 목록. 렌더마다 새 배열을 만들면 지도 맞춤 effect가 다시 돈다. */
+const EMPTY_RECOMMENDATIONS: StationRecommendationDto[] = [];
+
 /** 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다. */
 function fitMapBounds({
   mapInst,
@@ -237,7 +240,7 @@ export function LocationMainPage() {
       ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
     });
 
-  const recommendations = midpoint?.recommendations ?? [];
+  const recommendations = midpoint?.recommendations ?? EMPTY_RECOMMENDATIONS;
   const stationId = Number(searchParams.get(LOCATION_QUERY_PARAMS.stationId));
 
   const selectedStation = useMemo(
@@ -355,6 +358,8 @@ export function LocationMainPage() {
    */
   const isContentLoading = isMidpointLoading || isMyInfoLoading;
   const hasRecommendations = recommendations.length > 0;
+  // 점일 때 사람 이름은 참여자 목록에서 본다. 추천이 없으면 참여자 목록이 없으므로 이름표로 둔다.
+  const shownPinShape: PinShape = hasRecommendations ? pinShape : "label";
   const departureCount = departures?.length ?? 0;
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
@@ -411,7 +416,7 @@ export function LocationMainPage() {
           text={formatStationName(selectedStation.stationName)}
           variant="blue"
           size="sm"
-          hideLabel={pinShape === "dot"}
+          hideLabel={shownPinShape === "dot"}
         />
       )}
 
@@ -427,7 +432,7 @@ export function LocationMainPage() {
               longitude={locationVote.departureLng}
               zIndex={isMine ? PIN_Z_INDEX.myLabel : PIN_Z_INDEX.otherLabel}
             >
-              {pinShape === "label" && (
+              {shownPinShape === "label" && (
                 <TextPin
                   text={locationVote.participantName}
                   variant={variant}
@@ -440,7 +445,7 @@ export function LocationMainPage() {
               zIndex={isMine ? PIN_Z_INDEX.myDot : PIN_Z_INDEX.otherDot}
               anchor="center"
             >
-              {pinShape === "dot" && (
+              {shownPinShape === "dot" && (
                 <DotPin text={locationVote.participantName} variant={variant} />
               )}
             </MapMarker>
