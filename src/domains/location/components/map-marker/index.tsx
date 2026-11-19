@@ -7,6 +7,11 @@ const ANCHOR_TRANSFORM = {
   center: "translate(-50%, -50%)",
 } as const;
 
+/** 확대 효과 중 SDK가 부르는 scale을 가진 OverlayView. 타입 정의에는 없다. */
+type ZoomEffectOverlay = naver.maps.OverlayView & {
+  scale?: (ratio: number) => void;
+};
+
 export interface MapMarkerProps {
   latitude: number;
   longitude: number;
@@ -46,6 +51,8 @@ export function MapMarker({
 
     const el = document.createElement("div");
     el.style.position = "absolute";
+    // 아래 scale()이 거는 비율이 좌표 자리(상자 왼쪽 위)를 기준으로 걸리게 한다.
+    el.style.transformOrigin = "0 0";
     el.style.zIndex = String(zIndex);
     el.style.cursor = onClick ? "pointer" : "default";
     if (!interactive) el.style.pointerEvents = "none";
@@ -84,6 +91,16 @@ export function MapMarker({
       } catch {
         // ignore draw errors from unstable map SDK state
       }
+    };
+
+    // 두 손가락으로 확대하는 동안 SDK는 핀 층을 지도와 같은 비율(ratio)로 키우거나
+    // 줄이고, 오버레이마다 scale(ratio)를 부른다(지도 옵션 overlayZoomEffect, NaverMap).
+    // 반대 비율을 걸어 핀 크기는 그대로 두고 자리만 지도를 따라가게 한다. 확대가
+    // 끝나면 SDK가 draw()를 다시 불러 transform이 원래대로 돌아온다. 네이버 Marker가
+    // 쓰는 방식인데 공개 문서에는 없는 SDK 동작이라, 없어지면 확대하는 동안 핀이
+    // 지도와 함께 커지고 작아진다.
+    (ov as ZoomEffectOverlay).scale = (ratio) => {
+      el.style.transform = `scale(${1 / ratio}) ${ANCHOR_TRANSFORM[anchor]}`;
     };
 
     ov.onRemove = () => {

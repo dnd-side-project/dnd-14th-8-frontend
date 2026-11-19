@@ -1,8 +1,38 @@
+// @vitest-environment jsdom
+import { cleanup, render } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { NaverMap } from "@/domains/location/components/naver-map";
 
+afterEach(() => {
+  cleanup();
+  delete (window as unknown as { naver?: unknown }).naver;
+});
+
 describe("NaverMap", () => {
+  it("두 손가락으로 확대하는 동안 핀 층을 숨기지 않도록 overlayLayer에 확대 효과를 켠다", () => {
+    // SDK 기본값(null)이면 확대하는 동안 핀 층을 숨겨 손을 뗄 때까지 핀이 사라진다.
+    const MapCtor = vi.fn(function FakeMap() {
+      return {
+        destroy: () => {},
+        getCenter: () => ({ lat: () => 37.5665, lng: () => 126.978 }),
+        getZoom: () => 13,
+        setZoom: () => {},
+        panTo: () => {},
+      };
+    });
+    (window as unknown as { naver: unknown }).naver = {
+      maps: { Map: MapCtor, LatLng: class {}, Position: { TOP_LEFT: 1 } },
+    };
+
+    render(<NaverMap />);
+
+    expect(MapCtor).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({ overlayZoomEffect: "overlayLayer" }),
+    );
+  });
+
   it("keeps the map SDK layers in their own stacking context", () => {
     // SDK가 컨트롤·마커 레이어에 z-index 100대를 심는다. 컨테이너가
     // 스택 컨텍스트를 만들지 않으면 그 값이 바텀시트(z-20)와
