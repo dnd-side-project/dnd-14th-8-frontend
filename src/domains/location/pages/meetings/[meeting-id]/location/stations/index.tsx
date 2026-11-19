@@ -398,6 +398,7 @@ export function LocationMainPage() {
                   key={station.stationId}
                   rank={station.rank}
                   name={formatStationName(station.stationName)}
+                  lines={station.lines}
                   durationMinutes={Math.round(station.avgTransitDuration)}
                   selected={station.stationId === selectedStation.stationId}
                   onClick={() => handleStationClick(station.stationId)}

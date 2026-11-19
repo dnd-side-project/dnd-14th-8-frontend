@@ -18,6 +18,44 @@ describe("StationCard", () => {
     expect(textOf(markup)).toBe("2위충무로역평균28분");
   });
 
+  it("노선이 있으면 순위, 역 이름, 노선, 평균 시간 순서로 읽는다", () => {
+    const markup = renderToStaticMarkup(
+      <StationCard
+        rank={1}
+        name="을지로3가역"
+        lines={["2호선", "3호선"]}
+        durationMinutes={27}
+      />,
+    );
+
+    expect(markup.match(/<button/g)).toHaveLength(1);
+    expect(textOf(markup)).toBe("1위을지로3가역2호선3호선평균27분");
+  });
+
+  it("노선은 받은 순서대로 모두 보여 준다", () => {
+    const markup = renderToStaticMarkup(
+      <StationCard
+        rank={3}
+        name="서울역"
+        lines={["1호선", "4호선", "경의중앙선", "공항철도", "GTX-A"]}
+        durationMinutes={32}
+      />,
+    );
+
+    expect(textOf(markup)).toBe(
+      "3위서울역1호선4호선경의중앙선공항철도GTX-A평균32분",
+    );
+  });
+
+  it("노선이 없으면 배지 줄을 그리지 않는다", () => {
+    const markup = renderToStaticMarkup(
+      <StationCard rank={1} name="서울역" lines={[]} durationMinutes={27} />,
+    );
+
+    expect(markup).not.toContain("flex-wrap");
+    expect(textOf(markup)).toBe("1위서울역평균27분");
+  });
+
   it("1시간이 넘으면 시간과 분을 나눠 보여 준다", () => {
     const markup = renderToStaticMarkup(
       <StationCard rank={1} name="서울역" durationMinutes={70} />,

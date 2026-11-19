@@ -55,11 +55,13 @@ export interface StationRecommendationDto {
   avgTransitDuration: number;
   distanceFromCenter: number;
   latitude: number;
-  line: string;
+  /** 그 역의 노선 전체(같은 역의 노선을 1호선부터 9호선까지 번호순, 가나다순, 영문 노선은 마지막으로 백엔드가 정렬) */
+  lines: string[];
   longitude: number;
   rank: number;
   routes: RouteDto[];
   stationId: number;
+  /** 노선마다 이름이 다른 환승역은 합친 이름("총신대입구(이수)")이다 */
   stationName: string;
 }
 

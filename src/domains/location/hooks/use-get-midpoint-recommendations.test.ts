@@ -12,7 +12,7 @@ function createRecommendation(
     avgTransitDuration: 25,
     distanceFromCenter: 120,
     latitude: 37.5,
-    line: "2호선",
+    lines: ["2호선"],
     longitude: 127,
     rank: 1,
     routes: [],
@@ -74,7 +74,7 @@ describe("normalizeMidpointResponse", () => {
         }),
         createRecommendation({
           latitude: 37.556,
-          line: "6호선",
+          lines: ["6호선"],
           longitude: 126.923,
           rank: 2,
           stationId: 11,
