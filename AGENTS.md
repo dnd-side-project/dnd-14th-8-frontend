@@ -24,6 +24,7 @@ pnpm build       # tsc 타입 검사와 운영 빌드
 
 - UI는 `@moyeorak/design-system` 컴포넌트를 먼저 쓴다. 없을 때만 서비스 컴포넌트를 만든다.
 - 색과 글자는 디자인 시스템 토큰 클래스만 쓴다(`bg-fill-*`, `text-fg-*`, `border-stroke-*`, `textStyle_*`). 팔레트 색 클래스와 예전 글자 클래스는 `src/design-tokens-static.test.ts`에서 실패한다.
+- 지하철 노선 색은 예외다. 노선마다 정해진 데이터라 `src/domains/location/constants/subway-line-colors.ts`에 서울시 공식 값을 두고 인라인 `style`로 쓴다(#261).
 - 클래스를 합칠 때는 `cn()`(`@/shared/utils/cn`)을 쓴다.
 - 디자인 시스템 소스를 복사하거나 토큰을 서비스에서 다시 정의하지 않는다.
 - 디자인 시스템 전환은 `docs/design-system-migration.md`의 "전환 절차"를 따른다. 2단계 설계 결정은 사람이 한다. AI는 선택지와 근거를 정리하고 멈춘다.
