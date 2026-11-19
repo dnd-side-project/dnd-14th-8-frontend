@@ -55,8 +55,8 @@ export const TwoBadgeRows: Story = {
   },
 };
 
-// 노선이 가장 많은 역(5개). 배지가 세 줄이 된다.
-export const ThreeBadgeRows: Story = {
+// 노선이 가장 많은 역(5개). 배지는 두 줄이다.
+export const MostLines: Story = {
   args: {
     rank: 3,
     name: "서울역",
