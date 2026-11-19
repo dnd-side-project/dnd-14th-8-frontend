@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import {
   useNavigate,
   useOutletContext,
@@ -9,6 +10,7 @@ import { Empty1Character } from "@/assets/characters";
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
+import { DotPin } from "@/domains/location/components/dot-pin";
 import { LayeredMarker } from "@/domains/location/components/layered-marker";
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
@@ -36,6 +38,7 @@ import {
   getMapFitPadding,
   getVisibleCenterOffsetY,
 } from "@/domains/location/utils/map-viewport";
+import { getPinShape, type PinShape } from "@/domains/location/utils/pin-shape";
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
@@ -58,6 +61,22 @@ const SINGLE_POINT_ZOOM = 15;
  */
 const MAX_FIT_ZOOM = 16;
 
+/**
+ * 지도 핀을 쌓는 순서. 아래부터 모여락 핀(LayeredMarker의 아이콘 층, 80), 남의 점,
+ * 내 점, 남의 이름표, 내 이름표, 역 이름표다. 내 것은 남의 것 위에 온다.
+ */
+const PIN_Z_INDEX = {
+  otherDot: 84,
+  myDot: 86,
+  otherLabel: 90,
+  myLabel: 100,
+  stationLabel: 120,
+} as const;
+
+/** 추천이 없을 때 쓰는 빈 목록. 렌더마다 새 배열을 만들면 지도 맞춤 effect가 다시 돈다. */
+const EMPTY_RECOMMENDATIONS: StationRecommendationDto[] = [];
+
+/** 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다. */
 function fitMapBounds({
   mapInst,
   sheetHeight,
@@ -66,9 +85,9 @@ function fitMapBounds({
   mapInst: naver.maps.Map;
   sheetHeight: number;
   points: { latitude: number; longitude: number }[];
-}) {
+}): boolean {
   const maps = window.naver?.maps;
-  if (!maps || points.length === 0) return;
+  if (!maps || points.length === 0) return false;
 
   const [firstPoint] = points;
 
@@ -82,7 +101,7 @@ function fitMapBounds({
       mapInst,
       sheetHeight,
     });
-    return;
+    return true;
   }
 
   const bounds = new maps.LatLngBounds(
@@ -100,11 +119,11 @@ function fitMapBounds({
   });
   // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
   // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
-  if (!padding) return;
+  if (!padding) return false;
 
   mapInst.fitBounds(bounds, padding);
 
-  if (mapInst.getZoom() <= MAX_FIT_ZOOM) return;
+  if (mapInst.getZoom() <= MAX_FIT_ZOOM) return true;
 
   // 확대를 낮추면 fitBounds가 잡은 중심이 어긋난다. 점들의 한가운데를
   // 시트가 비워 둔 영역의 가운데로 다시 보낸다.
@@ -118,6 +137,7 @@ function fitMapBounds({
     mapInst,
     sheetHeight,
   });
+  return true;
 }
 
 /**
@@ -221,7 +241,7 @@ export function LocationMainPage() {
       ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
     });
 
-  const recommendations = midpoint?.recommendations ?? [];
+  const recommendations = midpoint?.recommendations ?? EMPTY_RECOMMENDATIONS;
   const stationId = Number(searchParams.get(LOCATION_QUERY_PARAMS.stationId));
 
   const selectedStation = useMemo(
@@ -256,6 +276,39 @@ export function LocationMainPage() {
     stationIdRef.current = stationId;
   }, [stationId]);
 
+  /**
+   * 핀을 이름표로 그릴지 점으로 그릴지(getPinShape). 기준은 지도를 맞춘 직후의 확대
+   * 단계이고, 시트를 움직이거나 출발지가 바뀌어 지도를 다시 맞추면 새로 잡는다.
+   * 기준은 ref로 두고 모양만 state로 둬서, 확대가 바뀌어도 모양이 그대로면 다시 그리지 않는다.
+   */
+  const fitZoomRef = useRef<number | null>(null);
+  const isFittingRef = useRef(false);
+  const [pinShape, setPinShape] = useState<PinShape>("label");
+
+  useEffect(() => {
+    const maps = window.naver?.maps;
+    if (!mapInst || !maps) return;
+
+    const listener = maps.Event.addListener(mapInst, "zoom_changed", () => {
+      // 지도를 맞추는 중이면 아래 효과가 기준과 모양을 새로 정한다. 효과 안에서는
+      // flushSync를 부를 수 없어서 여기서 건너뛴다.
+      if (isFittingRef.current) return;
+
+      // 네이버 지도는 확대 단계를 바꾸는 동안 핀 층을 숨기고, zoom_changed 바로 뒤에
+      // 다시 보인다. 평소처럼 React가 나중에 그리면 층이 먼저 보여 예전 모양이 한
+      // 프레임 비친다. 층이 숨어 있는 동안 바로 그려 둔다.
+      flushSync(() => {
+        setPinShape(
+          getPinShape({ zoom: mapInst.getZoom(), fitZoom: fitZoomRef.current }),
+        );
+      });
+    });
+
+    return () => {
+      maps.Event.removeListener(listener);
+    };
+  }, [mapInst]);
+
   useEffect(() => {
     if (!mapInst) return;
 
@@ -270,7 +323,21 @@ export function LocationMainPage() {
       })),
     ];
 
-    fitMapBounds({ mapInst, sheetHeight, points });
+    // 맞추는 도중에도 zoom_changed가 나지만, 위 리스너는 건너뛰고 아래에서 정한다.
+    isFittingRef.current = true;
+    let fitted: boolean;
+    try {
+      fitted = fitMapBounds({ mapInst, sheetHeight, points });
+    } finally {
+      isFittingRef.current = false;
+    }
+
+    // 맞추지 않고 그대로 뒀으면(시트를 끝까지 올렸을 때) 기준도 그대로 둔다.
+    if (!fitted) return;
+
+    // 맞춘 확대 단계를 새 기준으로 잡고 이름표로 되돌린다.
+    fitZoomRef.current = mapInst.getZoom();
+    setPinShape("label");
   }, [mapInst, sheetHeight, recommendations, departures]);
 
   /**
@@ -310,10 +377,13 @@ export function LocationMainPage() {
    */
   const isContentLoading = isMidpointLoading || isMyInfoLoading;
   const hasRecommendations = recommendations.length > 0;
+  // 점일 때 사람 이름은 참여자 목록에서 본다. 추천이 없으면 참여자 목록이 없으므로 이름표로 둔다.
+  const shownPinShape: PinShape = hasRecommendations ? pinShape : "label";
   const departureCount = departures?.length ?? 0;
   const registeredCount = midpoint?.registeredCount ?? departureCount;
   const totalCount = midpoint?.totalCount ?? departureCount;
   const hasMyDeparture = hasVoteId(myInfo?.locationVoteId);
+  const myLocationVoteId = hasMyDeparture ? myInfo?.locationVoteId : null;
   const shouldManageDepartures = canManageDepartures({
     registeredCount,
     hasMyDeparture,
@@ -356,28 +426,51 @@ export function LocationMainPage() {
         <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
       )}
 
-      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 검은 이름표다. 겹치면 역 이름표, 사람 이름표, 모여락 핀 순서로 위에 온다. 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
+      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 겹치면 역 이름표, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
       {selectedStation && (
         <LayeredMarker
           latitude={selectedStation.latitude}
           longitude={selectedStation.longitude}
-          zIndex={120}
+          zIndex={PIN_Z_INDEX.stationLabel}
           text={formatStationName(selectedStation.stationName)}
           variant="blue"
           size="sm"
+          hideLabel={shownPinShape === "dot"}
         />
       )}
 
-      {(departures ?? []).map((locationVote) => (
-        <MapMarker
-          key={locationVote.locationVoteId}
-          latitude={locationVote.departureLat}
-          longitude={locationVote.departureLng}
-          zIndex={90}
-        >
-          <TextPin text={locationVote.participantName} variant="black" />
-        </MapMarker>
-      ))}
+      {/* 사람마다 이름표 층과 점 층을 함께 올려 두고 지금 모양만 채운다. 모양이 바뀔 때 핀을 지도에서 내렸다 다시 올리지 않아, 모든 핀이 한 번에 바뀐다. 내 정보가 오기 전에는 모두 검은색이다. */}
+      {(departures ?? []).map((locationVote) => {
+        const isMine = locationVote.locationVoteId === myLocationVoteId;
+        const variant = isMine ? "blue" : "black";
+
+        return (
+          <Fragment key={locationVote.locationVoteId}>
+            <MapMarker
+              latitude={locationVote.departureLat}
+              longitude={locationVote.departureLng}
+              zIndex={isMine ? PIN_Z_INDEX.myLabel : PIN_Z_INDEX.otherLabel}
+            >
+              {shownPinShape === "label" && (
+                <TextPin
+                  text={locationVote.participantName}
+                  variant={variant}
+                />
+              )}
+            </MapMarker>
+            <MapMarker
+              latitude={locationVote.departureLat}
+              longitude={locationVote.departureLng}
+              zIndex={isMine ? PIN_Z_INDEX.myDot : PIN_Z_INDEX.otherDot}
+              anchor="center"
+            >
+              {shownPinShape === "dot" && (
+                <DotPin text={locationVote.participantName} variant={variant} />
+              )}
+            </MapMarker>
+          </Fragment>
+        );
+      })}
 
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
         {isContentLoading ? null : hasRecommendations && selectedStation ? (
