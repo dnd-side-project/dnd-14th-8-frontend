@@ -50,6 +50,13 @@ import {
 
 /** 점이 하나일 때의 확대 단계. 핀 옆 역 이름과 동 이름이 읽히는 정도다. */
 const SINGLE_POINT_ZOOM = 15;
+/**
+ * 여러 점을 맞출 때 들어갈 수 있는 가장 큰 확대 단계. 출발지가 모두 고른 역
+ * 가까이에 모여 있으면 fitBounds가 건물 단위(18 이상)까지 확대해 어느 동네인지
+ * 알 수 없다. 16은 주변 건물과 길 이름이 보이면서, 가까운 이름표끼리 덜 겹치는
+ * 단계다.
+ */
+const MAX_FIT_ZOOM = 16;
 
 function fitMapBounds({
   mapInst,
@@ -96,6 +103,21 @@ function fitMapBounds({
   if (!padding) return;
 
   mapInst.fitBounds(bounds, padding);
+
+  if (mapInst.getZoom() <= MAX_FIT_ZOOM) return;
+
+  // 확대를 낮추면 fitBounds가 잡은 중심이 어긋난다. 점들의 한가운데를
+  // 시트가 비워 둔 영역의 가운데로 다시 보낸다.
+  const latitudes = points.map((point) => point.latitude);
+  const longitudes = points.map((point) => point.longitude);
+
+  mapInst.setZoom(MAX_FIT_ZOOM, false);
+  panToVisibleCenter({
+    latitude: (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+    longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+    mapInst,
+    sheetHeight,
+  });
 }
 
 /**
