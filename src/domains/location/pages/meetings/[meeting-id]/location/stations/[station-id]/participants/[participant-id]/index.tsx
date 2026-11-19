@@ -21,7 +21,10 @@ import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
 import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { useGetPersonalRoute } from "@/domains/location/hooks/use-get-personal-route";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
-import { formatDepartureDateTime } from "@/domains/location/utils/format";
+import {
+  formatDepartureDateTime,
+  formatStationName,
+} from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import {
   CarIcon,
@@ -149,7 +152,7 @@ export function RouteDetailPage() {
           zIndex={station.stationId === selectedStation?.stationId ? 120 : 100}
         >
           <TextPin
-            text={station.stationName}
+            text={formatStationName(station.stationName)}
             variant={
               station.stationId === selectedStation?.stationId
                 ? "blue"
@@ -203,7 +206,7 @@ export function RouteDetailPage() {
                     )
                   }
                 >
-                  {station.stationName}
+                  {formatStationName(station.stationName)}
                 </Chip>
               ))}
             </div>
@@ -240,7 +243,7 @@ export function RouteDetailPage() {
             {activeTab === ROUTE_TAB_VALUES.transit && transit && (
               <CardTraffic
                 departure={personalRoute.participant.departureAddress}
-                arrival={personalRoute.station.stationName}
+                arrival={formatStationName(personalRoute.station.stationName)}
                 distanceMeters={transit.distanceMeters}
                 durationMinutes={transit.durationMinutes}
                 trafficGuides={[
@@ -253,7 +256,7 @@ export function RouteDetailPage() {
             {activeTab === ROUTE_TAB_VALUES.driving && driving && (
               <CardTraffic
                 departure={personalRoute.participant.departureAddress}
-                arrival={personalRoute.station.stationName}
+                arrival={formatStationName(personalRoute.station.stationName)}
                 distanceMeters={driving.distanceMeters}
                 durationMinutes={driving.durationMinutes}
                 trafficGuides={[

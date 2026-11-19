@@ -8,6 +8,11 @@ export interface MapMarkerProps {
   children: React.ReactNode;
   onClick?: () => void;
   zIndex?: number;
+  /**
+   * false면 눌림을 받지 않고 아래에 있는 핀이나 지도로 넘긴다.
+   * 보이는 것보다 상자가 큰 핀이 아래 핀을 막지 않게 할 때 쓴다.
+   */
+  interactive?: boolean;
 }
 
 /** OverlayView 기반 React 마커 */
@@ -17,6 +22,7 @@ export function MapMarker({
   children,
   onClick,
   zIndex = 100,
+  interactive = true,
 }: MapMarkerProps) {
   const map = useNaverMap();
   const elRef = useRef<HTMLDivElement | null>(null);
@@ -31,6 +37,7 @@ export function MapMarker({
     el.style.position = "absolute";
     el.style.zIndex = String(zIndex);
     el.style.cursor = onClick ? "pointer" : "default";
+    if (!interactive) el.style.pointerEvents = "none";
     elRef.current = el;
 
     if (onClick) el.addEventListener("click", onClick);
@@ -92,7 +99,7 @@ export function MapMarker({
       elRef.current = null;
       setPortal(null);
     };
-  }, [map, latitude, longitude, onClick, zIndex]);
+  }, [map, latitude, longitude, onClick, zIndex, interactive]);
 
   if (!portal) return null;
   return createPortal(children, portal);
