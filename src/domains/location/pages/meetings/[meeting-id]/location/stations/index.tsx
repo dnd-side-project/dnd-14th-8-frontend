@@ -1,4 +1,11 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { flushSync } from "react-dom";
 import {
   useNavigate,
@@ -11,24 +18,36 @@ import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import { BottomSheet } from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
 import { DotPin } from "@/domains/location/components/dot-pin";
+import {
+  FacilityPinDefault,
+  type FacilityType,
+} from "@/domains/location/components/facility-pin";
 import { LayeredMarker } from "@/domains/location/components/layered-marker";
 import { MapMarker } from "@/domains/location/components/map-marker";
-import { NearbyPlacesFloatingButton } from "@/domains/location/components/nearby-places-floating-button";
+import { NearbyPlacesPanel } from "@/domains/location/components/nearby-places-panel";
 import { StationCard } from "@/domains/location/components/station-card";
 import { TextPin } from "@/domains/location/components/text-pin";
 import { LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
 import {
   LOCATION_QUERY_PARAMS,
+  parseResultTab,
+  RESULT_TAB_VALUES,
   ROUTE_TAB_VALUES,
 } from "@/domains/location/constants/location-query-params";
+import {
+  NEARBY_FACILITY_TYPE,
+  type NearbyCategory,
+  parseNearbyCategory,
+} from "@/domains/location/constants/nearby-categories";
 import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
 import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-midpoint-recommendations";
+import { useNearbyPlaces } from "@/domains/location/hooks/use-nearby-places";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
 import type {
   RouteDto,
   StationRecommendationDto,
 } from "@/domains/location/types/location-api-types";
-import { toCoordsPath } from "@/domains/location/utils/coords";
+import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import { formatStationName } from "@/domains/location/utils/format";
 import {
   canManageDepartures,
@@ -38,6 +57,7 @@ import {
   getMapFitPadding,
   getVisibleCenterOffsetY,
 } from "@/domains/location/utils/map-viewport";
+import { buildPlaceDetailPath } from "@/domains/location/utils/nearby-paths";
 import { getPinShape, type PinShape } from "@/domains/location/utils/pin-shape";
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
@@ -45,6 +65,7 @@ import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-ac
 import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import { ParticipantCount } from "@/shared/components/participant-count";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
+import { Tab } from "@/shared/components/tab";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import {
   attachRevealFocusedChip,
@@ -63,18 +84,27 @@ const MAX_FIT_ZOOM = 16;
 
 /**
  * 지도 핀을 쌓는 순서. 아래부터 모여락 핀(LayeredMarker의 아이콘 층, 80), 남의 점,
- * 내 점, 남의 이름표, 내 이름표, 역 이름표다. 내 것은 남의 것 위에 온다.
+ * 내 점, 남의 이름표, 내 이름표, 주변 장소 핀, 역 이름표다. 내 것은 남의 것 위에 온다.
+ * 주변 장소 핀은 주변 살펴보기 탭에서만 있고 그때 사람 핀은 숨는다.
  */
 const PIN_Z_INDEX = {
   otherDot: 84,
   myDot: 86,
   otherLabel: 90,
   myLabel: 100,
+  place: 110,
   stationLabel: 120,
 } as const;
 
 /** 추천이 없을 때 쓰는 빈 목록. 렌더마다 새 배열을 만들면 지도 맞춤 effect가 다시 돈다. */
 const EMPTY_RECOMMENDATIONS: StationRecommendationDto[] = [];
+/** 주변 장소를 찾지 못했을 때 쓰는 빈 목록. 같은 이유로 하나만 둔다. */
+const EMPTY_NEARBY_PLACES: NearbyPlace[] = [];
+
+const RESULT_TABS = [
+  { id: RESULT_TAB_VALUES.routes, label: "개인별 루트" },
+  { id: RESULT_TAB_VALUES.nearby, label: "주변 살펴보기" },
+];
 
 /** 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다. */
 function fitMapBounds({
@@ -208,6 +238,33 @@ function attachStationCardRow(scroller: HTMLElement | null) {
   return attachRevealFocusedChip(scroller);
 }
 
+/**
+ * 주변 장소 핀. 누르면 장소 상세로 간다. 축소해도 점으로 바꾸지 않는다(점은 사람 핀이 겹치는 문제만 푼다).
+ * MapMarker는 onClick이 바뀌면 핀을 지도에서 내렸다 다시 올리므로, 장소마다 고정한 함수를 넘긴다.
+ */
+function NearbyPlacePin({
+  place,
+  type,
+  onSelect,
+}: {
+  place: NearbyPlace;
+  type: FacilityType;
+  onSelect: (place: NearbyPlace) => void;
+}) {
+  const handleClick = useCallback(() => onSelect(place), [onSelect, place]);
+
+  return (
+    <MapMarker
+      latitude={place.latitude}
+      longitude={place.longitude}
+      zIndex={PIN_Z_INDEX.place}
+      onClick={handleClick}
+    >
+      <FacilityPinDefault type={type} />
+    </MapMarker>
+  );
+}
+
 export function LocationMainPage() {
   const navigate = useNavigate();
   const { share } = useShareSheet();
@@ -264,11 +321,66 @@ export function LocationMainPage() {
   }, [searchParams, selectedStation, setSearchParams]);
 
   /**
-   * 지도는 고른 역과 출발지만 담는다. 고르지 않은 추천역은 지도에 없다.
+   * 시트의 탭과 주변 살펴보기 분류는 주소 쿼리에 둔다(#269). 값이 없으면 개인별 루트와 첫 분류다.
+   * 주변 살펴보기 탭은 추천역이 있을 때만 있어서, 추천이 없는 화면은 주소에 tab=nearby가 있어도
+   * 개인별 루트처럼 사람 핀을 보여 준다.
+   */
+  const resultTab = parseResultTab(
+    searchParams.get(LOCATION_QUERY_PARAMS.resultTab),
+  );
+  const nearbyCategory = parseNearbyCategory(
+    searchParams.get(LOCATION_QUERY_PARAMS.nearbyCategory),
+  );
+  const isNearbyTab =
+    resultTab === RESULT_TAB_VALUES.nearby && selectedStation !== null;
+
+  /**
+   * 주변 장소는 주변 살펴보기 탭을 연 동안만 찾는다. 탭을 닫으면 좌표를 넘기지 않아 쿼리 키가
+   * 바뀌고, 받은 장소는 바로 버려진다(gcTime 0). enabled만 끄면 화면이 같은 키를 계속 보고 있어
+   * 결과가 남는다. 탭을 다시 열면 새로 찾는다.
+   */
+  const nearbyStation = isNearbyTab ? selectedStation : null;
+  const nearbyPlacesQuery = useNearbyPlaces({
+    latitude: nearbyStation?.latitude ?? Number.NaN,
+    longitude: nearbyStation?.longitude ?? Number.NaN,
+    category: nearbyCategory,
+    enabled: nearbyStation !== null,
+  });
+  // 찾는 중이거나 탭을 닫았으면 undefined다. 찾지 못했으면(오류) 장소가 없을 때와 같게 둔다.
+  const nearbyPlaces = nearbyPlacesQuery.isError
+    ? EMPTY_NEARBY_PLACES
+    : nearbyPlacesQuery.data;
+
+  const departurePoints = useMemo(
+    () =>
+      (departures ?? []).map((locationVote) => ({
+        latitude: locationVote.departureLat,
+        longitude: locationVote.departureLng,
+      })),
+    [departures],
+  );
+  const placePoints = useMemo(
+    () =>
+      nearbyPlaces?.map((place) => ({
+        latitude: place.latitude,
+        longitude: place.longitude,
+      })),
+    [nearbyPlaces],
+  );
+  /**
+   * 고른 역과 함께 지도에 담을 점. 개인별 루트 탭은 출발지, 주변 살펴보기 탭은 고른 분류의 장소다.
+   * 장소를 찾는 중이면 undefined라 아직 맞추지 않고, 받으면 그때 맞춘다. 탭을 바꾸면 이 값이
+   * 바뀌어 그 탭의 점에 다시 맞춘다.
+   */
+  const fitPoints = isNearbyTab ? placePoints : departurePoints;
+
+  /**
+   * 지도는 고른 역과 출발지(주변 살펴보기 탭에서는 장소)만 담는다. 고르지 않은 추천역은 지도에 없다.
    *
    * 고른 역은 ref로 읽어 deps에 넣지 않는다. 넣으면 다른 역을 고를 때마다 지도를
    * 다시 맞춰 확대가 바뀐다. 역을 고를 때는 아래 panToVisibleCenter가 그 역을
-   * 가운데로 옮기기만 한다.
+   * 가운데로 옮기기만 한다. 주변 살펴보기 탭에서는 역을 바꾸면 장소도 바뀌어, 새 장소를
+   * 받을 때 다시 맞춘다.
    */
   const stationIdRef = useRef(stationId);
 
@@ -311,17 +423,14 @@ export function LocationMainPage() {
   }, [mapInst]);
 
   useEffect(() => {
-    if (!mapInst) return;
+    if (!mapInst || !fitPoints) return;
 
     const station = findSelectedStation(recommendations, stationIdRef.current);
     const points = [
       ...(station
         ? [{ latitude: station.latitude, longitude: station.longitude }]
         : []),
-      ...(departures ?? []).map((locationVote) => ({
-        latitude: locationVote.departureLat,
-        longitude: locationVote.departureLng,
-      })),
+      ...fitPoints,
     ];
 
     // 맞추는 도중에도 zoom_changed가 나지만, 위 리스너는 건너뛰고 아래에서 정한다.
@@ -339,7 +448,7 @@ export function LocationMainPage() {
     // 맞춘 확대 단계를 새 기준으로 잡고 이름표로 되돌린다.
     fitZoomRef.current = mapInst.getZoom();
     setPinShape("label");
-  }, [mapInst, sheetHeight, recommendations, departures]);
+  }, [mapInst, sheetHeight, recommendations, fitPoints]);
 
   /**
    * sheetHeight를 deps에 넣지 않는다. 넣으면 스냅이 바뀔 때마다 panTo가
@@ -352,8 +461,19 @@ export function LocationMainPage() {
     sheetHeightRef.current = sheetHeight;
   }, [sheetHeight]);
 
+  /**
+   * 주변 살펴보기 탭에서는 역을 옮기지 않는다. 새 역의 장소를 받으면 위 효과가 역과 장소에 다시
+   * 맞춘다. 탭은 ref로 읽는다. deps에 넣으면 탭을 바꿀 때마다 역을 가운데로 옮겨 방금 맞춘 지도가 어긋난다.
+   */
+  const isNearbyTabRef = useRef(isNearbyTab);
+
+  useEffect(() => {
+    isNearbyTabRef.current = isNearbyTab;
+  }, [isNearbyTab]);
+
   useEffect(() => {
     if (!mapInst || !selectedStation) return;
+    if (isNearbyTabRef.current) return;
 
     panToVisibleCenter({
       latitude: selectedStation.latitude,
@@ -399,18 +519,40 @@ export function LocationMainPage() {
     setSearchParams(next, { replace: true });
   };
 
-  const handleMoveNearby = () => {
-    if (!selectedStation) return;
-
-    const coordsPath = toCoordsPath({
-      latitude: selectedStation.latitude,
-      longitude: selectedStation.longitude,
-    });
-
-    navigate(
-      `/meetings/${meetingId}/location/nearby/${coordsPath}?${LOCATION_QUERY_PARAMS.stationId}=${selectedStation.stationId}`,
-    );
+  // 탭과 분류는 역을 고를 때처럼 주소를 바꾸기만 해서(replace) 뒤로 가기 기록을 쌓지 않는다.
+  const handleResultTabChange = (tabId: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set(LOCATION_QUERY_PARAMS.resultTab, parseResultTab(tabId));
+    setSearchParams(next, { replace: true });
   };
+
+  const handleNearbyCategoryChange = (category: NearbyCategory) => {
+    const next = new URLSearchParams(searchParams);
+    next.set(LOCATION_QUERY_PARAMS.nearbyCategory, category);
+    setSearchParams(next, { replace: true });
+  };
+
+  // 장소 상세로는 새 기록을 쌓아(push) 뒤로 가기로 이 탭에 돌아오게 한다.
+  const handlePlaceSelect = useCallback(
+    (place: NearbyPlace) => {
+      if (!selectedStation) return;
+
+      navigate(
+        buildPlaceDetailPath({
+          meetingId,
+          latitude: selectedStation.latitude,
+          longitude: selectedStation.longitude,
+          placeId: place.id,
+          stationId: selectedStation.stationId,
+          category: nearbyCategory,
+        }),
+      );
+    },
+    [meetingId, navigate, nearbyCategory, selectedStation],
+  );
+
+  // 주변 살펴보기 탭을 연 동안은 사람 핀(이름표와 점)을 비운다. 핀 층은 지도에 그대로 둬서 개인별 루트로 돌아오면 바로 보인다.
+  const personPinShape: PinShape | null = isNearbyTab ? null : shownPinShape;
 
   const handleVoteAction = () => {
     if (shouldManageDepartures) {
@@ -423,11 +565,7 @@ export function LocationMainPage() {
 
   return (
     <>
-      {selectedStation && (
-        <NearbyPlacesFloatingButton onClick={handleMoveNearby} />
-      )}
-
-      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 겹치면 역 이름표, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
+      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 주변 살펴보기 탭을 연 동안은 사람 핀을 숨기고 고른 분류의 장소 핀을 올린다. 장소 핀은 축소해도 그대로다. 겹치면 역 이름표, 장소 핀, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
       {selectedStation && (
         <LayeredMarker
           latitude={selectedStation.latitude}
@@ -452,7 +590,7 @@ export function LocationMainPage() {
               longitude={locationVote.departureLng}
               zIndex={isMine ? PIN_Z_INDEX.myLabel : PIN_Z_INDEX.otherLabel}
             >
-              {shownPinShape === "label" && (
+              {personPinShape === "label" && (
                 <TextPin
                   text={locationVote.participantName}
                   variant={variant}
@@ -465,13 +603,23 @@ export function LocationMainPage() {
               zIndex={isMine ? PIN_Z_INDEX.myDot : PIN_Z_INDEX.otherDot}
               anchor="center"
             >
-              {shownPinShape === "dot" && (
+              {personPinShape === "dot" && (
                 <DotPin text={locationVote.participantName} variant={variant} />
               )}
             </MapMarker>
           </Fragment>
         );
       })}
+
+      {isNearbyTab &&
+        (nearbyPlaces ?? []).map((place) => (
+          <NearbyPlacePin
+            key={place.id}
+            place={place}
+            type={NEARBY_FACILITY_TYPE[nearbyCategory]}
+            onSelect={handlePlaceSelect}
+          />
+        ))}
 
       <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
         {isContentLoading ? null : hasRecommendations && selectedStation ? (
@@ -500,31 +648,49 @@ export function LocationMainPage() {
               ))}
             </div>
 
-            <ParticipantCount count={registeredCount} total={totalCount} />
+            <Tab
+              tabs={RESULT_TABS}
+              activeTabId={resultTab}
+              onTabChange={handleResultTabChange}
+            />
 
-            <div className="flex flex-col gap-2">
-              {(departures ?? []).map((locationVote) => {
-                const route = routeByParticipantName.get(
-                  locationVote.participantName,
-                );
-                if (!route) return null;
+            {isNearbyTab ? (
+              <NearbyPlacesPanel
+                category={nearbyCategory}
+                onCategoryChange={handleNearbyCategoryChange}
+                places={nearbyPlaces ?? EMPTY_NEARBY_PLACES}
+                stationName={formatStationName(selectedStation.stationName)}
+                onPlaceClick={handlePlaceSelect}
+              />
+            ) : (
+              <>
+                <ParticipantCount count={registeredCount} total={totalCount} />
 
-                return (
-                  <CardLocationMember
-                    key={locationVote.locationVoteId}
-                    name={locationVote.participantName}
-                    address={route.departureAddress}
-                    durationMinutes={route.transitDuration}
-                    unreachable={route.transitReachable === false}
-                    onClick={() =>
-                      navigate(
-                        `/meetings/${meetingId}/location/stations/${selectedStation.stationId}/participants/${route.participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${ROUTE_TAB_VALUES.transit}`,
-                      )
-                    }
-                  />
-                );
-              })}
-            </div>
+                <div className="flex flex-col gap-2">
+                  {(departures ?? []).map((locationVote) => {
+                    const route = routeByParticipantName.get(
+                      locationVote.participantName,
+                    );
+                    if (!route) return null;
+
+                    return (
+                      <CardLocationMember
+                        key={locationVote.locationVoteId}
+                        name={locationVote.participantName}
+                        address={route.departureAddress}
+                        durationMinutes={route.transitDuration}
+                        unreachable={route.transitReachable === false}
+                        onClick={() =>
+                          navigate(
+                            `/meetings/${meetingId}/location/stations/${selectedStation.stationId}/participants/${route.participantId}?${LOCATION_QUERY_PARAMS.routeTab}=${ROUTE_TAB_VALUES.transit}`,
+                          )
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         ) : midpoint?.noNearbyStations ? (
           <div className="flex min-h-full flex-col px-5 pb-[106px]">
