@@ -4,7 +4,6 @@ import type {
   LocationVote,
   MidpointRecommendationResponse,
   MidpointRouteMode,
-  NearbyPlaceSearchResponse,
   PersonalRouteResponse,
   UpdateLocationVoteRequest,
 } from "@/domains/location/types/location-api-types";
@@ -44,11 +43,6 @@ export interface GetPersonalRouteParams {
   mode?: MidpointRouteMode;
   participantId: number;
   stationId: number;
-}
-
-export interface NearbyPlaceSearchParams {
-  latitude: CoordinateValue;
-  longitude: CoordinateValue;
 }
 
 export interface UpdateLocationVoteParams {
@@ -137,21 +131,6 @@ export function getPersonalRoute({
         mode,
         participantId,
         stationId,
-      },
-    },
-  );
-}
-
-export function nearbyPlaceSearch({
-  latitude,
-  longitude,
-}: NearbyPlaceSearchParams) {
-  return api.get<ApiResponse<NearbyPlaceSearchResponse>>(
-    "/api/locations/nearby-place-search",
-    {
-      params: {
-        latitude: toCoordinateString(latitude),
-        longitude: toCoordinateString(longitude),
       },
     },
   );

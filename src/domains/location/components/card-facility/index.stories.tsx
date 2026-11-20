@@ -20,45 +20,36 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Open: Story = {
+export const Default: Story = {
   args: {
-    name: "스터디카페 24",
-    distanceFromBase: 150,
-    isOpen: true,
-    businessStatusMessage: "22:00 까지",
+    name: "모여 스터디룸",
+    stationName: "을지로3가",
+    distanceMeters: 120,
   },
 };
 
-export const Closed: Story = {
+export const LongName: Story = {
   args: {
-    name: "스터디카페 24",
-    distanceFromBase: 150,
-    isOpen: false,
-    businessStatusMessage: "09:00 에 시작",
+    name: "을지로 공유회의실 2층 대회의실 정기 모임 전용 공간",
+    stationName: "동대문역사문화공원",
+    distanceMeters: 980,
   },
 };
 
 export const Showcase: Story = {
   args: {
-    name: "스터디카페 24",
-    distanceFromBase: 150,
-    isOpen: true,
-    businessStatusMessage: "22:00 까지",
+    name: "모여 스터디룸",
+    stationName: "을지로3가",
+    distanceMeters: 120,
   },
   render: () => (
     <div className="flex flex-col gap-3">
       <CardFacility
-        name="스터디카페 24"
-        distanceFromBase={150}
-        isOpen={true}
-        businessStatusMessage="22:00 까지"
+        name="모여 스터디룸"
+        stationName="을지로3가"
+        distanceMeters={120}
       />
-      <CardFacility
-        name="스타벅스 강남점"
-        distanceFromBase={320}
-        isOpen={false}
-        businessStatusMessage="08:00 에 시작"
-      />
+      <CardFacility name="카페 마루" stationName="서울역" distanceMeters={40} />
     </div>
   ),
 };

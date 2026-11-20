@@ -1,5 +1,5 @@
 import { Button } from "@moyeorak/design-system";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import {
   useNavigate,
   useOutletContext,
@@ -11,25 +11,22 @@ import { CardFacility } from "@/domains/location/components/card-facility";
 import {
   FacilityPinDefault,
   FacilityPinSelected,
-  type FacilityType,
 } from "@/domains/location/components/facility-pin";
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { StationBadges } from "@/domains/location/components/station-badges";
 import { TextPin } from "@/domains/location/components/text-pin";
 import { LOCATION_QUERY_PARAMS } from "@/domains/location/constants/location-query-params";
+import {
+  NEARBY_FACILITY_TYPE,
+  parseNearbyCategory,
+} from "@/domains/location/constants/nearby-categories";
 import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-midpoint-recommendations";
-import { useNearbyPlaceSearch } from "@/domains/location/hooks/use-nearby-place-search";
+import { useNearbyPlaces } from "@/domains/location/hooks/use-nearby-places";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
-import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
+import { parseCoordsPath } from "@/domains/location/utils/coords";
 import { formatStationName } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-
-function categoryToFacilityType(category: string): FacilityType {
-  if (category.includes("카페")) return "cafe";
-  if (category.includes("식당")) return "restaurant";
-  if (category.includes("회의")) return "meetingroom";
-  return "book";
-}
+import { buildResultNearbyPath } from "@/domains/location/utils/nearby-paths";
 
 export function PlaceDetailPage() {
   const navigate = useNavigate();
@@ -39,14 +36,19 @@ export function PlaceDetailPage() {
     useOutletContext<MapPageOutletContext>();
 
   const parsedCoords = parseCoordsPath(coords);
-  const parsedLatitude = parsedCoords?.latitude ?? Number.NaN;
-  const parsedLongitude = parsedCoords?.longitude ?? Number.NaN;
-  const coordsPath = parsedCoords ? toCoordsPath(parsedCoords) : coords;
+  // 옛 분류 이름(스터디카페, 음식점)은 새 이름으로 읽는다(#269).
+  const category = parseNearbyCategory(
+    searchParams.get(LOCATION_QUERY_PARAMS.nearbyCategory),
+  );
+  const facilityType = NEARBY_FACILITY_TYPE[category];
 
-  const { data: midpoint } = useGetMidpointRecommendations({ meetingId });
-  const { data: nearbyResponse } = useNearbyPlaceSearch({
-    latitude: parsedLatitude,
-    longitude: parsedLongitude,
+  const { data: midpoint, isLoading: isMidpointLoading } =
+    useGetMidpointRecommendations({ meetingId });
+  // 주소의 좌표(검색 기준 역)에서 같은 분류를 카카오로 다시 찾는다. 카카오 결과는 저장하지 않는다(#269).
+  const { data: places, isLoading: isPlacesLoading } = useNearbyPlaces({
+    latitude: parsedCoords?.latitude ?? Number.NaN,
+    longitude: parsedCoords?.longitude ?? Number.NaN,
+    category,
   });
 
   const recommendations = midpoint?.recommendations ?? [];
@@ -57,17 +59,9 @@ export function PlaceDetailPage() {
     recommendations[0] ??
     null;
 
-  const placeCategoryGroup = useMemo(
-    () =>
-      nearbyResponse?.categories.find((categoryPlaces) =>
-        categoryPlaces.places.some((place) => place.id === Number(placeId)),
-      ) ?? null,
-    [nearbyResponse, placeId],
-  );
-
-  const selectedPlace =
-    placeCategoryGroup?.places.find((place) => place.id === Number(placeId)) ??
-    null;
+  // 장소 번호는 카카오 장소 ID다. 옛 백엔드 번호로 된 링크는 찾지 못해 아래 "찾을 수 없어요"가 나온다.
+  const selectedPlace = places?.find((place) => place.id === placeId) ?? null;
+  const isLoading = isPlacesLoading || isMidpointLoading;
 
   useEffect(() => {
     if (!selectedStation) return;
@@ -120,8 +114,12 @@ export function PlaceDetailPage() {
     mapInst.fitBounds(bounds, padding);
   }, [mapInst, selectedPlace, selectedStation, sheetHeight]);
 
-  const selectedCategory = placeCategoryGroup?.category ?? "";
-  const facilityType = categoryToFacilityType(selectedCategory);
+  // 주변 장소 목록은 결과 화면의 주변 살펴보기 탭이다(#269). 고른 역과 분류를 들고 간다.
+  const goToNearbyTab = (nextStationId?: number) =>
+    navigate(
+      buildResultNearbyPath({ meetingId, stationId: nextStationId, category }),
+      { replace: true },
+    );
 
   return (
     <>
@@ -129,20 +127,7 @@ export function PlaceDetailPage() {
         recommendations={recommendations}
         selectedStationId={selectedStation?.stationId}
         onBack={() => navigate(-1)}
-        onStationClick={(station) => {
-          const next = new URLSearchParams(searchParams);
-          next.set(LOCATION_QUERY_PARAMS.stationId, String(station.stationId));
-
-          const stationCoordsPath = toCoordsPath({
-            latitude: station.latitude,
-            longitude: station.longitude,
-          });
-
-          navigate(
-            `/meetings/${meetingId}/location/nearby/${stationCoordsPath}?${next.toString()}`,
-            { replace: true },
-          );
-        }}
+        onStationClick={(station) => goToNearbyTab(station.stationId)}
       />
 
       {recommendations.map((station) => (
@@ -163,33 +148,33 @@ export function PlaceDetailPage() {
         </MapMarker>
       ))}
 
-      {placeCategoryGroup?.places.map((place) => (
-        <MapMarker
-          key={place.id}
-          latitude={place.latitude}
-          longitude={place.longitude}
-          zIndex={place.id === Number(placeId) ? 130 : 110}
-        >
-          {place.id === Number(placeId) ? (
-            <div className="flex flex-col items-center">
-              <TextPin text={place.name} variant="blue" />
-              <FacilityPinSelected type={facilityType} />
-            </div>
-          ) : (
-            <FacilityPinDefault type={facilityType} />
-          )}
-        </MapMarker>
-      ))}
+      {selectedPlace &&
+        places?.map((place) => (
+          <MapMarker
+            key={place.id}
+            latitude={place.latitude}
+            longitude={place.longitude}
+            zIndex={place.id === selectedPlace.id ? 130 : 110}
+          >
+            {place.id === selectedPlace.id ? (
+              <div className="flex flex-col items-center">
+                <TextPin text={place.name} variant="blue" />
+                <FacilityPinSelected type={facilityType} />
+              </div>
+            ) : (
+              <FacilityPinDefault type={facilityType} />
+            )}
+          </MapMarker>
+        ))}
 
       <BottomSheet defaultSnap="peek" onHeightChange={setSheetHeight}>
         <div className="flex flex-col gap-4 px-5 pb-6">
-          {selectedPlace ? (
+          {isLoading ? null : selectedPlace && selectedStation ? (
             <>
               <CardFacility
                 name={selectedPlace.name}
-                distanceFromBase={selectedPlace.distanceFromBase}
-                isOpen={selectedPlace.isOpen}
-                businessStatusMessage={selectedPlace.businessStatusMessage}
+                stationName={selectedStation.stationName}
+                distanceMeters={selectedPlace.distanceMeters}
                 disabled
                 className="border-none px-0 py-0"
               />
@@ -198,9 +183,7 @@ export function PlaceDetailPage() {
                 variant="default"
                 size="xl"
                 display="full"
-                onClick={() =>
-                  window.open(selectedPlace.kakaoPlaceUrl, "_blank")
-                }
+                onClick={() => window.open(selectedPlace.placeUrl, "_blank")}
               >
                 자세히 보기
               </Button>
@@ -214,14 +197,9 @@ export function PlaceDetailPage() {
                 variant="default"
                 size="xl"
                 display="full"
-                onClick={() =>
-                  navigate(
-                    `/meetings/${meetingId}/location/nearby/${coordsPath}?${searchParams.toString()}`,
-                    { replace: true },
-                  )
-                }
+                onClick={() => goToNearbyTab(selectedStation?.stationId)}
               >
-                주변 장소 목록으로
+                주변 살펴보기로
               </Button>
             </>
           )}
