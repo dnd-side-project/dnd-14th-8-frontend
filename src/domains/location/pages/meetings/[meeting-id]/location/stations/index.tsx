@@ -294,9 +294,10 @@ export function LocationMainPage() {
       // flushSync를 부를 수 없어서 여기서 건너뛴다.
       if (isFittingRef.current) return;
 
-      // 네이버 지도는 확대 단계를 바꾸는 동안 핀 층을 숨기고, zoom_changed 바로 뒤에
-      // 다시 보인다. 평소처럼 React가 나중에 그리면 층이 먼저 보여 예전 모양이 한
-      // 프레임 비친다. 층이 숨어 있는 동안 바로 그려 둔다.
+      // 확대 단계가 정해진 그 자리에서 바로 그린다. 데스크톱 Chrome과 Edge에서는
+      // 네이버 지도가 확대하는 동안 핀 층을 숨겼다가 zoom_changed 바로 뒤에 다시
+      // 보인다(휴대폰은 NaverMap의 overlayZoomEffect로 숨기지 않는다). 평소처럼
+      // React가 나중에 그리면 층이 먼저 보여 예전 모양이 한 프레임 비친다.
       flushSync(() => {
         setPinShape(
           getPinShape({ zoom: mapInst.getZoom(), fitZoom: fitZoomRef.current }),
