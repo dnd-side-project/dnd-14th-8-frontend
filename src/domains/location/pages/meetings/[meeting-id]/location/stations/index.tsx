@@ -153,14 +153,19 @@ function fitMapBounds({
 
   mapInst.fitBounds(bounds, padding);
 
-  if (mapInst.getZoom() <= MAX_FIT_ZOOM) return true;
+  if (mapInst.getZoom() > MAX_FIT_ZOOM) {
+    mapInst.setZoom(MAX_FIT_ZOOM, false);
+  }
 
-  // 확대를 낮추면 fitBounds가 잡은 중심이 어긋난다. 점들의 한가운데를
-  // 시트가 비워 둔 영역의 가운데로 다시 보낸다.
+  // 확대 단계는 fitBounds가 고른 것(16 이하)을 쓰고, 점들의 한가운데를 시트가 비워 둔
+  // 영역의 가운데로 다시 보낸다. 확대를 낮추면 fitBounds가 잡은 중심이 어긋나고, 낮추지
+  // 않아도 네이버 fitBounds는 위아래 여백이 크게 다르면 점들을 그 차이만큼 올리지 않는다.
+  // 375x812에서 시트가 중간일 때 점들의 한가운데가 여백 안쪽 가운데보다 117px 아래에 놓여,
+  // 아래쪽 핀이 시트 뒤에 숨었다(2026-11-20 측정, #269). 처음 열 때는 뒤이어 고른 역을
+  // 가운데로 옮겨 가려지지 않았고, 시트를 내렸다 올리거나 탭을 바꿔 다시 맞출 때 드러났다.
   const latitudes = points.map((point) => point.latitude);
   const longitudes = points.map((point) => point.longitude);
 
-  mapInst.setZoom(MAX_FIT_ZOOM, false);
   panToVisibleCenter({
     latitude: (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
     longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
