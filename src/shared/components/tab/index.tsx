@@ -1,12 +1,11 @@
-import type { ComponentType, SVGProps } from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
-
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 export interface TabItem {
   id: string;
   label: string;
-  icon?: IconComponent;
+  /** 디자인 시스템 `Icon`을 `variant` 없이 넘긴다. 색은 탭 글자 색을 따른다. */
+  icon?: ReactNode;
 }
 
 export interface TabProps {
@@ -42,16 +41,7 @@ export function Tab({ tabs, activeTabId, onTabChange, className }: TabProps) {
                 : "textStyle_body1 border-transparent text-fg-neutral-subtler",
             )}
           >
-            {tab.icon && (
-              <tab.icon
-                className={cn(
-                  "size-5 shrink-0 transition-colors",
-                  isActive
-                    ? "text-fg-brand-default"
-                    : "text-fg-neutral-subtler",
-                )}
-              />
-            )}
+            {tab.icon}
 
             <span>{tab.label}</span>
           </button>

@@ -1,4 +1,4 @@
-import { Button, Chip } from "@moyeorak/design-system";
+import { Button, Chip, Icon } from "@moyeorak/design-system";
 import { useEffect, useMemo } from "react";
 import {
   useNavigate,
@@ -26,11 +26,6 @@ import {
   formatStationName,
 } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-import {
-  CarIcon,
-  ChevronDownIcon,
-  TrafficIcon,
-} from "@/shared/components/icons";
 import { Tab } from "@/shared/components/tab";
 import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
@@ -213,8 +208,16 @@ export function RouteDetailPage() {
 
             <Tab
               tabs={[
-                { id: "transit", label: "대중교통", icon: TrafficIcon },
-                { id: "driving", label: "자동차", icon: CarIcon },
+                {
+                  id: "transit",
+                  label: "대중교통",
+                  icon: <Icon type="traffic" size="sm" />,
+                },
+                {
+                  id: "driving",
+                  label: "자동차",
+                  icon: <Icon type="car" size="sm" />,
+                },
               ]}
               activeTabId={activeTab}
               onTabChange={(tabId) => {
@@ -237,7 +240,7 @@ export function RouteDetailPage() {
               className="textStyle_body2 inline-flex w-fit items-center gap-0.5 text-fg-neutral-subtle"
             >
               {formatDepartureDateTime(personalRoute.departureTime)}
-              <ChevronDownIcon className="size-5 text-fg-neutral-subtler" />
+              <Icon type="chevron_down" size="sm" variant="weak" />
             </button>
 
             {activeTab === ROUTE_TAB_VALUES.transit && transit && (

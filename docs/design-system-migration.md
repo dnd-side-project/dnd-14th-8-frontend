@@ -335,6 +335,30 @@ FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. Floati
 - 디자인 시스템 `Button`은 기본 `type`이 `button`이라, 어댑터가 넣던 `type="button"`은 따로 적지 않는다. 폼 제출, disabled, `aria-busy` 전달 약속은 `design-system-migration.test.tsx`가 `Button`으로 확인한다.
 - 아이콘은 어댑터처럼 `aria-hidden` span으로 감싸 `leadingIcon`, `trailingIcon`에 넘긴다.
 
+## 10차: 남은 서비스 아이콘
+
+6차에서 미뤄 둔 장소 조율 화면의 아이콘을 디자인 시스템 `Icon`으로 바꾸고, 쓰지 않는 아이콘을 지운다. 서비스 SVG는 22개에서 7개가 된다.
+
+| 서비스 아이콘 | 디자인 시스템 Icon | 쓰는 곳 |
+| --- | --- | --- |
+| Traffic, Car | `traffic`, `car` (`sm`) | 개인 루트 탭 |
+| Book, MeetingRoom, Restaurant, Cafe | `studyroom`, `meetingroom`, `restaurant`, `cafe` | 주변 장소 분류 칩(`sm`), 주변 장소 핀(`sm`, 고른 핀은 `lg`, `inverted`) |
+| Time | `clock` (`sm`, `default`) | 주변 장소 카드의 영업 정보 |
+| Target | `location` (`sm`) | 주소 검색의 현 위치 불러오기 |
+| Search | `search` | 주소 검색 입력칸(`md`), 추천역 화면의 주변 장소 버튼(`xs`, `brand`) |
+| ChevronDown, ChevronUp | `chevron_down`, `chevron_up` | 개인 루트의 출발 시각(`sm`, `weak`), 출발지 추가의 이름 선택(`md`) |
+| ChevronRight | `chevron_right` (`weak`) | 참여자 카드(`xs`), 주변 장소 카드(`md`) |
+| SelectedCheck | `check` (`md`) | 이름 선택 목록의 선택 표시 |
+| Check, Member | 지움 | 쓰는 곳이 없다(Member는 아이콘 스토리 기본값만) |
+
+- 서비스 `Tab`의 `icon`과 서비스 `TextField`의 `leftIcon`, `rightIcon`은 아이콘 컴포넌트 대신 `ReactNode`를 받는다. 디자인 시스템 `Button`의 `leadingIcon`과 같은 방식이다. 넘기는 `Icon`에는 `variant`를 주지 않는다. 탭 아이콘은 탭 글자 색을, 입력칸 아이콘은 `fg.neutral.subtle`을 따른다.
+- 남은 서비스 아이콘은 7개다. 설치 안내의 공유, 추가(6차), 경로 카드의 오른쪽 화살표(디자인 시스템에는 위쪽 화살표만 있다), 장소 카드 거리 앞의 위치 핀(디자인 시스템 `location`은 조준점 모양이다), 지도에 그리는 logo-pin, pin, polygon이다.
+- main과 같은 시나리오로 캡처해 비교했다. 탭 아이콘과 고른 장소 핀은 다른 픽셀이 없고, 주변 장소 핀은 가장자리 몇 픽셀만 다르다. 바뀐 모양은 다음과 같다.
+  - 이름 선택 목록의 선택 표시가 1.5배쯤 커지고, 이름 선택 화살표가 조금 넓어진다.
+  - 참여자 카드와 주변 장소 카드의 오른쪽 화살표 칸이 24px에서 16px로, 40px에서 24px로 줄어 화살표와 옆 글자가 오른쪽으로 조금 옮겨진다. 화살표 크기는 거의 같다.
+  - 영업 정보의 시계와 현 위치 아이콘은 선이 조금 굵어진다.
+  - 현 위치 불러오기 아이콘은 SVG에 박혀 있던 색(#46464D) 대신 버튼 글자 색을 따른다. 불러오는 중에는 글자와 함께 흐려진다(#9fa5b3).
+
 ## 별도 화면 전환 단계
 
 다음 요소는 이번 공통 버튼 교체 범위와 별개로 화면 시안과 함께 전환한다.

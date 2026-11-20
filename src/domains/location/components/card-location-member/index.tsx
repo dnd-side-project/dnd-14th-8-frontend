@@ -1,7 +1,6 @@
-import { Badge } from "@moyeorak/design-system";
+import { Badge, Icon } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
 import { formatDuration } from "@/domains/location/utils/format";
-import { ChevronRightIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface CardLocationMemberProps
@@ -50,7 +49,7 @@ export function CardLocationMember({
         >
           {unreachable ? "경로 없음" : formatDuration(durationMinutes)}
         </span>
-        <ChevronRightIcon className="size-6 shrink-0 text-fg-neutral-subtler" />
+        <Icon type="chevron_right" size="xs" variant="weak" />
       </div>
     </button>
   );

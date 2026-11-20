@@ -1,6 +1,5 @@
-import { Button } from "@moyeorak/design-system";
+import { Button, Icon } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
-import { SearchIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export type NearbyPlacesFloatingButtonProps =
@@ -19,7 +18,9 @@ export function NearbyPlacesFloatingButton({
       variant="outline"
       size="sm"
       leadingIcon={
-        <SearchIcon aria-hidden className="size-4 text-fg-brand-default" />
+        <span aria-hidden className="inline-flex shrink-0">
+          <Icon type="search" size="xs" variant="brand" />
+        </span>
       }
       className={cn(
         "absolute top-4 right-4 z-30 h-10 gap-1.5 rounded-full shadow-[var(--shadows-strong)]",
