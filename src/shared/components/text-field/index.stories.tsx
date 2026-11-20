@@ -1,6 +1,6 @@
+import { Icon } from "@moyeorak/design-system";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { SearchIcon } from "@/shared/components/icons";
 import { TextField } from "@/shared/components/text-field";
 
 const meta = {
@@ -103,10 +103,14 @@ export const States: Story = {
 export const WithIcons: Story = {
   render: () => (
     <div className="flex flex-col gap-8">
-      <TextField label="출발지" placeholder="출발장소" rightIcon={SearchIcon} />
+      <TextField
+        label="출발지"
+        placeholder="출발장소"
+        rightIcon={<Icon type="search" size="md" />}
+      />
       <TextField
         placeholder="지하철역, 아파트 이름 등으로 검색"
-        leftIcon={SearchIcon}
+        leftIcon={<Icon type="search" size="md" />}
       />
     </div>
   ),

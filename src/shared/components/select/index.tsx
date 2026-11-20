@@ -1,9 +1,5 @@
+import { Icon } from "@moyeorak/design-system";
 import { useCallback, useId, useState } from "react";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  SelectedCheckIcon,
-} from "@/shared/components/icons";
 import { TextField, type TextFieldProps } from "@/shared/components/text-field";
 import { useOutsideClick } from "@/shared/hooks/use-outside-click";
 import { cn } from "@/shared/utils/cn";
@@ -89,7 +85,9 @@ export function Select({
         disabled={disabled}
         clearable={false}
         readOnly
-        rightIcon={isOpen ? ChevronUpIcon : ChevronDownIcon}
+        rightIcon={
+          <Icon type={isOpen ? "chevron_up" : "chevron_down"} size="md" />
+        }
         onClick={handleToggle}
         role="combobox"
         aria-expanded={isOpen}
@@ -126,12 +124,7 @@ export function Select({
                 onClick={() => handleOptionClick(option.value)}
               >
                 <span>{option.label}</span>
-                {isSelected ? (
-                  <SelectedCheckIcon
-                    aria-hidden
-                    className="size-6 shrink-0 text-fg-brand-default"
-                  />
-                ) : null}
+                {isSelected ? <Icon type="check" size="md" /> : null}
               </button>
             );
           })}

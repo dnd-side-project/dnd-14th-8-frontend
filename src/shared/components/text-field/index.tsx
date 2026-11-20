@@ -1,9 +1,8 @@
 import { Icon, IconButton } from "@moyeorak/design-system";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
-  type ComponentType,
   type InputHTMLAttributes,
-  type SVGProps,
+  type ReactNode,
   useId,
   useRef,
   useState,
@@ -45,8 +44,6 @@ const textFieldVariants = cva(
   },
 );
 
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
-
 export interface TextFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "status">,
     VariantProps<typeof textFieldVariants> {
@@ -55,8 +52,9 @@ export interface TextFieldProps
   maxLength?: number;
   clearable?: boolean;
   onClear?: () => void;
-  leftIcon?: IconComponent;
-  rightIcon?: IconComponent;
+  /** 디자인 시스템 `Icon`을 `variant` 없이 넘긴다. 색은 `fg.neutral.subtle`이다. */
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
   hidePlaceholderOnFocus?: boolean;
 }
 
@@ -66,8 +64,8 @@ export function TextField({
   maxLength,
   clearable = true,
   onClear,
-  leftIcon: LeftIcon,
-  rightIcon: RightIcon,
+  leftIcon,
+  rightIcon,
   hidePlaceholderOnFocus = false,
   value,
   className,
@@ -124,12 +122,12 @@ export function TextField({
       <div
         className={cn(textFieldVariants({ status: computedStatus, variant }))}
       >
-        {LeftIcon && (
-          <div className="ml-3 flex items-center justify-center">
-            <LeftIcon
-              aria-hidden
-              className="size-6 shrink-0 text-fg-neutral-subtle"
-            />
+        {leftIcon && (
+          <div
+            aria-hidden
+            className="ml-3 flex items-center justify-center text-fg-neutral-subtle"
+          >
+            {leftIcon}
           </div>
         )}
 
@@ -142,7 +140,7 @@ export function TextField({
             "textStyle_body2 w-full bg-transparent px-4 py-4 text-fg-neutral-stronger caret-fg-brand-default outline-none",
             "transition-all placeholder:text-fg-neutral-subtler",
             hidePlaceholderOnFocus && "focus:placeholder:text-transparent",
-            !!LeftIcon && "pl-2",
+            !!leftIcon && "pl-2",
           )}
           value={value}
           readOnly={readOnly}
@@ -165,12 +163,12 @@ export function TextField({
           </div>
         )}
 
-        {RightIcon && !showDelete && (
-          <div className="mr-3 flex items-center justify-center">
-            <RightIcon
-              aria-hidden
-              className="size-6 shrink-0 text-fg-neutral-subtle"
-            />
+        {rightIcon && !showDelete && (
+          <div
+            aria-hidden
+            className="mr-3 flex items-center justify-center text-fg-neutral-subtle"
+          >
+            {rightIcon}
           </div>
         )}
       </div>

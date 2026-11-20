@@ -1,4 +1,4 @@
-import { Chip } from "@moyeorak/design-system";
+import { Chip, Icon } from "@moyeorak/design-system";
 import { useEffect } from "react";
 import {
   useNavigate,
@@ -22,12 +22,6 @@ import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[me
 import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
 import { formatStationName } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-import {
-  BookIcon,
-  CafeIcon,
-  MeetingRoomIcon,
-  RestaurantIcon,
-} from "@/shared/components/icons";
 import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
 function categoryToFacilityType(category: string): FacilityType {
@@ -38,10 +32,10 @@ function categoryToFacilityType(category: string): FacilityType {
 }
 
 function categoryToIcon(category: string) {
-  if (category.includes("카페")) return <CafeIcon className="size-5" />;
-  if (category.includes("식당")) return <RestaurantIcon className="size-5" />;
-  if (category.includes("회의")) return <MeetingRoomIcon className="size-5" />;
-  return <BookIcon className="size-5" />;
+  if (category.includes("카페")) return <Icon type="cafe" size="sm" />;
+  if (category.includes("식당")) return <Icon type="restaurant" size="sm" />;
+  if (category.includes("회의")) return <Icon type="meetingroom" size="sm" />;
+  return <Icon type="studyroom" size="sm" />;
 }
 
 export function NearbySearchPage() {

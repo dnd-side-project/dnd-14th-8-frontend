@@ -1,4 +1,4 @@
-import { Button, Header } from "@moyeorak/design-system";
+import { Button, Header, Icon } from "@moyeorak/design-system";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Empty2Character } from "@/assets/characters";
@@ -10,7 +10,6 @@ import {
   isWithinServiceArea,
   OUT_OF_SERVICE_AREA_MESSAGE,
 } from "@/domains/location/utils/service-area";
-import { SearchIcon, TargetIcon } from "@/shared/components/icons";
 import { MobileLayout } from "@/shared/components/mobile-layout";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { TextField } from "@/shared/components/text-field";
@@ -93,7 +92,7 @@ export function DepartureNewSearchPage() {
           <TextField
             autoFocus
             placeholder="지하철역, 아파트 이름 등으로 검색"
-            leftIcon={SearchIcon}
+            leftIcon={<Icon type="search" size="md" />}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="mt-3 mb-3"
@@ -108,7 +107,7 @@ export function DepartureNewSearchPage() {
                 aria-hidden
                 className="inline-flex shrink-0 items-center justify-center"
               >
-                <TargetIcon />
+                <Icon type="location" size="sm" />
               </span>
             }
             onClick={getCurrentLocation}

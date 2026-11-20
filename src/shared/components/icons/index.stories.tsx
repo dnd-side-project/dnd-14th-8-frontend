@@ -38,7 +38,7 @@ const meta = {
   ],
   parameters: { layout: "centered" },
   args: {
-    iconName: "MemberIcon",
+    iconName: "ShareIcon",
     size: 20,
     color: "var(--colors-fg-neutral-strong)",
   },
@@ -72,7 +72,10 @@ export const SizeVariants: Story = {
       </div>
     );
   },
-  args: { iconName: "TimeIcon", color: "var(--colors-fg-neutral-strong)" },
+  args: {
+    iconName: "ArrowRightIcon",
+    color: "var(--colors-fg-neutral-strong)",
+  },
   argTypes: {
     size: { table: { disable: true } },
   },
@@ -98,7 +101,7 @@ export const ColorVariants: Story = {
       </div>
     );
   },
-  args: { iconName: "MemberIcon", size: 20 },
+  args: { iconName: "ShareIcon", size: 20 },
   argTypes: {
     color: { table: { disable: true } },
   },

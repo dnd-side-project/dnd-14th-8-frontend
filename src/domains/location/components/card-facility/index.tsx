@@ -1,9 +1,6 @@
+import { Icon } from "@moyeorak/design-system";
 import type { ButtonHTMLAttributes } from "react";
-import {
-  ChevronRightIcon,
-  LocationIcon,
-  TimeIcon,
-} from "@/shared/components/icons";
+import { LocationIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface CardFacilityProps
@@ -44,7 +41,7 @@ export function CardFacility({
           </span>
         </div>
         <div className="flex items-center gap-0.5">
-          <TimeIcon className="size-5 shrink-0 text-fg-neutral-subtle" />
+          <Icon type="clock" size="sm" variant="default" />
           {isOpen == null ? (
             <span className="textStyle_body5 text-fg-neutral-subtle">
               영업정보 없음
@@ -70,7 +67,7 @@ export function CardFacility({
           )}
         </div>
       </div>
-      <ChevronRightIcon className="-mr-1 size-10 shrink-0 text-fg-neutral-subtler" />
+      <Icon type="chevron_right" size="md" variant="weak" />
     </button>
   );
 }

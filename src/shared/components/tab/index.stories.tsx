@@ -1,6 +1,6 @@
+import { Icon } from "@moyeorak/design-system";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { CarIcon, TrafficIcon } from "@/shared/components/icons";
 import { Tab } from "@/shared/components/tab";
 
 const meta: Meta<typeof Tab> = {
@@ -25,8 +25,12 @@ const mockTabs = [
 ];
 
 const transportationTabs = [
-  { id: "traffic", label: "대중교통", icon: TrafficIcon },
-  { id: "car", label: "자동차", icon: CarIcon },
+  {
+    id: "traffic",
+    label: "대중교통",
+    icon: <Icon type="traffic" size="sm" />,
+  },
+  { id: "car", label: "자동차", icon: <Icon type="car" size="sm" /> },
 ];
 
 export const Default: Story = {

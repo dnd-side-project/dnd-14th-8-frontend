@@ -1,10 +1,5 @@
-import {
-  BookIcon,
-  CafeIcon,
-  MeetingRoomIcon,
-  PinIcon,
-  RestaurantIcon,
-} from "@/shared/components/icons";
+import { Icon } from "@moyeorak/design-system";
+import { PinIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export type FacilityType = "book" | "meetingroom" | "restaurant" | "cafe";
@@ -14,26 +9,12 @@ export interface FacilityPinProps {
   className?: string;
 }
 
-const FacilityIcon = ({
-  type,
-  className,
-}: {
-  type: FacilityType;
-  className?: string;
-}) => {
-  const iconProps = { className: cn("text-fg-neutral-faintest", className) };
-
-  switch (type) {
-    case "book":
-      return <BookIcon {...iconProps} />;
-    case "meetingroom":
-      return <MeetingRoomIcon {...iconProps} />;
-    case "restaurant":
-      return <RestaurantIcon {...iconProps} />;
-    case "cafe":
-      return <CafeIcon {...iconProps} />;
-  }
-};
+const FACILITY_ICON_TYPE = {
+  book: "studyroom",
+  meetingroom: "meetingroom",
+  restaurant: "restaurant",
+  cafe: "cafe",
+} as const satisfies Record<FacilityType, string>;
 
 export function FacilityPinDefault({ type, className }: FacilityPinProps) {
   return (
@@ -44,7 +25,7 @@ export function FacilityPinDefault({ type, className }: FacilityPinProps) {
       )}
     >
       <div className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-fill-brand-default">
-        <FacilityIcon type={type} className="size-5" />
+        <Icon type={FACILITY_ICON_TYPE[type]} size="sm" variant="inverted" />
       </div>
     </div>
   );
@@ -60,7 +41,7 @@ export function FacilityPinSelected({ type, className }: FacilityPinProps) {
     >
       <PinIcon />
       <div className="absolute inset-0 flex translate-y-[-3px] items-center justify-center">
-        <FacilityIcon type={type} className="size-8" />
+        <Icon type={FACILITY_ICON_TYPE[type]} size="lg" variant="inverted" />
       </div>
     </div>
   );
