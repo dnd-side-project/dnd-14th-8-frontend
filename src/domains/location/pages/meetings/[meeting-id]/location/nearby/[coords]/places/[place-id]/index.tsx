@@ -27,6 +27,14 @@ import { parseCoordsPath } from "@/domains/location/utils/coords";
 import { formatStationName } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import { buildResultNearbyPath } from "@/domains/location/utils/nearby-paths";
+import { panToVisibleCenter } from "@/domains/location/utils/pan-to-visible-center";
+
+/**
+ * 역과 장소에 맞출 때 가장 크게 확대하는 단계. 장소가 역에서 아주 가까우면 fitBounds가
+ * 19, 20단계까지 확대해 길 없이 건물 윤곽만 보인다(역에서 80m는 19단계, 40m는 20단계,
+ * 120m와 180m는 18단계. 375x812, 2026-11-20 측정, #269).
+ */
+const MAX_PLACE_FIT_ZOOM = 18;
 
 export function PlaceDetailPage() {
   const navigate = useNavigate();
@@ -112,6 +120,22 @@ export function PlaceDetailPage() {
     if (!padding) return;
 
     mapInst.fitBounds(bounds, padding);
+
+    if (mapInst.getZoom() <= MAX_PLACE_FIT_ZOOM) return;
+
+    // 확대를 낮추면 fitBounds가 잡은 중심이 어긋난다. 점들의 한가운데를
+    // 시트가 비워 둔 영역의 가운데로 다시 보낸다.
+    mapInst.setZoom(MAX_PLACE_FIT_ZOOM, false);
+
+    const latitudes = points.map((point) => point.latitude);
+    const longitudes = points.map((point) => point.longitude);
+
+    panToVisibleCenter({
+      latitude: (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
+      longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
+      mapInst,
+      sheetHeight,
+    });
   }, [mapInst, selectedPlace, selectedStation, sheetHeight]);
 
   // 주변 장소 목록은 결과 화면의 주변 살펴보기 탭이다(#269). 고른 역과 분류를 들고 간다.

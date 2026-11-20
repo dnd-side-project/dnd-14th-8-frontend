@@ -53,11 +53,9 @@ import {
   canManageDepartures,
   getInsufficientDepartureCopy,
 } from "@/domains/location/utils/insufficient-departures";
-import {
-  getMapFitPadding,
-  getVisibleCenterOffsetY,
-} from "@/domains/location/utils/map-viewport";
+import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import { buildPlaceDetailPath } from "@/domains/location/utils/nearby-paths";
+import { panToVisibleCenter } from "@/domains/location/utils/pan-to-visible-center";
 import { getPinShape, type PinShape } from "@/domains/location/utils/pin-shape";
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
@@ -173,43 +171,6 @@ function fitMapBounds({
     sheetHeight,
   });
   return true;
-}
-
-/**
- * 바텀시트가 지도 아래를 덮고 있으므로, 좌표를 컨테이너 정중앙이 아니라
- * 시트가 비워둔 영역의 한가운데로 보낸다. 그냥 panTo 하면 fitMapBounds가
- * 준 하단 패딩이 무시되고 선택한 역이 시트 뒤로 숨는다.
- */
-function panToVisibleCenter({
-  latitude,
-  longitude,
-  mapInst,
-  sheetHeight,
-}: {
-  latitude: number;
-  longitude: number;
-  mapInst: naver.maps.Map;
-  sheetHeight: number;
-}) {
-  const maps = window.naver?.maps;
-  if (!maps) return;
-
-  const target = new maps.LatLng(latitude, longitude);
-  const projection = mapInst.getProjection();
-  const offset = projection.fromCoordToOffset(target);
-
-  mapInst.panTo(
-    projection.fromOffsetToCoord(
-      new maps.Point(
-        offset.x,
-        getVisibleCenterOffsetY({
-          mapHeight: mapInst.getSize().height,
-          sheetHeight,
-          targetOffsetY: offset.y,
-        }),
-      ),
-    ),
-  );
 }
 
 /** 주소의 역이 추천 목록에 없으면 1순위 역을 고른다. */
