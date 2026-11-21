@@ -33,6 +33,15 @@ describe("CardFacility", () => {
     expect(textOf(markup)).toBe("카페 마루서울역에서 40m");
   });
 
+  it("역 이름을 모르면 거리 줄 없이 장소 이름만 보여 준다", () => {
+    const markup = renderToStaticMarkup(
+      <CardFacility name="모여 스터디룸" distanceMeters={120} />,
+    );
+
+    expect(textOf(markup)).toBe("모여 스터디룸");
+    expect(markup).not.toContain("120m");
+  });
+
   it("카카오 결과에는 영업 정보가 없어 영업 상태를 보여 주지 않는다", () => {
     const markup = renderToStaticMarkup(
       <CardFacility

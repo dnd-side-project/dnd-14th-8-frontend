@@ -23,7 +23,7 @@ import {
 import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { useNearbyPlaces } from "@/domains/location/hooks/use-nearby-places";
 import type { MapPageOutletContext } from "@/domains/location/pages/meetings/[meeting-id]/location";
-import { parseCoordsPath } from "@/domains/location/utils/coords";
+import { parseCoordsPath, toCoordsPath } from "@/domains/location/utils/coords";
 import { formatStationName } from "@/domains/location/utils/format";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
 import { buildResultNearbyPath } from "@/domains/location/utils/nearby-paths";
@@ -66,6 +66,13 @@ export function PlaceDetailPage() {
     recommendations.find((station) => station.rank === 1) ??
     recommendations[0] ??
     null;
+  /**
+   * 거리는 주소의 좌표(검색 기준 역)에서 잰 값이라, 카드에는 그 좌표와 같은 추천역의 이름만 쓴다.
+   * 공유한 뒤 그 역이 추천에서 빠지면 위 selectedStation은 1순위 역으로 바뀌어 거리 기준과 달라지므로,
+   * 그때는 역 이름과 거리를 보여 주지 않는다.
+   */
+  const searchStation =
+    recommendations.find((station) => toCoordsPath(station) === coords) ?? null;
 
   // 장소 번호는 카카오 장소 ID다. 옛 백엔드 번호로 된 링크는 찾지 못해 아래 "찾을 수 없어요"가 나온다.
   const selectedPlace = places?.find((place) => place.id === placeId) ?? null;
@@ -193,11 +200,12 @@ export function PlaceDetailPage() {
 
       <BottomSheet defaultSnap="peek" onHeightChange={setSheetHeight}>
         <div className="flex flex-col gap-4 px-5 pb-6">
-          {isLoading ? null : selectedPlace && selectedStation ? (
+          {/* 추천역이 없어도(출발지가 모자라거나 역을 못 찾음) 찾은 장소는 이름과 자세히 보기를 보여 준다. */}
+          {isLoading ? null : selectedPlace ? (
             <>
               <CardFacility
                 name={selectedPlace.name}
-                stationName={selectedStation.stationName}
+                stationName={searchStation?.stationName}
                 distanceMeters={selectedPlace.distanceMeters}
                 disabled
                 className="border-none px-0 py-0"

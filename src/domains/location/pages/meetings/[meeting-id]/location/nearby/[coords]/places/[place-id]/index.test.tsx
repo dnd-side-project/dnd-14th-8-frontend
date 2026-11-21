@@ -61,31 +61,28 @@ const OUTLET_CONTEXT: MapPageOutletContext = {
  * 장소 상세를 서버 렌더링으로 그린다. 효과가 돌지 않아 카카오를 부르지 않으므로,
  * 검색 결과는 같은 키로 미리 넣어 둔다. 넣지 않으면 검색 중인 상태다.
  */
+const SEOUL_STATION = {
+  stationId: 105,
+  stationName: "서울역",
+  latitude: 37.5547,
+  longitude: 126.9707,
+};
+
 function renderPlaceDetail({
   path,
   places,
   category = "스터디룸",
+  recommendations = [station({}), station({ ...SEOUL_STATION, rank: 2 })],
 }: {
   path: string;
   places?: NearbyPlace[];
   category?: NearbyCategory;
+  recommendations?: StationRecommendationDto[];
 }) {
   const queryClient = new QueryClient();
   queryClient.setQueryData(
     getMidpointRecommendationsQueryKey({ meetingId: "m1" }),
-    {
-      centerPoint: STATION,
-      recommendations: [
-        station({}),
-        station({
-          stationId: 105,
-          stationName: "서울역",
-          rank: 2,
-          latitude: 37.5547,
-          longitude: 126.9707,
-        }),
-      ],
-    },
+    { centerPoint: STATION, recommendations },
   );
   if (places) {
     queryClient.setQueryData(
@@ -145,6 +142,39 @@ describe("PlaceDetailPage", () => {
     });
 
     expect(markup).toContain("을지로3가역에서 120m");
+  });
+
+  it("추천역이 없어도 찾은 장소는 이름과 자세히 보기를 보여 주고, 거리 줄은 숨긴다", () => {
+    const markup = renderPlaceDetail({
+      path: detailPath(
+        "9001",
+        `station_id=101&category=${encodeURIComponent("스터디룸")}`,
+      ),
+      places: PLACES,
+      recommendations: [],
+    });
+
+    expect(markup).toContain("을지 스터디카페");
+    expect(markup).toContain("자세히 보기");
+    expect(markup).not.toContain("260m");
+    expect(markup).not.toContain("찾을 수 없어요");
+  });
+
+  it("주소 좌표의 역이 추천에서 빠지면 다른 역 이름으로 거리를 보여 주지 않는다", () => {
+    // 을지로3가역 좌표로 만든 링크인데, 지금 추천에는 서울역만 남았다.
+    const markup = renderPlaceDetail({
+      path: detailPath(
+        "9001",
+        `station_id=101&category=${encodeURIComponent("스터디룸")}`,
+      ),
+      places: PLACES,
+      recommendations: [station({ ...SEOUL_STATION, rank: 1 })],
+    });
+
+    expect(markup).toContain("을지 스터디카페");
+    expect(markup).toContain("자세히 보기");
+    expect(markup).not.toContain("서울역에서");
+    expect(markup).not.toContain("260m");
   });
 
   it("옛 백엔드 번호처럼 검색 결과에 없는 번호면 찾지 못했다고 알린다", () => {

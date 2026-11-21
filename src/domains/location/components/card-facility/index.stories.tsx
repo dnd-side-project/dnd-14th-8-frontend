@@ -36,6 +36,14 @@ export const LongName: Story = {
   },
 };
 
+/** 검색 기준 역이 추천에서 빠졌거나 추천이 없을 때. 어디서 잰 거리인지 몰라 거리 줄을 숨긴다. */
+export const WithoutStation: Story = {
+  args: {
+    name: "모여 스터디룸",
+    distanceMeters: 120,
+  },
+};
+
 export const Showcase: Story = {
   args: {
     name: "모여 스터디룸",
