@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { useState } from "react";
-import type { NearbyCategory } from "@/domains/location/constants/nearby-categories";
+import type {
+  FoodCondition,
+  NearbyCategory,
+} from "@/domains/location/constants/nearby-categories";
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import { NearbyPlacesPanel } from ".";
 
@@ -57,6 +60,8 @@ const meta = {
     places: PLACES.스터디룸,
     stationName: "을지로3가역",
     onCategoryChange: fn(),
+    foodCondition: "nearest",
+    onFoodConditionChange: fn(),
     onPlaceClick: fn(),
   },
 } satisfies Meta<typeof NearbyPlacesPanel>;
@@ -65,23 +70,37 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// 칩을 누르면 그 분류의 장소로 바뀐다.
+// 칩을 누르면 그 분류의 장소로 바뀐다. 식당을 고르면 조건 칩 줄이 하나 더 나온다(#273).
 export const Default: Story = {
   render: (args) => {
     const [category, setCategory] = useState<NearbyCategory>(args.category);
+    const [condition, setCondition] = useState<FoodCondition>(
+      args.foodCondition,
+    );
 
     return (
       <NearbyPlacesPanel
         {...args}
         category={category}
+        foodCondition={condition}
         places={PLACES[category]}
         onCategoryChange={(next) => {
+          if (next !== category) setCondition("nearest");
           setCategory(next);
           args.onCategoryChange(next);
+        }}
+        onFoodConditionChange={(next) => {
+          setCondition(next);
+          args.onFoodConditionChange(next);
         }}
       />
     );
   },
+};
+
+// 식당을 고른 모습. 분류 칩 아래 조건 칩 줄이 있고, 고른 조건은 테두리로 강조한다.
+export const Food: Story = {
+  args: { category: "식당", foodCondition: "popular", places: PLACES.식당 },
 };
 
 // 찾는 중이거나 장소가 없을 때. 칩만 남고 카드 자리는 비어 있다.

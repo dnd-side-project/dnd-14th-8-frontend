@@ -36,8 +36,9 @@ export function parseNearbyCategory(value: string | null): NearbyCategory {
 export interface NearbySearchRule {
   /** 키워드 검색어. 없으면 업종 검색이다. */
   keyword?: string;
-  /** 카카오 업종 코드. 음식점 FD6, 카페 CE7 */
+  /** 카카오 업종 코드. 음식점 FD6, 카페 CE7. 키워드와 함께 주면 그 업종 안에서 키워드로 찾는다 */
   categoryGroupCode?: "FD6" | "CE7";
+  /** 가까운 순 또는 카카오 정확도순(무엇으로 매기는지는 카카오 문서에 없다) */
   sort: "distance" | "accuracy";
 }
 
@@ -51,6 +52,49 @@ export const NEARBY_SEARCH_RULES: Record<NearbyCategory, NearbySearchRule> = {
   식당: { categoryGroupCode: "FD6", sort: "distance" },
   카페: { categoryGroupCode: "CE7", sort: "distance" },
 };
+
+/**
+ * 식당의 조건(#273). 칩도 이 순서로 보이고, 주소 쿼리(condition)에는 이 값을 쓴다. 다른 분류에는 조건이 없다.
+ * 처음에는 늘 가까운 순이다.
+ */
+export const FOOD_CONDITIONS = ["nearest", "popular", "group"] as const;
+
+export type FoodCondition = (typeof FOOD_CONDITIONS)[number];
+
+/** 조건 칩 이름. 맛집은 별점이 아니라 카카오 정확도순이라 별점처럼 보이는 말은 쓰지 않는다. */
+export const FOOD_CONDITION_LABEL: Record<FoodCondition, string> = {
+  nearest: "가까운 순",
+  popular: "맛집",
+  group: "단체",
+};
+
+/** 주소의 condition 값을 식당 조건으로 읽는다. 모르는 값이나 빈 값은 가까운 순. */
+export function parseFoodCondition(value: string | null): FoodCondition {
+  return value && (FOOD_CONDITIONS as readonly string[]).includes(value)
+    ? (value as FoodCondition)
+    : "nearest";
+}
+
+/**
+ * 식당 조건마다 카카오에 보내는 검색(#273 "검색 규칙"). 가까운 순은 #269의 식당 규칙 그대로다.
+ * 맛집과 단체는 음식점 업종 안에서 키워드로 찾고 정확도순이다. 단체 검색어는 "회식"과 결과가 많이 겹쳐
+ * "단체모임" 하나로 정했다(추천역 12곳 확인, 2026-11-20).
+ */
+export const FOOD_SEARCH_RULES: Record<FoodCondition, NearbySearchRule> = {
+  nearest: NEARBY_SEARCH_RULES.식당,
+  popular: { keyword: "맛집", categoryGroupCode: "FD6", sort: "accuracy" },
+  group: { keyword: "단체모임", categoryGroupCode: "FD6", sort: "accuracy" },
+};
+
+/** 분류와 식당 조건으로 검색 규칙을 고른다. 식당이 아니면 조건은 쓰지 않는다. */
+export function getNearbySearchRule(
+  category: NearbyCategory,
+  foodCondition: FoodCondition = "nearest",
+): NearbySearchRule {
+  return category === "식당"
+    ? FOOD_SEARCH_RULES[foodCondition]
+    : NEARBY_SEARCH_RULES[category];
+}
 
 /** 역 좌표에서 찾는 반경(m)과 받는 개수 */
 export const NEARBY_SEARCH_RADIUS_METERS = 1000;

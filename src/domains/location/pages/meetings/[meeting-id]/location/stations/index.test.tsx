@@ -589,6 +589,100 @@ const PLACE_ABOVE: NearbyPlace = {
   latitude: STATION.latitude + 0.0038,
 };
 
+const FOOD_PATH = `/meetings/m1/location/stations?station_id=101&tab=nearby&category=${encodeURIComponent("식당")}`;
+
+function chip(name: string) {
+  return screen.getByRole("button", { name });
+}
+
+describe("식당 조건(#273)", () => {
+  it("식당이면 조건 칩 줄을 보여 주고 처음에는 가까운 순으로 찾는다", async () => {
+    renderResult({ path: FOOD_PATH });
+    await screen.findByText("을지 스터디카페");
+
+    expect(chip("가까운 순").getAttribute("aria-pressed")).toBe("true");
+    expect(chip("맛집").getAttribute("aria-pressed")).toBe("false");
+    expect(chip("단체").getAttribute("aria-pressed")).toBe("false");
+    expect(searchNearbyPlaces).toHaveBeenCalledWith({
+      ...STATION,
+      category: "식당",
+      foodCondition: "nearest",
+    });
+  });
+
+  it("조건 칩을 누르면 주소에 condition을 남기고(replace) 그 조건으로 다시 찾는다", async () => {
+    renderResult({ path: FOOD_PATH });
+    await screen.findByText("을지 스터디카페");
+
+    fireEvent.click(chip("맛집"));
+
+    expect(currentUrl().searchParams.get("condition")).toBe("popular");
+    expect(navigationType()).toBe("REPLACE");
+    await vi.waitFor(() =>
+      expect(searchNearbyPlaces).toHaveBeenLastCalledWith({
+        ...STATION,
+        category: "식당",
+        foodCondition: "popular",
+      }),
+    );
+    expect(chip("맛집").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("다른 분류로 갔다 오면 가까운 순으로 돌아온다", async () => {
+    renderResult({ path: `${FOOD_PATH}&condition=group` });
+    await screen.findByText("을지 스터디카페");
+
+    fireEvent.click(chip("카페"));
+    expect(currentUrl().searchParams.has("condition")).toBe(false);
+    expect(screen.queryByRole("button", { name: "단체" })).toBeNull();
+
+    fireEvent.click(chip("식당"));
+    await vi.waitFor(() =>
+      expect(searchNearbyPlaces).toHaveBeenLastCalledWith({
+        ...STATION,
+        category: "식당",
+        foodCondition: "nearest",
+      }),
+    );
+    expect(chip("가까운 순").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("이미 고른 식당 칩을 다시 누르면 조건을 그대로 둔다", async () => {
+    renderResult({ path: `${FOOD_PATH}&condition=popular` });
+    await screen.findByText("을지 스터디카페");
+
+    fireEvent.click(chip("식당"));
+
+    expect(currentUrl().searchParams.get("condition")).toBe("popular");
+    expect(chip("맛집").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("조건이 담긴 장소 링크는 같은 조건의 결과에서 장소를 찾고, 고른 상태에서는 조건 칩을 숨긴다", async () => {
+    renderResult({ path: `${FOOD_PATH}&condition=group&place_id=9001` });
+
+    await screen.findByRole("heading", { name: "을지 스터디카페" });
+    expect(searchNearbyPlaces).toHaveBeenCalledTimes(1);
+    expect(searchNearbyPlaces).toHaveBeenCalledWith({
+      ...STATION,
+      category: "식당",
+      foodCondition: "group",
+    });
+    expect(screen.queryByRole("button", { name: "단체" })).toBeNull();
+    expect(currentUrl().searchParams.get("condition")).toBe("group");
+  });
+
+  it("식당이 아니면 주소에 condition이 있어도 조건 없이 찾는다", async () => {
+    renderResult({ path: `${LIST_PATH}&condition=popular` });
+    await screen.findByText("을지 스터디카페");
+
+    expect(searchNearbyPlaces).toHaveBeenCalledWith({
+      ...STATION,
+      category: "스터디룸",
+    });
+    expect(screen.queryByRole("button", { name: "맛집" })).toBeNull();
+  });
+});
+
 describe("고른 상태의 지도(#271)", () => {
   let restoreSize: () => void;
 
