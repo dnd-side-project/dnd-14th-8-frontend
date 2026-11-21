@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildLegacyNearbyRedirectPath,
+  buildLegacyPlaceDetailRedirectPath,
   parseStationIdParam,
 } from "@/domains/location/utils/legacy-nearby-redirect";
 
@@ -57,5 +58,41 @@ describe("buildLegacyNearbyRedirectPath", () => {
     expect(
       redirectOf("station_id=abc&category=카페").searchParams.has("station_id"),
     ).toBe(false);
+  });
+});
+
+describe("buildLegacyPlaceDetailRedirectPath", () => {
+  function placeRedirectOf(placeId: string, search: string) {
+    const path = buildLegacyPlaceDetailRedirectPath({
+      meetingId: "m1",
+      placeId,
+      searchParams: new URLSearchParams(search),
+    });
+    return new URL(path, "https://moyeorak.site");
+  }
+
+  it("옛 장소 상세 주소의 역, 분류, 장소를 결과 화면의 고른 상태 주소로 넘긴다", () => {
+    const url = placeRedirectOf("9000", "station_id=102&category=카페");
+
+    expect(url.pathname).toBe("/meetings/m1/location/stations");
+    expect(url.searchParams.get("station_id")).toBe("102");
+    expect(url.searchParams.get("tab")).toBe("nearby");
+    expect(url.searchParams.get("category")).toBe("카페");
+    expect(url.searchParams.get("place_id")).toBe("9000");
+  });
+
+  it("옛 분류 이름은 새 이름으로 바꾸고 좌표는 주소에 남기지 않는다", () => {
+    const url = placeRedirectOf("9000", "station_id=101&category=스터디카페");
+
+    expect(url.searchParams.get("category")).toBe("스터디룸");
+    expect(url.search).not.toContain("37.5663");
+  });
+
+  it("쿼리가 없으면 역을 빼고 첫 분류로 넘겨 결과 화면이 1순위 역을 고르게 한다", () => {
+    const url = placeRedirectOf("9000", "");
+
+    expect(url.searchParams.has("station_id")).toBe(false);
+    expect(url.searchParams.get("category")).toBe("스터디룸");
+    expect(url.searchParams.get("place_id")).toBe("9000");
   });
 });

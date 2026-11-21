@@ -33,3 +33,29 @@ export function buildLegacyNearbyRedirectPath({
     ),
   });
 }
+
+/**
+ * 옛 장소 상세 주소(/location/nearby/{좌표}/places/{카카오 장소 ID}?station_id=&category=)를
+ * 결과 화면에서 그 장소를 고른 주소로 바꾼다(#271). 역과 분류는 옛 목록 주소와 같은 규칙으로 읽고,
+ * 주소의 좌표는 버린다. 결과 화면은 고른 역 좌표로 장소를 찾고, 찾지 못하면 목록으로 연다.
+ */
+export function buildLegacyPlaceDetailRedirectPath({
+  meetingId,
+  placeId,
+  searchParams,
+}: {
+  meetingId: string;
+  placeId: string;
+  searchParams: URLSearchParams;
+}) {
+  return buildResultNearbyPath({
+    meetingId,
+    stationId: parseStationIdParam(
+      searchParams.get(LOCATION_QUERY_PARAMS.stationId),
+    ),
+    category: parseNearbyCategory(
+      searchParams.get(LOCATION_QUERY_PARAMS.nearbyCategory),
+    ),
+    placeId,
+  });
+}
