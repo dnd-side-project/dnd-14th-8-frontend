@@ -1,5 +1,9 @@
 // @vitest-environment jsdom
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import {
   act,
   cleanup,
@@ -166,9 +170,12 @@ function MapLayout({ mapInst }: { mapInst: naver.maps.Map | null }) {
 function renderResult({
   path,
   mapInst = null,
+  prefillMidpoint = true,
 }: {
   path: string;
   mapInst?: naver.maps.Map | null;
+  /** false면 추천 응답을 미리 넣지 않는다(첫 조회가 아직 끝나지 않은 상태). */
+  prefillMidpoint?: boolean;
 }) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -178,24 +185,25 @@ function renderResult({
     getDeparturesQueryKey({ meetingId: "m1" }),
     DEPARTURES,
   );
-  queryClient.setQueryData(
-    getMidpointRecommendationsQueryKey({ meetingId: "m1" }),
-    {
-      centerPoint: STATION,
-      registeredCount: 2,
-      totalCount: 2,
-      recommendations: [
-        station({}),
-        station({
-          stationId: 105,
-          stationName: "서울역",
-          latitude: 37.5547,
-          longitude: 126.9707,
-          rank: 2,
-        }),
-      ],
-    },
-  );
+  if (prefillMidpoint)
+    queryClient.setQueryData(
+      getMidpointRecommendationsQueryKey({ meetingId: "m1" }),
+      {
+        centerPoint: STATION,
+        registeredCount: 2,
+        totalCount: 2,
+        recommendations: [
+          station({}),
+          station({
+            stationId: 105,
+            stationName: "서울역",
+            latitude: 37.5547,
+            longitude: 126.9707,
+            rank: 2,
+          }),
+        ],
+      },
+    );
   queryClient.setQueryData(
     getMyParticipantQueryKey({
       localStorageKey: getGuestId(),
@@ -395,6 +403,27 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
       id: "nearby-place-not-found",
     });
     toastMessage.mockRestore();
+  });
+
+  it("오프라인이라 추천 첫 조회가 멈춰 있으면 place_id를 지우지 않는다", async () => {
+    // 오프라인이면 첫 조회가 멈춰(paused) isLoading은 false, 결과가 없어 isPending은 true다.
+    onlineManager.setOnline(false);
+    const toastMessage = vi.spyOn(toast, "message");
+    try {
+      renderResult({
+        path: `${LIST_PATH}&place_id=9001`,
+        prefillMidpoint: false,
+      });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+
+      expect(currentUrl().searchParams.get("place_id")).toBe("9001");
+      expect(toastMessage).not.toHaveBeenCalled();
+    } finally {
+      toastMessage.mockRestore();
+      onlineManager.setOnline(true);
+    }
   });
 
   it("주변 살펴보기 탭이 아닌 주소의 place_id는 토스트 없이 지운다", async () => {

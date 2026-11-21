@@ -325,11 +325,14 @@ export function LocationMainPage() {
   const { data: myInfo, isLoading: isMyInfoLoading } = useGetMyParticipant({
     meetingId,
   });
-  const { data: midpoint, isLoading: isMidpointLoading } =
-    useGetMidpointRecommendations({
-      meetingId,
-      ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
-    });
+  const {
+    data: midpoint,
+    isLoading: isMidpointLoading,
+    isPending: isMidpointPending,
+  } = useGetMidpointRecommendations({
+    meetingId,
+    ...LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS,
+  });
 
   const recommendations = midpoint?.recommendations ?? EMPTY_RECOMMENDATIONS;
   const stationId = Number(searchParams.get(LOCATION_QUERY_PARAMS.stationId));
@@ -401,9 +404,11 @@ export function LocationMainPage() {
    * place_id는 고른 상태를 보여 줄 수 있을 때만 주소에 둔다. 추천을 받은 뒤 주변 살펴보기 탭이 아니거나
    * (추천역이 없어 탭이 없을 때 포함), 찾은 장소에 없으면(옛 백엔드 번호, 검색 오류 등) replace로 지워
    * 목록으로 연다. 찾은 장소에 없을 때만 토스트로 알린다(#271). 추천역이 없는 화면은 그 화면이 이유를 보여 준다.
+   * 추천을 아직 한 번도 받지 못했으면(isPending) 지우지 않는다. 오프라인이면 첫 조회가 멈춰 isLoading은
+   * false지만 결과가 없어서, 지우면 연결이 돌아와도 고른 장소로 돌아가지 못한다(CodeRabbit 지적, PR #272).
    */
   useEffect(() => {
-    if (placeIdParam === null || isMidpointLoading) return;
+    if (placeIdParam === null || isMidpointPending) return;
     if (selectedPlaceId !== null) {
       if (!nearbyPlaces) return;
       if (nearbyPlaces.some((place) => place.id === selectedPlaceId)) return;
@@ -415,7 +420,7 @@ export function LocationMainPage() {
     next.delete(LOCATION_QUERY_PARAMS.placeId);
     setSearchParams(next, { replace: true });
   }, [
-    isMidpointLoading,
+    isMidpointPending,
     nearbyPlaces,
     placeIdParam,
     searchParams,
