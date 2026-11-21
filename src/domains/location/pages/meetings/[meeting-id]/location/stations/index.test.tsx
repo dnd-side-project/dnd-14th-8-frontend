@@ -551,6 +551,9 @@ async function settleMap() {
   });
 }
 
+/** 고른 상태 시트(손잡이 36px + 카드 90px = 126px)의 절반, 대역 투영(1px = 위도 0.00001도)으로 63px. */
+const FITTED_SHEET_HALF_LAT = 0.00063;
+
 // 역보다 380m(위도 0.0038도, 대역 투영으로 380px) 위에 있는 장소.
 const PLACE_ABOVE: NearbyPlace = {
   ...PLACES[0],
@@ -632,10 +635,14 @@ describe("고른 상태의 지도(#271)", () => {
 
     expect(map.fitBounds).toHaveBeenCalledTimes(fitsBeforeSelect);
     expect(map.panTo).toHaveBeenCalledTimes(1);
-    // 시트 peek(255px)의 절반만큼 장소보다 아래를 중심으로 잡아, 장소가 시트 위 영역 가운데에 온다.
+    // 고른 상태의 시트는 카드 높이에 맞춘다. 이 묶음은 모든 요소 높이를 90px로 두어 시트가 손잡이 36px + 90px = 126px다.
+    // 시트 높이의 절반(63px, 대역 투영으로 위도 0.00063도)만큼 장소보다 아래를 중심으로 잡아, 장소가 시트 위 영역 가운데에 온다.
     const [target] = map.panTo.mock.calls[0] as [{ lat: number; lng: number }];
     expect(target.lng).toBeCloseTo(PLACE_ABOVE.longitude, 6);
-    expect(target.lat).toBeCloseTo(PLACE_ABOVE.latitude - 0.001275, 6);
+    expect(target.lat).toBeCloseTo(
+      PLACE_ABOVE.latitude - FITTED_SHEET_HALF_LAT,
+      6,
+    );
   });
 
   it("링크로 바로 열면 목록처럼 한 번 맞춘 자리에서 고른 장소가 가려졌는지 보고 옮긴다", async () => {
@@ -653,6 +660,9 @@ describe("고른 상태의 지도(#271)", () => {
     expect(map.setCenter).toHaveBeenCalledTimes(1);
     expect(map.panTo).toHaveBeenCalledTimes(1);
     const [target] = map.panTo.mock.calls[0] as [{ lat: number; lng: number }];
-    expect(target.lat).toBeCloseTo(PLACE_ABOVE.latitude - 0.001275, 6);
+    expect(target.lat).toBeCloseTo(
+      PLACE_ABOVE.latitude - FITTED_SHEET_HALF_LAT,
+      6,
+    );
   });
 });

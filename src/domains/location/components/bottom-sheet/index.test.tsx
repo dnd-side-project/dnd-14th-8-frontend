@@ -14,7 +14,11 @@ function sheetOf(container: HTMLElement) {
   return sheet;
 }
 
-function renderSheet(props: { snap?: SheetSnap; defaultSnap?: SheetSnap }) {
+function renderSheet(props: {
+  snap?: SheetSnap;
+  defaultSnap?: SheetSnap;
+  peekContentHeight?: number;
+}) {
   const onHeightChange = vi.fn();
   const utils = render(
     <BottomSheet {...props} onHeightChange={onHeightChange}>
@@ -63,5 +67,32 @@ describe("BottomSheet snap", () => {
     const { container } = renderSheet({ defaultSnap: "peek" });
 
     expect(sheetOf(container).style.height).toBe(`${PEEK}px`);
+  });
+
+  it("peekContentHeight를 넘기면 peek을 손잡이 36px + 그 높이에 맞추고, 바뀌면 바로 따라간다(#271)", () => {
+    const { container, onHeightChange, rerender } = renderSheet({
+      snap: "peek",
+      peekContentHeight: 160,
+    });
+    expect(sheetOf(container).style.height).toBe("196px");
+    expect(onHeightChange).toHaveBeenLastCalledWith(196);
+
+    rerender(
+      <BottomSheet
+        snap="peek"
+        peekContentHeight={140}
+        onHeightChange={onHeightChange}
+      >
+        <p>내용</p>
+      </BottomSheet>,
+    );
+    expect(sheetOf(container).style.height).toBe("176px");
+    expect(onHeightChange).toHaveBeenLastCalledWith(176);
+  });
+
+  it("peekContentHeight는 peek에만 쓰고 half 높이는 바꾸지 않는다", () => {
+    const { container } = renderSheet({ snap: "half", peekContentHeight: 160 });
+
+    expect(sheetOf(container).style.height).toBe(`${HALF}px`);
   });
 });

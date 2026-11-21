@@ -20,7 +20,23 @@ const SNAP_MAX_VIEWPORT_RATIO: Record<SheetSnap, number> = {
   full: 0.88,
 };
 
-export function getSheetHeightBySnap(snap: SheetSnap, viewportHeight: number) {
+/**
+ * @param peekContentHeight peek의 콘텐츠 높이를 부르는 쪽이 정할 때(내용에 맞출 때) 넘긴다.
+ *   그러면 peek은 시안 기준 대신 손잡이 + 이 높이다. full 높이는 넘지 않는다(#271).
+ */
+export function getSheetHeightBySnap(
+  snap: SheetSnap,
+  viewportHeight: number,
+  peekContentHeight?: number,
+): number {
+  if (snap === "peek" && peekContentHeight !== undefined) {
+    const fittedHeight = Math.round(peekContentHeight + HANDLE_HEIGHT_PX);
+
+    return viewportHeight > 0
+      ? Math.min(fittedHeight, getSheetHeightBySnap("full", viewportHeight))
+      : fittedHeight;
+  }
+
   const designHeight = SNAP_CONTENT_HEIGHT_PX[snap] + HANDLE_HEIGHT_PX;
 
   if (viewportHeight <= 0) {
@@ -38,13 +54,14 @@ const SNAPS: SheetSnap[] = ["peek", "half", "full"];
 export function getNearestSnap(
   height: number,
   viewportHeight: number,
+  peekContentHeight?: number,
 ): SheetSnap {
   return SNAPS.reduce((nearest, snap) => {
     const nearestDistance = Math.abs(
-      height - getSheetHeightBySnap(nearest, viewportHeight),
+      height - getSheetHeightBySnap(nearest, viewportHeight, peekContentHeight),
     );
     const distance = Math.abs(
-      height - getSheetHeightBySnap(snap, viewportHeight),
+      height - getSheetHeightBySnap(snap, viewportHeight, peekContentHeight),
     );
 
     return distance < nearestDistance ? snap : nearest;

@@ -3,6 +3,7 @@ import {
   Fragment,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -423,13 +424,17 @@ export function LocationMainPage() {
   ]);
 
   /**
-   * 시트 높이. 장소를 고른 상태는 peek, 아니면 half다. 닫으면 고르기 전 높이를 기억하지 않고 half로 연다(#271).
+   * 시트 높이. 장소를 고른 상태는 peek(높이는 장소 카드에 맞춤, 아래 selectedSheetContentHeight), 아니면 half다.
+   * 닫으면 고르기 전 높이를 기억하지 않고 half로 연다(#271).
    * 링크로 고른 상태를 열면 추천을 받기 전부터 peek로 열어, half로 열었다가 줄어들지 않게 한다.
    */
   const isOpeningPlaceLink =
     isMidpointLoading &&
     resultTab === RESULT_TAB_VALUES.nearby &&
     placeIdParam !== null;
+  /** 고른 장소 카드 영역의 높이(아래 selectedSheetContentHeight 효과가 잰다). 시트 peek을 여기에 맞춘다. */
+  const [selectedSheetContentHeight, setSelectedSheetContentHeight] =
+    useState<number>();
   const sheetSnap: SheetSnap =
     isPlaceSelected || isOpeningPlaceLink ? "peek" : "half";
 
@@ -552,9 +557,44 @@ export function LocationMainPage() {
   const [selectedPinBox, setSelectedPinBox] = useState<HTMLDivElement | null>(
     null,
   );
+  /**
+   * 시트가 마지막으로 알린 높이. 시트는 이 화면보다 먼저 효과를 돌려 높이를 알리므로, 같은 커밋에서 이 화면의
+   * 효과가 읽는 sheetHeight 상태는 한 단계 늦을 수 있다. 장소를 고르며 시트가 카드 높이로 줄어드는 커밋에서
+   * 늦은 높이로 옮기지 않게, 옮길 때는 이 값을 읽는다.
+   */
+  const reportedSheetHeightRef = useRef(sheetHeight);
+  const handleSheetHeightChange = useCallback(
+    (height: number) => {
+      reportedSheetHeightRef.current = height;
+      setSheetHeight(height);
+    },
+    [setSheetHeight],
+  );
+  /** 같은 장소를 같은 시트 높이로 이미 봤으면 다시 옮기지 않는다(지도가 옮겨지는 중이면 중심이 아직 예전 값이다). */
+  const lastRevealRef = useRef<{
+    placeId: string;
+    sheetHeight: number;
+    pinBox: HTMLDivElement;
+  } | null>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: sheetHeight는 시트 높이가 바뀌면 다시 보라는 신호로만 쓴다. 값은 한 단계 늦을 수 있어 reportedSheetHeightRef에서 읽는다.
   useEffect(() => {
     if (!mapInst || !selectedPlace || !selectedPinBox) return;
+
+    const currentSheetHeight = reportedSheetHeightRef.current;
+    const last = lastRevealRef.current;
+    if (
+      last?.placeId === selectedPlace.id &&
+      last.sheetHeight === currentSheetHeight &&
+      last.pinBox === selectedPinBox
+    ) {
+      return;
+    }
+    lastRevealRef.current = {
+      placeId: selectedPlace.id,
+      sheetHeight: currentSheetHeight,
+      pinBox: selectedPinBox,
+    };
 
     revealAnchoredBox({
       latitude: selectedPlace.latitude,
@@ -562,7 +602,7 @@ export function LocationMainPage() {
       boxWidth: selectedPinBox.offsetWidth,
       boxHeight: selectedPinBox.offsetHeight,
       mapInst,
-      sheetHeight,
+      sheetHeight: currentSheetHeight,
     });
   }, [mapInst, selectedPlace, selectedPinBox, sheetHeight]);
 
@@ -730,6 +770,32 @@ export function LocationMainPage() {
       ?.focus();
   }, [shownPlaceId]);
 
+  /**
+   * 고른 장소 카드 시트의 높이(#271). peek을 시안 높이로 두면 카드가 짧아 거리 배지와 아래 "자세히 보기" 사이가
+   * 크게 빈다(작성자가 실기기에서 확인). 카드 영역을 재서 시트의 peek을 그 높이에 맞춘다. 카드 영역의 아래 여백은
+   * 아래 버튼 영역 높이 + 12px라, 배지와 버튼 사이는 이 12px와 ActionArea 위 여백 12px를 더한 24px다(시안).
+   * 장소 이름과 주소는 한 줄이라 높이가 거의 같아서, 한 번 잰 값을 다음 고르기에도 쓴다(상태는 위 sheetSnap 옆).
+   */
+  useLayoutEffect(() => {
+    if (shownPlaceId === null) return;
+    const element = sheetContentRef.current;
+    if (!element) return;
+
+    const update = () => {
+      const contentHeight = element.offsetHeight;
+      if (contentHeight > 0) setSelectedSheetContentHeight(contentHeight);
+    };
+
+    update();
+    // 아래 버튼 영역 높이가 바뀌면 여백(padding)만 바뀌므로 테두리 상자 기준으로 본다.
+    const observer = new ResizeObserver(update);
+    observer.observe(element, { box: "border-box" });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [shownPlaceId]);
+
   // 주변 살펴보기 탭을 연 동안은 사람 핀(이름표와 점)을 비운다. 핀 층은 지도에 그대로 둬서 개인별 루트로 돌아오면 바로 보인다.
   const personPinShape: PinShape | null = isNearbyTab ? null : shownPinShape;
 
@@ -809,14 +875,24 @@ export function LocationMainPage() {
           ),
         )}
 
-      <BottomSheet snap={sheetSnap} onHeightChange={setSheetHeight}>
+      <BottomSheet
+        snap={sheetSnap}
+        peekContentHeight={
+          shownPlaceId !== null ? selectedSheetContentHeight : undefined
+        }
+        onHeightChange={handleSheetHeightChange}
+      >
         {isContentLoading ? null : hasRecommendations &&
           selectedStation &&
           isPlaceSelected ? (
           // 장소를 고른 상태의 시트는 장소 카드 하나다. 제목, 역 카드, 탭, 분류 칩은 숨긴다(#271). 찾는 중에는 비운다.
           // 위 4px는 시트 위쪽 끝에 붙은 닫기 버튼의 포커스 링(두께 2px, 간격 2px)이 시트 스크롤 영역에 잘리지 않게 둔다.
+          // 아래 여백은 아래 버튼 영역 높이 + 12px다. 시트 높이를 이 영역에 맞춘다(위 selectedSheetContentHeight).
           selectedPlace && (
-            <div ref={sheetContentRef} className="px-5 pt-1 pb-[106px]">
+            <div
+              ref={sheetContentRef}
+              className="px-5 pt-1 pb-[calc(var(--fixed-bottom-area-height,0px)+12px)]"
+            >
               <SelectedPlaceCard
                 name={selectedPlace.name}
                 address={selectedPlace.address}
