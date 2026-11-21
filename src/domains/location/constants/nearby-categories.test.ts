@@ -23,6 +23,12 @@ describe("parseNearbyCategory", () => {
     expect(parseNearbyCategory("")).toBe("스터디룸");
     expect(parseNearbyCategory("술집")).toBe("스터디룸");
   });
+
+  it("객체가 물려받은 속성 이름도 모르는 값으로 보고 첫 분류로 연다", () => {
+    expect(parseNearbyCategory("toString")).toBe("스터디룸");
+    expect(parseNearbyCategory("constructor")).toBe("스터디룸");
+    expect(parseNearbyCategory("__proto__")).toBe("스터디룸");
+  });
 });
 
 describe("NEARBY_SEARCH_RULES", () => {

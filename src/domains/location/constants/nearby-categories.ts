@@ -13,11 +13,14 @@ export const NEARBY_CATEGORIES = [
 
 export type NearbyCategory = (typeof NEARBY_CATEGORIES)[number];
 
-/** 예전 백엔드 분류 이름. 이미 공유된 링크의 category 값을 새 이름으로 읽는다. */
-const LEGACY_NEARBY_CATEGORY: Record<string, NearbyCategory> = {
-  스터디카페: "스터디룸",
-  음식점: "식당",
-};
+/**
+ * 예전 백엔드 분류 이름. 이미 공유된 링크의 category 값을 새 이름으로 읽는다.
+ * 객체로 두고 `in`으로 찾으면 `toString` 같은 상속 속성까지 걸려서 Map으로 둔다.
+ */
+const LEGACY_NEARBY_CATEGORY = new Map<string, NearbyCategory>([
+  ["스터디카페", "스터디룸"],
+  ["음식점", "식당"],
+]);
 
 function isNearbyCategory(value: string): value is NearbyCategory {
   return (NEARBY_CATEGORIES as readonly string[]).includes(value);
@@ -26,11 +29,8 @@ function isNearbyCategory(value: string): value is NearbyCategory {
 /** 주소의 category 값을 분류로 읽는다. 옛 이름은 새 이름으로, 모르는 값이나 빈 값은 첫 분류로. */
 export function parseNearbyCategory(value: string | null): NearbyCategory {
   if (value && isNearbyCategory(value)) return value;
-  if (value && value in LEGACY_NEARBY_CATEGORY) {
-    return LEGACY_NEARBY_CATEGORY[value];
-  }
 
-  return NEARBY_CATEGORIES[0];
+  return (value && LEGACY_NEARBY_CATEGORY.get(value)) || NEARBY_CATEGORIES[0];
 }
 
 export interface NearbySearchRule {
