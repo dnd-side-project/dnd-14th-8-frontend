@@ -20,6 +20,7 @@ export interface NearbyPlacesPanelProps {
 /**
  * 결과 화면의 주변 살펴보기 탭 내용(#269). 분류 칩 줄과 고른 분류의 장소 카드다.
  * 칩은 아이콘 없이 NEARBY_CATEGORIES 순서로 늘 모두 보인다. 장소가 없으면 카드 자리를 비운다.
+ * 카드마다 `data-place-id`(카카오 장소 ID)를 단다. 고른 장소를 닫으면 결과 화면이 이 값으로 그 카드에 포커스를 돌려준다(#271).
  */
 export function NearbyPlacesPanel({
   category,
@@ -58,6 +59,7 @@ export function NearbyPlacesPanel({
           {places.map((place) => (
             <NearbyPlaceCard
               key={place.id}
+              data-place-id={place.id}
               name={place.name}
               address={place.address}
               stationName={stationName}

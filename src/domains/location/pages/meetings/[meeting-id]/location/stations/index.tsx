@@ -1,3 +1,4 @@
+import { ActionArea, Button } from "@moyeorak/design-system";
 import {
   Fragment,
   useCallback,
@@ -8,6 +9,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import {
+  useLocation,
   useNavigate,
   useOutletContext,
   useParams,
@@ -15,16 +17,21 @@ import {
 } from "react-router";
 import { Empty1Character } from "@/assets/characters";
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
-import { BottomSheet } from "@/domains/location/components/bottom-sheet";
+import {
+  BottomSheet,
+  type SheetSnap,
+} from "@/domains/location/components/bottom-sheet";
 import { CardLocationMember } from "@/domains/location/components/card-location-member";
 import { DotPin } from "@/domains/location/components/dot-pin";
 import {
   FacilityPinDefault,
+  FacilityPinSelected,
   type FacilityType,
 } from "@/domains/location/components/facility-pin";
 import { LayeredMarker } from "@/domains/location/components/layered-marker";
 import { MapMarker } from "@/domains/location/components/map-marker";
 import { NearbyPlacesPanel } from "@/domains/location/components/nearby-places-panel";
+import { SelectedPlaceCard } from "@/domains/location/components/selected-place-card";
 import { StationCard } from "@/domains/location/components/station-card";
 import { TextPin } from "@/domains/location/components/text-pin";
 import { LOCATION_MIDPOINT_RESULT_LIVE_QUERY_OPTIONS } from "@/domains/location/constants/live-query-options";
@@ -54,8 +61,10 @@ import {
   getInsufficientDepartureCopy,
 } from "@/domains/location/utils/insufficient-departures";
 import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
-import { buildPlaceDetailPath } from "@/domains/location/utils/nearby-paths";
-import { panToVisibleCenter } from "@/domains/location/utils/pan-to-visible-center";
+import {
+  panToVisibleCenter,
+  revealAnchoredBox,
+} from "@/domains/location/utils/pan-to-visible-center";
 import { getPinShape, type PinShape } from "@/domains/location/utils/pin-shape";
 import { hasVoteId } from "@/domains/meeting/utils/vote-id";
 import { useGetMyParticipant } from "@/domains/schedule/hooks/use-get-my-participant";
@@ -82,8 +91,8 @@ const MAX_FIT_ZOOM = 16;
 
 /**
  * 지도 핀을 쌓는 순서. 아래부터 모여락 핀(LayeredMarker의 아이콘 층, 80), 남의 점,
- * 내 점, 남의 이름표, 내 이름표, 주변 장소 핀, 역 이름표다. 내 것은 남의 것 위에 온다.
- * 주변 장소 핀은 주변 살펴보기 탭에서만 있고 그때 사람 핀은 숨는다.
+ * 내 점, 남의 이름표, 내 이름표, 주변 장소 핀, 역 이름표, 고른 장소 핀이다. 내 것은 남의 것 위에 온다.
+ * 주변 장소 핀은 주변 살펴보기 탭에서만 있고 그때 사람 핀은 숨는다. 고른 장소는 다른 핀에 가려지지 않게 맨 위다(#271).
  */
 const PIN_Z_INDEX = {
   otherDot: 84,
@@ -92,7 +101,23 @@ const PIN_Z_INDEX = {
   myLabel: 100,
   place: 110,
   stationLabel: 120,
+  selectedPlace: 130,
 } as const;
+
+/**
+ * 목록이나 지도에서 장소를 골라 쌓은 기록에 붙이는 표시(#271). 닫기(X)는 이 표시가 있으면 뒤로 가기처럼
+ * 목록 기록으로 돌아가고, 없으면(링크로 바로 열었을 때) 주소에서 place_id만 지운다.
+ */
+const PLACE_PICKED_IN_APP_STATE = { placePickedInApp: true } as const;
+
+function isPlacePickedInApp(state: unknown) {
+  return (
+    typeof state === "object" &&
+    state !== null &&
+    "placePickedInApp" in state &&
+    state.placePickedInApp === true
+  );
+}
 
 /** 추천이 없을 때 쓰는 빈 목록. 렌더마다 새 배열을 만들면 지도 맞춤 effect가 다시 돈다. */
 const EMPTY_RECOMMENDATIONS: StationRecommendationDto[] = [];
@@ -104,15 +129,20 @@ const RESULT_TABS = [
   { id: RESULT_TAB_VALUES.nearby, label: "주변 살펴보기" },
 ];
 
-/** 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다. */
+/**
+ * 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다.
+ * animate가 false면 마지막 가운데 맞추기를 움직임 없이 한다(panToVisibleCenter).
+ */
 function fitMapBounds({
   mapInst,
   sheetHeight,
   points,
+  animate = true,
 }: {
   mapInst: naver.maps.Map;
   sheetHeight: number;
   points: { latitude: number; longitude: number }[];
+  animate?: boolean;
 }): boolean {
   const maps = window.naver?.maps;
   if (!maps || points.length === 0) return false;
@@ -128,6 +158,7 @@ function fitMapBounds({
       longitude: firstPoint.longitude,
       mapInst,
       sheetHeight,
+      animate,
     });
     return true;
   }
@@ -169,6 +200,7 @@ function fitMapBounds({
     longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
     mapInst,
     sheetHeight,
+    animate,
   });
   return true;
 }
@@ -205,7 +237,7 @@ function attachStationCardRow(scroller: HTMLElement | null) {
 }
 
 /**
- * 주변 장소 핀. 누르면 장소 상세로 간다. 축소해도 점으로 바꾸지 않는다(점은 사람 핀이 겹치는 문제만 푼다).
+ * 주변 장소 핀. 누르면 그 장소를 고른다(#271). 축소해도 점으로 바꾸지 않는다(점은 사람 핀이 겹치는 문제만 푼다).
  * MapMarker는 onClick이 바뀌면 핀을 지도에서 내렸다 다시 올리므로, 장소마다 고정한 함수를 넘긴다.
  */
 function NearbyPlacePin({
@@ -231,8 +263,36 @@ function NearbyPlacePin({
   );
 }
 
+/**
+ * 고른 장소의 핀(#271). 큰 핀 위에 검은 이름표를 얹어 파란 역 이름표와 구분하고, 다른 핀보다 위에 쌓는다.
+ * 눌러도 아무 일이 없다. boxRef로 받은 상자(이름표와 핀)의 크기로 시트 뒤나 화면 밖에 걸리는지 본다.
+ */
+function SelectedPlacePin({
+  place,
+  type,
+  boxRef,
+}: {
+  place: NearbyPlace;
+  type: FacilityType;
+  boxRef: (box: HTMLDivElement | null) => void;
+}) {
+  return (
+    <MapMarker
+      latitude={place.latitude}
+      longitude={place.longitude}
+      zIndex={PIN_Z_INDEX.selectedPlace}
+    >
+      <div ref={boxRef} className="flex flex-col items-center">
+        <TextPin text={place.name} variant="black" />
+        <FacilityPinSelected type={type} />
+      </div>
+    </MapMarker>
+  );
+}
+
 export function LocationMainPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { share } = useShareSheet();
   const { meetingId = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -317,6 +377,54 @@ export function LocationMainPage() {
     ? EMPTY_NEARBY_PLACES
     : nearbyPlacesQuery.data;
 
+  /**
+   * 주변 살펴보기에서 고른 장소(#271). 주소의 place_id(카카오 장소 ID)를 위 목록 결과에서 찾는다.
+   * 목록에서 고르면 같은 쿼리 결과를 써서 카카오를 새로 부르지 않고, 링크로 열면 목록을 한 번 찾는다.
+   * 찾는 중에는 isPlaceSelected만 true이고 selectedPlace는 null이다(시트와 아래 버튼을 비운다).
+   */
+  const placeIdParam = searchParams.get(LOCATION_QUERY_PARAMS.placeId);
+  const selectedPlaceId = isNearbyTab ? placeIdParam : null;
+  const isPlaceSelected = selectedPlaceId !== null;
+  const selectedPlace =
+    selectedPlaceId === null
+      ? null
+      : (nearbyPlaces?.find((place) => place.id === selectedPlaceId) ?? null);
+
+  /**
+   * place_id는 고른 상태를 보여 줄 수 있을 때만 주소에 둔다. 추천을 받은 뒤 주변 살펴보기 탭이 아니거나
+   * (추천역이 없어 탭이 없을 때 포함), 찾은 장소에 없으면(옛 백엔드 번호, 검색 오류 등) replace로 지워
+   * 목록으로 연다. 안내 문구는 없다(#271).
+   */
+  useEffect(() => {
+    if (placeIdParam === null || isMidpointLoading) return;
+    if (selectedPlaceId !== null) {
+      if (!nearbyPlaces) return;
+      if (nearbyPlaces.some((place) => place.id === selectedPlaceId)) return;
+    }
+
+    const next = new URLSearchParams(searchParams);
+    next.delete(LOCATION_QUERY_PARAMS.placeId);
+    setSearchParams(next, { replace: true });
+  }, [
+    isMidpointLoading,
+    nearbyPlaces,
+    placeIdParam,
+    searchParams,
+    selectedPlaceId,
+    setSearchParams,
+  ]);
+
+  /**
+   * 시트 높이. 장소를 고른 상태는 peek, 아니면 half다. 닫으면 고르기 전 높이를 기억하지 않고 half로 연다(#271).
+   * 링크로 고른 상태를 열면 추천을 받기 전부터 peek로 열어, half로 열었다가 줄어들지 않게 한다.
+   */
+  const isOpeningPlaceLink =
+    isMidpointLoading &&
+    resultTab === RESULT_TAB_VALUES.nearby &&
+    placeIdParam !== null;
+  const sheetSnap: SheetSnap =
+    isPlaceSelected || isOpeningPlaceLink ? "peek" : "half";
+
   const departurePoints = useMemo(
     () =>
       (departures ?? []).map((locationVote) => ({
@@ -362,6 +470,8 @@ export function LocationMainPage() {
   const fitZoomRef = useRef<number | null>(null);
   const isFittingRef = useRef(false);
   const [pinShape, setPinShape] = useState<PinShape>("label");
+  /** 마지막으로 지도를 맞춘 점 목록. 장소를 고른 동안 이미 맞춘 목록이면 다시 맞추지 않는다(#271). */
+  const fittedPointsRef = useRef<typeof fitPoints>(undefined);
 
   useEffect(() => {
     const maps = window.naver?.maps;
@@ -390,6 +500,11 @@ export function LocationMainPage() {
 
   useEffect(() => {
     if (!mapInst || !fitPoints) return;
+    // 장소를 고른 동안은 지도를 다시 맞추지 않는다. 고르면 시트가 peek로 내려가 높이가 바뀌어도 지금 범위를
+    // 그대로 두고, 고른 장소가 가려질 때만 아래 효과가 그 장소를 옮긴다. 닫으면 이 값이 바뀌어 다시 맞춘다.
+    // 링크로 고른 상태를 열어 아직 맞춘 적이 없는 목록이면, 목록을 볼 때와 같게 한 번 맞춘다. 이때는 움직임 없이
+    // 맞춘다. 움직이는 동안에는 지도 중심을 출발점으로 읽어, 뒤이어 고른 장소가 가려졌는지 잘못 본다.
+    if (isPlaceSelected && fittedPointsRef.current === fitPoints) return;
 
     const station = findSelectedStation(recommendations, stationIdRef.current);
     const points = [
@@ -403,7 +518,12 @@ export function LocationMainPage() {
     isFittingRef.current = true;
     let fitted: boolean;
     try {
-      fitted = fitMapBounds({ mapInst, sheetHeight, points });
+      fitted = fitMapBounds({
+        mapInst,
+        sheetHeight,
+        points,
+        animate: !isPlaceSelected,
+      });
     } finally {
       isFittingRef.current = false;
     }
@@ -411,10 +531,32 @@ export function LocationMainPage() {
     // 맞추지 않고 그대로 뒀으면(시트를 끝까지 올렸을 때) 기준도 그대로 둔다.
     if (!fitted) return;
 
+    fittedPointsRef.current = fitPoints;
     // 맞춘 확대 단계를 새 기준으로 잡고 이름표로 되돌린다.
     fitZoomRef.current = mapInst.getZoom();
     setPinShape("label");
-  }, [mapInst, sheetHeight, recommendations, fitPoints]);
+  }, [mapInst, sheetHeight, recommendations, fitPoints, isPlaceSelected]);
+
+  /**
+   * 고른 장소의 핀이나 이름표가 시트 뒤나 화면 밖에 걸리면 그 장소를 시트가 비워 둔 영역 가운데로 옮긴다(#271).
+   * 다 보이면 지도를 그대로 둔다. 장소를 고르거나 바꿀 때(핀 상자가 새로 붙을 때)와 시트 높이가 바뀔 때 본다.
+   */
+  const [selectedPinBox, setSelectedPinBox] = useState<HTMLDivElement | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (!mapInst || !selectedPlace || !selectedPinBox) return;
+
+    revealAnchoredBox({
+      latitude: selectedPlace.latitude,
+      longitude: selectedPlace.longitude,
+      boxWidth: selectedPinBox.offsetWidth,
+      boxHeight: selectedPinBox.offsetHeight,
+      mapInst,
+      sheetHeight,
+    });
+  }, [mapInst, selectedPlace, selectedPinBox, sheetHeight]);
 
   /**
    * sheetHeight를 deps에 넣지 않는다. 넣으면 스냅이 바뀔 때마다 panTo가
@@ -498,24 +640,87 @@ export function LocationMainPage() {
     setSearchParams(next, { replace: true });
   };
 
-  // 장소 상세로는 새 기록을 쌓아(push) 뒤로 가기로 이 탭에 돌아오게 한다.
+  /**
+   * 장소 고르기(#271). 목록에서 고르면 새 기록을 쌓아(push) 휴대폰 뒤로 가기로 목록에 돌아오게 하고, 고른 상태에서
+   * 다른 장소 핀을 누르면 기록을 쌓지 않고 바꾼다(replace). 여러 장소를 눌러 봐도 뒤로 가기 한 번이면 목록이다.
+   * 주소와 기록 표시는 ref로 읽는다. 둘을 deps에 넣으면 고를 때마다 함수가 바뀌어 모든 장소 핀을 지도에서
+   * 내렸다 다시 올린다(NearbyPlacePin).
+   */
+  const searchParamsRef = useRef(searchParams);
+  const locationStateRef = useRef<unknown>(location.state);
+
+  useEffect(() => {
+    searchParamsRef.current = searchParams;
+    locationStateRef.current = location.state;
+  }, [searchParams, location.state]);
+
+  /** 고른 뒤 카드 제목으로 포커스를 옮길지. 링크로 열거나 뒤로 가기로 돌아왔을 때는 옮기지 않는다. */
+  const focusSelectedTitleRef = useRef(false);
+
   const handlePlaceSelect = useCallback(
     (place: NearbyPlace) => {
-      if (!selectedStation) return;
+      const current = searchParamsRef.current;
+      const next = new URLSearchParams(current);
+      next.set(LOCATION_QUERY_PARAMS.placeId, place.id);
+      focusSelectedTitleRef.current = true;
 
-      navigate(
-        buildPlaceDetailPath({
-          meetingId,
-          latitude: selectedStation.latitude,
-          longitude: selectedStation.longitude,
-          placeId: place.id,
-          stationId: selectedStation.stationId,
-          category: nearbyCategory,
-        }),
-      );
+      if (current.has(LOCATION_QUERY_PARAMS.placeId)) {
+        navigate(`?${next.toString()}`, {
+          replace: true,
+          state: locationStateRef.current,
+        });
+        return;
+      }
+
+      navigate(`?${next.toString()}`, { state: PLACE_PICKED_IN_APP_STATE });
     },
-    [meetingId, navigate, nearbyCategory, selectedStation],
+    [navigate],
   );
+
+  // 앱 안에서 골랐으면 뒤로 가기와 같게 목록 기록으로 돌아간다. 링크로 바로 열었으면 뒤로 가면 앱을 떠나므로
+  // place_id만 지운다(replace).
+  const handlePlaceClose = () => {
+    if (isPlacePickedInApp(location.state)) {
+      navigate(-1);
+      return;
+    }
+
+    const next = new URLSearchParams(searchParams);
+    next.delete(LOCATION_QUERY_PARAMS.placeId);
+    setSearchParams(next, { replace: true });
+  };
+
+  /**
+   * 포커스(#271). 장소를 고르면 시트 내용이 장소 카드로 통째로 바뀌어 포커스가 사라지므로 카드 제목으로 옮긴다.
+   * 고른 상태를 닫으면(닫기, 뒤로 가기) 방금 본 장소의 목록 카드로 돌려준다. 찾지 못해 목록으로 연 장소는
+   * 카드로 보인 적이 없어 옮기지 않는다.
+   */
+  const selectedTitleRef = useRef<HTMLHeadingElement>(null);
+  const sheetContentRef = useRef<HTMLDivElement>(null);
+  const shownPlaceId = selectedPlace?.id ?? null;
+  const shownPlaceIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const previousPlaceId = shownPlaceIdRef.current;
+    shownPlaceIdRef.current = shownPlaceId;
+
+    if (shownPlaceId !== null) {
+      if (focusSelectedTitleRef.current) {
+        focusSelectedTitleRef.current = false;
+        selectedTitleRef.current?.focus();
+      }
+      return;
+    }
+    if (previousPlaceId === null) return;
+
+    const placeCards =
+      sheetContentRef.current?.querySelectorAll<HTMLElement>(
+        "[data-place-id]",
+      ) ?? [];
+    Array.from(placeCards)
+      .find((card) => card.dataset.placeId === previousPlaceId)
+      ?.focus();
+  }, [shownPlaceId]);
 
   // 주변 살펴보기 탭을 연 동안은 사람 핀(이름표와 점)을 비운다. 핀 층은 지도에 그대로 둬서 개인별 루트로 돌아오면 바로 보인다.
   const personPinShape: PinShape | null = isNearbyTab ? null : shownPinShape;
@@ -531,7 +736,7 @@ export function LocationMainPage() {
 
   return (
     <>
-      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 주변 살펴보기 탭을 연 동안은 사람 핀을 숨기고 고른 분류의 장소 핀을 올린다. 장소 핀은 축소해도 그대로다. 겹치면 역 이름표, 장소 핀, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
+      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 주변 살펴보기 탭을 연 동안은 사람 핀을 숨기고 고른 분류의 장소 핀을 올린다. 장소를 고르면 그 장소만 큰 핀과 검은 이름표로 바꾼다. 장소 핀은 축소해도 그대로다. 겹치면 고른 장소 핀, 역 이름표, 장소 핀, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
       {selectedStation && (
         <LayeredMarker
           latitude={selectedStation.latitude}
@@ -578,18 +783,47 @@ export function LocationMainPage() {
       })}
 
       {isNearbyTab &&
-        (nearbyPlaces ?? []).map((place) => (
-          <NearbyPlacePin
-            key={place.id}
-            place={place}
-            type={NEARBY_FACILITY_TYPE[nearbyCategory]}
-            onSelect={handlePlaceSelect}
-          />
-        ))}
+        (nearbyPlaces ?? []).map((place) =>
+          place.id === selectedPlace?.id ? (
+            <SelectedPlacePin
+              key={`selected-${place.id}`}
+              place={place}
+              type={NEARBY_FACILITY_TYPE[nearbyCategory]}
+              boxRef={setSelectedPinBox}
+            />
+          ) : (
+            <NearbyPlacePin
+              key={place.id}
+              place={place}
+              type={NEARBY_FACILITY_TYPE[nearbyCategory]}
+              onSelect={handlePlaceSelect}
+            />
+          ),
+        )}
 
-      <BottomSheet defaultSnap="half" onHeightChange={setSheetHeight}>
-        {isContentLoading ? null : hasRecommendations && selectedStation ? (
-          <div className="flex flex-col gap-4 px-5 pb-[106px]">
+      <BottomSheet snap={sheetSnap} onHeightChange={setSheetHeight}>
+        {isContentLoading ? null : hasRecommendations &&
+          selectedStation &&
+          isPlaceSelected ? (
+          // 장소를 고른 상태의 시트는 장소 카드 하나다. 제목, 역 카드, 탭, 분류 칩은 숨긴다(#271). 찾는 중에는 비운다.
+          // 위 4px는 시트 위쪽 끝에 붙은 닫기 버튼의 포커스 링(두께 2px, 간격 2px)이 시트 스크롤 영역에 잘리지 않게 둔다.
+          selectedPlace && (
+            <div ref={sheetContentRef} className="px-5 pt-1 pb-[106px]">
+              <SelectedPlaceCard
+                name={selectedPlace.name}
+                address={selectedPlace.address}
+                stationName={formatStationName(selectedStation.stationName)}
+                distanceMeters={selectedPlace.distanceMeters}
+                onClose={handlePlaceClose}
+                titleRef={selectedTitleRef}
+              />
+            </div>
+          )
+        ) : hasRecommendations && selectedStation ? (
+          <div
+            ref={sheetContentRef}
+            className="flex flex-col gap-4 px-5 pb-[106px]"
+          >
             <h2 className="textStyle_title1 text-fg-neutral-strong">
               가장 최적의{" "}
               <span className="text-fg-brand-default">중간지점</span>
@@ -678,14 +912,31 @@ export function LocationMainPage() {
         )}
       </BottomSheet>
 
-      {!isContentLoading && (
+      {/* 장소를 고른 상태의 아래 버튼은 "자세히 보기"(카카오맵 장소 페이지를 새 창으로) 하나다. 공유와 출발지 버튼은 숨긴다(#271). */}
+      {!isContentLoading && !(isPlaceSelected && !selectedPlace) && (
         <FixedBottomArea>
-          <BottomActionBarWithButtonAndShare
-            onClick={handleVoteAction}
-            onShare={share}
-          >
-            {shouldManageDepartures ? "출발지 관리하기" : "출발지 추가하기"}
-          </BottomActionBarWithButtonAndShare>
+          {selectedPlace ? (
+            <ActionArea
+              type="single"
+              main={
+                <Button
+                  variant="default"
+                  size="xl"
+                  display="full"
+                  onClick={() => window.open(selectedPlace.placeUrl, "_blank")}
+                >
+                  자세히 보기
+                </Button>
+              }
+            />
+          ) : (
+            <BottomActionBarWithButtonAndShare
+              onClick={handleVoteAction}
+              onShare={share}
+            >
+              {shouldManageDepartures ? "출발지 관리하기" : "출발지 추가하기"}
+            </BottomActionBarWithButtonAndShare>
+          )}
         </FixedBottomArea>
       )}
     </>

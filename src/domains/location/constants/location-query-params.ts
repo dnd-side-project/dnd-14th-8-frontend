@@ -4,6 +4,8 @@ export const LOCATION_QUERY_PARAMS = {
   nearbyCategory: "category",
   /** 결과 화면의 탭(개인별 루트, 주변 살펴보기). 개인 루트 화면의 routeTab과 같은 이름이지만 다른 화면이다 */
   resultTab: "tab",
+  /** 주변 살펴보기에서 고른 장소의 카카오 장소 ID(#271). 없으면 장소 목록이다 */
+  placeId: "place_id",
 } as const;
 
 export const ROUTE_TAB_VALUES = {

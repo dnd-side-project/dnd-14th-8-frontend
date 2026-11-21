@@ -76,3 +76,36 @@ export function getMapFitPadding({
     right: side,
   };
 }
+
+/**
+ * 좌표에 아래 가운데를 맞춘 상자(핀과 이름표)가 시트 위 영역 밖으로 걸리는지 본다(#271).
+ * 자리는 지도 컨테이너 왼쪽 위에서 잰 px다. 상자가 조금이라도 화면 위나 양옆 끝을 넘거나,
+ * 좌표가 시트 윗변보다 아래에 있으면 걸린 것이다.
+ */
+export function isAnchoredBoxHidden({
+  anchorX,
+  anchorY,
+  boxWidth,
+  boxHeight,
+  mapWidth,
+  mapHeight,
+  sheetHeight,
+}: {
+  /** 상자 아래 가운데(좌표)의 자리 */
+  anchorX: number;
+  anchorY: number;
+  boxWidth: number;
+  boxHeight: number;
+  mapWidth: number;
+  mapHeight: number;
+  /** 지도 위를 덮고 있는 바텀시트의 높이(px). */
+  sheetHeight: number;
+}): boolean {
+  const left = anchorX - boxWidth / 2;
+  const right = anchorX + boxWidth / 2;
+  const top = anchorY - boxHeight;
+
+  return (
+    left < 0 || right > mapWidth || top < 0 || anchorY > mapHeight - sheetHeight
+  );
+}
