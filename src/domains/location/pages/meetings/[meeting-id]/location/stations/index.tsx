@@ -43,8 +43,10 @@ import {
   ROUTE_TAB_VALUES,
 } from "@/domains/location/constants/location-query-params";
 import {
+  type FoodCondition,
   NEARBY_FACILITY_TYPE,
   type NearbyCategory,
+  parseFoodCondition,
   parseNearbyCategory,
 } from "@/domains/location/constants/nearby-categories";
 import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
@@ -367,6 +369,10 @@ export function LocationMainPage() {
   const nearbyCategory = parseNearbyCategory(
     searchParams.get(LOCATION_QUERY_PARAMS.nearbyCategory),
   );
+  /** 식당의 조건(#273). 주소에 없거나 모르는 값이면 가까운 순이다. 식당이 아니면 쓰지 않는다. */
+  const foodCondition = parseFoodCondition(
+    searchParams.get(LOCATION_QUERY_PARAMS.foodCondition),
+  );
   const isNearbyTab =
     resultTab === RESULT_TAB_VALUES.nearby && selectedStation !== null;
 
@@ -380,6 +386,7 @@ export function LocationMainPage() {
     latitude: nearbyStation?.latitude ?? Number.NaN,
     longitude: nearbyStation?.longitude ?? Number.NaN,
     category: nearbyCategory,
+    foodCondition,
     enabled: nearbyStation !== null,
   });
   // 찾는 중이거나 탭을 닫았으면 undefined다. 찾지 못했으면(오류) 장소가 없을 때와 같게 둔다.
@@ -687,9 +694,21 @@ export function LocationMainPage() {
     setSearchParams(next, { replace: true });
   };
 
+  // 다른 분류로 바꾸면 식당 조건을 지워, 식당에 돌아오면 늘 가까운 순으로 연다(#273 "처음에는 늘 가까운 순").
+  // 이미 고른 분류를 다시 누르면 조건을 그대로 둔다.
   const handleNearbyCategoryChange = (category: NearbyCategory) => {
     const next = new URLSearchParams(searchParams);
     next.set(LOCATION_QUERY_PARAMS.nearbyCategory, category);
+    if (category !== nearbyCategory) {
+      next.delete(LOCATION_QUERY_PARAMS.foodCondition);
+    }
+    setSearchParams(next, { replace: true });
+  };
+
+  // 식당 조건도 분류 칩처럼 주소만 바꾸고 뒤로 가기 기록을 쌓지 않는다(#273).
+  const handleFoodConditionChange = (condition: FoodCondition) => {
+    const next = new URLSearchParams(searchParams);
+    next.set(LOCATION_QUERY_PARAMS.foodCondition, condition);
     setSearchParams(next, { replace: true });
   };
 
@@ -947,6 +966,8 @@ export function LocationMainPage() {
               <NearbyPlacesPanel
                 category={nearbyCategory}
                 onCategoryChange={handleNearbyCategoryChange}
+                foodCondition={foodCondition}
+                onFoodConditionChange={handleFoodConditionChange}
                 places={nearbyPlaces ?? EMPTY_NEARBY_PLACES}
                 stationName={formatStationName(selectedStation.stationName)}
                 onPlaceClick={handlePlaceSelect}
