@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getMapFitPadding,
+  getRevealAnchorY,
   getVisibleCenterOffsetY,
   isAnchoredBoxHidden,
 } from "@/domains/location/utils/map-viewport";
@@ -133,5 +134,27 @@ describe("isAnchoredBoxHidden", () => {
     expect(isAnchoredBoxHidden({ ...base, anchorX: 188, anchorY: 600 })).toBe(
       true,
     );
+  });
+});
+
+describe("getRevealAnchorY", () => {
+  it("남은 영역이 넉넉하면 좌표를 그 영역의 가운데에 둔다", () => {
+    // 지도 812px, 시트 223px → 남은 영역 589px, 가운데 294.5px. 상자 115px는 위로 넘치지 않는다.
+    expect(
+      getRevealAnchorY({ mapHeight: 812, sheetHeight: 223, boxHeight: 115 }),
+    ).toBe(294.5);
+  });
+
+  it("가운데에 두면 상자 위쪽이 화면 밖으로 나가면, 상자가 다 들어가는 자리까지 내린다", () => {
+    // CodeRabbit 예: 지도 667px, 시트 500px → 남은 영역 167px, 가운데 83.5px. 상자 90px를 가운데에 두면 위가 -6.5px.
+    expect(
+      getRevealAnchorY({ mapHeight: 667, sheetHeight: 500, boxHeight: 90 }),
+    ).toBe(90);
+  });
+
+  it("남은 영역이 상자보다 낮으면 다 보이게 할 수 없어 가운데에 둔다", () => {
+    expect(
+      getRevealAnchorY({ mapHeight: 667, sheetHeight: 600, boxHeight: 90 }),
+    ).toBe(33.5);
   });
 });
