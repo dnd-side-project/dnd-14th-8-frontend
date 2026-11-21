@@ -38,6 +38,19 @@ describe("getSheetHeightBySnap", () => {
   it("falls back to the designed height before the viewport is measurable", () => {
     expect(getSheetHeightBySnap("half", 0)).toBe(530);
   });
+
+  it("peek의 콘텐츠 높이를 넘기면 시안 대신 손잡이 36px + 그 높이를 쓴다(#271)", () => {
+    expect(getSheetHeightBySnap("peek", DESIGN_VIEWPORT, 160)).toBe(196);
+    expect(getSheetHeightBySnap("peek", 0, 160)).toBe(196);
+    // half와 full은 그대로다.
+    expect(getSheetHeightBySnap("half", DESIGN_VIEWPORT, 160)).toBe(530);
+  });
+
+  it("맞춘 peek도 full 높이는 넘지 않는다", () => {
+    expect(getSheetHeightBySnap("peek", 667, 900)).toBe(
+      getSheetHeightBySnap("full", 667),
+    );
+  });
 });
 
 describe("getNearestSnap", () => {

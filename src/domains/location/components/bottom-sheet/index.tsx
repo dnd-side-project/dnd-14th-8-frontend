@@ -17,6 +17,17 @@ export type { SheetSnap };
 export interface BottomSheetProps {
   children: ReactNode;
   defaultSnap?: SheetSnap;
+  /**
+   * 부르는 쪽이 정하는 스냅. 값이 바뀔 때마다 그 스냅으로 옮긴다(예: 결과 화면에서 장소를 고르면 peek,
+   * 닫으면 half, #271). 그사이 사용자가 끌어 바꾼 스냅은 이 값이 다시 바뀔 때까지 그대로 둔다.
+   * 넘기지 않으면 defaultSnap에서 시작해 끌기로만 바뀐다.
+   */
+  snap?: SheetSnap;
+  /**
+   * peek일 때 손잡이 아래 콘텐츠 높이. 넘기면 peek을 시안 높이 대신 이 내용에 맞춘다
+   * (예: 결과 화면에서 고른 장소 카드만 있을 때, #271). 끌어 내릴 수 있는 가장 낮은 높이도 이 값이 된다.
+   */
+  peekContentHeight?: number;
   onHeightChange?: (height: number) => void;
   className?: string;
 }
@@ -25,6 +36,8 @@ export interface BottomSheetProps {
 export function BottomSheet({
   children,
   defaultSnap = "half",
+  snap: requestedSnap,
+  peekContentHeight,
   onHeightChange,
   className,
 }: BottomSheetProps) {
@@ -32,13 +45,38 @@ export function BottomSheet({
   const dragStartYRef = useRef(0);
   const dragStartHeightRef = useRef(0);
 
-  const [snap, setSnap] = useState<SheetSnap>(defaultSnap);
+  const initialSnap = requestedSnap ?? defaultSnap;
+  const [snap, setSnap] = useState<SheetSnap>(initialSnap);
   const [dragging, setDragging] = useState(false);
   /** 시트를 담고 있는 지도 컨테이너의 높이. 0이면 아직 측정 전이다. */
   const [containerHeight, setContainerHeight] = useState(0);
   const [height, setHeight] = useState(() =>
-    getSheetHeightBySnap(defaultSnap, 0),
+    getSheetHeightBySnap(initialSnap, 0, peekContentHeight),
   );
+
+  // 부르는 쪽이 스냅이나 peek 내용 높이를 바꾸면 렌더 중에 스냅과 높이를 함께 바꾼다. 높이를 아래 효과로
+  // 미루면 새 높이를 한 번 늦게 알려, 그사이 부르는 쪽이 예전 높이로 지도를 계산한다.
+  const [appliedRequestedSnap, setAppliedRequestedSnap] =
+    useState(requestedSnap);
+  const [appliedPeekContentHeight, setAppliedPeekContentHeight] =
+    useState(peekContentHeight);
+  if (requestedSnap !== appliedRequestedSnap) {
+    setAppliedRequestedSnap(requestedSnap);
+    setAppliedPeekContentHeight(peekContentHeight);
+    if (requestedSnap) {
+      setSnap(requestedSnap);
+      setHeight(
+        getSheetHeightBySnap(requestedSnap, containerHeight, peekContentHeight),
+      );
+    }
+  } else if (peekContentHeight !== appliedPeekContentHeight) {
+    setAppliedPeekContentHeight(peekContentHeight);
+    if (snap === "peek" && !dragging) {
+      setHeight(
+        getSheetHeightBySnap("peek", containerHeight, peekContentHeight),
+      );
+    }
+  }
 
   // window.innerHeight가 아니라 실제 컨테이너를 잰다. 시트가 늘 뷰포트 전체를
   // 차지하는 부모 안에 있다는 가정을 코드에 심지 않기 위해서다.
@@ -59,8 +97,8 @@ export function BottomSheet({
   }, []);
 
   useEffect(() => {
-    setHeight(getSheetHeightBySnap(snap, containerHeight));
-  }, [snap, containerHeight]);
+    setHeight(getSheetHeightBySnap(snap, containerHeight, peekContentHeight));
+  }, [snap, containerHeight, peekContentHeight]);
 
   // 드래그 중에는 알리지 않는다. 매 프레임 높이가 나가면 이 값으로 지도를
   // 다시 맞추는 쪽이 프레임마다 재프레이밍을 돌려 지도가 요동친다.
@@ -70,7 +108,11 @@ export function BottomSheet({
     onHeightChange?.(height);
   }, [dragging, height, onHeightChange]);
 
-  const minHeight = getSheetHeightBySnap("peek", containerHeight);
+  const minHeight = getSheetHeightBySnap(
+    "peek",
+    containerHeight,
+    peekContentHeight,
+  );
   const maxHeight = getSheetHeightBySnap("full", containerHeight);
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -93,12 +135,14 @@ export function BottomSheet({
     if (!dragging) return;
     setDragging(false);
 
-    const nextSnap = getNearestSnap(height, containerHeight);
+    const nextSnap = getNearestSnap(height, containerHeight, peekContentHeight);
 
     // 스냅이 그대로면 snap 변경 effect가 돌지 않아 손을 뗀 높이에 멈춘다.
     // 높이도 같이 되돌려야 항상 스냅 위치로 붙는다.
     setSnap(nextSnap);
-    setHeight(getSheetHeightBySnap(nextSnap, containerHeight));
+    setHeight(
+      getSheetHeightBySnap(nextSnap, containerHeight, peekContentHeight),
+    );
   };
 
   return (

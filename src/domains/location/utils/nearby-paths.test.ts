@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  buildPlaceDetailPath,
-  buildResultNearbyPath,
-} from "@/domains/location/utils/nearby-paths";
+import { buildResultNearbyPath } from "@/domains/location/utils/nearby-paths";
 
 describe("buildResultNearbyPath", () => {
   it("결과 화면의 주변 살펴보기 탭과 분류를 주소에 담는다", () => {
@@ -17,6 +14,7 @@ describe("buildResultNearbyPath", () => {
     expect(url.searchParams.get("station_id")).toBe("101");
     expect(url.searchParams.get("tab")).toBe("nearby");
     expect(url.searchParams.get("category")).toBe("식당");
+    expect(url.searchParams.has("place_id")).toBe(false);
   });
 
   it("역을 모르면 station_id를 빼서 결과 화면이 1순위 역을 고르게 한다", () => {
@@ -27,26 +25,25 @@ describe("buildResultNearbyPath", () => {
 
     expect(url.searchParams.has("station_id")).toBe(false);
   });
-});
 
-describe("buildPlaceDetailPath", () => {
-  it("역 좌표와 카카오 장소 ID로 장소 상세 주소를 만든다", () => {
+  it("장소를 넘기면 고른 장소를 place_id로 붙인다", () => {
     const url = new URL(
-      buildPlaceDetailPath({
+      buildResultNearbyPath({
         meetingId: "m1",
-        latitude: 37.5663,
-        longitude: 126.9918,
-        placeId: "1001",
         stationId: 101,
         category: "스터디룸",
+        placeId: "1001",
       }),
       "https://moyeorak.site",
     );
 
-    expect(url.pathname).toBe(
-      "/meetings/m1/location/nearby/37.5663x126.9918/places/1001",
-    );
-    expect(url.searchParams.get("station_id")).toBe("101");
-    expect(url.searchParams.get("category")).toBe("스터디룸");
+    expect(url.pathname).toBe("/meetings/m1/location/stations");
+    expect([...url.searchParams.keys()]).toEqual([
+      "station_id",
+      "tab",
+      "category",
+      "place_id",
+    ]);
+    expect(url.searchParams.get("place_id")).toBe("1001");
   });
 });

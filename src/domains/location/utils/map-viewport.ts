@@ -76,3 +76,59 @@ export function getMapFitPadding({
     right: side,
   };
 }
+
+/**
+ * 좌표에 아래 가운데를 맞춘 상자(핀과 이름표)가 시트 위 영역 밖으로 걸리는지 본다(#271).
+ * 자리는 지도 컨테이너 왼쪽 위에서 잰 px다. 상자가 조금이라도 화면 위나 양옆 끝을 넘거나,
+ * 좌표가 시트 윗변보다 아래에 있으면 걸린 것이다.
+ */
+/**
+ * 아래 가운데를 좌표에 맞춘 상자(핀과 이름표)를 시트가 비워 둔 영역에 보일 때, 좌표(상자 아래 끝)를 둘
+ * 세로 자리(컨테이너 위에서 px, #271). 기본은 그 영역의 가운데다. 영역이 상자 높이의 두 배보다 낮으면 가운데에
+ * 두었을 때 상자 위쪽이 화면 밖으로 나가므로, 상자가 다 들어가는 자리(상자 높이)까지 내린다. 영역이 상자보다
+ * 낮으면 어디에 두어도 다 보이지 않으니 가운데에 둔다.
+ */
+export function getRevealAnchorY({
+  mapHeight,
+  sheetHeight,
+  boxHeight,
+}: {
+  mapHeight: number;
+  sheetHeight: number;
+  boxHeight: number;
+}): number {
+  const visibleHeight = mapHeight - sheetHeight;
+  const visibleCenter = visibleHeight / 2;
+
+  if (boxHeight > visibleHeight) return visibleCenter;
+
+  return Math.max(visibleCenter, boxHeight);
+}
+
+export function isAnchoredBoxHidden({
+  anchorX,
+  anchorY,
+  boxWidth,
+  boxHeight,
+  mapWidth,
+  mapHeight,
+  sheetHeight,
+}: {
+  /** 상자 아래 가운데(좌표)의 자리 */
+  anchorX: number;
+  anchorY: number;
+  boxWidth: number;
+  boxHeight: number;
+  mapWidth: number;
+  mapHeight: number;
+  /** 지도 위를 덮고 있는 바텀시트의 높이(px). */
+  sheetHeight: number;
+}): boolean {
+  const left = anchorX - boxWidth / 2;
+  const right = anchorX + boxWidth / 2;
+  const top = anchorY - boxHeight;
+
+  return (
+    left < 0 || right > mapWidth || top < 0 || anchorY > mapHeight - sheetHeight
+  );
+}

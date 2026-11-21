@@ -83,6 +83,17 @@ describe("NearbyPlacesPanel", () => {
     expect(markup.match(/<button/g)).toHaveLength(6);
   });
 
+  it("카드마다 카카오 장소 ID를 data-place-id로 달아 포커스를 돌려줄 수 있게 한다", () => {
+    const markup = render({ places: PLACES });
+
+    expect(markup).toMatch(
+      /<button[^>]*data-place-id="9000"[^>]*>.*?모여 스터디룸/,
+    );
+    expect(markup).toMatch(
+      /<button[^>]*data-place-id="9001"[^>]*>.*?을지 스터디카페/,
+    );
+  });
+
   it("장소가 없으면 칩만 보여 주고 카드는 그리지 않는다", () => {
     const markup = render({ places: [] });
 
