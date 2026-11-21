@@ -61,7 +61,7 @@ export const FOOD_CONDITIONS = ["nearest", "popular", "group"] as const;
 
 export type FoodCondition = (typeof FOOD_CONDITIONS)[number];
 
-/** 조건 칩 이름. 맛집은 별점이 아니라 카카오 정확도순이라 별점처럼 보이는 말은 쓰지 않는다. */
+/** 조건 스위치의 칸 이름. 맛집은 별점이 아니라 카카오 정확도순이라 별점처럼 보이는 말은 쓰지 않는다. */
 export const FOOD_CONDITION_LABEL: Record<FoodCondition, string> = {
   nearest: "가까운 순",
   popular: "맛집",

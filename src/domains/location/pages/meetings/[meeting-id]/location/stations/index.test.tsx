@@ -596,7 +596,7 @@ function chip(name: string) {
 }
 
 describe("식당 조건(#273)", () => {
-  it("식당이면 조건 칩 줄을 보여 주고 처음에는 가까운 순으로 찾는다", async () => {
+  it("식당이면 조건 스위치를 보여 주고 처음에는 가까운 순으로 찾는다", async () => {
     renderResult({ path: FOOD_PATH });
     await screen.findByText("을지 스터디카페");
 
@@ -610,7 +610,7 @@ describe("식당 조건(#273)", () => {
     });
   });
 
-  it("조건 칩을 누르면 주소에 condition을 남기고(replace) 그 조건으로 다시 찾는다", async () => {
+  it("조건을 누르면 주소에 condition을 남기고(replace) 그 조건으로 다시 찾는다", async () => {
     renderResult({ path: FOOD_PATH });
     await screen.findByText("을지 스터디카페");
 
@@ -657,7 +657,7 @@ describe("식당 조건(#273)", () => {
     expect(chip("맛집").getAttribute("aria-pressed")).toBe("true");
   });
 
-  it("조건이 담긴 장소 링크는 같은 조건의 결과에서 장소를 찾고, 고른 상태에서는 조건 칩을 숨긴다", async () => {
+  it("조건이 담긴 장소 링크는 같은 조건의 결과에서 장소를 찾고, 고른 상태에서는 조건 스위치를 숨긴다", async () => {
     renderResult({ path: `${FOOD_PATH}&condition=group&place_id=9001` });
 
     await screen.findByRole("heading", { name: "을지 스터디카페" });

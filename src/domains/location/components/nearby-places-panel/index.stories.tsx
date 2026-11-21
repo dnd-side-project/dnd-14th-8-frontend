@@ -70,7 +70,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// 칩을 누르면 그 분류의 장소로 바뀐다. 식당을 고르면 조건 칩 줄이 하나 더 나온다(#273).
+// 칩을 누르면 그 분류의 장소로 바뀐다. 식당을 고르면 조건 스위치가 나온다(#273).
 export const Default: Story = {
   render: (args) => {
     const [category, setCategory] = useState<NearbyCategory>(args.category);
@@ -98,7 +98,7 @@ export const Default: Story = {
   },
 };
 
-// 식당을 고른 모습. 분류 칩 아래 조건 칩 줄이 있고, 고른 조건은 테두리로 강조한다.
+// 식당을 고른 모습. 분류 칩 아래 조건 스위치가 있고, 고른 조건은 흰 칸으로 띄운다.
 export const Food: Story = {
   args: { category: "식당", foodCondition: "popular", places: PLACES.식당 },
 };
