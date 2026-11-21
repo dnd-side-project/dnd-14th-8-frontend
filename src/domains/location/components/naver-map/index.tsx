@@ -56,7 +56,7 @@ export function NaverMap({
         mapDataControl: false,
         logoControl: true,
         // 하단은 어느 스냅에서든 바텀시트가 덮는다. 약관상 로고는 가려지면
-        // 안 되므로 지도가 항상 보이는 좌상단에 둔다(우상단은 주변 장소 버튼).
+        // 안 되므로 지도가 항상 보이는 좌상단에 둔다.
         logoControlOptions: { position: maps.Position.TOP_LEFT },
         // 기본값(null)이면 두 손가락으로 확대하는 동안 핀 층을 숨겨, 손을 뗄 때까지
         // 핀이 모두 사라진다. MapMarker가 쓰는 overlayLayer만 지도와 함께 움직이게 한다.

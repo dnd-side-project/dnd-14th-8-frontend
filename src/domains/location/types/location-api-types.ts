@@ -76,27 +76,6 @@ export interface MidpointRecommendationResponse {
   recommendations: StationRecommendationDto[];
 }
 
-export interface PlaceDetail {
-  businessStatusMessage: string | null;
-  distanceFromBase: number;
-  formattedAddress: string;
-  id: number;
-  isOpen: boolean | null;
-  kakaoPlaceUrl: string;
-  latitude: number;
-  longitude: number;
-  name: string;
-}
-
-export interface CategoryPlaces {
-  category: string;
-  places: PlaceDetail[];
-}
-
-export interface NearbyPlaceSearchResponse {
-  categories: CategoryPlaces[];
-}
-
 export interface ParticipantSummaryDto {
   departureAddress: string;
   participantId: number;
