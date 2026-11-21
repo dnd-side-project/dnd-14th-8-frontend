@@ -29,6 +29,7 @@ import type {
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import { searchNearbyPlaces } from "@/domains/location/utils/search-nearby-places";
 import { getMyParticipantQueryKey } from "@/domains/schedule/hooks/use-get-my-participant";
+import { toast } from "@/shared/components/toast";
 import { ShareSheetContext } from "@/shared/providers/share-sheet-provider";
 import { getGuestId } from "@/shared/utils/auth";
 
@@ -379,7 +380,8 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     expect(listCard("9001")).toBeTruthy();
   });
 
-  it("주소의 장소가 검색 결과에 없으면 목록으로 열고 place_id를 replace로 지운다", async () => {
+  it("주소의 장소가 검색 결과에 없으면 토스트로 알리고 목록으로 열며 place_id를 replace로 지운다", async () => {
+    const toastMessage = vi.spyOn(toast, "message");
     renderResult({ path: `${LIST_PATH}&place_id=1` });
 
     await screen.findByText("을지 스터디카페");
@@ -388,9 +390,15 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     expect(currentUrl().searchParams.has("place_id")).toBe(false);
     expect(screen.queryByRole("button", { name: "닫기" })).toBeNull();
     expect(screen.getByText("출발지 관리하기")).toBeTruthy();
+    expect(toastMessage).toHaveBeenCalledTimes(1);
+    expect(toastMessage).toHaveBeenCalledWith("장소 정보를 찾을 수 없어요", {
+      id: "nearby-place-not-found",
+    });
+    toastMessage.mockRestore();
   });
 
-  it("주변 살펴보기 탭이 아닌 주소의 place_id는 지운다", async () => {
+  it("주변 살펴보기 탭이 아닌 주소의 place_id는 토스트 없이 지운다", async () => {
+    const toastMessage = vi.spyOn(toast, "message");
     renderResult({
       path: "/meetings/m1/location/stations?station_id=101&tab=routes&place_id=9000",
     });
@@ -398,6 +406,8 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     await screen.findByText("출발지 관리하기");
     expect(currentUrl().searchParams.has("place_id")).toBe(false);
     expect(searchNearbyPlaces).not.toHaveBeenCalled();
+    expect(toastMessage).not.toHaveBeenCalled();
+    toastMessage.mockRestore();
   });
 
   it("목록에서 고르고 닫는 동안 카카오는 처음 목록을 찾을 때 한 번만 부른다", async () => {
@@ -412,7 +422,8 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     expect(searchNearbyPlaces).toHaveBeenCalledTimes(1);
   });
 
-  it("링크로 열면 목록을 한 번 찾아 그 결과에서 장소를 고른다", async () => {
+  it("링크로 열면 목록을 한 번 찾아 그 결과에서 장소를 고르고, 찾았으면 토스트를 띄우지 않는다", async () => {
+    const toastMessage = vi.spyOn(toast, "message");
     renderResult({ path: `${LIST_PATH}&place_id=9000` });
 
     await screen.findByRole("heading", { name: "모여 스터디룸" });
@@ -421,6 +432,8 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
       ...STATION,
       category: "스터디룸",
     });
+    expect(toastMessage).not.toHaveBeenCalled();
+    toastMessage.mockRestore();
   });
 
   it("고르면 카드 제목으로, 닫으면 방금 고른 목록 카드로 포커스를 옮긴다", async () => {

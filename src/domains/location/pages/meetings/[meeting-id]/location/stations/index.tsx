@@ -73,6 +73,7 @@ import { FixedBottomArea } from "@/shared/components/fixed-bottom-area";
 import { ParticipantCount } from "@/shared/components/participant-count";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 import { Tab } from "@/shared/components/tab";
+import { toast } from "@/shared/components/toast";
 import { useShareSheet } from "@/shared/hooks/use-share-sheet";
 import {
   attachRevealFocusedChip,
@@ -123,6 +124,11 @@ function isPlacePickedInApp(state: unknown) {
 const EMPTY_RECOMMENDATIONS: StationRecommendationDto[] = [];
 /** 주변 장소를 찾지 못했을 때 쓰는 빈 목록. 같은 이유로 하나만 둔다. */
 const EMPTY_NEARBY_PLACES: NearbyPlace[] = [];
+
+/** 주소의 장소(place_id)를 검색 결과에서 찾지 못했을 때 목록으로 열며 띄우는 안내(#271, 작성자 결정). */
+const PLACE_NOT_FOUND_MESSAGE = "장소 정보를 찾을 수 없어요";
+/** 같은 안내가 연달아 쌓이지 않게 하나의 id로 띄운다. */
+const PLACE_NOT_FOUND_TOAST_ID = "nearby-place-not-found";
 
 const RESULT_TABS = [
   { id: RESULT_TAB_VALUES.routes, label: "개인별 루트" },
@@ -393,13 +399,15 @@ export function LocationMainPage() {
   /**
    * place_id는 고른 상태를 보여 줄 수 있을 때만 주소에 둔다. 추천을 받은 뒤 주변 살펴보기 탭이 아니거나
    * (추천역이 없어 탭이 없을 때 포함), 찾은 장소에 없으면(옛 백엔드 번호, 검색 오류 등) replace로 지워
-   * 목록으로 연다. 안내 문구는 없다(#271).
+   * 목록으로 연다. 찾은 장소에 없을 때만 토스트로 알린다(#271). 추천역이 없는 화면은 그 화면이 이유를 보여 준다.
    */
   useEffect(() => {
     if (placeIdParam === null || isMidpointLoading) return;
     if (selectedPlaceId !== null) {
       if (!nearbyPlaces) return;
       if (nearbyPlaces.some((place) => place.id === selectedPlaceId)) return;
+
+      toast.message(PLACE_NOT_FOUND_MESSAGE, { id: PLACE_NOT_FOUND_TOAST_ID });
     }
 
     const next = new URLSearchParams(searchParams);
