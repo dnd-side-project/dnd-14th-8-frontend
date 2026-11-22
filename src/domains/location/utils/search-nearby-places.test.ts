@@ -88,6 +88,71 @@ describe("searchNearbyPlaces", () => {
     );
   });
 
+  it('식당 맛집은 음식점 업종 안에서 키워드 "맛집"으로, 카카오 정확도순으로 찾는다(#273)', async () => {
+    const { keywordSearch, categorySearch } = stubKakaoPlaces([[], "OK"]);
+
+    await searchNearbyPlaces({
+      ...STATION,
+      category: "식당",
+      foodCondition: "popular",
+    });
+
+    expect(categorySearch).not.toHaveBeenCalled();
+    expect(keywordSearch).toHaveBeenCalledWith("맛집", expect.any(Function), {
+      x: 126.990873,
+      y: 37.566292,
+      radius: 1000,
+      size: 15,
+      sort: "accuracy",
+      category_group_code: "FD6",
+    });
+  });
+
+  it('식당 단체는 음식점 업종 안에서 키워드 "단체모임"으로, 정확도순으로 찾는다', async () => {
+    const { keywordSearch } = stubKakaoPlaces([[], "OK"]);
+
+    await searchNearbyPlaces({
+      ...STATION,
+      category: "식당",
+      foodCondition: "group",
+    });
+
+    expect(keywordSearch).toHaveBeenCalledWith(
+      "단체모임",
+      expect.any(Function),
+      expect.objectContaining({ category_group_code: "FD6", sort: "accuracy" }),
+    );
+  });
+
+  it("식당 가까운 순은 지금처럼 음식점 업종 검색이고, 식당이 아니면 조건을 쓰지 않는다", async () => {
+    const { keywordSearch, categorySearch } = stubKakaoPlaces([[], "OK"]);
+
+    await searchNearbyPlaces({
+      ...STATION,
+      category: "식당",
+      foodCondition: "nearest",
+    });
+    await searchNearbyPlaces({
+      ...STATION,
+      category: "카페",
+      foodCondition: "popular",
+    });
+
+    expect(keywordSearch).not.toHaveBeenCalled();
+    expect(categorySearch).toHaveBeenNthCalledWith(
+      1,
+      "FD6",
+      expect.any(Function),
+      expect.objectContaining({ sort: "distance" }),
+    );
+    expect(categorySearch).toHaveBeenNthCalledWith(
+      2,
+      "CE7",
+      expect.any(Function),
+      expect.objectContaining({ sort: "distance" }),
+    );
+  });
+
   it("카카오 결과를 화면에서 쓰는 모양으로 바꾼다", async () => {
     stubKakaoPlaces([[STUDY_ROOM], "OK"]);
 

@@ -6,6 +6,8 @@ export const LOCATION_QUERY_PARAMS = {
   resultTab: "tab",
   /** 주변 살펴보기에서 고른 장소의 카카오 장소 ID(#271). 없으면 장소 목록이다 */
   placeId: "place_id",
+  /** 주변 살펴보기 식당의 조건(#273, FOOD_CONDITIONS). 없으면 가까운 순이고, 식당이 아니면 쓰지 않는다 */
+  foodCondition: "condition",
 } as const;
 
 export const ROUTE_TAB_VALUES = {

@@ -34,6 +34,8 @@ function render(props: Partial<Parameters<typeof NearbyPlacesPanel>[0]>) {
     <NearbyPlacesPanel
       category="스터디룸"
       onCategoryChange={() => undefined}
+      foodCondition="nearest"
+      onFoodConditionChange={() => undefined}
       places={[]}
       stationName="을지로3가역"
       onPlaceClick={() => undefined}
@@ -53,14 +55,52 @@ function chipsOf(markup: string) {
 
 describe("NearbyPlacesPanel", () => {
   it("분류 칩은 스터디룸, 회의실, 식당, 카페 순서이고 고른 칩만 눌려 있다", () => {
-    const markup = render({ category: "식당" });
+    const markup = render({ category: "카페" });
+
+    expect(chipsOf(markup)).toEqual([
+      ["스터디룸", "false"],
+      ["회의실", "false"],
+      ["식당", "false"],
+      ["카페", "true"],
+    ]);
+  });
+
+  it("식당이면 분류 칩 아래에 조건 스위치(가까운 순, 맛집, 단체)가 나오고 고른 조건만 눌려 있다(#273)", () => {
+    const markup = render({ category: "식당", foodCondition: "popular" });
 
     expect(chipsOf(markup)).toEqual([
       ["스터디룸", "false"],
       ["회의실", "false"],
       ["식당", "true"],
       ["카페", "false"],
+      ["가까운 순", "false"],
+      ["맛집", "true"],
+      ["단체", "false"],
     ]);
+  });
+
+  it("고른 조건은 고른 분류 칩과 다른 모양으로 그린다(분류는 꽉 찬 파랑 칩, 조건은 흰 칸)", () => {
+    const markup = render({ category: "식당", foodCondition: "nearest" });
+    const pressedClasses = [
+      ...markup.matchAll(
+        /<button[^>]*class="([^"]*)"[^>]*aria-pressed="true"/g,
+      ),
+      ...markup.matchAll(
+        /<button[^>]*aria-pressed="true"[^>]*class="([^"]*)"/g,
+      ),
+    ].map(([, className]) => className);
+
+    expect(pressedClasses).toHaveLength(2);
+    expect(pressedClasses[0]).not.toBe(pressedClasses[1]);
+  });
+
+  it("식당이 아니면 조건 스위치가 없다", () => {
+    for (const category of ["스터디룸", "회의실", "카페"] as const) {
+      const text = textOf(render({ category }));
+
+      expect(text).not.toContain("가까운 순");
+      expect(text).not.toContain("맛집");
+    }
   });
 
   it("칩에는 아이콘이 없다", () => {
