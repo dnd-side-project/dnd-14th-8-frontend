@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  getFitAnchorY,
+  getFitZoom,
   getMapFitPadding,
   getRevealAnchorY,
   getVisibleCenterOffsetY,
@@ -89,6 +91,70 @@ describe("getMapFitPadding", () => {
       left: 20,
       right: 20,
     });
+  });
+});
+
+describe("getFitZoom", () => {
+  // 375x812에서 시트가 중간(528px)일 때의 여백. 띠는 335x184px다.
+  const fit = (boundsWidth: number, boundsHeight: number, zoom = 16) =>
+    getFitZoom({
+      boundsWidth,
+      boundsHeight,
+      zoom,
+      mapWidth: 375,
+      mapHeight: 812,
+      padding: { top: 80, bottom: 548, left: 20, right: 20 },
+      maxZoom: 16,
+    });
+
+  it("상자가 띠에 들어가면 지금 단계를 두고, 넘치면 들어갈 때까지 한 단계씩 축소한다", () => {
+    // 2026-11-21 을지로3가역 맛집: 16단계에서 172x217px라 띠 높이(184px)를 넘는다. 15단계면 86x109px.
+    expect(fit(172, 217)).toBe(15);
+    expect(fit(172, 184)).toBe(16);
+    // 높이가 띠의 네 배면 두 단계, 그보다 조금이라도 크면 세 단계 축소한다.
+    expect(fit(100, 736)).toBe(14);
+    expect(fit(100, 740)).toBe(13);
+  });
+
+  it("상자가 작으면 확대하되 가장 큰 단계를 넘지 않는다", () => {
+    // 14단계에서 30x40px면 16단계에서 120x160px라 들어간다.
+    expect(fit(30, 40, 14)).toBe(16);
+    expect(fit(15, 13, 14)).toBe(16);
+  });
+
+  it("너비와 높이 중 더 빠듯한 쪽에 맞춘다", () => {
+    // 높이는 넉넉하지만 너비 400px가 띠 너비(335px)를 넘는다.
+    expect(fit(400, 50)).toBe(15);
+  });
+
+  it("점이 모두 한 자리면 가장 큰 단계다", () => {
+    expect(fit(0, 0, 12)).toBe(16);
+  });
+
+  it("띠가 없으면 고를 수 없다", () => {
+    expect(
+      getFitZoom({
+        boundsWidth: 100,
+        boundsHeight: 100,
+        zoom: 16,
+        mapWidth: 375,
+        mapHeight: 0,
+        padding: { top: 80, bottom: 550, left: 20, right: 20 },
+        maxZoom: 16,
+      }),
+    ).toBeNull();
+  });
+});
+
+describe("getFitAnchorY", () => {
+  it("점들의 한가운데를 여백 안쪽 띠의 가운데에 둔다", () => {
+    // 띠는 위에서 80px부터 264px까지라 가운데는 172px다. 시트 위 영역(284px)의 가운데 142px보다 30px 아래다.
+    expect(
+      getFitAnchorY({
+        mapHeight: 812,
+        padding: { top: 80, bottom: 548, left: 20, right: 20 },
+      }),
+    ).toBe(172);
   });
 });
 

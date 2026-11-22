@@ -9,6 +9,7 @@ import {
 } from "@/domains/location/constants/nearby-categories";
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import { SegmentedControl } from "@/shared/components/segmented-control";
+import { cn } from "@/shared/utils/cn";
 import { attachRevealFocusedChip } from "@/shared/utils/reveal-in-scroller";
 
 const FOOD_CONDITION_OPTIONS = FOOD_CONDITIONS.map((condition) => ({
@@ -24,6 +25,11 @@ export interface NearbyPlacesPanelProps {
   onFoodConditionChange: (condition: FoodCondition) => void;
   /** 고른 분류의 장소. 찾는 중이거나 찾지 못했으면 빈 배열을 넘긴다. */
   places: NearbyPlace[];
+  /**
+   * true면 places는 분류나 조건을 바꿔 새 결과를 받는 동안 남겨 둔 이전 결과다(#275).
+   * 카드를 흐리게 두고 누르거나 키보드로 옮겨 가지 못하게 한다.
+   */
+  updating?: boolean;
   /** 거리를 잰 역의 이름. "역"은 부르는 쪽에서 `formatStationName`으로 붙인다. */
   stationName: string;
   onPlaceClick: (place: NearbyPlace) => void;
@@ -34,6 +40,7 @@ export interface NearbyPlacesPanelProps {
  * 칩은 아이콘 없이 NEARBY_CATEGORIES 순서로 늘 모두 보인다. 장소가 없으면 카드 자리를 비운다.
  * 카드마다 `data-place-id`(카카오 장소 ID)를 단다. 고른 장소를 닫으면 결과 화면이 이 값으로 그 카드에 포커스를 돌려준다(#271).
  * 식당을 고르면 분류 칩 아래에 조건 스위치(가까운 순, 맛집, 단체)가 나온다(#273).
+ * 분류나 조건을 바꿔 새 결과를 받는 동안은 이전 카드를 흐리게 남긴다(updating, #275).
  */
 export function NearbyPlacesPanel({
   category,
@@ -41,6 +48,7 @@ export function NearbyPlacesPanel({
   foodCondition,
   onFoodConditionChange,
   places,
+  updating = false,
   stationName,
   onPlaceClick,
 }: NearbyPlacesPanelProps) {
@@ -83,7 +91,11 @@ export function NearbyPlacesPanel({
       </div>
 
       {places.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div
+          className={cn("flex flex-col gap-2", updating && "opacity-40")}
+          aria-busy={updating}
+          inert={updating}
+        >
           {places.map((place) => (
             <NearbyPlaceCard
               key={place.id}

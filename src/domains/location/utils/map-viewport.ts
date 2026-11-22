@@ -77,6 +77,74 @@ export function getMapFitPadding({
   };
 }
 
+/** 여백 안쪽 띠의 너비와 높이(px). 점들의 상자를 이 띠에 담는다. */
+function getFitBand({
+  mapWidth,
+  mapHeight,
+  padding,
+}: {
+  mapWidth: number;
+  mapHeight: number;
+  padding: MapFitPadding;
+}) {
+  return {
+    width: mapWidth - padding.left - padding.right,
+    height: mapHeight - padding.top - padding.bottom,
+  };
+}
+
+/**
+ * 점들의 상자가 여백 안쪽 띠에 다 들어가는 가장 큰 확대 단계. maxZoom을 넘지 않는다.
+ * 상자 크기는 지금 확대 단계(zoom)에서 잰 px이고, 한 단계 올릴 때마다 두 배가 된다.
+ * 네이버 fitBounds는 넘긴 여백을 다 지키지 않아(위아래 여백이 크게 다르면 더 확대한다) 직접 고른다.
+ * 점이 모두 한 자리면 maxZoom이고, 띠가 없으면(지도를 아직 재지 못함) 고를 수 없어 null이다.
+ */
+export function getFitZoom({
+  boundsWidth,
+  boundsHeight,
+  zoom,
+  mapWidth,
+  mapHeight,
+  padding,
+  maxZoom,
+}: {
+  /** 점들의 상자 크기(px, 지금 확대 단계) */
+  boundsWidth: number;
+  boundsHeight: number;
+  /** 지금 확대 단계 */
+  zoom: number;
+  mapWidth: number;
+  mapHeight: number;
+  padding: MapFitPadding;
+  maxZoom: number;
+}): number | null {
+  const band = getFitBand({ mapWidth, mapHeight, padding });
+  if (band.width <= 0 || band.height <= 0) return null;
+
+  const ratios = [
+    ...(boundsWidth > 0 ? [band.width / boundsWidth] : []),
+    ...(boundsHeight > 0 ? [band.height / boundsHeight] : []),
+  ];
+  if (ratios.length === 0) return maxZoom;
+
+  return Math.min(Math.floor(zoom + Math.log2(Math.min(...ratios))), maxZoom);
+}
+
+/**
+ * 맞춘 점들의 한가운데를 둘 세로 자리(컨테이너 위에서 px). 여백 안쪽 띠의 가운데다.
+ * 시트가 비워 둔 영역의 가운데보다 위 여백과 아래 여백의 차이의 절반만큼 아래라, 맨 위 점의 핀과 역 이름표가
+ * 위 여백 안에 들어온다.
+ */
+export function getFitAnchorY({
+  mapHeight,
+  padding,
+}: {
+  mapHeight: number;
+  padding: MapFitPadding;
+}): number {
+  return padding.top + (mapHeight - padding.top - padding.bottom) / 2;
+}
+
 /**
  * 좌표에 아래 가운데를 맞춘 상자(핀과 이름표)가 시트 위 영역 밖으로 걸리는지 본다(#271).
  * 자리는 지도 컨테이너 왼쪽 위에서 잰 px다. 상자가 조금이라도 화면 위나 양옆 끝을 넘거나,

@@ -63,7 +63,11 @@ import {
   canManageDepartures,
   getInsufficientDepartureCopy,
 } from "@/domains/location/utils/insufficient-departures";
-import { getMapFitPadding } from "@/domains/location/utils/map-viewport";
+import {
+  getFitAnchorY,
+  getFitZoom,
+  getMapFitPadding,
+} from "@/domains/location/utils/map-viewport";
 import {
   panToVisibleCenter,
   revealAnchoredBox,
@@ -139,68 +143,72 @@ const RESULT_TABS = [
 ];
 
 /**
- * 지도를 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다.
- * animate가 false면 마지막 가운데 맞추기를 움직임 없이 한다(panToVisibleCenter).
+ * 점들을 시트가 비워 둔 영역에 담는다. 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다.
+ *
+ * 확대 단계와 중심을 움직임 없이 한 번에 바꾼다(#275). 예전에는 fitBounds로 맞춘 뒤 panTo로 가운데에
+ * 옮겨, 분류를 바꿀 때마다 역 이름표가 시트 바로 위(375 x 812px에서 y 120에서 258)까지 떨어졌다가 1초 동안
+ * 올라왔다(2026-11-21 측정). 끝 화면은 누르기 전과 거의 같았다. 같은 함수라 탭을 바꾸거나 시트 높이가 바뀔 때도
+ * 한 번에 바뀐다.
+ *
+ * 확대 단계도 fitBounds에 맡기지 않고 고른다(getFitZoom). 네이버 fitBounds는 위아래 여백이 크게 다르면
+ * 넘긴 여백을 다 지키지 않아, 맛집처럼 장소가 역 아래로 퍼지면 한 단계 더 확대해 역 이름표가 화면 위로
+ * 잘렸다(#275). 점들의 한가운데는 시트 위 영역이 아니라 여백 안쪽 띠의 가운데에 둔다(getFitAnchorY).
  */
 function fitMapBounds({
   mapInst,
   sheetHeight,
   points,
-  animate = true,
 }: {
   mapInst: naver.maps.Map;
   sheetHeight: number;
   points: { latitude: number; longitude: number }[];
-  animate?: boolean;
 }): boolean {
   const maps = window.naver?.maps;
   if (!maps || points.length === 0) return false;
 
-  const [firstPoint] = points;
-
-  // 점이 하나면 bounds 크기가 0이라 fitBounds가 최대 확대(20)까지 들어가
-  // 건물만 보인다. 확대 단계를 고정하고 시트가 비워 둔 영역의 가운데로 보낸다.
+  // 점이 하나면 상자 크기가 0이라 가장 큰 단계까지 확대해 건물만 보인다. 확대 단계를 고정하고
+  // 시트가 비워 둔 영역의 가운데로 보낸다.
   if (points.length === 1) {
+    const [point] = points;
     mapInst.setZoom(SINGLE_POINT_ZOOM, false);
     panToVisibleCenter({
-      latitude: firstPoint.latitude,
-      longitude: firstPoint.longitude,
+      latitude: point.latitude,
+      longitude: point.longitude,
       mapInst,
       sheetHeight,
-      animate,
+      animate: false,
     });
     return true;
   }
 
-  const bounds = new maps.LatLngBounds(
-    new maps.LatLng(firstPoint.latitude, firstPoint.longitude),
-    new maps.LatLng(firstPoint.latitude, firstPoint.longitude),
-  );
-
-  points.slice(1).forEach((point) => {
-    bounds.extend(new maps.LatLng(point.latitude, point.longitude));
-  });
-
-  const padding = getMapFitPadding({
-    mapHeight: mapInst.getSize().height,
-    sheetHeight,
-  });
+  const { width: mapWidth, height: mapHeight } = mapInst.getSize();
+  const padding = getMapFitPadding({ mapHeight, sheetHeight });
   // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
   // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
   if (!padding) return false;
 
-  mapInst.fitBounds(bounds, padding);
+  // 점들의 상자 크기를 지금 확대 단계의 px로 잰다. 자리의 기준점은 확대 단계마다 달라도 같은 단계 안의 차이는 맞다.
+  const projection = mapInst.getProjection();
+  const offsets = points.map((point) =>
+    projection.fromCoordToOffset(
+      new maps.LatLng(point.latitude, point.longitude),
+    ),
+  );
+  const xs = offsets.map((offset) => offset.x);
+  const ys = offsets.map((offset) => offset.y);
+  const zoom = getFitZoom({
+    boundsWidth: Math.max(...xs) - Math.min(...xs),
+    boundsHeight: Math.max(...ys) - Math.min(...ys),
+    zoom: mapInst.getZoom(),
+    mapWidth,
+    mapHeight,
+    padding,
+    maxZoom: MAX_FIT_ZOOM,
+  });
+  if (zoom === null) return false;
 
-  if (mapInst.getZoom() > MAX_FIT_ZOOM) {
-    mapInst.setZoom(MAX_FIT_ZOOM, false);
-  }
+  mapInst.setZoom(zoom, false);
 
-  // 확대 단계는 fitBounds가 고른 것(16 이하)을 쓰고, 점들의 한가운데를 시트가 비워 둔
-  // 영역의 가운데로 다시 보낸다. 확대를 낮추면 fitBounds가 잡은 중심이 어긋나고, 낮추지
-  // 않아도 네이버 fitBounds는 위아래 여백이 크게 다르면 점들을 그 차이만큼 올리지 않는다.
-  // 375x812에서 시트가 중간일 때 점들의 한가운데가 여백 안쪽 가운데보다 117px 아래에 놓여,
-  // 아래쪽 핀이 시트 뒤에 숨었다(2026-11-20 측정, #269). 처음 열 때는 뒤이어 고른 역을
-  // 가운데로 옮겨 가려지지 않았고, 시트를 내렸다 올리거나 탭을 바꿔 다시 맞출 때 드러났다.
   const latitudes = points.map((point) => point.latitude);
   const longitudes = points.map((point) => point.longitude);
 
@@ -209,7 +217,8 @@ function fitMapBounds({
     longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
     mapInst,
     sheetHeight,
-    animate,
+    animate: false,
+    anchorY: getFitAnchorY({ mapHeight, padding }),
   });
   return true;
 }
@@ -248,14 +257,17 @@ function attachStationCardRow(scroller: HTMLElement | null) {
 /**
  * 주변 장소 핀. 누르면 그 장소를 고른다(#271). 축소해도 점으로 바꾸지 않는다(점은 사람 핀이 겹치는 문제만 푼다).
  * MapMarker는 onClick이 바뀌면 핀을 지도에서 내렸다 다시 올리므로, 장소마다 고정한 함수를 넘긴다.
+ * dimmed면 새 결과를 받는 동안 남겨 둔 이전 결과라 흐리게 그린다(#275). 누르지 못하게 하는 것은 onSelect가 맡는다.
  */
 function NearbyPlacePin({
   place,
   type,
+  dimmed,
   onSelect,
 }: {
   place: NearbyPlace;
   type: FacilityType;
+  dimmed: boolean;
   onSelect: (place: NearbyPlace) => void;
 }) {
   const handleClick = useCallback(() => onSelect(place), [onSelect, place]);
@@ -267,7 +279,10 @@ function NearbyPlacePin({
       zIndex={PIN_Z_INDEX.place}
       onClick={handleClick}
     >
-      <FacilityPinDefault type={type} />
+      <FacilityPinDefault
+        type={type}
+        className={dimmed ? "opacity-40" : undefined}
+      />
     </MapMarker>
   );
 }
@@ -393,17 +408,32 @@ export function LocationMainPage() {
   const nearbyPlaces = nearbyPlacesQuery.isError
     ? EMPTY_NEARBY_PLACES
     : nearbyPlacesQuery.data;
+  /**
+   * 같은 역에서 분류나 식당 조건을 바꿔 새 결과를 받는 동안이면 true다(#275). 그동안 nearbyPlaces는 화면에 있던
+   * 이전 결과다. 이전 핀과 카드는 흐리게 두고 누르지 못하게 하고, 고른 장소를 찾거나 찾지 못했다고 알리지 않는다.
+   * 이전 결과를 누를 수 있으면 새 분류 주소에 이전 분류의 장소가 골라져, 새 결과에서 찾지 못했다는 안내가 뜬다.
+   */
+  const isNearbyPlaceholder = nearbyPlacesQuery.isPlaceholderData;
+  /**
+   * 지도 장소 핀의 아이콘 분류. 이전 결과를 남겨 둔 동안은 그 결과의 분류를 그대로 쓴다. 고른 칩을 따르면
+   * 스터디룸 장소가 잠깐 식당 아이콘으로 그려진다. 새 결과를 받으면 고른 분류로 바꾼다(렌더 중에 상태를 맞춤).
+   */
+  const [placesCategory, setPlacesCategory] = useState(nearbyCategory);
+  if (!isNearbyPlaceholder && placesCategory !== nearbyCategory) {
+    setPlacesCategory(nearbyCategory);
+  }
 
   /**
    * 주변 살펴보기에서 고른 장소(#271). 주소의 place_id(카카오 장소 ID)를 위 목록 결과에서 찾는다.
    * 목록에서 고르면 같은 쿼리 결과를 써서 카카오를 새로 부르지 않고, 링크로 열면 목록을 한 번 찾는다.
-   * 찾는 중에는 isPlaceSelected만 true이고 selectedPlace는 null이다(시트와 아래 버튼을 비운다).
+   * 찾는 중에는 isPlaceSelected만 true이고 selectedPlace는 null이다(시트와 아래 버튼을 비운다). 이전 결과를 남겨 둔
+   * 동안(isNearbyPlaceholder, 뒤로 가기나 앞으로 가기로 다른 분류의 고른 상태에 갔을 때)도 찾는 중과 같다.
    */
   const placeIdParam = searchParams.get(LOCATION_QUERY_PARAMS.placeId);
   const selectedPlaceId = isNearbyTab ? placeIdParam : null;
   const isPlaceSelected = selectedPlaceId !== null;
   const selectedPlace =
-    selectedPlaceId === null
+    selectedPlaceId === null || isNearbyPlaceholder
       ? null
       : (nearbyPlaces?.find((place) => place.id === selectedPlaceId) ?? null);
 
@@ -417,7 +447,7 @@ export function LocationMainPage() {
   useEffect(() => {
     if (placeIdParam === null || isMidpointPending) return;
     if (selectedPlaceId !== null) {
-      if (!nearbyPlaces) return;
+      if (!nearbyPlaces || isNearbyPlaceholder) return;
       if (nearbyPlaces.some((place) => place.id === selectedPlaceId)) return;
 
       toast.message(PLACE_NOT_FOUND_MESSAGE, { id: PLACE_NOT_FOUND_TOAST_ID });
@@ -428,6 +458,7 @@ export function LocationMainPage() {
     setSearchParams(next, { replace: true });
   }, [
     isMidpointPending,
+    isNearbyPlaceholder,
     nearbyPlaces,
     placeIdParam,
     searchParams,
@@ -527,8 +558,8 @@ export function LocationMainPage() {
     if (!mapInst || !fitPoints) return;
     // 장소를 고른 동안은 지도를 다시 맞추지 않는다. 고르면 시트가 peek로 내려가 높이가 바뀌어도 지금 범위를
     // 그대로 두고, 고른 장소가 가려질 때만 아래 효과가 그 장소를 옮긴다. 닫으면 이 값이 바뀌어 다시 맞춘다.
-    // 링크로 고른 상태를 열어 아직 맞춘 적이 없는 목록이면, 목록을 볼 때와 같게 한 번 맞춘다. 이때는 움직임 없이
-    // 맞춘다. 움직이는 동안에는 지도 중심을 출발점으로 읽어, 뒤이어 고른 장소가 가려졌는지 잘못 본다.
+    // 링크로 고른 상태를 열어 아직 맞춘 적이 없는 목록이면, 목록을 볼 때와 같게 한 번 맞춘다. 맞춤은 늘 움직임
+    // 없이 한다(fitMapBounds). 움직이는 동안에는 지도 중심을 출발점으로 읽어, 뒤이어 고른 장소가 가려졌는지 잘못 본다.
     if (isPlaceSelected && fittedPointsRef.current === fitPoints) return;
 
     const station = findSelectedStation(recommendations, stationIdRef.current);
@@ -543,12 +574,7 @@ export function LocationMainPage() {
     isFittingRef.current = true;
     let fitted: boolean;
     try {
-      fitted = fitMapBounds({
-        mapInst,
-        sheetHeight,
-        points,
-        animate: !isPlaceSelected,
-      });
+      fitted = fitMapBounds({ mapInst, sheetHeight, points });
     } finally {
       isFittingRef.current = false;
     }
@@ -720,17 +746,22 @@ export function LocationMainPage() {
    */
   const searchParamsRef = useRef(searchParams);
   const locationStateRef = useRef<unknown>(location.state);
+  const isNearbyPlaceholderRef = useRef(isNearbyPlaceholder);
 
   useEffect(() => {
     searchParamsRef.current = searchParams;
     locationStateRef.current = location.state;
-  }, [searchParams, location.state]);
+    isNearbyPlaceholderRef.current = isNearbyPlaceholder;
+  }, [searchParams, location.state, isNearbyPlaceholder]);
 
   /** 고른 뒤 카드 제목으로 포커스를 옮길지. 링크로 열거나 뒤로 가기로 돌아왔을 때는 옮기지 않는다. */
   const focusSelectedTitleRef = useRef(false);
 
   const handlePlaceSelect = useCallback(
     (place: NearbyPlace) => {
+      // 새 결과를 받는 동안 남겨 둔 이전 결과의 핀은 누르지 못한다(#275). 카드는 패널이 막는다(updating).
+      if (isNearbyPlaceholderRef.current) return;
+
       const current = searchParamsRef.current;
       const next = new URLSearchParams(current);
       next.set(LOCATION_QUERY_PARAMS.placeId, place.id);
@@ -886,14 +917,15 @@ export function LocationMainPage() {
             <SelectedPlacePin
               key={`selected-${place.id}`}
               place={place}
-              type={NEARBY_FACILITY_TYPE[nearbyCategory]}
+              type={NEARBY_FACILITY_TYPE[placesCategory]}
               boxRef={setSelectedPinBox}
             />
           ) : (
             <NearbyPlacePin
               key={place.id}
               place={place}
-              type={NEARBY_FACILITY_TYPE[nearbyCategory]}
+              type={NEARBY_FACILITY_TYPE[placesCategory]}
+              dimmed={isNearbyPlaceholder}
               onSelect={handlePlaceSelect}
             />
           ),
@@ -969,6 +1001,7 @@ export function LocationMainPage() {
                 foodCondition={foodCondition}
                 onFoodConditionChange={handleFoodConditionChange}
                 places={nearbyPlaces ?? EMPTY_NEARBY_PLACES}
+                updating={isNearbyPlaceholder}
                 stationName={formatStationName(selectedStation.stationName)}
                 onPlaceClick={handlePlaceSelect}
               />
