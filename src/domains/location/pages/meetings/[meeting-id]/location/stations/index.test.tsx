@@ -836,7 +836,11 @@ const MEETING_ROOM_PATH = `/meetings/m1/location/stations?station_id=101&tab=nea
 
 /**
  * 다음 검색을 끝내지 않고 붙잡는다. 돌려준 함수로 결과를 넘기면 끝난다. 새 결과를 받는 동안을 본다.
- * TanStack Query는 결과를 다음 틱에 알리므로, 끝낸 뒤 한 틱을 더 기다린다.
+ *
+ * TanStack Query는 결과를 받으면 화면에 알리는 일을 타이머(setTimeout 0)로 미룬다. 그 타이머는 결과를 넘긴 뒤
+ * 마이크로태스크를 여러 번 거친 다음에야 걸린다. 한 틱만 기다리면 그 틱이 알림 타이머보다 먼저 걸려서, 먼저 끝나는
+ * 날에는 테스트가 예전 화면을 본다. 그래서 두 틱을 기다린다. 첫 틱이 돌 때는 알림 타이머가 이미 걸려 있고, 그 뒤에
+ * 건 둘째 틱은 늘 알림 타이머보다 늦게 돈다.
  */
 function holdNextSearch() {
   let resolve: (places: NearbyPlace[]) => void = () => undefined;
@@ -849,6 +853,7 @@ function holdNextSearch() {
     await act(async () => {
       resolve(places);
       await pending;
+      await new Promise((tick) => setTimeout(tick, 0));
       await new Promise((tick) => setTimeout(tick, 0));
     });
   };
