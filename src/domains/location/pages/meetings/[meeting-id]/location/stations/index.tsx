@@ -1002,7 +1002,7 @@ export function LocationMainPage() {
         ) : hasRecommendations && selectedStation ? (
           <div
             ref={sheetContentRef}
-            className="flex flex-col gap-4 px-5 pb-[106px]"
+            className="flex flex-col gap-4 px-5 pb-[calc(var(--fixed-bottom-area-height,0px)+28px)]"
           >
             <h2 className="textStyle_title1 text-fg-neutral-strong">
               가장 최적의{" "}
@@ -1076,7 +1076,7 @@ export function LocationMainPage() {
             )}
           </div>
         ) : midpoint?.noNearbyStations ? (
-          <div className="flex min-h-full flex-col px-5 pb-[106px]">
+          <div className="flex min-h-full flex-col px-5 pb-[calc(var(--fixed-bottom-area-height,0px)+28px)]">
             <PlaceholderContent
               graphic={<PlaceholderGraphic className="h-[90px] w-[104px]" />}
               title="중간지점을 찾지 못했어요"
@@ -1084,7 +1084,7 @@ export function LocationMainPage() {
             />
           </div>
         ) : (
-          <div className="flex min-h-full flex-col px-5 pb-[106px]">
+          <div className="flex min-h-full flex-col px-5 pb-[calc(var(--fixed-bottom-area-height,0px)+28px)]">
             <ParticipantCount count={registeredCount} total={totalCount} />
             <PlaceholderContent
               graphic={<Empty1Character />}

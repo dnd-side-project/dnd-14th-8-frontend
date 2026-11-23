@@ -16,7 +16,9 @@ const DURATION_MS = 4000;
 
 // 디자인 시스템 가이드: 하단 영역 12px 위에 띄운다. FixedBottomArea가 없는 화면은
 // 하단 ActionArea(single, 80px)가 페이지 끝에 놓이므로 그 높이를 기본값으로 둔다.
-const VIEWPORT_BOTTOM = "calc(var(--fixed-bottom-area-height, 80px) + 12px)";
+// 80px는 ActionArea 아래 여백 12px를 포함하고, 그 여백은 safe area만큼 늘어난다.
+const VIEWPORT_BOTTOM =
+  "calc(var(--fixed-bottom-area-height, calc(68px + max(12px, env(safe-area-inset-bottom)))) + 12px)";
 
 export function Toaster() {
   const items = useSyncExternalStore(

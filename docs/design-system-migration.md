@@ -165,7 +165,7 @@ FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. Floati
 - 하단 공유 바의 메인 버튼 기본값을 outline에서 default로 바꿨다. 시안 기준이다. `buttonVariant`는 패키지 Button의 variant를 그대로 받는다.
 - 일정 투표 폼은 안내와 버튼 간격이 기존 16px에서 ActionArea 기본값 8px로 줄었다.
 - 아직 전환하지 않은 곳: 모임 참여 초대(브랜드 배경), 일정 범위 수정 저장 버튼(sticky + 335px 폭). 콘텐츠 안에 놓인 버튼(장소 상세, 경로 상세, 설치 안내)은 ActionArea 대상이 아니다.
-- safe area 여백은 viewport에 `viewport-fit=cover`가 있어야 적용된다. 지금 `index.html`에는 없어서 `env(safe-area-inset-bottom)`이 0이다.
+- safe area 여백은 viewport에 `viewport-fit=cover`가 있어야 적용된다. `index.html`에 켜 두었고(#183), 화면 아래에 붙는 서비스 시트와 버튼도 `ActionArea`처럼 아래 여백을 `max(지금 여백, env(safe-area-inset-bottom))`으로 잡는다.
 
 ## 기초값: Typography
 
@@ -225,7 +225,7 @@ FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. Floati
   | `toast.message` | `neutral` (아이콘 없음) |
 
 - 같은 `id`로 다시 띄우면 하나만 보이고 닫히는 시간이 다시 흐른다. 동시에 최대 3개까지 보인다. 4초 뒤 닫힌다(sonner 기본값과 같음).
-- 위치는 디자인 시스템 가이드(하단 영역 12px 위)를 따른다. `FixedBottomArea`가 알리는 `--fixed-bottom-area-height`를 쓰고, 없는 화면은 페이지 끝 ActionArea(single, 80px)를 기본값으로 둔다.
+- 위치는 디자인 시스템 가이드(하단 영역 12px 위)를 따른다. `FixedBottomArea`가 알리는 `--fixed-bottom-area-height`를 쓰고, 없는 화면은 페이지 끝 ActionArea(single, 80px)를 기본값으로 두고, 80px에 든 아래 여백 12px는 safe area만큼 늘린다(`68px + max(12px, env(safe-area-inset-bottom))`).
 - 디자인 시스템 `Toast`는 한 줄 고정이라, 375px에서 넘치던 문구를 줄이고 문구 전체를 규칙에 맞춰 정리했다. 규칙과 용어는 `docs/ux-writing.md`에 있다.
 - 디자인 시스템 `Toast`에는 버튼이 없어, 새 버전 안내("새로고침" 버튼)는 `Modal`로 옮겼다. 제목 "업데이트된 버전으로 새로고침할까요?", 본문 "지금 새로고침하면 입력 중인 내용이 사라질 수 있어요", 버튼 "나중에 / 새로고침". 나중을 고르면 앱을 다시 열 때 대기 중인 워커가 적용된다. 설치 유도 시트가 열려 있는 동안 미루는 동작은 그대로다.
 - sonner와 `color-system.css`, tailwind-merge의 팔레트 색 목록을 지웠다. 정적 검사(`src/design-tokens-static.test.ts`)는 관리자 화면 말고는 예외가 없다.

@@ -87,7 +87,7 @@ export function ShareSheetView({
           </IconButton>
         </div>
 
-        <div className="flex items-start justify-center gap-4 px-5 pt-3.5 pb-7">
+        <div className="flex items-start justify-center gap-4 px-5 pt-3.5 pb-[max(28px,env(safe-area-inset-bottom))]">
           {shares.map(({ channel, onClick }) => (
             <ShareButton key={channel} channel={channel} onClick={onClick} />
           ))}

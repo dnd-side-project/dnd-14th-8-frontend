@@ -60,7 +60,7 @@ export function InstallPromptView({
       </div>
 
       {mode === "guide" ? (
-        <div className="px-5 pt-4 pb-7">
+        <div className="px-5 pt-4 pb-[max(28px,env(safe-area-inset-bottom))]">
           <ol className="flex flex-col gap-2 rounded-xl bg-fill-neutral-subtlest px-4 py-3.5">
             <li className="textStyle_body2 flex items-center gap-2 break-keep text-fg-neutral-default">
               <span className="text-fg-neutral-stronger text-t3">1</span>
@@ -86,7 +86,7 @@ export function InstallPromptView({
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-2 px-5 pt-4 pb-7">
+        <div className="flex flex-col gap-2 px-5 pt-4 pb-[max(28px,env(safe-area-inset-bottom))]">
           <Button onClick={onInstall} variant="brand" size="xl" display="full">
             홈 화면에 추가
           </Button>
