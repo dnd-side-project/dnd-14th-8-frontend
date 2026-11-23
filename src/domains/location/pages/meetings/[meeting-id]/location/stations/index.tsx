@@ -49,6 +49,7 @@ import {
   parseFoodCondition,
   parseNearbyCategory,
 } from "@/domains/location/constants/nearby-categories";
+import { UPDATING_CLASS } from "@/domains/location/constants/updating-class";
 import { useGetDepartures } from "@/domains/location/hooks/use-get-departures";
 import { useGetMidpointRecommendations } from "@/domains/location/hooks/use-get-midpoint-recommendations";
 import { useNearbyPlaces } from "@/domains/location/hooks/use-nearby-places";
@@ -64,9 +65,8 @@ import {
   getInsufficientDepartureCopy,
 } from "@/domains/location/utils/insufficient-departures";
 import {
-  getFitAnchorY,
-  getFitZoom,
-  getMapFitPadding,
+  getMapFit,
+  getPinFitPadding,
 } from "@/domains/location/utils/map-viewport";
 import {
   panToVisibleCenter,
@@ -113,6 +113,21 @@ const PIN_Z_INDEX = {
 } as const;
 
 /**
+ * 지도를 맞출 때 좌표 위로 비워 둘 높이(px, getMapFit).
+ * 역과 사람은 핀이 그려지는 높이다. 역은 이름표 33 + 꼬리 6 + 모여락 핀 48 + 아래 여백 4(Marker sm), 사람은
+ * 이름표 33 + 꼬리 6(TextPin)이다. 장소 핀은 31px이지만 고르면 이름표가 붙은 큰 핀(115px)이 되어, 화면 위에 걸리면
+ * 지도를 옮긴다(#271). 115px를 다 비우면 핀이 뭉쳐 보여서, 예전 위 여백인 80px를 비운다.
+ */
+const PIN_ABOVE = { station: 91, person: 39, place: 80 } as const;
+
+/** 지도에 담을 좌표와, 그 위로 비워 둘 높이 */
+interface FitPoint {
+  latitude: number;
+  longitude: number;
+  above: number;
+}
+
+/**
  * 목록이나 지도에서 장소를 골라 쌓은 기록에 붙이는 표시(#271). 닫기(X)는 이 표시가 있으면 뒤로 가기처럼
  * 목록 기록으로 돌아가고, 없으면(링크로 바로 열었을 때) 주소에서 place_id만 지운다.
  */
@@ -143,16 +158,15 @@ const RESULT_TABS = [
 ];
 
 /**
- * 점들을 시트가 비워 둔 영역에 담는다. 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다.
+ * 핀들을 시트가 비워 둔 영역에 담는다. 맞췄으면 true, 맞출 수 없어 그대로 뒀으면 false를 돌려준다.
  *
  * 확대 단계와 중심을 움직임 없이 한 번에 바꾼다(#275). 예전에는 fitBounds로 맞춘 뒤 panTo로 가운데에
  * 옮겨, 분류를 바꿀 때마다 역 이름표가 시트 바로 위(375 x 812px에서 y 120에서 258)까지 떨어졌다가 1초 동안
  * 올라왔다(2026-11-21 측정). 끝 화면은 누르기 전과 거의 같았다. 같은 함수라 탭을 바꾸거나 시트 높이가 바뀔 때도
  * 한 번에 바뀐다.
  *
- * 확대 단계도 fitBounds에 맡기지 않고 고른다(getFitZoom). 네이버 fitBounds는 위아래 여백이 크게 다르면
- * 넘긴 여백을 다 지키지 않아, 맛집처럼 장소가 역 아래로 퍼지면 한 단계 더 확대해 역 이름표가 화면 위로
- * 잘렸다(#275). 점들의 한가운데는 시트 위 영역이 아니라 여백 안쪽 띠의 가운데에 둔다(getFitAnchorY).
+ * 확대 단계와 자리는 좌표 위로 그려지는 핀까지 세어 고른다(getMapFit). 네이버 fitBounds는 넘긴 여백을 다 지키지
+ * 않고, 좌표만 담으면 역 이름표가 화면 위로 잘린다.
  */
 function fitMapBounds({
   mapInst,
@@ -161,7 +175,7 @@ function fitMapBounds({
 }: {
   mapInst: naver.maps.Map;
   sheetHeight: number;
-  points: { latitude: number; longitude: number }[];
+  points: FitPoint[];
 }): boolean {
   const maps = window.naver?.maps;
   if (!maps || points.length === 0) return false;
@@ -182,32 +196,29 @@ function fitMapBounds({
   }
 
   const { width: mapWidth, height: mapHeight } = mapInst.getSize();
-  const padding = getMapFitPadding({ mapHeight, sheetHeight });
+  const padding = getPinFitPadding({ mapHeight, sheetHeight });
   // 시트가 지도를 거의 다 덮은 상태(full 스냅)면 맞출 여지가 없다.
   // 억지로 맞추는 대신 마지막 프레이밍을 그대로 둔다.
   if (!padding) return false;
 
-  // 점들의 상자 크기를 지금 확대 단계의 px로 잰다. 자리의 기준점은 확대 단계마다 달라도 같은 단계 안의 차이는 맞다.
+  // 자리의 기준점은 확대 단계마다 다르지만, 같은 단계 안의 차이는 맞다.
   const projection = mapInst.getProjection();
-  const offsets = points.map((point) =>
-    projection.fromCoordToOffset(
-      new maps.LatLng(point.latitude, point.longitude),
-    ),
-  );
-  const xs = offsets.map((offset) => offset.x);
-  const ys = offsets.map((offset) => offset.y);
-  const zoom = getFitZoom({
-    boundsWidth: Math.max(...xs) - Math.min(...xs),
-    boundsHeight: Math.max(...ys) - Math.min(...ys),
+  const fit = getMapFit({
+    pins: points.map((point) => {
+      const { x, y } = projection.fromCoordToOffset(
+        new maps.LatLng(point.latitude, point.longitude),
+      );
+      return { x, y, above: point.above };
+    }),
     zoom: mapInst.getZoom(),
     mapWidth,
     mapHeight,
     padding,
     maxZoom: MAX_FIT_ZOOM,
   });
-  if (zoom === null) return false;
+  if (!fit) return false;
 
-  mapInst.setZoom(zoom, false);
+  mapInst.setZoom(fit.zoom, false);
 
   const latitudes = points.map((point) => point.latitude);
   const longitudes = points.map((point) => point.longitude);
@@ -218,7 +229,7 @@ function fitMapBounds({
     mapInst,
     sheetHeight,
     animate: false,
-    anchorY: getFitAnchorY({ mapHeight, padding }),
+    anchorY: fit.anchorY,
   });
   return true;
 }
@@ -281,7 +292,7 @@ function NearbyPlacePin({
     >
       <FacilityPinDefault
         type={type}
-        className={dimmed ? "opacity-40" : undefined}
+        className={dimmed ? UPDATING_CLASS : undefined}
       />
     </MapMarker>
   );
@@ -486,6 +497,7 @@ export function LocationMainPage() {
       (departures ?? []).map((locationVote) => ({
         latitude: locationVote.departureLat,
         longitude: locationVote.departureLng,
+        above: PIN_ABOVE.person,
       })),
     [departures],
   );
@@ -494,6 +506,7 @@ export function LocationMainPage() {
       nearbyPlaces?.map((place) => ({
         latitude: place.latitude,
         longitude: place.longitude,
+        above: PIN_ABOVE.place,
       })),
     [nearbyPlaces],
   );
@@ -514,7 +527,8 @@ export function LocationMainPage() {
    */
   const stationIdRef = useRef(stationId);
 
-  useEffect(() => {
+  // 아래 맞춤 효과보다 먼저 바꾼다.
+  useLayoutEffect(() => {
     stationIdRef.current = stationId;
   }, [stationId]);
 
@@ -554,7 +568,8 @@ export function LocationMainPage() {
     };
   }, [mapInst]);
 
-  useEffect(() => {
+  // 화면을 그리기 전에 맞춘다. 그린 뒤에 맞추면 새 핀이 예전 지도 위에 한 프레임 보인다(#275, MapMarker도 같은 이유).
+  useLayoutEffect(() => {
     if (!mapInst || !fitPoints) return;
     // 장소를 고른 동안은 지도를 다시 맞추지 않는다. 고르면 시트가 peek로 내려가 높이가 바뀌어도 지금 범위를
     // 그대로 두고, 고른 장소가 가려질 때만 아래 효과가 그 장소를 옮긴다. 닫으면 이 값이 바뀌어 다시 맞춘다.
@@ -563,9 +578,15 @@ export function LocationMainPage() {
     if (isPlaceSelected && fittedPointsRef.current === fitPoints) return;
 
     const station = findSelectedStation(recommendations, stationIdRef.current);
-    const points = [
+    const points: FitPoint[] = [
       ...(station
-        ? [{ latitude: station.latitude, longitude: station.longitude }]
+        ? [
+            {
+              latitude: station.latitude,
+              longitude: station.longitude,
+              above: PIN_ABOVE.station,
+            },
+          ]
         : []),
       ...fitPoints,
     ];

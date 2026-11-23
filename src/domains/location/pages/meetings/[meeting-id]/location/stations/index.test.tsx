@@ -34,8 +34,8 @@ import type {
 } from "@/domains/location/types/location-api-types";
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import {
-  getFitAnchorY,
-  getMapFitPadding,
+  getMapFit,
+  getPinFitPadding,
 } from "@/domains/location/utils/map-viewport";
 import { searchNearbyPlaces } from "@/domains/location/utils/search-nearby-places";
 import { getMyParticipantQueryKey } from "@/domains/schedule/hooks/use-get-my-participant";
@@ -839,7 +839,7 @@ function pinIcon(pin: HTMLElement) {
 }
 
 describe("분류와 조건을 바꿀 때(#275)", () => {
-  it("분류를 바꾸면 지도를 움직임 없이 한 번에 맞추고, 점들의 한가운데를 여백 안쪽 띠의 가운데에 둔다", async () => {
+  it("분류를 바꾸면 지도를 움직임 없이 한 번에 맞춘다", async () => {
     const map = createFakeMap();
     renderResult({
       path: LIST_PATH,
@@ -860,18 +860,66 @@ describe("분류와 조건을 바꿀 때(#275)", () => {
     expect(map.panTo).not.toHaveBeenCalled();
     expect(map.setZoom).toHaveBeenCalledTimes(1);
     expect(map.setCenter).toHaveBeenCalledTimes(1);
+  });
 
-    // 역과 회의실 두 곳의 한가운데(위도 37.566, 경도 126.9925)를 여백 안쪽 띠의 가운데에 둔다.
-    // 지도 중심은 컨테이너 한가운데(406px)에 그려지므로 그 자리보다 (406 - 띠 가운데)px 아래다.
+  it.each([
+    // 장소가 모두 역 남쪽이면 역이 맨 위라 역 이름표(91px)까지 세고, 북쪽에 장소가 있으면 장소 위로 80px를 비운다.
+    ["역이 맨 위", 37.5655, 37.564],
+    ["장소가 맨 위", 37.569, 37.563],
+  ])("%s일 때 좌표 위로 비울 높이까지 세어 띠의 가운데에 둔다", async (_, firstLatitude, secondLatitude) => {
+    const rooms = [
+      { ...MEETING_ROOMS[0], latitude: firstLatitude },
+      { ...MEETING_ROOMS[1], latitude: secondLatitude },
+    ];
+    const map = createFakeMap();
+    renderResult({
+      path: LIST_PATH,
+      mapInst: map as unknown as naver.maps.Map,
+    });
+    await screen.findByText("을지 스터디카페");
+    await settleMap();
+    vi.mocked(searchNearbyPlaces).mockResolvedValue(rooms);
+    map.setZoom.mockClear();
+    map.setCenter.mockClear();
+
+    fireEvent.click(chip("회의실"));
+    await screen.findByText("모여 회의실");
+    await settleMap();
+
+    // 대역 지도는 위도 0.00001도가 1px이고 확대 단계는 늘 16이다.
     const sheetHeight = Number(screen.getByTestId("sheet-height").textContent);
-    const padding = getMapFitPadding({ mapHeight: 812, sheetHeight });
+    const padding = getPinFitPadding({ mapHeight: 812, sheetHeight });
     if (!padding) throw new Error("여백 없음");
-    const anchorY = getFitAnchorY({ mapHeight: 812, padding });
+    const pin = (
+      coord: { latitude: number; longitude: number },
+      above: number,
+    ) => ({
+      x: (coord.longitude - 126.9) * 100000,
+      y: (37.6 - coord.latitude) * 100000,
+      above,
+    });
+    const fit = getMapFit({
+      pins: [pin(STATION, 91), pin(rooms[0], 80), pin(rooms[1], 80)],
+      zoom: 16,
+      mapWidth: 375,
+      mapHeight: 812,
+      padding,
+      maxZoom: 16,
+    });
+    if (!fit) throw new Error("맞추지 못함");
+    expect(map.setZoom).toHaveBeenLastCalledWith(fit.zoom, false);
+    // 좌표들의 한가운데를 anchorY에 둔다. 지도 중심은 컨테이너 한가운데(406px)에 그려진다.
+    const latitudes = [STATION.latitude, firstLatitude, secondLatitude];
+    const middleLatitude =
+      (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
     const [target] = map.setCenter.mock.calls[0] as [
       { lat: number; lng: number },
     ];
     expect(target.lng).toBeCloseTo(126.9925, 6);
-    expect(target.lat).toBeCloseTo(37.566 - (406 - anchorY) / 100000, 6);
+    expect(target.lat).toBeCloseTo(
+      middleLatitude - (406 - fit.anchorY) / 100000,
+      6,
+    );
   });
 
   it("새 결과를 받는 동안 이전 핀과 카드를 흐리게 남기고, 누르거나 키보드로 옮겨 가지 못한다", async () => {
@@ -888,11 +936,17 @@ describe("분류와 조건을 바꿀 때(#275)", () => {
     expect(list.getAttribute("aria-busy")).toBe("true");
     expect(list.hasAttribute("inert")).toBe(true);
     expect(list.className).toContain("opacity-40");
+    // 결과가 0.2초 안에 오면 흐려지지 않고 바로 바뀌게 흐림만 늦춘다. 막는 것은 처음부터다.
+    expect(list.className).toContain("delay-200");
     const pins = screen.getAllByTestId("map-pin");
     expect(pins).toHaveLength(2);
-    expect(pins.every((pin) => pin.innerHTML.includes("opacity-40"))).toBe(
-      true,
-    );
+    expect(
+      pins.every(
+        (pin) =>
+          pin.innerHTML.includes("opacity-40") &&
+          pin.innerHTML.includes("delay-200"),
+      ),
+    ).toBe(true);
 
     fireEvent.click(pins[0]);
     expect(currentUrl().searchParams.has("place_id")).toBe(false);

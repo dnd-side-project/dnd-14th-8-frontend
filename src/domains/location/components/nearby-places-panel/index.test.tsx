@@ -148,10 +148,13 @@ describe("NearbyPlacesPanel", () => {
     expect(updating).toContain('aria-busy="true"');
     expect(updating).toContain("inert");
     expect(updating).toContain("opacity-40");
+    // 흐림은 0.2초 늦게 시작한다. 빨리 온 결과에서 깜빡이지 않게 한다.
+    expect(updating).toContain("delay-200");
 
     const settled = list(render({ places: PLACES }));
     expect(settled).toContain('aria-busy="false"');
     expect(settled).not.toContain("inert");
     expect(settled).not.toContain("opacity-40");
+    expect(settled).not.toContain("transition-opacity");
   });
 });

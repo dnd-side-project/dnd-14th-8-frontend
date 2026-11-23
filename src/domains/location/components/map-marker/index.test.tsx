@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { cleanup, render } from "@testing-library/react";
+import { type ReactNode, useLayoutEffect } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MapMarker } from ".";
 
@@ -94,5 +95,30 @@ describe("MapMarker 확대 효과", () => {
     overlay.scale?.(4);
 
     expect(el.style.transform).toBe("scale(0.25) translate(-50%, -50%)");
+  });
+});
+
+describe("MapMarker를 지도에 올리는 때(#275)", () => {
+  it("화면을 그리기 전에 올려서, 핀이 통째로 바뀔 때 핀이 없는 프레임이 생기지 않는다", () => {
+    let pinsBeforePaint = -1;
+
+    // 부모의 useLayoutEffect는 자식의 useLayoutEffect 다음, 화면을 그리기 전에 돈다.
+    function Screen({ children }: { children: ReactNode }) {
+      useLayoutEffect(() => {
+        pinsBeforePaint = FakeOverlayView.last?.pane.childElementCount ?? 0;
+      }, []);
+      return children;
+    }
+
+    render(
+      <Screen>
+        <MapMarker latitude={37.5} longitude={127}>
+          <span>핀</span>
+        </MapMarker>
+      </Screen>,
+    );
+
+    expect(pinsBeforePaint).toBe(1);
+    expect(FakeOverlayView.last?.pane.textContent).toBe("핀");
   });
 });

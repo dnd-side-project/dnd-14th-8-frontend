@@ -7,6 +7,7 @@ import {
   NEARBY_CATEGORIES,
   type NearbyCategory,
 } from "@/domains/location/constants/nearby-categories";
+import { UPDATING_CLASS } from "@/domains/location/constants/updating-class";
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
 import { SegmentedControl } from "@/shared/components/segmented-control";
 import { cn } from "@/shared/utils/cn";
@@ -27,7 +28,7 @@ export interface NearbyPlacesPanelProps {
   places: NearbyPlace[];
   /**
    * true면 places는 분류나 조건을 바꿔 새 결과를 받는 동안 남겨 둔 이전 결과다(#275).
-   * 카드를 흐리게 두고 누르거나 키보드로 옮겨 가지 못하게 한다.
+   * 카드를 0.2초 뒤 흐리게 하고(UPDATING_CLASS), 처음부터 누르거나 키보드로 옮겨 가지 못하게 한다.
    */
   updating?: boolean;
   /** 거리를 잰 역의 이름. "역"은 부르는 쪽에서 `formatStationName`으로 붙인다. */
@@ -92,7 +93,7 @@ export function NearbyPlacesPanel({
 
       {places.length > 0 && (
         <div
-          className={cn("flex flex-col gap-2", updating && "opacity-40")}
+          className={cn("flex flex-col gap-2", updating && UPDATING_CLASS)}
           aria-busy={updating}
           inert={updating}
         >
