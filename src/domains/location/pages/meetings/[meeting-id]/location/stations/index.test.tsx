@@ -47,28 +47,31 @@ vi.mock("@/domains/location/utils/search-nearby-places", () => ({
   searchNearbyPlaces: vi.fn(),
 }));
 
-// 지도 SDK 없이 핀을 문서에 그린다. 누를 수 있는 핀은 버튼이고, 쌓는 순서는 data-z로 남긴다.
+// 지도 SDK 없이 핀을 문서에 그린다. 누를 수 있는 핀은 버튼이고, 쌓는 순서는 data-z, 좌표에 맞출 자리는 data-anchor로 남긴다.
 vi.mock("@/domains/location/components/map-marker", () => ({
   MapMarker: ({
     children,
     onClick,
     zIndex,
+    anchor = "bottom",
   }: {
     children: ReactNode;
     onClick?: () => void;
     zIndex?: number;
+    anchor?: string;
   }) =>
     onClick ? (
       <button
         type="button"
         data-testid="map-pin"
         data-z={zIndex}
+        data-anchor={anchor}
         onClick={onClick}
       >
         {children}
       </button>
     ) : (
-      <div data-testid="map-marker" data-z={zIndex}>
+      <div data-testid="map-marker" data-z={zIndex} data-anchor={anchor}>
         {children}
       </div>
     ),
@@ -507,12 +510,15 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
 });
 
 /**
- * 지도 대역. 경도와 위도 0.00001도를 1px로 바꾸는 단순한 투영이고, 컨테이너는 375x812, 확대 단계는 늘 16이다
- * (setZoom은 부른 것만 남긴다). 네이버 지도처럼 panTo는 움직이는 동안 중심을 출발점으로 돌려주다가 한 틱 뒤에
+ * 지도 대역. 경도와 위도 0.00001도를 1px로 바꾸는 단순한 투영이고, 컨테이너는 375x812, 확대 단계는 16이다
+ * (setZoom은 부른 것만 남긴다). 사람이 두 손가락으로 확대 단계를 바꾼 것은 pinchTo로 흉내 낸다. 확대 단계만 바꾸고
+ * zoom_changed를 알리며, 투영은 그대로다. 네이버 지도처럼 panTo는 움직이는 동안 중심을 출발점으로 돌려주다가 한 틱 뒤에
  * 도착하고, setCenter는 바로 옮긴다. 결과 화면은 지도를 맞출 때마다 setZoom과 setCenter를 한 번씩 부른다.
  */
 function createFakeMap() {
   let center = { lat: STATION.latitude, lng: STATION.longitude };
+  let zoom = 16;
+  const zoomListeners: Array<() => void> = [];
   const toOffset = (coord: { lat: number; lng: number }) => ({
     x: (coord.lng - 126.9) * 100000,
     y: (37.6 - coord.lat) * 100000,
@@ -538,8 +544,14 @@ function createFakeMap() {
         }
       },
       Event: {
-        addListener: () => ({}),
-        removeListener: () => undefined,
+        addListener: (_target: unknown, name: string, listener: () => void) => {
+          if (name === "zoom_changed") zoomListeners.push(listener);
+          return listener;
+        },
+        removeListener: (listener: () => void) => {
+          const index = zoomListeners.indexOf(listener);
+          if (index >= 0) zoomListeners.splice(index, 1);
+        },
       },
     },
   };
@@ -552,8 +564,12 @@ function createFakeMap() {
       fromOffsetToCoord: (point: { x: number; y: number }) =>
         new LatLng(37.6 - point.y / 100000, 126.9 + point.x / 100000),
     }),
-    getZoom: () => 16,
+    getZoom: () => zoom,
     setZoom: vi.fn(),
+    pinchTo: (nextZoom: number) => {
+      zoom = nextZoom;
+      for (const listener of [...zoomListeners]) listener();
+    },
     panTo: vi.fn((target: LatLng) => {
       setTimeout(() => {
         center = { lat: target.lat, lng: target.lng };
@@ -1046,5 +1062,169 @@ describe("분류와 조건을 바꿀 때(#275)", () => {
     expect(currentUrl().searchParams.get("place_id")).toBe("9100");
     expect(toastMessage).not.toHaveBeenCalled();
     toastMessage.mockRestore();
+  });
+});
+
+/** 장소 핀이 28px 핀(분류 아이콘이 있음)인지 둥근 사각 점인지. */
+function placePinShape(pin: HTMLElement) {
+  if (pin.querySelector("svg")) return "pin";
+  return pin.innerHTML.includes("rounded-sm") ? "dot" : "unknown";
+}
+
+function placePinShapes() {
+  return screen.queryAllByTestId("map-pin").map(placePinShape);
+}
+
+describe("축소하면 장소 핀을 점으로(#277)", () => {
+  /** 주변 살펴보기 목록을 열고 지도를 맞춘 데까지 간다. 맞춘 확대 단계(기준)는 16이다. */
+  async function openNearbyList(path = LIST_PATH) {
+    const map = createFakeMap();
+    renderResult({ path, mapInst: map as unknown as naver.maps.Map });
+    await screen.findByText("을지 스터디카페");
+    await settleMap();
+    return map;
+  }
+
+  function pinch(map: ReturnType<typeof createFakeMap>, zoom: number) {
+    act(() => {
+      map.pinchTo(zoom);
+    });
+  }
+
+  it("지도를 맞춘 직후보다 축소하면 점으로, 기준과 같거나 더 확대하면 핀으로 그린다", async () => {
+    const map = await openNearbyList();
+    expect(placePinShapes()).toEqual(["pin", "pin"]);
+
+    pinch(map, 15);
+    expect(placePinShapes()).toEqual(["dot", "dot"]);
+
+    pinch(map, 14);
+    expect(placePinShapes()).toEqual(["dot", "dot"]);
+
+    pinch(map, 16);
+    expect(placePinShapes()).toEqual(["pin", "pin"]);
+
+    pinch(map, 17);
+    expect(placePinShapes()).toEqual(["pin", "pin"]);
+  });
+
+  it("보이는 점은 14px, 누르는 영역은 28px이고, 아래 절반을 상자 밖에 내놓아 좌표가 점 한가운데에 온다", async () => {
+    const map = await openNearbyList();
+
+    pinch(map, 15);
+
+    const [pin] = screen.getAllByTestId("map-pin");
+    const touchArea = pin.firstElementChild as HTMLElement;
+    const dot = touchArea.firstElementChild as HTMLElement;
+    expect(pin.children).toHaveLength(1);
+    expect(touchArea.children).toHaveLength(1);
+    expect(dot.className).toContain("size-3.5");
+    const touchClasses = touchArea.className.split(" ");
+    expect(touchClasses).toContain("size-7");
+    expect(touchClasses).toContain("-mb-3.5");
+    // inline-flex면 줄 높이 틈으로 상자가 커져 점이 좌표에서 어긋난다.
+    expect(touchClasses).toContain("flex");
+    expect(touchClasses).not.toContain("inline-flex");
+  });
+
+  it("모양이 바뀌어도 핀을 지도에서 내렸다 올리지 않게 쌓는 순서와 맞출 자리를 그대로 둔다", async () => {
+    const map = await openNearbyList();
+    const before = screen.getAllByTestId("map-pin");
+
+    pinch(map, 15);
+
+    const after = screen.getAllByTestId("map-pin");
+    expect(after).toHaveLength(2);
+    after.forEach((pin, index) => {
+      // 같은 핀 상자 안에서 내용만 바뀐다.
+      expect(pin).toBe(before[index]);
+      expect(pin.dataset.z).toBe("110");
+      expect(pin.dataset.anchor).toBe("bottom");
+    });
+  });
+
+  it("점을 눌러도 그 장소를 고르고, 고른 장소는 축소한 채로도 큰 핀과 이름표로 그린다", async () => {
+    const map = await openNearbyList();
+    pinch(map, 15);
+
+    fireEvent.click(screen.getAllByTestId("map-pin")[0]);
+    await settleMap();
+
+    expect(currentUrl().searchParams.get("place_id")).toBe("9000");
+    expect(navigationType()).toBe("PUSH");
+    const pin = selectedPin();
+    expect(pin).not.toBeNull();
+    expect(within(pin as HTMLElement).getByText("모여 스터디룸")).toBeTruthy();
+    expect(pin?.querySelector("svg")).not.toBeNull();
+    // 고르지 않은 장소는 점 그대로다.
+    expect(placePinShapes()).toEqual(["dot"]);
+
+    // 고른 뒤 더 축소해도 고른 장소는 그대로다.
+    pinch(map, 14);
+    const pinAfterZoomOut = selectedPin();
+    expect(
+      within(pinAfterZoomOut as HTMLElement).getByText("모여 스터디룸"),
+    ).toBeTruthy();
+    expect(pinAfterZoomOut?.querySelector("svg")).not.toBeNull();
+    expect(placePinShapes()).toEqual(["dot"]);
+  });
+
+  it("고른 장소를 닫으면 지도를 다시 맞춰 핀으로 돌아온다", async () => {
+    const map = await openNearbyList();
+    pinch(map, 15);
+    fireEvent.click(screen.getAllByTestId("map-pin")[0]);
+    await settleMap();
+    expect(placePinShapes()).toEqual(["dot"]);
+
+    fireEvent.click(screen.getByRole("button", { name: "닫기" }));
+    await settleMap();
+
+    expect(placePinShapes()).toEqual(["pin", "pin"]);
+  });
+
+  it("새 결과를 받는 동안 점 그대로 흐리게 두고 누르지 못하며, 받으면 지도를 다시 맞춰 핀으로 돌아온다", async () => {
+    const map = await openNearbyList();
+    pinch(map, 15);
+    const finish = holdNextSearch();
+
+    fireEvent.click(chip("회의실"));
+
+    const pins = screen.getAllByTestId("map-pin");
+    expect(pins.map(placePinShape)).toEqual(["dot", "dot"]);
+    expect(
+      pins.every(
+        (pin) =>
+          pin.innerHTML.includes("opacity-40") &&
+          pin.innerHTML.includes("delay-200"),
+      ),
+    ).toBe(true);
+    fireEvent.click(pins[0]);
+    expect(currentUrl().searchParams.has("place_id")).toBe(false);
+
+    await finish(MEETING_ROOMS);
+    await settleMap();
+
+    const newPins = screen.getAllByTestId("map-pin");
+    expect(newPins.map(placePinShape)).toEqual(["pin", "pin"]);
+    expect(newPins.some((pin) => pin.innerHTML.includes("opacity-40"))).toBe(
+      false,
+    );
+  });
+
+  it("개인별 루트 탭에서 축소한 채 주변 살펴보기 탭을 열면 장소에 다시 맞춰 핀으로 그린다", async () => {
+    const map = createFakeMap();
+    renderResult({
+      path: "/meetings/m1/location/stations?station_id=101",
+      mapInst: map as unknown as naver.maps.Map,
+    });
+    await screen.findByRole("tab", { name: "주변 살펴보기" });
+    await settleMap();
+    pinch(map, 15);
+
+    fireEvent.click(screen.getByRole("tab", { name: "주변 살펴보기" }));
+    await screen.findByText("을지 스터디카페");
+    await settleMap();
+
+    expect(placePinShapes()).toEqual(["pin", "pin"]);
   });
 });

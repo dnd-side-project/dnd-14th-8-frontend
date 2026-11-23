@@ -26,6 +26,7 @@ import { CardLocationMember } from "@/domains/location/components/card-location-
 import { DotPin } from "@/domains/location/components/dot-pin";
 import {
   FacilityPinDefault,
+  FacilityPinDot,
   FacilityPinSelected,
   type FacilityType,
 } from "@/domains/location/components/facility-pin";
@@ -101,6 +102,8 @@ const MAX_FIT_ZOOM = 16;
  * 지도 핀을 쌓는 순서. 아래부터 모여락 핀(LayeredMarker의 아이콘 층, 80), 남의 점,
  * 내 점, 남의 이름표, 내 이름표, 주변 장소 핀, 역 이름표, 고른 장소 핀이다. 내 것은 남의 것 위에 온다.
  * 주변 장소 핀은 주변 살펴보기 탭에서만 있고 그때 사람 핀은 숨는다. 고른 장소는 다른 핀에 가려지지 않게 맨 위다(#271).
+ * 주변 장소는 축소해 점이 되어도 같은 순서(place)에 둔다(#277). 사람 점처럼 따로 두면 모양이 바뀔 때 MapMarker가
+ * 핀을 지도에서 내렸다 다시 올린다.
  */
 const PIN_Z_INDEX = {
   otherDot: 84,
@@ -266,22 +269,28 @@ function attachStationCardRow(scroller: HTMLElement | null) {
 }
 
 /**
- * 주변 장소 핀. 누르면 그 장소를 고른다(#271). 축소해도 점으로 바꾸지 않는다(점은 사람 핀이 겹치는 문제만 푼다).
- * MapMarker는 onClick이 바뀌면 핀을 지도에서 내렸다 다시 올리므로, 장소마다 고정한 함수를 넘긴다.
+ * 주변 장소 핀. 누르면 그 장소를 고른다(#271). 지도를 맞춘 직후보다 축소하면(shape가 dot) 사람 핀처럼 점으로
+ * 그린다(#277). 28px 핀은 축소하면 서로 덮고 역의 모여락 핀까지 가린다. 점도 누르면 그 장소를 고른다.
+ *
+ * 핀과 점은 MapMarker 하나 안에서 내용만 바꾼다. MapMarker는 onClick, zIndex, anchor가 바뀌면 핀을 지도에서
+ * 내렸다 다시 올려 빈 프레임이 생길 수 있으므로, 장소마다 고정한 함수를 넘기고 나머지는 모양과 상관없이 그대로 둔다.
  * dimmed면 새 결과를 받는 동안 남겨 둔 이전 결과라 흐리게 그린다(#275). 누르지 못하게 하는 것은 onSelect가 맡는다.
  */
 function NearbyPlacePin({
   place,
   type,
+  shape,
   dimmed,
   onSelect,
 }: {
   place: NearbyPlace;
   type: FacilityType;
+  shape: PinShape;
   dimmed: boolean;
   onSelect: (place: NearbyPlace) => void;
 }) {
   const handleClick = useCallback(() => onSelect(place), [onSelect, place]);
+  const className = dimmed ? UPDATING_CLASS : undefined;
 
   return (
     <MapMarker
@@ -290,17 +299,24 @@ function NearbyPlacePin({
       zIndex={PIN_Z_INDEX.place}
       onClick={handleClick}
     >
-      <FacilityPinDefault
-        type={type}
-        className={dimmed ? UPDATING_CLASS : undefined}
-      />
+      {shape === "dot" ? (
+        // 보이는 점은 14px, 누르는 영역은 장소 핀과 같은 28px다. MapMarker는 상자의 아래 가운데를 좌표에 맞추는데
+        // 점은 좌표가 한가운데에 와야 해서, 아래 절반(14px)을 음수 margin으로 MapMarker 상자 밖에 내놓는다.
+        // translate로 내리면 MapMarker 상자가 위에 남아 누르는 영역이 28 x 42px가 된다. inline-flex로 두면
+        // 줄 높이 틈만큼 상자가 커져 어긋나므로 flex로 둔다.
+        <div className="-mb-3.5 flex size-7 items-center justify-center">
+          <FacilityPinDot className={className} />
+        </div>
+      ) : (
+        <FacilityPinDefault type={type} className={className} />
+      )}
     </MapMarker>
   );
 }
 
 /**
  * 고른 장소의 핀(#271). 큰 핀 위에 검은 이름표를 얹어 파란 역 이름표와 구분하고, 다른 핀보다 위에 쌓는다.
- * 눌러도 아무 일이 없다. boxRef로 받은 상자(이름표와 핀)의 크기로 시트 뒤나 화면 밖에 걸리는지 본다.
+ * 축소해도 점으로 바꾸지 않는다(#277). 눌러도 아무 일이 없다. boxRef로 받은 상자(이름표와 핀)의 크기로 시트 뒤나 화면 밖에 걸리는지 본다.
  */
 function SelectedPlacePin({
   place,
@@ -536,6 +552,8 @@ export function LocationMainPage() {
    * 핀을 이름표로 그릴지 점으로 그릴지(getPinShape). 기준은 지도를 맞춘 직후의 확대
    * 단계이고, 시트를 움직이거나 출발지가 바뀌어 지도를 다시 맞추면 새로 잡는다.
    * 기준은 ref로 두고 모양만 state로 둬서, 확대가 바뀌어도 모양이 그대로면 다시 그리지 않는다.
+   * 사람 핀과 주변 장소 핀이 같은 값을 쓴다(#277). 주변 살펴보기 탭에서 분류나 조건을 바꾸면 지도를
+   * 다시 맞추므로 장소 핀은 핀 모양으로 돌아온다.
    */
   const fitZoomRef = useRef<number | null>(null);
   const isFittingRef = useRef(false);
@@ -886,7 +904,7 @@ export function LocationMainPage() {
 
   return (
     <>
-      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 주변 살펴보기 탭을 연 동안은 사람 핀을 숨기고 고른 분류의 장소 핀을 올린다. 장소를 고르면 그 장소만 큰 핀과 검은 이름표로 바꾼다. 장소 핀은 축소해도 그대로다. 겹치면 고른 장소 핀, 역 이름표, 장소 핀, 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
+      {/* 지도 핀 규칙: 역은 파란 이름표와 모여락 핀, 사람 출발지는 이름이 적힌 이름표다. 내 출발지는 파란 이름표, 다른 사람 출발지는 검은 이름표다. 지도를 맞춘 직후보다 축소하면 역은 이름표 없이 모여락 핀만, 사람은 같은 색의 점으로 그린다. 주변 살펴보기 탭을 연 동안은 사람 핀을 숨기고 고른 분류의 장소 핀을 올린다. 장소 핀도 지도를 맞춘 직후보다 축소하면 점으로 그리는데, 사람의 원 점과 달리 둥근 사각 점이다(#277). 장소를 고르면 그 장소만 큰 핀과 검은 이름표로 바꾸고, 고른 장소는 축소해도 그대로다. 겹치면 고른 장소 핀, 역 이름표, 장소 핀(점일 때도 같음), 내 이름표, 남의 이름표, 내 점, 남의 점, 모여락 핀 순서로 위에 온다(PIN_Z_INDEX). 고르지 않은 추천역은 지도에 그리지 않고 역 카드로만 고른다. */}
       {selectedStation && (
         <LayeredMarker
           latitude={selectedStation.latitude}
@@ -946,6 +964,7 @@ export function LocationMainPage() {
               key={place.id}
               place={place}
               type={NEARBY_FACILITY_TYPE[placesCategory]}
+              shape={shownPinShape}
               dimmed={isNearbyPlaceholder}
               onSelect={handlePlaceSelect}
             />
