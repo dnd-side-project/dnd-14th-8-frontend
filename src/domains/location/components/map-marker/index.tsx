@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNaverMap } from "@/domains/location/components/naver-map";
 
@@ -45,7 +45,9 @@ export function MapMarker({
   const overlayRef = useRef<naver.maps.OverlayView | null>(null);
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  // 화면을 그리기 전에 지도에 올린다. 그린 뒤에 올리면 핀이 통째로 바뀔 때(주변 살펴보기 분류 바꾸기) 예전 핀은
+  // 없고 새 핀은 아직 없는 프레임이 하나 생긴다(#275).
+  useLayoutEffect(() => {
     const naverMaps = window.naver?.maps;
     if (!map || !naverMaps?.OverlayView || !naverMaps.LatLng) return;
 

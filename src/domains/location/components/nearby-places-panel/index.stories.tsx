@@ -103,6 +103,15 @@ export const Food: Story = {
   args: { category: "식당", foodCondition: "popular", places: PLACES.식당 },
 };
 
+// 같은 역에서 분류나 조건을 바꿔 새 결과를 받는 동안(#275). 칩은 바로 바뀌고, 이전 카드는 흐리게 남아 누를 수 없다.
+export const Updating: Story = {
+  args: {
+    category: "회의실",
+    places: PLACES.스터디룸,
+    updating: true,
+  },
+};
+
 // 찾는 중이거나 장소가 없을 때. 칩만 남고 카드 자리는 비어 있다.
 export const Empty: Story = {
   args: { places: [] },

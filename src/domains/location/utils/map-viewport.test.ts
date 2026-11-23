@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  getMapFit,
   getMapFitPadding,
+  getPinFitPadding,
   getRevealAnchorY,
   getVisibleCenterOffsetY,
   isAnchoredBoxHidden,
@@ -89,6 +91,100 @@ describe("getMapFitPadding", () => {
       left: 20,
       right: 20,
     });
+  });
+});
+
+describe("getPinFitPadding", () => {
+  it("좌표 위로 비울 높이를 따로 세므로 위에는 화면 끝과의 틈 8px만 둔다", () => {
+    expect(getPinFitPadding({ mapHeight: 812, sheetHeight: 528 })).toEqual({
+      top: 8,
+      bottom: 548,
+      left: 20,
+      right: 20,
+    });
+  });
+
+  it("시트가 지도를 거의 다 덮어 맞출 여지가 없으면 null이다", () => {
+    expect(getPinFitPadding({ mapHeight: 844, sheetHeight: 743 })).toBeNull();
+  });
+});
+
+describe("getMapFit", () => {
+  // 375x812에서 시트가 중간(528px)일 때의 여백. 띠는 335x256px다(위에서 8px부터 264px까지).
+  const padding = { top: 8, bottom: 548, left: 20, right: 20 };
+  const fit = (
+    pins: { x: number; y: number; above: number }[],
+    over: Partial<Parameters<typeof getMapFit>[0]> = {},
+  ) =>
+    getMapFit({
+      pins,
+      zoom: 16,
+      mapWidth: 375,
+      mapHeight: 812,
+      padding,
+      maxZoom: 16,
+      ...over,
+    });
+  const station = { x: 0, y: 0, above: 91 };
+  const place = (x: number, y: number) => ({ x, y, above: 80 });
+
+  it("역이 맨 위면 이름표 높이(91px)까지 띠에 들어가는 단계를 고른다", () => {
+    // 91 + 165 = 256px로 딱 들어간다.
+    expect(fit([station, place(0, 165)])?.zoom).toBe(16);
+    // 1px만 넘어도 한 단계 축소한다. 좌표 사이는 절반이 되고 이름표는 그대로다(91 + 83px).
+    expect(fit([station, place(0, 166)])?.zoom).toBe(15);
+  });
+
+  it("장소가 맨 위면 장소 위로 비울 높이(80px)를 센다", () => {
+    // 역은 아래에 있어 이름표(91px)가 장소 위보다 아래에서 시작한다. 80 + 176 = 256px.
+    expect(fit([station, place(0, -176)])?.zoom).toBe(16);
+    expect(fit([station, place(0, -177)])?.zoom).toBe(15);
+  });
+
+  it("너비가 더 빠듯하면 너비에 맞춘다", () => {
+    expect(fit([station, place(335, 0)])?.zoom).toBe(16);
+    expect(fit([station, place(336, 0)])?.zoom).toBe(15);
+  });
+
+  it("상자가 작으면 확대하되 가장 큰 단계를 넘지 않는다", () => {
+    expect(fit([station, place(10, 20)], { zoom: 14 })?.zoom).toBe(16);
+    expect(fit([station, place(0, 0)], { zoom: 12 })?.zoom).toBe(16);
+  });
+
+  it("핀들의 상자를 띠의 가운데에 두도록 좌표들의 한가운데 자리를 정한다", () => {
+    // 상자는 y -91부터 100까지라 가운데가 4.5, 좌표들의 한가운데는 50이다. 띠의 가운데 136px보다 45.5px 아래.
+    expect(fit([station, place(0, 100)])?.anchorY).toBe(136 + 45.5);
+    // 그 자리에 두면 맨 위 이름표는 136 - 95.5 = 40.5px, 맨 아래 좌표는 231.5px다.
+  });
+
+  it("띠가 핀보다 낮아 담을 수 없으면 끝없이 축소하지 않고 멈춘다", () => {
+    // iPhone SE에서 시트가 많이 올라온 경우처럼 띠가 60px다. 역 이름표(91px)는 어느 단계에서도 들어가지 않는다.
+    expect(fit([station, place(0, 10)], { mapHeight: 616 })?.zoom).toBe(6);
+  });
+
+  it("주소창이 있는 휴대폰 높이에서도 역 이름표가 화면 안에 들어온다", () => {
+    // 2026-11-23 시뮬레이터에서 잰 화면: iPhone SE 547px, iPhone 16 659px, iPhone 17 Pro 714px. 시트는 화면의 65%다.
+    // 회의실 대역처럼 장소가 역 남쪽으로 16단계에서 141px 떨어져 있다.
+    for (const mapHeight of [547, 659, 714]) {
+      const sheetHeight = Math.round(mapHeight * 0.65);
+      const pinPadding = getPinFitPadding({ mapHeight, sheetHeight });
+      if (!pinPadding) throw new Error("여백 없음");
+      const pins = [station, place(-62, 53), place(90, 141)];
+      const result = fit(pins, { mapHeight, padding: pinPadding });
+      if (!result) throw new Error("맞추지 못함");
+
+      const ratio = 2 ** (result.zoom - 16);
+      const middleY = (141 * ratio) / 2;
+      const labelTop = result.anchorY - middleY - station.above;
+      const lowest = result.anchorY + middleY;
+      expect(labelTop).toBeGreaterThanOrEqual(0);
+      expect(lowest).toBeLessThanOrEqual(mapHeight - sheetHeight - 20);
+    }
+  });
+
+  it("띠가 없거나(지도를 아직 재지 못함) 담을 핀이 없으면 고를 수 없다", () => {
+    expect(fit([station], { mapHeight: 0 })).toBeNull();
+    expect(fit([])).toBeNull();
   });
 });
 

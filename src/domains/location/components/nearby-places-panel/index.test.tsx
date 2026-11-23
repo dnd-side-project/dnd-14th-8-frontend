@@ -139,4 +139,22 @@ describe("NearbyPlacesPanel", () => {
 
     expect(markup.match(/<button/g)).toHaveLength(4);
   });
+
+  it("새 결과를 받는 동안(updating)은 카드 목록을 흐리게 두고 누르거나 키보드로 옮겨 가지 못하게 한다(#275)", () => {
+    const list = (markup: string) =>
+      markup.match(/<div[^>]*aria-busy="(true|false)"[^>]*>/)?.[0] ?? "";
+
+    const updating = list(render({ places: PLACES, updating: true }));
+    expect(updating).toContain('aria-busy="true"');
+    expect(updating).toContain("inert");
+    expect(updating).toContain("opacity-40");
+    // 흐림은 0.2초 늦게 시작한다. 빨리 온 결과에서 깜빡이지 않게 한다.
+    expect(updating).toContain("delay-200");
+
+    const settled = list(render({ places: PLACES }));
+    expect(settled).toContain('aria-busy="false"');
+    expect(settled).not.toContain("inert");
+    expect(settled).not.toContain("opacity-40");
+    expect(settled).not.toContain("transition-opacity");
+  });
 });

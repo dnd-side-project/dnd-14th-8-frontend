@@ -15,10 +15,12 @@ import {
 import { type ReactNode, useState } from "react";
 import {
   MemoryRouter,
+  type NavigateFunction,
   Outlet,
   Route,
   Routes,
   useLocation,
+  useNavigate,
   useNavigationType,
 } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -31,6 +33,10 @@ import type {
   StationRecommendationDto,
 } from "@/domains/location/types/location-api-types";
 import type { NearbyPlace } from "@/domains/location/types/nearby-place";
+import {
+  getMapFit,
+  getPinFitPadding,
+} from "@/domains/location/utils/map-viewport";
 import { searchNearbyPlaces } from "@/domains/location/utils/search-nearby-places";
 import { getMyParticipantQueryKey } from "@/domains/schedule/hooks/use-get-my-participant";
 import { toast } from "@/shared/components/toast";
@@ -137,10 +143,14 @@ const PLACES: NearbyPlace[] = [
 
 const LIST_PATH = `/meetings/m1/location/stations?station_id=101&tab=nearby&category=${encodeURIComponent("스터디룸")}`;
 
+/** 테스트에서 뒤로 가기, 앞으로 가기를 하려고 LocationProbe가 담아 두는 navigate. */
+let historyNavigate: NavigateFunction | null = null;
+
 /** 지금 주소, 넘어온 방식(PUSH, REPLACE, POP), 기록에 붙은 표시를 글자로 보여 준다. */
 function LocationProbe() {
   const location = useLocation();
   const navigationType = useNavigationType();
+  historyNavigate = useNavigate();
   return (
     <>
       <p data-testid="location">{location.pathname + location.search}</p>
@@ -163,16 +173,20 @@ function MapLayout({ mapInst }: { mapInst: naver.maps.Map | null }) {
     <>
       <Outlet context={context} />
       <LocationProbe />
+      <p data-testid="sheet-height">{sheetHeight}</p>
     </>
   );
 }
 
 function renderResult({
   path,
+  forwardPath,
   mapInst = null,
   prefillMidpoint = true,
 }: {
   path: string;
+  /** 있으면 기록에서 path 다음(앞으로 가기)에 둔다. */
+  forwardPath?: string;
   mapInst?: naver.maps.Map | null;
   /** false면 추천 응답을 미리 넣지 않는다(첫 조회가 아직 끝나지 않은 상태). */
   prefillMidpoint?: boolean;
@@ -215,7 +229,10 @@ function renderResult({
   return render(
     <QueryClientProvider client={queryClient}>
       <ShareSheetContext.Provider value={{ share: () => undefined }}>
-        <MemoryRouter initialEntries={[path]}>
+        <MemoryRouter
+          initialEntries={forwardPath ? [path, forwardPath] : [path]}
+          initialIndex={0}
+        >
           <Routes>
             <Route
               path="/meetings/:meetingId/location"
@@ -490,9 +507,9 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
 });
 
 /**
- * 지도 대역. 경도와 위도 0.00001도를 1px로 바꾸는 단순한 투영이고, 컨테이너는 375x812다.
- * 네이버 지도처럼 fitBounds는 바로 점들의 한가운데로 옮기고(여백은 보지 않음), panTo는 움직이는 동안 중심을
- * 출발점으로 돌려주다가 한 틱 뒤에 도착하며, setCenter는 바로 옮긴다.
+ * 지도 대역. 경도와 위도 0.00001도를 1px로 바꾸는 단순한 투영이고, 컨테이너는 375x812, 확대 단계는 늘 16이다
+ * (setZoom은 부른 것만 남긴다). 네이버 지도처럼 panTo는 움직이는 동안 중심을 출발점으로 돌려주다가 한 틱 뒤에
+ * 도착하고, setCenter는 바로 옮긴다. 결과 화면은 지도를 맞출 때마다 setZoom과 setCenter를 한 번씩 부른다.
  */
 function createFakeMap() {
   let center = { lat: STATION.latitude, lng: STATION.longitude };
@@ -509,28 +526,9 @@ function createFakeMap() {
       this.lng = lng;
     }
   }
-  class LatLngBounds {
-    south: number;
-    north: number;
-    west: number;
-    east: number;
-    constructor(sw: LatLng, ne: LatLng) {
-      this.south = sw.lat;
-      this.west = sw.lng;
-      this.north = ne.lat;
-      this.east = ne.lng;
-    }
-    extend(point: LatLng) {
-      this.south = Math.min(this.south, point.lat);
-      this.north = Math.max(this.north, point.lat);
-      this.west = Math.min(this.west, point.lng);
-      this.east = Math.max(this.east, point.lng);
-    }
-  }
   (window as unknown as { naver: unknown }).naver = {
     maps: {
       LatLng,
-      LatLngBounds,
       Point: class {
         x: number;
         y: number;
@@ -556,12 +554,6 @@ function createFakeMap() {
     }),
     getZoom: () => 16,
     setZoom: vi.fn(),
-    fitBounds: vi.fn((bounds: LatLngBounds) => {
-      center = {
-        lat: (bounds.south + bounds.north) / 2,
-        lng: (bounds.west + bounds.east) / 2,
-      };
-    }),
     panTo: vi.fn((target: LatLng) => {
       setTimeout(() => {
         center = { lat: target.lat, lng: target.lng };
@@ -724,7 +716,7 @@ describe("고른 상태의 지도(#271)", () => {
     });
     await screen.findByText("을지 스터디카페");
     await settleMap();
-    const fitsBeforeSelect = map.fitBounds.mock.calls.length;
+    const fitsBeforeSelect = map.setZoom.mock.calls.length;
     expect(fitsBeforeSelect).toBeGreaterThan(0);
 
     // 을지 스터디카페는 목록 지도에서 다 보인다. 옮기지도 않는다.
@@ -732,13 +724,14 @@ describe("고른 상태의 지도(#271)", () => {
     fireEvent.click(listCard("9001"));
     await settleMap();
 
-    expect(map.fitBounds).toHaveBeenCalledTimes(fitsBeforeSelect);
+    expect(map.setZoom).toHaveBeenCalledTimes(fitsBeforeSelect);
     expect(map.panTo).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "닫기" }));
     await settleMap();
 
-    expect(map.fitBounds.mock.calls.length).toBeGreaterThan(fitsBeforeSelect);
+    expect(map.setZoom.mock.calls.length).toBeGreaterThan(fitsBeforeSelect);
+    expect(map.panTo).not.toHaveBeenCalled();
   });
 
   it("목록에서 고른 장소의 이름표가 화면 위로 나가면 그 장소를 시트 위 영역 가운데로 옮긴다", async () => {
@@ -751,12 +744,12 @@ describe("고른 상태의 지도(#271)", () => {
     await screen.findByText("을지 스터디카페");
     await settleMap();
     map.panTo.mockClear();
-    const fitsBeforeSelect = map.fitBounds.mock.calls.length;
+    const fitsBeforeSelect = map.setZoom.mock.calls.length;
 
     fireEvent.click(listCard("9000"));
     await settleMap();
 
-    expect(map.fitBounds).toHaveBeenCalledTimes(fitsBeforeSelect);
+    expect(map.setZoom).toHaveBeenCalledTimes(fitsBeforeSelect);
     expect(map.panTo).toHaveBeenCalledTimes(1);
     // 고른 상태의 시트는 카드 높이에 맞춘다. 이 묶음은 모든 요소 높이를 90px로 두어 시트가 손잡이 36px + 90px = 126px다.
     // 시트 높이의 절반(63px, 대역 투영으로 위도 0.00063도)만큼 장소보다 아래를 중심으로 잡아, 장소가 시트 위 영역 가운데에 온다.
@@ -779,7 +772,7 @@ describe("고른 상태의 지도(#271)", () => {
     await settleMap();
 
     // 맞춤은 한 번이고 움직임 없이 옮긴다. 움직이는 동안 중심을 출발점으로 읽으면 가려진 것을 놓친다.
-    expect(map.fitBounds).toHaveBeenCalledTimes(1);
+    expect(map.setZoom).toHaveBeenCalledTimes(1);
     expect(map.setCenter).toHaveBeenCalledTimes(1);
     expect(map.panTo).toHaveBeenCalledTimes(1);
     const [target] = map.panTo.mock.calls[0] as [{ lat: number; lng: number }];
@@ -787,5 +780,271 @@ describe("고른 상태의 지도(#271)", () => {
       PLACE_ABOVE.latitude - FITTED_SHEET_HALF_LAT,
       6,
     );
+  });
+});
+
+// 회의실 결과. 스터디룸 결과(PLACES)와 자리와 이름이 다르다. 이름과 주소는 지어낸 것이다.
+const MEETING_ROOMS: NearbyPlace[] = [
+  {
+    id: "9100",
+    name: "모여 회의실",
+    address: "서울 중구 을지로 120",
+    distanceMeters: 330,
+    latitude: 37.569,
+    longitude: 126.989,
+    placeUrl: "https://place.map.kakao.com/9100",
+  },
+  {
+    id: "9101",
+    name: "을지 미팅룸",
+    address: "서울 중구 을지로 121",
+    distanceMeters: 450,
+    latitude: 37.563,
+    longitude: 126.996,
+    placeUrl: "https://place.map.kakao.com/9101",
+  },
+];
+
+const MEETING_ROOM_PATH = `/meetings/m1/location/stations?station_id=101&tab=nearby&category=${encodeURIComponent("회의실")}`;
+
+/**
+ * 다음 검색을 끝내지 않고 붙잡는다. 돌려준 함수로 결과를 넘기면 끝난다. 새 결과를 받는 동안을 본다.
+ * TanStack Query는 결과를 다음 틱에 알리므로, 끝낸 뒤 한 틱을 더 기다린다.
+ */
+function holdNextSearch() {
+  let resolve: (places: NearbyPlace[]) => void = () => undefined;
+  const pending = new Promise<NearbyPlace[]>((done) => {
+    resolve = done;
+  });
+  vi.mocked(searchNearbyPlaces).mockReturnValueOnce(pending);
+
+  return async (places: NearbyPlace[]) => {
+    await act(async () => {
+      resolve(places);
+      await pending;
+      await new Promise((tick) => setTimeout(tick, 0));
+    });
+  };
+}
+
+/** 장소 카드 목록. 새 결과를 받는 동안인지(aria-busy)를 단다. */
+function placeList(placeId: string) {
+  const list = listCard(placeId).closest<HTMLElement>("[aria-busy]");
+  if (!list) throw new Error(`카드 목록 없음: ${placeId}`);
+  return list;
+}
+
+function pinIcon(pin: HTMLElement) {
+  return pin.querySelector("svg")?.outerHTML;
+}
+
+describe("분류와 조건을 바꿀 때(#275)", () => {
+  it("분류를 바꾸면 지도를 움직임 없이 한 번에 맞춘다", async () => {
+    const map = createFakeMap();
+    renderResult({
+      path: LIST_PATH,
+      mapInst: map as unknown as naver.maps.Map,
+    });
+    await screen.findByText("을지 스터디카페");
+    await settleMap();
+    vi.mocked(searchNearbyPlaces).mockResolvedValue(MEETING_ROOMS);
+    map.panTo.mockClear();
+    map.setZoom.mockClear();
+    map.setCenter.mockClear();
+
+    fireEvent.click(chip("회의실"));
+    await screen.findByText("모여 회의실");
+    await settleMap();
+
+    // 예전에는 맞춘 뒤 panTo로 1초 동안 옮겼다.
+    expect(map.panTo).not.toHaveBeenCalled();
+    expect(map.setZoom).toHaveBeenCalledTimes(1);
+    expect(map.setCenter).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    // 장소가 모두 역 남쪽이면 역이 맨 위라 역 이름표(91px)까지 세고, 북쪽에 장소가 있으면 장소 위로 80px를 비운다.
+    ["역이 맨 위", 37.5655, 37.564],
+    ["장소가 맨 위", 37.569, 37.563],
+  ])("%s일 때 좌표 위로 비울 높이까지 세어 띠의 가운데에 둔다", async (_, firstLatitude, secondLatitude) => {
+    const rooms = [
+      { ...MEETING_ROOMS[0], latitude: firstLatitude },
+      { ...MEETING_ROOMS[1], latitude: secondLatitude },
+    ];
+    const map = createFakeMap();
+    renderResult({
+      path: LIST_PATH,
+      mapInst: map as unknown as naver.maps.Map,
+    });
+    await screen.findByText("을지 스터디카페");
+    await settleMap();
+    vi.mocked(searchNearbyPlaces).mockResolvedValue(rooms);
+    map.setZoom.mockClear();
+    map.setCenter.mockClear();
+
+    fireEvent.click(chip("회의실"));
+    await screen.findByText("모여 회의실");
+    await settleMap();
+
+    // 대역 지도는 위도 0.00001도가 1px이고 확대 단계는 늘 16이다.
+    const sheetHeight = Number(screen.getByTestId("sheet-height").textContent);
+    const padding = getPinFitPadding({ mapHeight: 812, sheetHeight });
+    if (!padding) throw new Error("여백 없음");
+    const pin = (
+      coord: { latitude: number; longitude: number },
+      above: number,
+    ) => ({
+      x: (coord.longitude - 126.9) * 100000,
+      y: (37.6 - coord.latitude) * 100000,
+      above,
+    });
+    const fit = getMapFit({
+      pins: [pin(STATION, 91), pin(rooms[0], 80), pin(rooms[1], 80)],
+      zoom: 16,
+      mapWidth: 375,
+      mapHeight: 812,
+      padding,
+      maxZoom: 16,
+    });
+    if (!fit) throw new Error("맞추지 못함");
+    expect(map.setZoom).toHaveBeenLastCalledWith(fit.zoom, false);
+    // 좌표들의 한가운데를 anchorY에 둔다. 지도 중심은 컨테이너 한가운데(406px)에 그려진다.
+    const latitudes = [STATION.latitude, firstLatitude, secondLatitude];
+    const middleLatitude =
+      (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
+    const [target] = map.setCenter.mock.calls[0] as [
+      { lat: number; lng: number },
+    ];
+    expect(target.lng).toBeCloseTo(126.9925, 6);
+    expect(target.lat).toBeCloseTo(
+      middleLatitude - (406 - fit.anchorY) / 100000,
+      6,
+    );
+  });
+
+  it("새 결과를 받는 동안 이전 핀과 카드를 흐리게 남기고, 누르거나 키보드로 옮겨 가지 못한다", async () => {
+    renderResult({ path: LIST_PATH });
+    await screen.findByText("을지 스터디카페");
+    expect(placeList("9001").getAttribute("aria-busy")).toBe("false");
+    const finish = holdNextSearch();
+
+    fireEvent.click(chip("회의실"));
+
+    // 칩은 바로 바뀌고, 카드와 핀은 이전 결과(스터디룸)가 흐리게 남는다.
+    expect(chip("회의실").getAttribute("aria-pressed")).toBe("true");
+    const list = placeList("9001");
+    expect(list.getAttribute("aria-busy")).toBe("true");
+    expect(list.hasAttribute("inert")).toBe(true);
+    expect(list.className).toContain("opacity-40");
+    // 결과가 0.2초 안에 오면 흐려지지 않고 바로 바뀌게 흐림만 늦춘다. 막는 것은 처음부터다.
+    expect(list.className).toContain("delay-200");
+    const pins = screen.getAllByTestId("map-pin");
+    expect(pins).toHaveLength(2);
+    expect(
+      pins.every(
+        (pin) =>
+          pin.innerHTML.includes("opacity-40") &&
+          pin.innerHTML.includes("delay-200"),
+      ),
+    ).toBe(true);
+
+    fireEvent.click(pins[0]);
+    expect(currentUrl().searchParams.has("place_id")).toBe(false);
+
+    await finish(MEETING_ROOMS);
+
+    expect(screen.queryByText("을지 스터디카페")).toBeNull();
+    const newList = placeList("9100");
+    expect(newList.getAttribute("aria-busy")).toBe("false");
+    expect(newList.hasAttribute("inert")).toBe(false);
+    expect(newList.className).not.toContain("opacity-40");
+    expect(
+      screen
+        .getAllByTestId("map-pin")
+        .some((pin) => pin.innerHTML.includes("opacity-40")),
+    ).toBe(false);
+  });
+
+  it("이전 결과의 핀은 새 결과가 올 때까지 이전 분류의 아이콘으로 그린다", async () => {
+    renderResult({ path: LIST_PATH });
+    await screen.findByText("을지 스터디카페");
+    const studyRoomIcon = pinIcon(screen.getAllByTestId("map-pin")[0]);
+    expect(studyRoomIcon).toBeTruthy();
+    const finish = holdNextSearch();
+
+    fireEvent.click(chip("회의실"));
+    expect(pinIcon(screen.getAllByTestId("map-pin")[0])).toBe(studyRoomIcon);
+
+    await finish(MEETING_ROOMS);
+    expect(pinIcon(screen.getAllByTestId("map-pin")[0])).not.toBe(
+      studyRoomIcon,
+    );
+  });
+
+  it("식당 조건을 바꿀 때도 새 결과를 받는 동안 이전 결과를 남긴다", async () => {
+    renderResult({ path: FOOD_PATH });
+    await screen.findByText("을지 스터디카페");
+    const finish = holdNextSearch();
+
+    fireEvent.click(chip("맛집"));
+
+    expect(placeList("9001").getAttribute("aria-busy")).toBe("true");
+    await finish(MEETING_ROOMS);
+    expect(placeList("9100").getAttribute("aria-busy")).toBe("false");
+  });
+
+  it("역을 바꾸면 다른 역 주변 장소가 남지 않게 비우고 새로 찾는다", async () => {
+    renderResult({ path: LIST_PATH });
+    await screen.findByText("을지 스터디카페");
+    const finish = holdNextSearch();
+
+    fireEvent.click(screen.getByRole("button", { name: /서울역/ }));
+
+    expect(document.querySelector("button[data-place-id]")).toBeNull();
+    expect(screen.queryAllByTestId("map-pin")).toHaveLength(0);
+    await finish(MEETING_ROOMS);
+    expect(screen.getByText("모여 회의실")).toBeTruthy();
+  });
+
+  it("개인별 루트 탭에 갔다 오면 이전 결과를 남기지 않고 새로 찾는다", async () => {
+    renderResult({ path: LIST_PATH });
+    await screen.findByText("을지 스터디카페");
+
+    fireEvent.click(screen.getByRole("tab", { name: "개인별 루트" }));
+    // 탭을 닫으면 받은 장소는 다음 틱에 버려진다(gcTime 0). 사람이 탭을 오가는 사이는 그보다 길다.
+    await settleMap();
+    const finish = holdNextSearch();
+    fireEvent.click(screen.getByRole("tab", { name: "주변 살펴보기" }));
+
+    expect(document.querySelector("button[data-place-id]")).toBeNull();
+    await finish(PLACES);
+    expect(placeList("9001").getAttribute("aria-busy")).toBe("false");
+  });
+
+  it("앞으로 가기로 다른 분류의 고른 상태에 가면, 새 결과를 받기 전에는 찾지 못했다고 하지 않는다", async () => {
+    const toastMessage = vi.spyOn(toast, "message");
+    renderResult({
+      path: LIST_PATH,
+      forwardPath: `${MEETING_ROOM_PATH}&place_id=9100`,
+    });
+    await screen.findByText("을지 스터디카페");
+    const finish = holdNextSearch();
+
+    act(() => {
+      historyNavigate?.(1);
+    });
+
+    // 남겨 둔 스터디룸 결과에는 9100이 없지만, 회의실 결과를 받기 전이라 지우지 않는다.
+    expect(currentUrl().searchParams.get("place_id")).toBe("9100");
+    expect(toastMessage).not.toHaveBeenCalled();
+
+    await finish(MEETING_ROOMS);
+
+    expect(
+      await screen.findByRole("heading", { name: "모여 회의실" }),
+    ).toBeTruthy();
+    expect(currentUrl().searchParams.get("place_id")).toBe("9100");
+    expect(toastMessage).not.toHaveBeenCalled();
+    toastMessage.mockRestore();
   });
 });
