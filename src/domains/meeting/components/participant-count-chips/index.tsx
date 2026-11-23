@@ -56,44 +56,44 @@ export function ParticipantCountChips({
   useEffect(() => attachRevealFocusedChip(scrollerRef.current), []);
 
   return (
-    <Fieldset
-      label="인원"
-      helperText={helperText}
-      className={cn("w-full", className)}
-    >
-      {/* 스크롤 영역은 세로로도 잘라내서, 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 위아래에 두고 margin으로 되돌린다. */}
-      <div
-        ref={scrollerRef}
-        className="scrollbar-hide -mx-5 -my-1 flex gap-2 overflow-x-auto px-5 py-1"
-      >
-        {COUNTS.map((count) => {
-          const blocked = count < selectableMin;
-          const selected = count === value;
-          return (
-            <Chip
-              key={count}
-              shape="square"
-              pressed={selected}
-              aria-disabled={blocked || undefined}
-              variant={selected ? "outlined-brand" : "neutral-weak"}
-              className={cn(
-                "shrink-0",
-                blocked && "cursor-default text-fg-neutral-subtlest",
-              )}
-              onClick={() => {
-                if (blocked) {
-                  onBlockedSelect?.();
-                  return;
-                }
-                if (count !== value) changedByChipRef.current = true;
-                onChange(count);
-              }}
-            >
-              {count}명
-            </Chip>
-          );
-        })}
-      </div>
-    </Fieldset>
+    // WebKit(아이폰)은 세로 flex 안에 바로 둔 fieldset의 높이에 legend와 그 아래 간격(29px)을 한 번 더 센다.
+    // 그러면 모임 생성 화면이 29px 길어져 아래 버튼이 화면 밖으로 내려간다. div로 감싸 flex 항목이 되지 않게 한다(#279).
+    <div className={cn("w-full", className)}>
+      <Fieldset label="인원" helperText={helperText}>
+        {/* 스크롤 영역은 세로로도 잘라내서, 포커스 링(두께 2px, 간격 2px)이 들어갈 4px를 위아래에 두고 margin으로 되돌린다. */}
+        <div
+          ref={scrollerRef}
+          className="scrollbar-hide -mx-5 -my-1 flex gap-2 overflow-x-auto px-5 py-1"
+        >
+          {COUNTS.map((count) => {
+            const blocked = count < selectableMin;
+            const selected = count === value;
+            return (
+              <Chip
+                key={count}
+                shape="square"
+                pressed={selected}
+                aria-disabled={blocked || undefined}
+                variant={selected ? "outlined-brand" : "neutral-weak"}
+                className={cn(
+                  "shrink-0",
+                  blocked && "cursor-default text-fg-neutral-subtlest",
+                )}
+                onClick={() => {
+                  if (blocked) {
+                    onBlockedSelect?.();
+                    return;
+                  }
+                  if (count !== value) changedByChipRef.current = true;
+                  onChange(count);
+                }}
+              >
+                {count}명
+              </Chip>
+            );
+          })}
+        </div>
+      </Fieldset>
+    </div>
   );
 }
