@@ -1095,20 +1095,21 @@ export function LocationMainPage() {
         )}
       </BottomSheet>
 
-      {/* 장소를 고른 상태의 아래 버튼은 "자세히 보기"(카카오맵 장소 페이지를 새 창으로) 하나다. 공유와 출발지 버튼은 숨긴다(#271). */}
+      {/* 장소를 고른 상태의 아래 버튼은 "자세히 보기"(카카오맵 장소 페이지를 새 창으로) 하나다. 공유와 출발지 버튼은 숨긴다(#271). window.open이 아니라 링크로 연다. 아이폰 홈 화면 앱은 window.open 때 빈 브라우저 창을 먼저 띄우는데, 주소는 카카오맵 앱이 가져가 돌아오면 빈 창이 남는다(#282). */}
       {!isContentLoading && !(isPlaceSelected && !selectedPlace) && (
         <FixedBottomArea>
           {selectedPlace ? (
             <ActionArea
               type="single"
               main={
-                <Button
-                  variant="default"
-                  size="xl"
-                  display="full"
-                  onClick={() => window.open(selectedPlace.placeUrl, "_blank")}
-                >
-                  자세히 보기
+                <Button asChild variant="default" size="xl" display="full">
+                  <a
+                    href={selectedPlace.placeUrl}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    자세히 보기
+                  </a>
                 </Button>
               }
             />

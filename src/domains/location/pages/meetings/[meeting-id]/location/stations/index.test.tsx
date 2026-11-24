@@ -313,7 +313,7 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     expect(screen.getByText("서울 중구 을지로 101")).toBeTruthy();
     expect(screen.getByText("을지로3가역에서 260m")).toBeTruthy();
     expect(screen.getByRole("button", { name: "닫기" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "자세히 보기" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "자세히 보기" })).toBeTruthy();
 
     // 제목, 역 카드, 탭, 분류 칩, 다른 장소 카드, 공유, 출발지 버튼은 없다.
     expect(screen.queryByText(/가장 최적의/)).toBeNull();
@@ -325,17 +325,15 @@ describe("결과 화면 주변 살펴보기에서 장소 고르기(#271)", () =>
     expect(screen.queryByText("출발지 관리하기")).toBeNull();
   });
 
-  it("자세히 보기는 카카오맵 장소 페이지를 새 창으로 연다", async () => {
-    const open = vi.spyOn(window, "open").mockReturnValue(null);
+  it("자세히 보기는 카카오맵 장소 페이지를 새 창으로 여는 링크다", async () => {
     renderResult({ path: `${LIST_PATH}&place_id=9000` });
 
-    fireEvent.click(await screen.findByRole("button", { name: "자세히 보기" }));
+    const link = await screen.findByRole("link", { name: "자세히 보기" });
 
-    expect(open).toHaveBeenCalledWith(
-      "https://place.map.kakao.com/9000",
-      "_blank",
-    );
-    open.mockRestore();
+    // window.open은 아이폰 홈 화면 앱에 빈 창을 남겨서 링크로 연다(#282).
+    expect(link.getAttribute("href")).toBe("https://place.map.kakao.com/9000");
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toBe("noopener");
   });
 
   it("지도의 장소 핀을 눌러도 고르고(push), 고른 상태에서 다른 핀을 누르면 기록을 쌓지 않고 바꾼다", async () => {
