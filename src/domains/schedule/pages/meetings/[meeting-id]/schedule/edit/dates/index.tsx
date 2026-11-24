@@ -250,10 +250,11 @@ export function ScheduleEditDatesPage() {
           {/*
             스크롤은 위 칸 안에서만 일어나므로, 줄어들지 않는 마지막 칸으로 두면
             버튼이 늘 시트 아래에 붙어 있다.
+            이 시트는 다른 화면과 달리 가로 화면에서도 화면 전체 폭이라, 좌우 여백을 노치 자리만큼 늘린다.
           */}
           <ActionArea
             type="single"
-            className="shrink-0"
+            className="shrink-0 pr-[max(16px,env(safe-area-inset-right))] pl-[max(16px,env(safe-area-inset-left))]"
             supportingItem={
               <p className="textStyle_body4 text-center text-fg-neutral-subtle">
                 최대 30일, 0 ~ 24시까지 선택 가능해요

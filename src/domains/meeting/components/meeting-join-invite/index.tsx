@@ -21,7 +21,7 @@ export function MeetingJoinInvite({
 
   return (
     <MobileLayout>
-      <section className="flex min-h-dvh flex-col bg-fill-brand-subtle px-5 pb-5">
+      <section className="flex min-h-dvh flex-col bg-fill-brand-subtle px-5 pb-[max(20px,env(safe-area-inset-bottom))]">
         <div className="mt-11 text-center">
           <p className="textStyle_head1 mb-4 text-fg-neutral-stronger">
             <span className="text-fg-brand-default">{hostName}</span>님의 모임에{" "}
