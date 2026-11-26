@@ -375,7 +375,7 @@ describe("문구의 위치 읽기", () => {
     expect(whereOf("{name}님의 모임")).toBe("text");
   });
 
-  it("같은 이름을 두 파일에서 선언했거나 토스트 종류가 갈리면 겹침으로 찾는다", () => {
+  it("같은 이름의 선언이 둘 이상이거나 토스트 종류가 갈리면 겹침으로 찾는다", () => {
     const scan = (files: [string, string][]) => {
       const owners = new Map<string, Where>();
       const uses = new Map<string, Set<Where>>();
@@ -400,6 +400,18 @@ describe("문구의 위치 읽기", () => {
     ];
     expect(scan([a])).toEqual([]);
     expect(scan([a, b])).toEqual(["MESSAGE"]);
+    // 같은 파일 안의 다른 함수에서 같은 이름을 따로 선언한 경우(PR #286 리뷰)
+    expect(
+      scan([
+        [
+          "d.ts",
+          [
+            'function first() { const MESSAGE = "가능한 시간을 선택해주세요"; toast.error(MESSAGE); }',
+            'function second() { const MESSAGE = "예약이 완료되었어요"; return MESSAGE; }',
+          ].join("\n"),
+        ],
+      ]),
+    ).toEqual(["MESSAGE"]);
     expect(
       scan([
         [

@@ -135,6 +135,8 @@ function isComparison(node: ts.Node): boolean {
 interface Found extends Copy {
   /** 문구를 담은 변수나 함수의 이름. 토스트에 변수나 함수 호출로 넘긴 문구를 찾을 때 쓴다. */
   owners: string[];
+  /** owners와 같은 순서로, 그 선언의 자리("파일:시작 위치"). 같은 이름의 다른 선언을 가려낼 때 쓴다. */
+  ownerDeclarations: string[];
 }
 
 /** 토스트에 넘긴 식에서 문구 상수(대문자 이름)와 호출한 함수의 이름을 모은다. */
@@ -178,9 +180,14 @@ export function collectFromSource(
   const isLabelFile = scope.bottomButtonLabelFiles.includes(file);
   const found: Found[] = [];
 
-  function describe(node: ts.Node): { where: Where; owners: string[] } {
+  function describe(node: ts.Node): {
+    where: Where;
+    owners: string[];
+    ownerDeclarations: string[];
+  } {
     let where: Where = "text";
     const owners: string[] = [];
+    const ownerDeclarations: string[] = [];
     let insideButton = false;
 
     for (
@@ -229,9 +236,10 @@ export function collectFromSource(
         current.name
       ) {
         owners.push(current.name.getText());
+        ownerDeclarations.push(`${file}:${current.getStart(sourceFile)}`);
       }
     }
-    return { where, owners };
+    return { where, owners, ownerDeclarations };
   }
 
   function add(
@@ -242,7 +250,7 @@ export function collectFromSource(
   ) {
     const clean = normalize(text);
     if (!HANGUL.test(clean)) return;
-    const { where, owners } = describe(node);
+    const { where, owners, ownerDeclarations } = describe(node);
     const parent = node.parent;
     // title="..."와 title={"..."}를 같게 본다.
     const attribute = ts.isJsxExpression(parent) ? parent.parent : parent;
@@ -263,6 +271,7 @@ export function collectFromSource(
       line: lineOf(position),
       where: isAppName ? "pageTitle" : where,
       owners,
+      ownerDeclarations,
       start: span[0],
       end: span[1],
       ...(screenTitle ? { screenTitle: true } : {}),
@@ -347,6 +356,7 @@ export function collectFromHtml(file: string, source: string): Found[] {
       line: lineAt(index),
       where,
       owners: [],
+      ownerDeclarations: [],
     });
   };
   for (const match of source.matchAll(/<title>([^<]+)<\/title>/g)) {
@@ -399,7 +409,7 @@ export function collectCopies(root: string, scope: Scope): Copy[] {
             (skip.text === "*" || skip.text === copy.text),
         ),
     )
-    .map(({ owners, ...copy }) => {
+    .map(({ owners, ownerDeclarations: _declarations, ...copy }) => {
       const owner = owners.find((name) => toastOwners.has(name));
       const toast = owner ? toastOwners.get(owner) : undefined;
       return copy.where === "text" && toast ? { ...copy, where: toast } : copy;
@@ -408,27 +418,32 @@ export function collectCopies(root: string, scope: Scope): Copy[] {
 
 /**
  * 토스트에 이름으로 넘긴 상수와 함수 가운데, 이름만으로는 어느 선언인지 정할 수 없는 것.
- * 검사기는 토스트 종류를 이름으로 문구에 붙이므로, 같은 이름을 두 파일 이상에서 선언했거나
- * 같은 이름이 서로 다른 토스트 종류로 쓰이면 다른 문구의 자리를 잘못 정할 수 있다(PR #286 리뷰).
- * 그런 이름이 생기면 이름을 바꾸거나, 검사기가 선언을 따라가게 고친다.
+ * 검사기는 토스트 종류를 이름으로 문구에 붙인다. 그래서 같은 이름의 선언이 둘 이상이거나(다른 파일이든
+ * 같은 파일의 다른 함수 안이든) 같은 이름이 서로 다른 토스트 종류로 쓰이면, 다른 문구의 자리를
+ * 잘못 정할 수 있다(PR #286 리뷰). 그런 이름이 생기면 이름을 바꾸거나, 검사기가 선언을 따라가게 고친다.
  */
 export function toastOwnerConflicts(
-  found: Pick<Found, "file" | "owners">[],
+  found: Pick<Found, "owners" | "ownerDeclarations">[],
   toastUses: Map<string, Set<Where>>,
 ): string[] {
-  const declaredIn = new Map<string, Set<string>>();
+  const declarations = new Map<string, Set<string>>();
   for (const copy of found) {
-    for (const name of copy.owners) {
-      if (!toastUses.has(name)) continue;
-      declaredIn.set(name, (declaredIn.get(name) ?? new Set()).add(copy.file));
-    }
+    copy.owners.forEach((name, index) => {
+      if (!toastUses.has(name)) return;
+      declarations.set(
+        name,
+        (declarations.get(name) ?? new Set()).add(
+          copy.ownerDeclarations[index],
+        ),
+      );
+    });
   }
   const conflicts: string[] = [];
   for (const [name, kinds] of toastUses) {
-    const files = declaredIn.get(name) ?? new Set<string>();
-    if (kinds.size > 1 || files.size > 1) {
+    const places = declarations.get(name) ?? new Set<string>();
+    if (kinds.size > 1 || places.size > 1) {
       conflicts.push(
-        `${name}: 토스트 ${[...kinds].join(", ")} / 선언한 파일 ${[...files].join(", ")}`,
+        `${name}: 토스트 ${[...kinds].join(", ")} / 선언 ${[...places].join(", ")}`,
       );
     }
   }
