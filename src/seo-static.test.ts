@@ -24,11 +24,11 @@ describe("SEO static configuration", () => {
     expectMetaTag(indexHtml, [`property="og:url"`, `content="${siteUrl}/"`]);
     expectMetaTag(indexHtml, [
       `property="og:image"`,
-      `content="${siteUrl}/static/images/share.png"`,
+      `content="${siteUrl}/images/og-image.png"`,
     ]);
     expectMetaTag(indexHtml, [
       `name="twitter:image"`,
-      `content="${siteUrl}/static/images/share.png"`,
+      `content="${siteUrl}/images/og-image.png"`,
     ]);
   });
 
