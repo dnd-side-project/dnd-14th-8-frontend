@@ -2,7 +2,7 @@ import {
   TextPin,
   type TextPinProps,
 } from "@/domains/location/components/text-pin";
-import { LogoPinIcon } from "@/shared/components/icons";
+import { MidpointPinIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 const ICON_SIZE_MAP = {
@@ -33,7 +33,7 @@ export function Marker({
       {part !== "icon" && (
         <TextPin variant={variant} text={text} className={className} />
       )}
-      <LogoPinIcon
+      <MidpointPinIcon
         className={cn(
           ICON_SIZE_MAP[size],
           part === "label" && "invisible",

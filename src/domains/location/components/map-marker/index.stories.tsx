@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react";
  * 지도 없이 독립 렌더링이 불가합니다.
  *
  * 대신 MapMarker에 들어가는 자식 컴포넌트들의 스토리를 참고하세요:
- * - `domains/location/Marker` (TextPin + LogoPinIcon)
+ * - `domains/location/Marker` (TextPin + MidpointPinIcon)
  * - `domains/location/FacilityPin` (Default / Selected)
  * - `domains/location/TextPin` (말풍선)
  */

@@ -1,7 +1,7 @@
 import { Button, Header, Icon } from "@moyeorak/design-system";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { Empty2Character } from "@/assets/characters";
+import { EmptyNotFoundCharacter } from "@/assets/characters";
 import { ItemSearchResult } from "@/domains/location/components/item-search-result";
 import { useCurrentLocation } from "@/domains/location/hooks/use-current-location";
 import { usePlaceSearch } from "@/domains/location/hooks/use-place-search";
@@ -163,7 +163,7 @@ export function DepartureNewSearchPage() {
             keyword.length > 1 && (
               <div className="mt-25 flex flex-col items-center px-5">
                 <PlaceholderContent
-                  graphic={<Empty2Character />}
+                  graphic={<EmptyNotFoundCharacter />}
                   title="일치하는 주소가 없어요"
                   description="검색한 지역을 다시 확인해 보세요."
                 />

@@ -1,4 +1,4 @@
-import { Empty1Character } from "@/assets/characters";
+import { EmptyNotYetCharacter } from "@/assets/characters";
 import { useGetMeetingSchedules } from "@/domains/schedule/hooks/use-get-meeting-schedules";
 import { PlaceholderContent } from "@/shared/components/placeholder-content";
 
@@ -22,7 +22,7 @@ export function ScheduleMainOptimalPlaceholder({
   if (votedParticipantCount <= 1) {
     return (
       <PlaceholderContent
-        graphic={<Empty1Character />}
+        graphic={<EmptyNotYetCharacter />}
         title="두 명 이상의 일정이 필요해요"
         description="링크를 공유하거나 일정을 등록해 보세요."
       />
@@ -31,7 +31,7 @@ export function ScheduleMainOptimalPlaceholder({
 
   return (
     <PlaceholderContent
-      graphic={<Empty1Character />}
+      graphic={<EmptyNotYetCharacter />}
       title="아직 겹치는 시간대가 없어요"
       description="시간 범위를 넓히거나 참여자들을 기다려 보세요."
     />
