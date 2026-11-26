@@ -49,7 +49,7 @@ export default defineConfig({
         // 설치 조건을 채우는 앱 셸만 precache 한다. 폰트(3MB)와 OG 공유 이미지는
         // 첫 방문 트래픽만 키우고 앱 구동에 필수는 아니라 HTTP 캐시에 맡긴다.
         globPatterns: ["**/*.{css,html,js}"],
-        globIgnores: ["**/node_modules/**/*", "static/images/**", "vite.svg"],
+        globIgnores: ["**/node_modules/**/*", "static/images/**"],
         navigateFallbackDenylist: [/^\/api\//],
       },
     }),
