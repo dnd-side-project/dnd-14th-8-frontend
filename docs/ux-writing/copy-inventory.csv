@@ -1,0 +1,285 @@
+﻿번호,문구,저장소,파일,줄,종류,자리,화면,컴포넌트와 속성,어미,끝 부호,문장 수,변수,노출,대상,오류 문구 분류,버튼 문구 분류,비고
+1,모여락 | 모임 일정·장소 조율,frontend,index.html,23,기타,페이지 제목,메타,title,명사(구),없음,1,없음,서비스 밖,사용자,,,"브라우저 탭, 검색 결과, 기기 공유 시트의 제목(document.title)"
+2,모임 일정과 장소를 쉽고 빠르게 정하는 모여락,frontend,index.html,26,기타,페이지 설명,메타,meta[name=description].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+3,모여락 | 모임 일정·장소 조율,frontend,index.html,32,기타,페이지 제목,메타,meta[og:title].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+4,모임 일정과 장소를 쉽고 빠르게 정하는 모여락,frontend,index.html,35,기타,페이지 설명,메타,meta[og:description].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+5,모여락 | 모임 일정·장소 조율,frontend,index.html,41,기타,이미지 설명,메타,meta[og:image:alt].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+6,모여락 | 모임 일정·장소 조율,frontend,index.html,44,기타,페이지 제목,메타,meta[twitter:title].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+7,모임 일정과 장소를 쉽고 빠르게 정하는 모여락,frontend,index.html,47,기타,페이지 설명,메타,meta[twitter:description].content,명사(구),없음,1,없음,서비스 밖,사용자,,,
+8,모여락 | 모임 일정·장소 조율,frontend,vite.config.ts,20,기타,앱 이름,메타,PWA manifest.name,명사(구),없음,1,없음,서비스 밖,사용자,,,홈 화면에 추가할 때 보이는 앱 이름
+9,모여락,frontend,vite.config.ts,21,기타,앱 이름,메타,PWA manifest.short_name,명사(구),없음,1,없음,서비스 밖,사용자,,,
+10,모임 일정과 장소를 쉽고 빠르게 정하는 모여락,frontend,vite.config.ts,22,기타,페이지 설명,메타,PWA manifest.description,명사(구),없음,1,없음,서비스 밖,사용자,,,
+11,"모임을 더 즐겁게, 효율적으로",frontend,src/domains/meeting/pages/index.tsx,17,설명,설명,랜딩,span,끊긴 말,없음,1,없음,화면,사용자,,,로고 아래 한 줄 소개
+12,일정 조율하기,frontend,src/domains/meeting/pages/index.tsx,22,버튼,제목,랜딩,FlowSelectCard.title,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,카드 전체가 버튼
+13,모두가 가능한 시간 찾기,frontend,src/domains/meeting/pages/index.tsx,23,설명,설명,랜딩,FlowSelectCard.description,명사형(-기),없음,1,없음,화면,사용자,,,
+14,중간 장소 찾기,frontend,src/domains/meeting/pages/index.tsx,31,버튼,제목,랜딩,FlowSelectCard.title,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,카드 전체가 버튼
+15,모두가 효율적인 장소 찾기,frontend,src/domains/meeting/pages/index.tsx,32,설명,설명,랜딩,FlowSelectCard.description,명사형(-기),없음,1,없음,화면,사용자,,,
+16,모임 생성,frontend,src/domains/meeting/pages/new/index.tsx,29,제목,제목,모임 만들기,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+17,모임장 이름,frontend,src/domains/meeting/pages/new/index.tsx,41,입력 안내,라벨,모임 만들기,TextField.label,명사(구),없음,1,없음,화면,사용자,,,
+18,이름을 입력해주세요,frontend,src/domains/meeting/pages/new/index.tsx,42,입력 안내,placeholder,모임 만들기,TextField.placeholder,해요체,없음,1,없음,화면,사용자,,,
+19,최대 {maxNameLength}자까지 입력할 수 있어요,frontend,src/domains/meeting/pages/new/index.tsx,47,입력 안내,도움말,모임 만들기,TextField.helperText,해요체,없음,1,있음,화면,사용자,,,
+20,{PARTICIPANT_COUNT_MIN}명부터 {PARTICIPANT_COUNT_MAX}명까지 고를 수 있어요,frontend,src/domains/meeting/pages/new/index.tsx,61,입력 안내,도움말,모임 만들기,ParticipantCountChips.helperText (Fieldset.helperText),해요체,없음,1,있음,화면,사용자,,,
+21,모임 생성하기,frontend,src/domains/meeting/pages/new/index.tsx,78,버튼,버튼,모임 만들기,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+22,인원,frontend,src/domains/meeting/components/participant-count-chips/index.tsx,62,입력 안내,라벨,"모임 만들기, 모임 인원 수정",Fieldset.label,명사(구),없음,1,없음,화면,사용자,,,
+23,{count}명,frontend,src/domains/meeting/components/participant-count-chips/index.tsx,91,기타,칩,"모임 만들기, 모임 인원 수정",Chip children,해당 없음,없음,1,있음,화면,사용자,,,2명부터 20명까지 고르는 칩
+24,이름을 입력해주세요,frontend,src/domains/meeting/hooks/use-create-meeting-form.ts,17,오류,오류 메시지,모임 만들기,zod min → TextField.errorMessage,해요체,없음,1,없음,화면,사용자,방법만,,
+25,최대 {NAME_MAX_LENGTH}자까지 입력할 수 있어요,frontend,src/domains/meeting/hooks/use-create-meeting-form.ts,18,오류,오류 메시지,모임 만들기,zod max → TextField.errorMessage,해요체,없음,1,있음,화면,사용자,방법만,,
+26,모임을 만들지 못했어요. 다시 시도해주세요,frontend,src/domains/meeting/hooks/use-create-meeting-form.ts,65,오류,토스트,모임 만들기,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+27,모임장,frontend,src/domains/meeting/hooks/use-meeting-access.ts,19,기타,대신 쓰는 값,"모임 초대, 일정 메인",hostName 기본값,명사(구),없음,1,없음,화면,사용자,,,모임장 이름을 못 찾으면 '모임장님의 모임'으로 보인다
+28,모임 인원이 수정되었어요,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,65,토스트,토스트,모임 인원 수정,toast.success,해요체,없음,1,없음,화면,사용자,,,
+29,모임 인원을 수정하지 못했어요. 다시 시도해주세요,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,68,오류,토스트,모임 인원 수정,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+30,로딩 중...,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,74,기타,불러오는 중,모임 인원 수정,div,명사(구),말줄임표,1,없음,화면,사용자,,,
+31,모임 인원 수정,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,81,제목,제목,모임 인원 수정,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+32,현재 참여 인원보다 적게 설정할 수 없어요,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,92,오류,토스트,모임 인원 수정,toast.error,해요체,없음,1,없음,화면,사용자,일만,,
+33,완료,frontend,src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx,109,버튼,버튼,모임 인원 수정,Button children (ActionArea.main),명사(구),없음,1,없음,화면,사용자,,막연함,
+34,{from}명부터 {PARTICIPANT_COUNT_MAX}명까지 고를 수 있어요,frontend,src/domains/meeting/utils/participant-count-limit.ts,14,입력 안내,도움말,모임 인원 수정,ParticipantCountChips.helperText (Fieldset.helperText),해요체,없음,1,있음,화면,사용자,,,"{from}은 참여한 사람이 2명보다 많으면 '지금 참여한 {min}'(13줄), 아니면 {min}"
+35,{hostName}님의 모임에 초대되었어요!,frontend,src/domains/meeting/components/meeting-join-invite/index.tsx,27,제목,제목,모임 초대,p,해요체,느낌표,1,있음,화면,사용자,,,'모임에' 뒤에서 줄을 바꾼다
+36,모임에 참여해서 중간지점을 찾아보세요,frontend,src/domains/meeting/components/meeting-join-invite/index.tsx,33,설명,설명,모임 초대,p,해요체,없음,1,없음,화면,사용자,,,
+37,모임에 참여해서 일정을 조율해 보세요,frontend,src/domains/meeting/components/meeting-join-invite/index.tsx,37,설명,설명,모임 초대,p,해요체,없음,1,없음,화면,사용자,,,
+38,모임 참여하기,frontend,src/domains/meeting/components/meeting-join-invite/index.tsx,52,버튼,버튼,모임 초대,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+39,{hostName}님의 모임,frontend,src/domains/schedule/components/schedule-main-summary/index.tsx,51,설명,윗줄,일정 메인,p,명사(구),없음,1,있음,화면,사용자,,,
+40,현재 {votedParticipantCount}명이 참여했어요,frontend,src/domains/schedule/components/schedule-main-summary/index.tsx,54,제목,제목,일정 메인,h1,해요체,없음,1,있음,화면,사용자,,,
+41,날짜,frontend,src/domains/schedule/components/schedule-main-summary/index.tsx,59,기타,라벨,일정 메인,dt,명사(구),없음,1,없음,스크린 리더 전용,사용자,,,
+42,시간,frontend,src/domains/schedule/components/schedule-main-summary/index.tsx,69,기타,라벨,일정 메인,dt,명사(구),없음,1,없음,스크린 리더 전용,사용자,,,
+43,시간표 수정,frontend,src/domains/schedule/components/schedule-main-summary/index.tsx,83,버튼,버튼,일정 메인,Button children,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+44,장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요,frontend,src/domains/schedule/views/schedule-main-view/index.tsx,62,토스트,토스트,일정 메인,toast.message,해요체,없음,1,없음,화면,사용자,,,읽기 전용 시간표 칸을 눌렀을 때
+45,일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요,frontend,src/domains/schedule/views/schedule-main-view/index.tsx,64,토스트,토스트,일정 메인,toast.message,해요체,없음,1,없음,화면,사용자,,,읽기 전용 시간표 칸을 눌렀을 때
+46,일정 추가하기를 눌러 가능한 시간을 입력해주세요,frontend,src/domains/schedule/views/schedule-main-view/index.tsx,65,토스트,토스트,일정 메인,toast.message,해요체,없음,1,없음,화면,사용자,,,읽기 전용 시간표 칸을 눌렀을 때
+47,시간표,frontend,src/domains/schedule/views/schedule-main-view/index.tsx,87,기타,탭,일정 메인,Tab.tabs[].label,명사(구),없음,1,없음,화면,사용자,,,
+48,최적일정,frontend,src/domains/schedule/views/schedule-main-view/index.tsx,88,기타,탭,일정 메인,Tab.tabs[].label,명사(구),없음,1,없음,화면,사용자,,,
+49,장소 보러 가기,frontend,src/domains/schedule/utils/schedule-main-action.ts,22,버튼,버튼,일정 메인,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+50,장소 정하러 가기,frontend,src/domains/schedule/utils/schedule-main-action.ts,26,버튼,버튼,최적 일정,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,모임장에게만 보인다. 누르면 확인 모달이 뜬다
+51,일정 수정하기,frontend,src/domains/schedule/utils/schedule-main-action.ts,31,버튼,버튼,일정 메인,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+52,일정 추가하기,frontend,src/domains/schedule/utils/schedule-main-action.ts,31,버튼,버튼,일정 메인,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+53,시간표를 불러오는 중이에요,frontend,src/domains/schedule/components/schedule-main-vote-content/index.tsx,42,기타,불러오는 중,일정 메인,div,해요체,없음,1,없음,화면,사용자,,,
+54,참여자 {count}/{total},frontend,src/shared/components/participant-count/index.tsx,25,기타,라벨,"일정 메인, 중간지점 결과",span,명사(구),없음,1,있음,화면,사용자,,,모임장에게는 버튼(모임 인원 수정으로 이동)
+55,이동하지 못했어요. 다시 시도해주세요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx,54,오류,토스트,일정 메인,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+56,장소 정하기로 이동할까요?,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx,81,모달,제목,일정 메인,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+57,이동 후 일정 추가 및 수정이 불가능해요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx,82,모달,설명,일정 메인,Modal.body,해요체,없음,1,없음,화면,사용자,,,
+58,이동하기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx,83,모달,버튼,일정 메인,Modal.mainLabel,명사형(-기),없음,1,없음,화면,사용자,,모달 제목에 기댐,
+59,취소,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx,85,모달,버튼,일정 메인,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,
+60,최적일정을 불러오는 중이에요,frontend,src/domains/schedule/components/schedule-main-optimal-content/index.tsx,22,기타,불러오는 중,최적 일정,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+61,잠시만 기다려주세요.,frontend,src/domains/schedule/components/schedule-main-optimal-content/index.tsx,23,기타,불러오는 중,최적 일정,PlaceholderContent.description,해요체,마침표,1,없음,화면,사용자,,,
+62,총 {results.length}개,frontend,src/domains/schedule/components/schedule-main-optimal-content/index.tsx,35,기타,개수,최적 일정,div,명사(구),없음,1,있음,화면,사용자,,,
+63,더보기 접기,frontend,src/domains/schedule/components/schedule-main-optimal-content/index.tsx,106,버튼,버튼,최적 일정,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+64,최적일정 더보기,frontend,src/domains/schedule/components/schedule-main-optimal-content/index.tsx,106,버튼,버튼,최적 일정,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+65,최적일정을 불러오는 중이에요,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,16,기타,불러오는 중,최적 일정,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+66,잠시만 기다려주세요.,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,17,기타,불러오는 중,최적 일정,PlaceholderContent.description,해요체,마침표,1,없음,화면,사용자,,,
+67,두 명 이상의 일정이 필요해요,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,26,빈 화면,제목,최적 일정,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+68,링크를 공유하거나 일정을 등록해 보세요.,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,27,빈 화면,설명,최적 일정,PlaceholderContent.description,해요체,마침표,1,없음,화면,사용자,,,
+69,아직 겹치는 시간대가 없어요,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,35,빈 화면,제목,최적 일정,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+70,시간 범위를 넓히거나 참여자들을 기다려 보세요.,frontend,src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx,36,빈 화면,설명,최적 일정,PlaceholderContent.description,해요체,마침표,1,없음,화면,사용자,,,
+71,{month}월 {day}일 {scheduleDayOfWeek},frontend,src/domains/schedule/components/card-recommended/index.tsx,25,기타,날짜 표기,최적 일정,p,해당 없음,없음,1,있음,화면,사용자,,,요일은 서버 값
+72,없음,frontend,src/domains/schedule/components/card-recommended/index.tsx,52,기타,값이 없을 때,최적 일정,p,명사(구),없음,1,없음,화면,사용자,,,참여 가능한 사람이 없을 때
+73,없음,frontend,src/domains/schedule/components/card-recommended/index.tsx,53,기타,값이 없을 때,최적 일정,p,명사(구),없음,1,없음,화면,사용자,,,참여 못 하는 사람이 없을 때
+74,참여가능({availableCount}),frontend,src/domains/schedule/components/card-recommended/index.tsx,129,기타,라벨,최적 일정,p,명사(구),없음,1,있음,화면,사용자,,,
+75,참여불가({unavailableCount}),frontend,src/domains/schedule/components/card-recommended/index.tsx,138,기타,라벨,최적 일정,p,명사(구),없음,1,있음,화면,사용자,,,
+76,이름을 입력해주세요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,35,오류,오류 메시지,일정 등록,"zod min → TextField.errorMessage, toast.error",해요체,없음,1,없음,화면,사용자,방법만,,상수 NAME_REQUIRED_MESSAGE. 입력칸과 토스트 두 곳에 나온다
+77,최대 4자까지 입력할 수 있어요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,36,오류,오류 메시지,일정 등록,"zod max → TextField.errorMessage, toast.error",해요체,없음,1,없음,화면,사용자,방법만,,상수 NAME_TOO_LONG_MESSAGE. 다른 화면은 변수로 조합하는데 여기만 4를 직접 적었다
+78,가능한 시간을 선택해주세요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,37,오류,토스트,일정 등록,zod min → toast.error,해요체,없음,1,없음,화면,사용자,방법만,,상수 NO_SELECTED_TIME_MESSAGE
+79,일정 수정,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,81,제목,제목,일정 등록,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+80,일정 추가,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,81,제목,제목,일정 등록,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+81,일정이 수정되었어요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,212,토스트,토스트,일정 등록,toast.success,해요체,없음,1,없음,화면,사용자,,,
+82,일정이 추가되었어요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,212,토스트,토스트,일정 등록,toast.success,해요체,없음,1,없음,화면,사용자,,,
+83,입력한 일정이 초기화되었어요,frontend,src/domains/schedule/hooks/use-schedule-vote-form.ts,241,토스트,토스트,일정 등록,toast.success,해요체,없음,1,없음,화면,사용자,,,
+84,초기화,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,94,버튼,버튼,일정 등록,Header.actionLabel,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+85,이름,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,104,입력 안내,라벨,일정 등록,TextField.label,명사(구),없음,1,없음,화면,사용자,,,
+86,완료,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,148,버튼,버튼,일정 등록,Button children (ActionArea.main),명사(구),없음,1,없음,화면,사용자,,막연함,
+87,입력한 내용을 모두 삭제할까요?,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,157,모달,제목,일정 등록,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+88,초기화 후에는 복구할 수 없어요,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,158,모달,설명,일정 등록,Modal.body,해요체,없음,1,없음,화면,사용자,,,
+89,초기화,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,159,모달,버튼,일정 등록,Modal.mainLabel,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+90,취소,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,161,모달,버튼,일정 등록,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,
+91,저장하지 않고 나가시겠어요?,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,168,모달,제목,일정 등록,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+92,입력하신 내용이 모두 사라져요,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,169,모달,설명,일정 등록,Modal.body,해요체,없음,1,없음,화면,사용자,,,
+93,나가기,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,170,모달,버튼,일정 등록,Modal.mainLabel,명사형(-기),없음,1,없음,화면,사용자,,닫는 말,
+94,취소,frontend,src/domains/schedule/views/schedule-vote-form-view/index.tsx,172,모달,버튼,일정 등록,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,
+95,가능,frontend,src/domains/schedule/components/guide-time-selection/index.tsx,44,기타,범례,일정 등록,GuideTimeSelection.availableLabel 기본값,명사(구),없음,1,없음,화면,사용자,,,
+96,클릭하거나 쓸어내려 가능 시간대를 지정해보세요,frontend,src/domains/schedule/components/guide-time-selection/index.tsx,46,입력 안내,도움말,일정 등록,GuideTimeSelection.description 기본값,해요체,없음,1,없음,화면,사용자,,,
+97,불가,frontend,src/domains/schedule/components/guide-time-selection/index.tsx,47,기타,범례,일정 등록,GuideTimeSelection.unavailableLabel 기본값,명사(구),없음,1,없음,화면,사용자,,,
+98,시간표가 수정되었어요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,97,토스트,토스트,시간표 수정,toast.success,해요체,없음,1,없음,화면,사용자,,,
+99,시간표를 수정하지 못했어요. 다시 시도해주세요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,100,오류,토스트,시간표 수정,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+100,시간표 수정 닫기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,140,버튼,접근성 이름,시간표 수정,button.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,시트 바깥 배경 버튼
+101,시간표 수정,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,150,제목,제목,시간표 수정,h2,명사(구),없음,1,없음,화면,사용자,,,
+102,시간표 수정 닫기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,153,버튼,접근성 이름,시간표 수정,IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,
+103,날짜,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,166,제목,소제목,시간표 수정,h2,명사(구),없음,1,없음,화면,사용자,,,
+104,시간범위,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,201,제목,소제목,시간표 수정,h2,명사(구),없음,1,없음,화면,사용자,,,
+105,"최대 30일, 0 ~ 24시까지 선택 가능해요",frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,260,입력 안내,도움말,시간표 수정,p (ActionArea.supportingItem),해요체,없음,1,없음,화면,사용자,,,
+106,저장 중...,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,271,버튼,버튼,시간표 수정,Button children (ActionArea.main),명사(구),말줄임표,1,없음,화면,사용자,,진행 상태,저장하는 동안
+107,저장하기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,271,버튼,버튼,시간표 수정,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+108,저장하지 않고 나가시겠어요?,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,281,모달,제목,시간표 수정,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+109,입력하신 내용이 모두 사라져요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,282,모달,설명,시간표 수정,Modal.body,해요체,없음,1,없음,화면,사용자,,,
+110,나가기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,283,모달,버튼,시간표 수정,Modal.mainLabel,명사형(-기),없음,1,없음,화면,사용자,,닫는 말,
+111,취소,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,288,모달,버튼,시간표 수정,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,
+112,시간표를 수정할까요?,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,295,모달,제목,시간표 수정,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+113,기존에 등록된 일정 중 변경된 범위에 포함되지 않는 시간은 자동으로 삭제돼요,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,297,모달,설명,시간표 수정,Modal.body,해요체,없음,1,없음,화면,사용자,,,'범위에' 뒤에서 줄을 바꾼다(\n)
+114,수정하기,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,299,모달,버튼,시간표 수정,Modal.mainLabel,명사형(-기),없음,1,없음,화면,사용자,,모달 제목에 기댐,
+115,취소,frontend,src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx,304,모달,버튼,시간표 수정,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,누르면 모달과 함께 시간표 수정 시트도 닫힌다
+116,오늘부터 7일,frontend,src/domains/schedule/constants/poll-options-presets.ts,4,기타,칩,시간표 수정,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+117,오늘부터 14일,frontend,src/domains/schedule/constants/poll-options-presets.ts,5,기타,칩,시간표 수정,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+118,오늘부터 30일,frontend,src/domains/schedule/constants/poll-options-presets.ts,6,기타,칩,시간표 수정,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+119,9시 ~ 18시,frontend,src/domains/schedule/constants/poll-options-presets.ts,10,기타,칩,시간표 수정,Chip children,해당 없음,없음,1,없음,화면,사용자,,,
+120,18시 ~ 24시,frontend,src/domains/schedule/constants/poll-options-presets.ts,11,기타,칩,시간표 수정,Chip children,해당 없음,없음,1,없음,화면,사용자,,,
+121,9시 ~ 24시,frontend,src/domains/schedule/constants/poll-options-presets.ts,12,기타,칩,시간표 수정,Chip children,해당 없음,없음,1,없음,화면,사용자,,,
+122,이전 달,frontend,src/shared/components/calendar/index.tsx,45,버튼,접근성 이름,시간표 수정,IconButton.aria-label,명사(구),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+123,다음 달,frontend,src/shared/components/calendar/index.tsx,45,버튼,접근성 이름,시간표 수정,IconButton.aria-label,명사(구),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+124,yyyy년 M월,frontend,src/shared/components/calendar/index.tsx,140,기타,날짜 표기,시간표 수정,DayPicker formatCaption,해당 없음,없음,1,없음,화면,사용자,,,
+125,개인별 루트,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,159,기타,탭,중간지점 결과,Tab.tabs[].label,명사(구),없음,1,없음,화면,사용자,,,
+126,주변 살펴보기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,160,기타,탭,중간지점 결과,Tab.tabs[].label,명사형(-기),없음,1,없음,화면,사용자,,,
+127,가장 최적의 중간지점이에요!,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1008,제목,제목,중간지점 결과,h2,해요체,느낌표,1,없음,화면,사용자,,,
+128,중간지점을 찾지 못했어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1082,오류,제목,중간지점 결과,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,일만,,출발지 근처에 역이 없을 때. 빈 화면 컴포넌트로 보여 준다
+129,출발지들이 서로 너무 멀리 떨어져 있어요. 출발지를 다시 확인해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1083,오류,설명,중간지점 결과,PlaceholderContent.description,해요체,없음,2,없음,화면,사용자,일과 방법,,
+130,출발지 관리하기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1121,버튼,버튼,중간지점 결과,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+131,출발지 추가하기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1121,버튼,버튼,중간지점 결과,BottomActionBarWithButtonAndShare children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+132,두 명 이상의 출발지가 필요해요,frontend,src/domains/location/utils/insufficient-departures.ts,20,빈 화면,제목,중간지점 결과,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+133,링크를 공유하거나 직접 출발지를 추가해 보세요,frontend,src/domains/location/utils/insufficient-departures.ts,21,빈 화면,설명,중간지점 결과,PlaceholderContent.description,해요체,없음,1,없음,화면,사용자,,,
+134,출발지가 하나 더 필요해요,frontend,src/domains/location/utils/insufficient-departures.ts,27,빈 화면,제목,중간지점 결과,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+135,링크를 공유하면 다른 참여자도 출발지를 추가할 수 있어요,frontend,src/domains/location/utils/insufficient-departures.ts,28,빈 화면,설명,중간지점 결과,PlaceholderContent.description,해요체,없음,1,없음,화면,사용자,,,
+136,출발지가 하나 더 필요해요,frontend,src/domains/location/utils/insufficient-departures.ts,33,빈 화면,제목,중간지점 결과,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+137,출발지를 추가하면 중간지점을 찾을 수 있어요,frontend,src/domains/location/utils/insufficient-departures.ts,34,빈 화면,설명,중간지점 결과,PlaceholderContent.description,해요체,없음,1,없음,화면,사용자,,,
+138,{rank}위,frontend,src/domains/location/components/station-card/index.tsx,57,기타,순위,중간지점 결과,span,해당 없음,없음,1,있음,스크린 리더 전용,사용자,,,숫자는 보이고 '위'만 스크린 리더 전용
+139,평균,frontend,src/domains/location/components/station-card/index.tsx,74,기타,라벨,중간지점 결과,span,명사(구),없음,1,없음,화면,사용자,,,뒤에 '{n}시간 {n}분'이 붙는다
+140,시간,frontend,src/domains/location/utils/format.ts,24,기타,단위,"중간지점 결과, 개인별 루트",getDurationParts,해당 없음,없음,1,없음,화면,사용자,,,'{n}시간 {n}분' 형식. 0인 쪽은 뺀다
+141,분,frontend,src/domains/location/utils/format.ts,25,기타,단위,"중간지점 결과, 개인별 루트",getDurationParts,해당 없음,없음,1,없음,화면,사용자,,,
+142,{name}역,frontend,src/domains/location/utils/format.ts,46,기타,역 이름 표기,"중간지점 결과, 주변 장소, 개인별 루트",formatStationName,해당 없음,없음,1,있음,화면,사용자,,,"역 이름은 서버 값, '역'만 프론트가 붙인다"
+143,경로 없음,frontend,src/domains/location/components/card-location-member/index.tsx,50,기타,값이 없을 때,중간지점 결과,span,명사(구),없음,1,없음,화면,사용자,,,대중교통으로 갈 수 없는 참여자
+144,스터디룸,frontend,src/domains/location/constants/nearby-categories.ts,8,기타,칩,주변 장소,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+145,회의실,frontend,src/domains/location/constants/nearby-categories.ts,9,기타,칩,주변 장소,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+146,식당,frontend,src/domains/location/constants/nearby-categories.ts,10,기타,칩,주변 장소,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+147,카페,frontend,src/domains/location/constants/nearby-categories.ts,11,기타,칩,주변 장소,Chip children,명사(구),없음,1,없음,화면,사용자,,,
+148,{stationName}에서 {distanceMeters}m,frontend,src/domains/location/components/nearby-place-card/index.tsx,45,기타,배지,주변 장소,Badge children,명사(구),없음,1,있음,화면,사용자,,,
+149,가까운 순,frontend,src/domains/location/constants/nearby-categories.ts,66,기타,칩,주변 장소,SegmentedControl options[].label,명사(구),없음,1,없음,화면,사용자,,,식당을 골랐을 때만 보이는 조건 스위치(#273)
+150,맛집,frontend,src/domains/location/constants/nearby-categories.ts,67,기타,칩,주변 장소,SegmentedControl options[].label,명사(구),없음,1,없음,화면,사용자,,,카카오 정확도순 검색. 별점이 아니다
+151,단체,frontend,src/domains/location/constants/nearby-categories.ts,68,기타,칩,주변 장소,SegmentedControl options[].label,명사(구),없음,1,없음,화면,사용자,,,
+152,닫기,frontend,src/domains/location/components/selected-place-card/index.tsx,50,버튼,접근성 이름,주변 장소,IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,고른 장소 카드를 닫는다(#271)
+153,{stationName}에서 {distanceMeters}m,frontend,src/domains/location/components/selected-place-card/index.tsx,60,기타,배지,주변 장소,Badge children,명사(구),없음,1,있음,화면,사용자,,,고른 장소 카드
+154,장소 정보를 찾을 수 없어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,154,오류,토스트,주변 장소,toast.message,해요체,없음,1,없음,화면,사용자,일만,,상수 PLACE_NOT_FOUND_MESSAGE. 링크의 장소를 찾지 못했을 때(480줄)
+155,자세히 보기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx,1111,버튼,버튼,주변 장소,"Button children (ActionArea.main, 링크)",명사형(-기),없음,1,없음,화면,사용자,,막연함,카카오맵 장소 페이지를 새 창으로 연다
+156,약 {value.toLocaleString()}원,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,33,기타,금액 표기,개인별 루트,formatWon,해당 없음,없음,1,있음,화면,사용자,,,
+157,{personalRoute.participant.participantName}님의 루트,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,178,제목,제목,개인별 루트,h2,명사(구),없음,1,있음,화면,사용자,,,
+158,대중교통,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,213,기타,탭,개인별 루트,Tab.tabs[].label,명사(구),없음,1,없음,화면,사용자,,,
+159,자동차,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,218,기타,탭,개인별 루트,Tab.tabs[].label,명사(구),없음,1,없음,화면,사용자,,,
+160,요금,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,253,기타,라벨,개인별 루트,CardTraffic.trafficGuides[].label,명사(구),없음,1,없음,화면,사용자,,,
+161,환승,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,254,기타,라벨,개인별 루트,CardTraffic.trafficGuides[].label,명사(구),없음,1,없음,화면,사용자,,,
+162,{transit.transferCount}회,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,254,기타,횟수 표기,개인별 루트,CardTraffic.trafficGuides[].value,해당 없음,없음,1,있음,화면,사용자,,,
+163,택시비,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,267,기타,라벨,개인별 루트,CardTraffic.trafficGuides[].label,명사(구),없음,1,없음,화면,사용자,,,
+164,통행료,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,270,기타,라벨,개인별 루트,CardTraffic.trafficGuides[].label,명사(구),없음,1,없음,화면,사용자,,,
+165,지도에서 보기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,286,버튼,버튼,개인별 루트,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+166,루트 정보를 찾을 수 없어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,292,오류,설명,개인별 루트,p,해요체,없음,1,없음,화면,사용자,일만,,
+167,추천역 목록으로 돌아가기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx,305,버튼,버튼,개인별 루트,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+168,출발 시간 선택,frontend,src/domains/location/utils/format.ts,50,버튼,버튼,개인별 루트,button children (formatDepartureDateTime),명사(구),없음,1,없음,화면,사용자,,일을 적음,"출발 시간이 없을 때. 이 버튼에는 onClick이 없다(코드 기준, 화면 미확인)"
+169,출발 시간 선택,frontend,src/domains/location/utils/format.ts,53,버튼,버튼,개인별 루트,button children (formatDepartureDateTime),명사(구),없음,1,없음,화면,사용자,,일을 적음,출발 시간 값을 읽지 못했을 때
+170,{month}월 {day}일 {hour}:{minute} 출발,frontend,src/domains/location/utils/format.ts,60,버튼,버튼,개인별 루트,button children (formatDepartureDateTime),명사(구),없음,1,있음,화면,사용자,,일을 적음,
+171,뒤로 가기,frontend,src/domains/location/components/station-badges/index.tsx,24,버튼,접근성 이름,개인별 루트,FloatingButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+172,출발지가 삭제되었어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,60,토스트,토스트,출발지 관리,toast.success,해요체,없음,1,없음,화면,사용자,,,
+173,출발지 관리,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,76,제목,제목,출발지 관리,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+174,출발지 추가하기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,87,버튼,버튼,출발지 관리,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+175,중간지점 결과 보러 가기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,117,버튼,버튼,출발지 관리,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+176,해당 출발지를 삭제할까요?,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,126,모달,제목,출발지 관리,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+177,삭제 후에는 복구할 수 없어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,127,모달,설명,출발지 관리,Modal.body,해요체,없음,1,없음,화면,사용자,,,
+178,삭제,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,128,모달,버튼,출발지 관리,Modal.mainLabel,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+179,취소,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx,130,모달,버튼,출발지 관리,Modal.alternativeLabel,명사(구),없음,1,없음,화면,사용자,,닫는 말,
+180,수정,frontend,src/domains/location/components/item-savedplace/index.tsx,54,버튼,버튼,출발지 관리,Button children,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+181,삭제,frontend,src/domains/location/components/item-savedplace/index.tsx,64,버튼,버튼,출발지 관리,Button children,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+182,출발지 추가,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,118,제목,제목,출발지 입력,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+183,이름,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,131,입력 안내,라벨,출발지 입력,Select.label,명사(구),없음,1,없음,화면,사용자,,,
+184,이름을 선택해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,132,입력 안내,placeholder,출발지 입력,Select.placeholder,해요체,없음,1,없음,화면,사용자,,,
+185,이름,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,152,입력 안내,라벨,출발지 입력,TextField.label,명사(구),없음,1,없음,화면,사용자,,,
+186,이름을 입력해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,153,입력 안내,placeholder,출발지 입력,TextField.placeholder,해요체,없음,1,없음,화면,사용자,,,
+187,최대 {maxNameLength}자까지 입력할 수 있어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,157,입력 안내,도움말,출발지 입력,TextField.helperText,해요체,없음,1,있음,화면,사용자,,,
+188,출발지,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,169,입력 안내,라벨,출발지 입력,FieldButton.label,명사(구),없음,1,없음,화면,사용자,,,
+189,주소를 검색해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,170,입력 안내,placeholder,출발지 입력,FieldButton.placeholder,해요체,없음,1,없음,화면,사용자,,,
+190,출발지 추가하기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx,190,버튼,버튼,출발지 입력,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+191,최대 {NAME_MAX_LENGTH}자까지 입력할 수 있어요,frontend,src/domains/location/hooks/use-create-departure-form.ts,55,오류,오류 메시지,출발지 입력,zod max → TextField.errorMessage,해요체,없음,1,있음,화면,사용자,방법만,,
+192,출발지를 선택해주세요,frontend,src/domains/location/hooks/use-create-departure-form.ts,58,오류,오류 메시지,출발지 입력,zod min (departureLocation),해요체,없음,1,없음,화면,사용자,방법만,,"FieldButton에 errorMessage를 넘기지 않아 화면에 나오는 자리를 찾지 못했다(코드 기준, 화면 미확인)"
+193,출발지가 추가되었어요,frontend,src/domains/location/hooks/use-create-departure-form.ts,135,토스트,토스트,출발지 입력,toast.success,해요체,없음,1,없음,화면,사용자,,,
+194,출발지를 추가하지 못했어요. 다시 시도해주세요,frontend,src/domains/location/hooks/use-create-departure-form.ts,147,오류,토스트,출발지 입력,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+195,이미 출발지를 등록한 참여자예요,frontend,src/domains/location/utils/create-departure-request.ts,8,오류,토스트,출발지 입력,toast.error,해요체,없음,1,없음,화면,사용자,일만,,상수 DUPLICATE_DEPARTURE_MESSAGE. use-create-departure-form.ts 144줄에서 쓴다
+196,서비스 지역이 아니에요. 다른 곳을 선택해주세요,frontend,src/domains/location/utils/service-area.ts,12,오류,토스트,"출발지 입력, 주소 검색","toast.error, zod 검증",해요체,없음,2,없음,화면,사용자,일과 방법,,"상수 OUT_OF_SERVICE_AREA_MESSAGE. 토스트 4곳(추가 140줄, 수정 110줄, 주소 검색 67줄과 143줄)과 zod 1곳(추가 44줄)에서 쓴다"
+197,출발지 수정,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,123,제목,제목,출발지 입력,Header.title,명사(구),없음,1,없음,화면,사용자,,,수정할 출발지를 못 찾았을 때의 화면
+198,수정할 출발지를 찾을 수 없어요.,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,129,오류,설명,출발지 입력,p,해요체,마침표,1,없음,화면,사용자,일만,,
+199,이전으로 돌아가기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,142,버튼,버튼,출발지 입력,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+200,출발지 수정,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,155,제목,제목,출발지 입력,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+201,이름,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,167,입력 안내,라벨,출발지 입력,TextField.label,명사(구),없음,1,없음,화면,사용자,,,
+202,이름을 입력해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,168,입력 안내,placeholder,출발지 입력,TextField.placeholder,해요체,없음,1,없음,화면,사용자,,,
+203,최대 {maxNameLength}자까지 입력할 수 있어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,172,입력 안내,도움말,출발지 입력,TextField.helperText,해요체,없음,1,있음,화면,사용자,,,
+204,출발지,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,183,입력 안내,라벨,출발지 입력,FieldButton.label,명사(구),없음,1,없음,화면,사용자,,,
+205,주소를 검색해주세요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,184,입력 안내,placeholder,출발지 입력,FieldButton.placeholder,해요체,없음,1,없음,화면,사용자,,,
+206,출발지 수정하기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx,204,버튼,버튼,출발지 입력,Button children (ActionArea.main),명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+207,이름을 입력해주세요,frontend,src/domains/location/hooks/use-update-departure-form.ts,26,오류,오류 메시지,출발지 입력,zod min → TextField.errorMessage,해요체,없음,1,없음,화면,사용자,방법만,,
+208,최대 {NAME_MAX_LENGTH}자까지 입력할 수 있어요,frontend,src/domains/location/hooks/use-update-departure-form.ts,27,오류,오류 메시지,출발지 입력,zod max → TextField.errorMessage,해요체,없음,1,있음,화면,사용자,방법만,,
+209,출발지를 선택해주세요,frontend,src/domains/location/hooks/use-update-departure-form.ts,28,오류,오류 메시지,출발지 입력,zod min (departureLocation),해요체,없음,1,없음,화면,사용자,방법만,,"FieldButton에 errorMessage를 넘기지 않아 화면에 나오는 자리를 찾지 못했다(코드 기준, 화면 미확인)"
+210,출발지가 수정되었어요,frontend,src/domains/location/hooks/use-update-departure-form.ts,105,토스트,토스트,출발지 입력,toast.success,해요체,없음,1,없음,화면,사용자,,,
+211,출발지를 수정하지 못했어요. 다시 시도해주세요,frontend,src/domains/location/hooks/use-update-departure-form.ts,113,오류,토스트,출발지 입력,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+212,주소 검색,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,87,제목,제목,주소 검색,Header.title,명사(구),없음,1,없음,화면,사용자,,,
+213,"지하철역, 아파트 이름 등으로 검색",frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,94,입력 안내,placeholder,주소 검색,TextField.placeholder (서비스 TextField),명사(구),없음,1,없음,화면,사용자,,,
+214,불러오는 중...,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,116,버튼,버튼,주소 검색,Button children,명사(구),말줄임표,1,없음,화면,사용자,,진행 상태,현 위치를 불러오는 동안
+215,현 위치 불러오기,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,116,버튼,버튼,주소 검색,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,
+216,검색 중...,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,123,기타,불러오는 중,주소 검색,p,명사(구),말줄임표,1,없음,화면,사용자,,,
+217,일치하는 주소가 없어요,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,167,빈 화면,제목,주소 검색,PlaceholderContent.title,해요체,없음,1,없음,화면,사용자,,,
+218,검색한 지역을 다시 확인해 보세요.,frontend,src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx,168,빈 화면,설명,주소 검색,PlaceholderContent.description,해요체,마침표,1,없음,화면,사용자,,,
+219,현 위치를 불러오지 못했어요. 다시 시도해주세요,frontend,src/domains/location/hooks/use-current-location.ts,9,오류,토스트,주소 검색,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,상수 CURRENT_LOCATION_FAILED_MESSAGE. 좌표로 주소를 찾지 못했을 때
+220,이 브라우저에서는 현 위치를 불러올 수 없어요,frontend,src/domains/location/hooks/use-current-location.ts,35,오류,토스트,주소 검색,toast.error,해요체,없음,1,없음,화면,사용자,일만,,
+221,현재 위치를 찾지 못했어요. 다시 시도해주세요,frontend,src/domains/location/hooks/use-current-location.ts,56,오류,토스트,주소 검색,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,위치 권한은 있는데 위치를 못 받았을 때
+222,새로고침한 뒤 다시 눌러 위치를 허용해주세요,frontend,src/domains/location/utils/location-permission-message.ts,9,오류,토스트,주소 검색,toast.error,해요체,없음,1,없음,화면,사용자,방법만,,권한 거부. iOS 카카오톡 안 브라우저
+223,설정에서 위치 권한을 허용해주세요,frontend,src/domains/location/utils/location-permission-message.ts,10,오류,토스트,주소 검색,toast.error,해요체,없음,1,없음,화면,사용자,방법만,,권한 거부. 그 밖의 브라우저
+224,장소를 검색하지 못했어요. 다시 시도해주세요,frontend,src/domains/location/hooks/use-place-search.ts,12,오류,토스트,주소 검색,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+225,입력 지우기,frontend,src/shared/components/text-field/index.tsx,155,버튼,접근성 이름,주소 검색,IconButton.aria-label (서비스 TextField),명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+226,공유하기,frontend,src/shared/components/bottom-action-bar-with-button-and-share/index.tsx,28,버튼,접근성 이름,"일정 메인, 중간지점 결과",IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+227,공유 시트 배경 닫기,frontend,src/shared/providers/share-sheet-provider/share-sheet-view.tsx,57,버튼,접근성 이름,공유,button.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,
+228,공유하기,frontend,src/shared/providers/share-sheet-provider/share-sheet-view.tsx,67,제목,접근성 이름,공유,section.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,,
+229,공유하기,frontend,src/shared/providers/share-sheet-provider/share-sheet-view.tsx,77,제목,제목,공유,h2,명사형(-기),없음,1,없음,화면,사용자,,,
+230,닫기,frontend,src/shared/providers/share-sheet-provider/share-sheet-view.tsx,83,버튼,접근성 이름,공유,IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,
+231,카카오톡,frontend,src/shared/components/share-button/index.tsx,15,버튼,버튼,공유,ShareButton label 기본값,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+232,링크복사,frontend,src/shared/components/share-button/index.tsx,16,버튼,버튼,공유,ShareButton label 기본값,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+233,더보기,frontend,src/shared/components/share-button/index.tsx,17,버튼,버튼,공유,ShareButton label 기본값,명사형(-기),없음,1,없음,화면,사용자,,막연함,기기의 공유 시트를 연다
+234,링크를 복사하지 못했어요. 다시 시도해주세요,frontend,src/shared/providers/share-sheet-provider/index.tsx,28,오류,토스트,공유,toast.error,해요체,없음,2,없음,화면,사용자,일과 방법,,
+235,링크가 복사되었어요,frontend,src/shared/providers/share-sheet-provider/index.tsx,32,토스트,토스트,공유,toast.success,해요체,없음,1,없음,화면,사용자,,,
+236,PC에서는 링크 복사로 공유해주세요,frontend,src/shared/providers/share-sheet-provider/index.tsx,38,오류,토스트,공유,toast.error,해요체,없음,1,없음,화면,사용자,방법만,,
+237,"즐겁고 효율적인 모임 준비 할 사람, 여기 모여락!",frontend,src/shared/utils/kakao.ts,10,기타,공유 메시지 제목,공유 메시지,Kakao.Share.sendDefault content.title,명사(구),느낌표,1,없음,서비스 밖,사용자,,,카카오톡 대화방에 보인다
+238,참여자들의 일정 조율과 중간지점 탐색을 한 번에 할 수 있어요,frontend,src/shared/utils/kakao.ts,12,기타,공유 메시지 설명,공유 메시지,Kakao.Share.sendDefault content.description,해요체,없음,1,없음,서비스 밖,사용자,,,
+239,웹으로 보기,frontend,src/shared/utils/kakao.ts,18,버튼,버튼,공유 메시지,Kakao.Share.sendDefault buttons[].title,명사형(-기),없음,1,없음,서비스 밖,사용자,,일을 적음,
+240,홈 화면에 추가,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,27,제목,접근성 이름,홈 화면에 추가 안내,section.aria-label,명사(구),없음,1,없음,스크린 리더 전용,사용자,,,
+241,홈 화면에 모여락 추가하기,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,44,제목,제목,홈 화면에 추가 안내,h2,명사형(-기),없음,1,없음,화면,사용자,,,
+242,앱처럼 바로 열어서 모임 일정과 장소를 확인할 수 있어요,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,47,설명,설명,홈 화면에 추가 안내,p,해요체,없음,1,없음,화면,사용자,,,
+243,닫기,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,52,버튼,접근성 이름,홈 화면에 추가 안내,IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,닫는 말,
+244,하단의 공유 버튼 {공유 아이콘}를 눌러주세요,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,67,설명,단계 안내,홈 화면에 추가 안내,li,해요체,없음,1,있음,화면,사용자,,,앞에 번호 1이 붙는다. iOS 안내
+245,‘홈 화면에 추가’를 선택해주세요,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,74,설명,단계 안내,홈 화면에 추가 안내,li,해요체,없음,1,없음,화면,사용자,,,앞에 번호 2와 더하기 아이콘이 붙는다. 코드에는 &lsquo; &rsquo;로 적혀 있다
+246,확인했어요,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,85,버튼,버튼,홈 화면에 추가 안내,Button children,해요체,없음,1,없음,화면,사용자,,닫는 말,
+247,홈 화면에 추가,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,91,버튼,버튼,홈 화면에 추가 안내,Button children,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+248,다음에 할게요,frontend,src/shared/providers/install-prompt-provider/install-prompt-view.tsx,94,버튼,버튼,홈 화면에 추가 안내,Button children,해요체,없음,1,없음,화면,사용자,,닫는 말,
+249,업데이트된 버전으로 새로고침할까요?,frontend,src/shared/providers/update-prompt-provider/index.tsx,44,모달,제목,업데이트 안내,Modal.title,해요체,물음표,1,없음,화면,사용자,,,
+250,지금 새로고침하면 입력 중인 내용이 사라질 수 있어요,frontend,src/shared/providers/update-prompt-provider/index.tsx,45,모달,설명,업데이트 안내,Modal.body,해요체,없음,1,없음,화면,사용자,,,'내용이' 뒤에서 줄을 바꾼다(\n)
+251,새로고침,frontend,src/shared/providers/update-prompt-provider/index.tsx,46,모달,버튼,업데이트 안내,Modal.mainLabel,명사(구),없음,1,없음,화면,사용자,,일을 적음,
+252,나중에,frontend,src/shared/providers/update-prompt-provider/index.tsx,51,모달,버튼,업데이트 안내,Modal.alternativeLabel,끊긴 말,없음,1,없음,화면,사용자,,닫는 말,
+253,모여락,frontend,src/shared/providers/backend-connection-provider/index.tsx,51,기타,서비스 이름,연결 대기,p,명사(구),없음,1,없음,화면,사용자,,,
+254,연결이 잠시 지연되고 있어요,frontend,src/shared/providers/backend-connection-provider/index.tsx,55,오류,제목,연결 대기,h1,해요체,없음,1,없음,화면,사용자,일만,,서버 연결에 실패했을 때
+255,모임을 준비하고 있어요,frontend,src/shared/providers/backend-connection-provider/index.tsx,56,기타,불러오는 중,연결 대기,h1,해요체,없음,1,없음,화면,사용자,,,서버가 깨어나기를 기다리는 동안
+256,잠시 후 다시 시도해 주세요.,frontend,src/shared/providers/backend-connection-provider/index.tsx,60,오류,설명,연결 대기,p,해요체,마침표,1,없음,화면,사용자,방법만,,
+257,첫 연결에는 몇 분 정도 걸릴 수 있어요. 잠시만 기다려 주세요.,frontend,src/shared/providers/backend-connection-provider/index.tsx,61,기타,불러오는 중,연결 대기,p,해요체,마침표,2,없음,화면,사용자,,,
+258,다시 연결하기,frontend,src/shared/providers/backend-connection-provider/index.tsx,71,버튼,버튼,연결 대기,Button children,명사형(-기),없음,1,없음,화면,사용자,,일을 적음,페이지를 새로고침한다
+259,맨 위로 이동,frontend,src/shared/components/floating-scroll-top/index.tsx,68,버튼,접근성 이름,"일정 메인, 일정 등록",FloatingButton.aria-label,명사(구),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
+260,알림,frontend,src/shared/components/toast/index.tsx,31,기타,접근성 이름,공통,ToastProvider.label,명사(구),없음,1,없음,스크린 리더 전용,사용자,,,
+261,알림 ({hotkey}),frontend,src/shared/components/toast/index.tsx,43,기타,접근성 이름,공통,ToastViewport.label,명사(구),없음,1,있음,스크린 리더 전용,사용자,,,{hotkey}는 Radix가 단축키로 바꾼다
+262,관리자 대시보드,frontend,src/domains/admin/components/admin-login-form.tsx,27,제목,제목,관리자,h1,명사(구),없음,1,없음,화면,관리자,,,
+263,외부 API 호출 통계를 보려면 관리자 토큰을 입력하세요.,frontend,src/domains/admin/components/admin-login-form.tsx,30,설명,설명,관리자,p,해요체,마침표,1,없음,화면,관리자,,,
+264,관리자 토큰,frontend,src/domains/admin/components/admin-login-form.tsx,34,입력 안내,라벨,관리자,label,명사(구),없음,1,없음,화면,관리자,,,
+265,X-Admin-Token,frontend,src/domains/admin/components/admin-login-form.tsx,41,입력 안내,placeholder,관리자,input.placeholder,해당 없음,없음,1,없음,화면,관리자,,,HTTP 헤더 이름
+266,입장,frontend,src/domains/admin/components/admin-login-form.tsx,59,버튼,버튼,관리자,Button children,명사(구),없음,1,없음,화면,관리자,,막연함,
+267,429 · {formatNumber(summary.rateLimited)},frontend,src/domains/admin/components/api-summary-card.tsx,37,기타,배지,관리자,span,해당 없음,없음,1,있음,화면,관리자,,,
+268,오늘 호출,frontend,src/domains/admin/components/api-summary-card.tsx,44,기타,라벨,관리자,dt,명사(구),없음,1,없음,화면,관리자,,,
+269,성공률,frontend,src/domains/admin/components/api-summary-card.tsx,50,기타,라벨,관리자,dt,명사(구),없음,1,없음,화면,관리자,,,
+270,p95,frontend,src/domains/admin/components/api-summary-card.tsx,56,기타,라벨,관리자,dt,해당 없음,없음,1,없음,화면,관리자,,,
+271,실패,frontend,src/domains/admin/components/api-summary-card.tsx,62,기타,라벨,관리자,dt,명사(구),없음,1,없음,화면,관리자,,,
+272,한도 잔여,frontend,src/domains/admin/components/api-summary-card.tsx,72,기타,라벨,관리자,span,명사(구),없음,1,없음,화면,관리자,,,
+273,오늘 비용,frontend,src/domains/admin/components/api-summary-card.tsx,86,기타,라벨,관리자,span,명사(구),없음,1,없음,화면,관리자,,,
+274,외부 API 호출 통계,frontend,src/domains/admin/pages/admin-dashboard-page.tsx,79,제목,제목,관리자,h1,명사(구),없음,1,없음,화면,관리자,,,
+275,기준 {yyyy-MM-dd HH:mm},frontend,src/domains/admin/pages/admin-dashboard-page.tsx,83,설명,설명,관리자,p,해당 없음,없음,1,있음,화면,관리자,,,
+276,로그아웃,frontend,src/domains/admin/pages/admin-dashboard-page.tsx,96,버튼,버튼,관리자,Button children,명사(구),없음,1,없음,화면,관리자,,일을 적음,
+277,불러오는 중…,frontend,src/domains/admin/pages/admin-dashboard-page.tsx,103,기타,불러오는 중,관리자,p,명사(구),말줄임표,1,없음,화면,관리자,,,
+278,호출수 추이,frontend,src/domains/admin/pages/admin-dashboard-page.tsx,118,제목,소제목,관리자,TrendChart.title,명사(구),없음,1,없음,화면,관리자,,,
+279,에러율 추이 (%),frontend,src/domains/admin/pages/admin-dashboard-page.tsx,123,제목,소제목,관리자,TrendChart.title,명사(구),없음,1,없음,화면,관리자,,,
+280,Google 비용 추이 (USD),frontend,src/domains/admin/pages/admin-dashboard-page.tsx,130,제목,소제목,관리자,TrendChart.title,명사(구),없음,1,없음,화면,관리자,,,
+281,토큰이 올바르지 않습니다. 다시 입력해주세요.,frontend,src/domains/admin/pages/admin-dashboard-page.tsx,161,오류,오류 메시지,관리자,AdminLoginForm.error,합쇼체와 해요체 섞임,마침표,2,없음,화면,관리자,일과 방법,,
+282,{characterCount.max}자 중 {characterCount.current}자 입력,design-system,src/components/Field/Field.tsx,170,입력 안내,글자 수,디자인 시스템 기본값,Field 글자 수 (TextField.maxCharacterCount),명사(구),없음,1,있음,스크린 리더 전용,사용자,,,화면에는 '2/4'가 보이고 스크린 리더는 이 문구를 읽는다
+283,뒤로 가기,design-system,src/components/Header/Header.tsx,20,버튼,접근성 이름,디자인 시스템 기본값,Header.backAriaLabel 기본값,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,서비스의 Header는 모두 이 기본값을 쓴다
+284,입력 지우기,design-system,src/components/TextField/TextField.tsx,149,버튼,접근성 이름,디자인 시스템 기본값,TextField 지우기 버튼 IconButton.aria-label,명사형(-기),없음,1,없음,스크린 리더 전용,사용자,,일을 적음,
