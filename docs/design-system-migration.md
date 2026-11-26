@@ -226,7 +226,7 @@ FloatingButton은 0.9.0부터 위치를 스스로 고정하지 않는다. Floati
 
 - 같은 `id`로 다시 띄우면 하나만 보이고 닫히는 시간이 다시 흐른다. 동시에 최대 3개까지 보인다. 4초 뒤 닫힌다(sonner 기본값과 같음).
 - 위치는 디자인 시스템 가이드(하단 영역 12px 위)를 따른다. `FixedBottomArea`가 알리는 `--fixed-bottom-area-height`를 쓰고, 없는 화면은 페이지 끝 ActionArea(single, 80px)를 기본값으로 두고, 80px에 든 아래 여백 12px는 safe area만큼 늘린다(`68px + max(12px, env(safe-area-inset-bottom))`).
-- 디자인 시스템 `Toast`는 한 줄 고정이라, 375px에서 넘치던 문구를 줄이고 문구 전체를 규칙에 맞춰 정리했다. 규칙과 용어는 `docs/ux-writing.md`에 있다.
+- 디자인 시스템 `Toast`는 한 줄 고정이라, 375px에서 넘치던 문구를 줄이고 문구 전체를 규칙에 맞춰 정리했다. 규칙과 용어는 `ux-writing/rules.json`에 있다(#284에서 `docs/ux-writing.md`를 옮겼다).
 - 디자인 시스템 `Toast`에는 버튼이 없어, 새 버전 안내("새로고침" 버튼)는 `Modal`로 옮겼다. 제목 "업데이트된 버전으로 새로고침할까요?", 본문 "지금 새로고침하면 입력 중인 내용이 사라질 수 있어요", 버튼 "나중에 / 새로고침". 나중을 고르면 앱을 다시 열 때 대기 중인 워커가 적용된다. 설치 유도 시트가 열려 있는 동안 미루는 동작은 그대로다.
 - sonner와 `color-system.css`, tailwind-merge의 팔레트 색 목록을 지웠다. 정적 검사(`src/design-tokens-static.test.ts`)는 관리자 화면 말고는 예외가 없다.
 

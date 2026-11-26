@@ -1,0 +1,1718 @@
+{
+  "about": "모여락 화면 문구 규칙이다. 자동 검사(src/ux-writing.test.ts)와 스킬(.claude/skills/ux-writing/SKILL.md)이 이 파일을 읽는다. 규칙을 바꿀 때는 이 파일만 고친다.",
+  "legend": {
+    "auto": {
+      "full": "문구만 보고 자동 검사가 확인한다",
+      "position": "문구의 위치(토스트, 모달 버튼 등)를 알아낸 뒤 자동 검사가 확인한다",
+      "partial": "정해 둔 표현만 자동 검사가 찾는다. 나머지는 쓰는 사람이 확인한다",
+      "none": "뜻을 읽어야 해서 자동 검사가 확인하지 못한다. 쓰는 사람이 확인한다"
+    },
+    "source": "규칙의 근거다. S1, T6 같은 번호는 #284에서 정한 결정이고, #197 같은 번호는 이슈다",
+    "where": {
+      "toast.success": "성공 토스트",
+      "toast.error": "실패나 오류 토스트",
+      "toast.message": "안내 토스트",
+      "modal.title": "모달 제목",
+      "modal.body": "모달 본문",
+      "modal.mainLabel": "모달의 확정 버튼",
+      "modal.alternativeLabel": "모달의 그만두는 버튼",
+      "bottomButton": "화면 아래의 큰 버튼",
+      "ariaLabel": "화면 읽기 프로그램용 이름",
+      "pageTitle": "페이지 제목",
+      "text": "그 밖의 문구"
+    },
+    "terms": "서비스에서 이름으로 쓰는 말이다. 한자어지만 그대로 쓴다(예외 X3)",
+    "fixes": "고칠 말이다. 자동 검사의 실패 메시지와 편집기의 빠른 수정이 쓴다. 뜻이 하나로 정해지는 경우에만 적는다"
+  },
+  "scope": {
+    "include": ["src", "index.html", "vite.config.ts"],
+    "exclude": ["src/domains/admin/"],
+    "bottomButtonLabelFiles": [
+      "src/domains/schedule/utils/schedule-main-action.ts"
+    ],
+    "screenReaderProps": ["ToastProvider.label", "ToastViewport.label"],
+    "notCopy": [
+      {
+        "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+        "text": "수정할 일정 투표 ID가 필요해요.",
+        "why": "throw new Error로 던지는 개발자용 문구다. 잡아서 화면에 보여 주는 곳이 없다."
+      },
+      {
+        "file": "src/shared/utils/backend-readiness.ts",
+        "text": "API 주소가 설정되지 않았습니다.",
+        "why": "throw new Error로 던지는 개발자용 문구다. 연결 대기 화면은 자기 문구를 쓴다."
+      },
+      {
+        "file": "src/shared/utils/backend-readiness.ts",
+        "text": "서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        "why": "throw new Error로 던지는 개발자용 문구다. 연결 대기 화면은 자기 문구를 쓴다."
+      },
+      {
+        "file": "src/domains/location/constants/nearby-categories.ts",
+        "text": "스터디카페",
+        "why": "예전 공유 링크의 category 값을 읽는 열쇠다."
+      },
+      {
+        "file": "src/domains/location/constants/nearby-categories.ts",
+        "text": "음식점",
+        "why": "예전 공유 링크의 category 값을 읽는 열쇠다."
+      },
+      {
+        "file": "src/domains/location/constants/nearby-categories.ts",
+        "text": "단체모임",
+        "why": "카카오에 보내는 검색어다."
+      },
+      {
+        "file": "src/domains/location/constants/subway-line-colors.ts",
+        "text": "*",
+        "why": "서버가 준 노선 이름으로 색을 찾는 열쇠다. 화면 글자는 서버 값이다."
+      }
+    ]
+  },
+  "terms": [
+    {
+      "term": "모임장",
+      "meaning": "모임을 만든 사람",
+      "usedIn": "모임장 이름, 모임장에게만 보이는 기능"
+    },
+    {
+      "term": "참여자",
+      "meaning": "모임에 참여한 사람. 모임장도 포함한다",
+      "usedIn": "참여자 N/M, 참여자 목록"
+    },
+    {
+      "term": "다른 참여자",
+      "meaning": "모임장을 뺀 참여자",
+      "usedIn": "모임장을 뺀 사람만 가리킬 때"
+    },
+    {
+      "term": "시간표",
+      "meaning": "날짜와 시간의 틀. 기본값으로 만들어지고 모임장이 고친다",
+      "usedIn": "시간표 탭, \"시간표 수정\" 버튼과 창"
+    },
+    {
+      "term": "일정",
+      "meaning": "시간표 안에 각자 칠한 가능한 시간",
+      "usedIn": "\"일정 추가하기\", \"일정 수정하기\" 버튼, 일정 추가 화면"
+    },
+    {
+      "term": "출발지",
+      "meaning": "참여자가 모임 장소로 출발하는 곳",
+      "usedIn": "출발지 추가, 출발지 관리"
+    },
+    {
+      "term": "중간지점",
+      "meaning": "참여자들의 출발지에서 가기 좋은 역",
+      "usedIn": "중간지점 찾기, 중간지점 결과"
+    }
+  ],
+  "rules": [
+    {
+      "id": "W01",
+      "group": "단어",
+      "use": "모임 만들기",
+      "avoid": "모임 생성, 모임 생성하기",
+      "why": "화면 제목과 버튼은 \"생성\"을, 실패 토스트는 \"만들다\"를 써서 같은 동작을 두 말로 불렀다. 풀어 쓴 말로 통일한다.",
+      "source": ["T1", "N1"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["모임 생성"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "모임 생성하기",
+          "replace": "모임 만들기"
+        },
+        {
+          "find": "모임 생성",
+          "replace": "모임 만들기"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "모임 생성하기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "모임 만들기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W02",
+      "group": "단어",
+      "use": "일정 추가, 출발지 추가",
+      "avoid": "일정 등록, 출발지 등록",
+      "why": "추가가 14곳, 등록이 3곳이었다. 버튼 이름이 \"일정 추가하기\", \"출발지 추가하기\"라서 버튼과 같은 말을 쓴다.",
+      "source": ["T2", "T3"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["일정(을)? 등록", "출발지(를)? 등록", "등록된 일정"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "출발지를 등록한",
+          "replace": "출발지를 추가한"
+        },
+        {
+          "find": "일정을 등록해",
+          "replace": "일정을 추가해"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "이미 출발지를 등록한 참여자예요",
+            "where": "toast.error"
+          },
+          {
+            "text": "일정을 등록해 보세요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "일정을 추가해보세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W03",
+      "group": "단어",
+      "use": "가능한 시간을 선택",
+      "avoid": "가능 시간대, 시간을 입력, 시간을 지정",
+      "why": "같은 동작을 입력, 지정, 선택 세 말로 불렀다. 시간표의 칸을 눌러 고르는 동작이라 \"선택\"으로 쓴다.",
+      "source": ["T2"],
+      "auto": "partial",
+      "check": {
+        "type": "avoid",
+        "patterns": ["가능 시간대", "시간(을|대를) (입력|지정)"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "가능 시간대를 지정해보세요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "가능한 시간을 선택해보세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W04",
+      "group": "단어",
+      "use": "중간지점",
+      "avoid": "중간 장소",
+      "why": "\"중간지점\"이 6곳, \"중간 장소\"가 1곳이었다. #249에서 \"중간지점\"으로 붙여 쓰기로 했다.",
+      "source": ["T5", "#249"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["중간 장소"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "중간 장소",
+          "replace": "중간지점"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "중간 장소 찾기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "중간지점 찾기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W05",
+      "group": "단어",
+      "use": "중간지점 찾기(화면으로 가는 과정), 중간지점 결과(화면)",
+      "avoid": "장소 정하기, 장소 정하러 가기, 장소 보러 가기, 추천역 목록",
+      "why": "같은 화면으로 가는 버튼과 안내가 여섯 가지 이름을 썼다. 첫 화면의 카드 이름 \"중간지점 찾기\"와 맞춘다.",
+      "source": ["T4", "T5"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["장소 정하기", "장소 정하러", "장소 보러", "추천역 목록"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "장소 정하러 가기",
+          "replace": "중간지점 찾으러 가기"
+        },
+        {
+          "find": "장소 보러 가기",
+          "replace": "중간지점 결과 보러 가기"
+        },
+        {
+          "find": "추천역 목록으로 돌아가기",
+          "replace": "중간지점 결과로 돌아가기"
+        },
+        {
+          "find": "장소 정하기",
+          "replace": "중간지점 찾기"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "장소 정하러 가기",
+            "where": "bottomButton"
+          },
+          {
+            "text": "추천역 목록으로 돌아가기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "중간지점 결과 보러 가기",
+            "where": "bottomButton"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W06",
+      "group": "단어",
+      "use": "현재 위치",
+      "avoid": "현 위치",
+      "why": "\"현 위치\"가 3곳, \"현재 위치\"가 1곳이었다. #236에서 쓴 \"현 위치\"를 \"현재 위치\"로 바꾼다.",
+      "source": ["T6", "#236"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["현 위치"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "현 위치",
+          "replace": "현재 위치"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "현 위치 불러오기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "현재 위치 불러오기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W07",
+      "group": "단어",
+      "use": "경로",
+      "avoid": "루트",
+      "why": "\"루트\"가 3곳, \"경로\"가 1곳이었다. 같은 것을 한 말로 부른다.",
+      "source": ["T7"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["루트"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "루트",
+          "replace": "경로"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "개인별 루트",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "개인별 경로",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W08",
+      "group": "단어",
+      "use": "최적 일정",
+      "avoid": "최적일정",
+      "why": "\"시간표 수정\", \"일정 추가\"는 띄어 쓰는데 \"최적일정\"만 붙여 썼다.",
+      "source": ["T8"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["최적일정"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "최적일정",
+          "replace": "최적 일정"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "최적일정 더보기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "최적 일정 더보기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W09",
+      "group": "단어",
+      "use": "시간표(문장 안), 시간(작은 제목)",
+      "avoid": "시간범위, 시간 범위, 시간표 범위, 선택범위",
+      "why": "#197에서 \"시간표 범위\"와 \"선택범위\"를 쓰지 않고 \"시간표\"만 쓰기로 했다. 그 뒤에 \"시간범위\", \"시간 범위\", \"변경된 범위\"가 다시 생겼다.",
+      "source": ["T9", "#197"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": [
+          "시간범위",
+          "시간 범위",
+          "시간표 범위",
+          "선택범위",
+          "변경된 범위"
+        ],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "시간 범위를 넓히거나 참여자들을 기다려 보세요.",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "시간표를 수정하거나 참여자들을 기다려보세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W10",
+      "group": "단어",
+      "use": "찾지 못했어요",
+      "avoid": "찾을 수 없어요",
+      "why": "\"찾을 수 없어요\"가 3곳, \"찾지 못했어요\"가 2곳이었다. 실패 토스트의 \"[동작]하지 못했어요\"와 맞춘다.",
+      "source": ["T11"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["찾을 수 없어요"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "찾을 수 없어요",
+          "replace": "찾지 못했어요"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "장소 정보를 찾을 수 없어요",
+            "where": "toast.message"
+          }
+        ],
+        "good": [
+          {
+            "text": "장소 정보를 찾지 못했어요",
+            "where": "toast.message"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W11",
+      "group": "단어",
+      "use": "누르다",
+      "avoid": "클릭",
+      "why": "휴대폰에서 쓰는 서비스라 화면을 손가락으로 누른다.",
+      "source": ["T12"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["클릭"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "클릭하거나",
+          "replace": "누르거나"
+        },
+        {
+          "find": "클릭하면",
+          "replace": "누르면"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "클릭하거나 쓸어내려 가능 시간대를 지정해보세요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "누르거나 쓸어내려 가능한 시간을 선택해보세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W12",
+      "group": "단어",
+      "use": "링크 복사",
+      "avoid": "링크복사",
+      "why": "토스트는 \"링크를 복사했어요\"로 풀어 쓰는데 버튼만 붙여 썼다.",
+      "source": ["T12"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["링크복사"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "링크복사",
+          "replace": "링크 복사"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "링크복사",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "링크 복사",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W13",
+      "group": "단어",
+      "use": "-거나, -고",
+      "avoid": "및",
+      "why": "\"및\"은 글에서만 쓰는 말이다. 문장으로 풀어 쓴다.",
+      "source": ["T12", "N1"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["(^|\\s)및(\\s|$)"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "이동 후 일정 추가 및 수정이 불가능해요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "이동한 뒤에는 일정을 추가하거나 수정할 수 없어요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W14",
+      "group": "단어",
+      "use": "이 출발지",
+      "avoid": "해당 출발지",
+      "why": "\"해당\"은 공문서에서 쓰는 말이다.",
+      "source": ["T12"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["해당 "],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "해당 ",
+          "replace": "이 "
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "해당 출발지를 삭제할까요?",
+            "where": "modal.title"
+          }
+        ],
+        "good": [
+          {
+            "text": "이 출발지를 삭제할까요?",
+            "where": "modal.title"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W15",
+      "group": "단어",
+      "use": "최적의",
+      "avoid": "가장 최적의",
+      "why": "\"최적\"에 \"가장\"이라는 뜻이 들어 있어 뜻이 겹친다.",
+      "source": ["T12"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["가장 최적"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "가장 최적",
+          "replace": "최적"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "가장 최적의 중간지점이에요!",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "최적의 중간지점이에요!",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W16",
+      "group": "단어",
+      "use": "할 수 있어요, 할 수 없어요",
+      "avoid": "가능해요, 불가능해요",
+      "why": "한자어를 풀어 쓴다.",
+      "source": ["T12", "N1"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["가능해요"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "([가-힣]+)이 불가능해요",
+          "replace": "$1할 수 없어요"
+        },
+        {
+          "find": "([가-힣]+) 가능해요",
+          "replace": "$1할 수 있어요"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "최대 30일, 0 ~ 24시까지 선택 가능해요",
+            "where": "text"
+          },
+          {
+            "text": "이동 후 일정 추가 및 수정이 불가능해요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "최대 30일, 0 ~ 24시까지 선택할 수 있어요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W17",
+      "group": "단어",
+      "use": "닫는 대상의 이름(예: 공유하기 닫기)",
+      "avoid": "시트",
+      "why": "\"시트\"는 개발할 때 쓰는 말이고 화면에는 보이지 않는다.",
+      "source": ["T12", "B4"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["시트"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "공유 시트 배경 닫기",
+            "where": "ariaLabel"
+          }
+        ],
+        "good": [
+          {
+            "text": "공유하기 닫기",
+            "where": "ariaLabel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W18",
+      "group": "단어",
+      "use": "카카오맵에서 보기",
+      "avoid": "자세히 보기",
+      "why": "누르면 카카오맵의 장소 페이지가 열리는데 버튼만 봐서는 알 수 없었다.",
+      "source": ["B5"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["자세히 보기"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "자세히 보기",
+          "replace": "카카오맵에서 보기"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "자세히 보기",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "카카오맵에서 보기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W19",
+      "group": "단어",
+      "use": "초기화(일정 등록 화면의 버튼, 모달, 토스트 모두)",
+      "avoid": "같은 동작을 \"삭제\"로 부르기",
+      "why": "버튼, 모달 본문, 모달 버튼, 토스트는 \"초기화\"인데 모달 제목만 \"삭제\"였다.",
+      "source": ["T10"],
+      "auto": "none"
+    },
+    {
+      "id": "W20",
+      "group": "단어",
+      "use": "화면에 보이는 말",
+      "avoid": "개발 용어(클립보드, 확정 처리 등)",
+      "why": "사용자가 누른 버튼, 보고 있는 화면의 이름과 같은 말을 써야 무엇을 말하는지 안다.",
+      "source": ["#197"],
+      "auto": "partial",
+      "check": {
+        "type": "avoid",
+        "patterns": ["클립보드", "확정 처리"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "클립보드에 복사했어요",
+            "where": "toast.success"
+          }
+        ],
+        "good": [
+          {
+            "text": "링크를 복사했어요",
+            "where": "toast.success"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W21",
+      "group": "단어",
+      "use": "모임장, 참여자, 다른 참여자",
+      "avoid": "팀장, 팀원, 팀",
+      "why": "모임을 만든 사람과 참여한 사람을 부르는 말을 하나로 정했다(#176).",
+      "source": ["#176", "#198"],
+      "auto": "partial",
+      "check": {
+        "type": "avoid",
+        "patterns": ["팀장", "팀원"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "팀장만 수정할 수 있어요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "모임장만 수정할 수 있어요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W22",
+      "group": "단어",
+      "use": "지금(때를 말할 때)",
+      "avoid": "현재",
+      "why": "\"지금\"과 \"현재\"를 같은 뜻으로 섞어 썼다(일정 메인 \"현재 1명이 참여했어요\", 인원 안내 \"지금 참여한 4명부터\"). 한자어 대신 일상에서 쓰는 말을 고른다는 토스 원칙(N1)에 따라 \"지금\"으로 맞춘다. 용어 \"현재 위치\"(W06)는 그대로 둔다.",
+      "source": ["2026-11-26 대화", "N1", "#226"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["현재(?! 위치)"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "현재(?! 위치)",
+          "replace": "지금"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "현재 1명이 참여했어요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "지금 1명이 참여했어요",
+            "where": "text"
+          },
+          {
+            "text": "현재 위치 불러오기",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W23",
+      "group": "단어",
+      "use": "선택하다",
+      "avoid": "고르다",
+      "why": "\"선택\"이 9곳, \"고르다\"가 2곳(인원 칩 아래 안내)이었다. 시간에는 \"선택\"을 쓰기로 한 결정(T2)과 맞춘다.",
+      "source": ["2026-11-26 대화", "T2"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["고를 수", "골라", "고르"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "고를 수",
+          "replace": "선택할 수"
+        },
+        {
+          "find": "골라주세요",
+          "replace": "선택해주세요"
+        },
+        {
+          "find": "골라보세요",
+          "replace": "선택해보세요"
+        },
+        {
+          "find": "골라 ",
+          "replace": "선택해 "
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "2명부터 20명까지 고를 수 있어요",
+            "where": "text"
+          },
+          {
+            "text": "다른 분류를 골라보세요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "2명부터 20명까지 선택할 수 있어요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S01",
+      "group": "표기",
+      "rule": "해요체로 쓴다.",
+      "why": "서비스 전체가 해요체다. 합쇼체가 섞이면 다른 서비스처럼 읽힌다.",
+      "source": ["N1"],
+      "auto": "partial",
+      "check": {
+        "type": "avoid",
+        "patterns": ["(습니다|입니다|합니다|됩니다|습니까)[.!?]?$"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "저장되었습니다.",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "저장했어요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S02",
+      "group": "표기",
+      "rule": "능동형으로 쓴다.",
+      "why": "\"됐어요\"보다 \"했어요\"가 누가 한 일인지 분명하다. #197의 \"[대상]이 [동작]되었어요\"를 바꾼다.",
+      "source": ["N1", "E3", "#197", "2026-11-26 대화"],
+      "auto": "partial",
+      "example": "출발지를 추가했어요",
+      "note": "자동 검사는 문장 끝뿐 아니라 문장 가운데의 수동형도 잡는다. 명사 뒤에 붙은 \"되다\"(등록된, 포함되지, 삭제돼요)와 \"바뀌다\"를 잡고, \"-이-, -히-, -리-, -기-\"가 붙는 수동형(열리다, 닫히다)은 잡지 못한다. 결과를 알리는 문장에는 수동형을 쓸 수 있다(예외 X6). 자동 검사는 이것을 가려내지 못하므로 X6에 해당하는 문구는 X6의 allow에 적는다.",
+      "check": {
+        "type": "avoid",
+        "patterns": ["[가-힣](되|된|될|됨|돼|됐|됩)", "바(뀌|뀐|뀔|뀜)"],
+        "where": ["*"],
+        "exceptRef": "X6"
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "출발지가 추가되었어요",
+            "where": "toast.success"
+          },
+          {
+            "text": "업데이트된 버전으로 새로고침할까요?",
+            "where": "modal.title"
+          },
+          {
+            "text": "바뀐 시간표에 없는 시간은 지워요",
+            "where": "modal.body"
+          }
+        ],
+        "good": [
+          {
+            "text": "출발지를 추가했어요",
+            "where": "toast.success"
+          },
+          {
+            "text": "바꾼 시간표에 없는 시간은 지워요",
+            "where": "modal.body"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S03",
+      "group": "표기",
+      "rule": "할 수 있는 것을 말한다(긍정형).",
+      "why": "할 수 없다는 말만 들으면 다음에 무엇을 할지 모른다.",
+      "source": ["N1", "E1"],
+      "auto": "none",
+      "example": "지금 참여한 인원부터 선택할 수 있어요",
+      "note": "할 수 없다는 것을 분명히 알려야 할 때는 부정형을 쓸 수 있다(예외 X7)."
+    },
+    {
+      "id": "S04",
+      "group": "표기",
+      "rule": "지나친 높임을 줄인다.",
+      "why": "같은 화면의 다른 모달은 \"삭제할까요?\"처럼 높임 없이 쓴다.",
+      "source": ["N1", "P4"],
+      "auto": "partial",
+      "example": "저장하지 않고 나갈까요?",
+      "check": {
+        "type": "avoid",
+        "patterns": ["시겠어요", "하신 ", "으신 "],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "나가시겠어요",
+          "replace": "나갈까요"
+        },
+        {
+          "find": "입력하신",
+          "replace": "입력한"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "저장하지 않고 나가시겠어요?",
+            "where": "modal.title"
+          },
+          {
+            "text": "입력하신 내용이 모두 사라져요",
+            "where": "modal.body"
+          }
+        ],
+        "good": [
+          {
+            "text": "저장하지 않고 나갈까요?",
+            "where": "modal.title"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S05",
+      "group": "표기",
+      "rule": "문장 안에서 명사를 이어 붙이지 않는다. 화면 제목과 버튼에는 적용하지 않는다.",
+      "why": "\"일정 추가 및 수정이 불가능\"처럼 명사만 이으면 글로 쓴 문장처럼 읽힌다.",
+      "source": ["N1", "N2"],
+      "auto": "none",
+      "example": "이동한 뒤에는 일정을 추가하거나 수정할 수 없어요"
+    },
+    {
+      "id": "S06",
+      "group": "표기",
+      "rule": "문장 끝에 마침표를 찍지 않는다. 문장이 두 개면 사이에만 찍는다.",
+      "why": "토스트와 제목은 마침표 없이 끝나는데 설명 문장만 마침표가 있는 것과 없는 것이 섞여 있었다(#249, #251).",
+      "source": ["P1", "#249", "#251"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["(?<!\\.)\\.$"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "(?<!\\.)\\.$",
+          "replace": ""
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "링크를 공유하거나 일정을 등록해 보세요.",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "링크를 공유하거나 일정을 추가해보세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S07",
+      "group": "표기",
+      "rule": "\"해주세요\", \"해보세요\"는 붙여 쓴다.",
+      "why": "\"해주세요\"는 붙여 쓴 곳이 32곳, 띄어 쓴 곳이 2곳이었다. \"보세요\"는 띄어 쓴 곳이 더 많았다. 규칙을 하나로 한다.",
+      "source": ["P2"],
+      "auto": "full",
+      "example": "기다려보세요",
+      "check": {
+        "type": "attachedAuxiliary",
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "type": "joinAuxiliary"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "잠시 후 다시 시도해 주세요",
+            "where": "text"
+          },
+          {
+            "text": "참여자들을 기다려 보세요",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "다시 시도해주세요",
+            "where": "text"
+          },
+          {
+            "text": "이름을 주세요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S08",
+      "group": "표기",
+      "rule": "말줄임표를 쓰지 않는다.",
+      "why": "진행 중임을 알리는 문구가 \"로딩 중...\", \"저장 중...\"처럼 다섯 가지 형식이었다.",
+      "source": ["P3"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["\\.\\.\\.", "…"],
+        "where": ["*"]
+      },
+      "fixes": [
+        {
+          "find": "\\s*(\\.\\.\\.|…)",
+          "replace": ""
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "저장 중...",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "수정하는 중",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S09",
+      "group": "표기",
+      "rule": "느낌표를 쓰지 않는다.",
+      "why": "느낌표는 지금 있는 3곳에만 둔다(예외 X4).",
+      "source": ["P5"],
+      "auto": "full",
+      "check": {
+        "type": "avoid",
+        "patterns": ["!"],
+        "where": ["*"],
+        "exceptRef": "X4"
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "저장했어요!",
+            "where": "toast.success"
+          }
+        ],
+        "good": [
+          {
+            "text": "저장했어요",
+            "where": "toast.success"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S10",
+      "group": "표기",
+      "rule": "가운데 점을 쓰지 않는다.",
+      "why": "가운데 점은 글에서만 쓰는 기호다. 쉼표나 \"와\", \"과\"로 풀어 쓴다.",
+      "source": ["P6", "#197"],
+      "auto": "full",
+      "example": "모임 일정과 장소 조율",
+      "check": {
+        "type": "avoid",
+        "patterns": ["·"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "모임 일정·장소 조율",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "모임 일정과 장소 조율",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "S11",
+      "group": "표기",
+      "rule": "꼭 해야 다음으로 넘어갈 수 있는 일은 \"해주세요\"로, 해도 되고 안 해도 되는 다음 걸음은 \"해보세요\"로 쓴다.",
+      "why": "지금 문구는 대체로 이렇게 나뉘어 있다(\"해주세요\" 34곳: 오류, 입력칸 안내, 기다리기, 따라 하기 단계. \"해보세요\" 7곳: 빈 화면, 초대 화면, 사용법 안내). 같은 \"다시 확인\"을 \"확인해주세요\"와 \"확인해 보세요\"로 섞어 쓴 곳이 있었다.",
+      "source": ["2026-11-26 대화"],
+      "auto": "partial",
+      "check": {
+        "type": "avoid",
+        "patterns": ["보세요$"],
+        "where": [
+          "toast.success",
+          "toast.error",
+          "toast.message",
+          "modal.title",
+          "modal.body"
+        ]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "가능한 시간을 선택해보세요",
+            "where": "toast.error"
+          }
+        ],
+        "good": [
+          {
+            "text": "가능한 시간을 선택해주세요",
+            "where": "toast.error"
+          },
+          {
+            "text": "링크를 공유하거나 일정을 추가해보세요",
+            "where": "text"
+          }
+        ]
+      },
+      "note": "자동 검사는 토스트와 모달에 \"해보세요\"를 쓴 경우만 잡는다(이 자리는 할 일을 요구하는 자리다). 빈 화면이나 안내 문구가 꼭 해야 하는 일인지는 쓰는 사람이 판단한다."
+    },
+    {
+      "id": "P01",
+      "group": "위치별",
+      "rule": "토스트에는 한 문장만 쓴다.",
+      "why": "토스트는 4초 뒤에 사라진다. 두 문장을 쓰면 375px 화면에서 양옆 여백이 24px까지 줄었다.",
+      "source": ["E2"],
+      "auto": "position",
+      "check": {
+        "type": "avoid",
+        "patterns": ["[.!?]\\s+\\S"],
+        "where": ["toast.success", "toast.error", "toast.message"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
+            "where": "toast.error"
+          }
+        ],
+        "good": [
+          {
+            "text": "출발지를 추가하지 못했어요",
+            "where": "toast.error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P02",
+      "group": "위치별",
+      "rule": "토스트는 375px 화면에서 한 줄(335px)에 들어가게 쓴다.",
+      "why": "디자인 시스템 Toast는 줄을 바꾸지 않는다. 양옆 20px 여백 안에 들어가야 한다(#197).",
+      "source": ["#197"],
+      "auto": "position",
+      "note": "너비는 public/fonts/Pretendard-Medium.woff2의 글자 폭으로 계산한다. 브라우저마다 자간(-0.14px)을 적용하는 정도가 달라서, 어느 기기에서도 넘지 않은 값인 자간을 뺀 너비로 본다. 브라우저 8곳에서 문구 93개를 잰 값이 ux-writing/toast-width-measured.json에 있고, 자동 검사가 계산값과 대조한다. 변수 자리가 있는 문구는 계산하지 못한다.",
+      "check": {
+        "type": "maxToastWidth",
+        "px": 335,
+        "where": ["toast.success", "toast.error", "toast.message"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
+            "where": "toast.error"
+          }
+        ],
+        "good": [
+          {
+            "text": "서비스 지역이 아니에요",
+            "where": "toast.error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P03",
+      "group": "위치별",
+      "rule": "성공 토스트는 \"[대상]을 [동작]했어요\"로 쓴다.",
+      "why": "무엇이 됐는지 한 문장으로 알린다.",
+      "source": ["E3"],
+      "auto": "position",
+      "example": "출발지를 추가했어요",
+      "check": {
+        "type": "mustMatch",
+        "pattern": "[을를] .*했어요$",
+        "where": ["toast.success"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "링크가 복사되었어요",
+            "where": "toast.success"
+          }
+        ],
+        "good": [
+          {
+            "text": "링크를 복사했어요",
+            "where": "toast.success"
+          },
+          {
+            "text": "입력한 일정을 초기화했어요",
+            "where": "toast.success"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P04",
+      "group": "위치별",
+      "rule": "서비스 문제로 실패했을 때의 토스트는 \"[대상]을 [동작]하지 못했어요\"로 쓴다. \"다시 시도해주세요\"를 붙이지 않는다.",
+      "why": "실패한 뒤에도 누른 버튼이 화면에 남아 있어서 다시 누르면 된다는 것을 화면으로 알 수 있다(실패 화면 10곳 확인). #197의 실패 형식을 바꾼다.",
+      "source": ["E2", "#197"],
+      "auto": "position",
+      "example": "시간표를 수정하지 못했어요",
+      "check": {
+        "type": "avoid",
+        "patterns": ["다시 시도해"],
+        "where": ["toast.success", "toast.error", "toast.message"]
+      },
+      "fixes": [
+        {
+          "find": "\\.?\\s*다시 시도해 ?주세요\\.?$",
+          "replace": ""
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
+            "where": "toast.error"
+          }
+        ],
+        "good": [
+          {
+            "text": "시간표를 수정하지 못했어요",
+            "where": "toast.error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P05",
+      "group": "위치별",
+      "rule": "실패 토스트의 동사는 사용자가 누른 버튼의 말을 쓴다. \"완료\" 버튼이 있는 화면에서는 화면 제목의 동사를 쓴다.",
+      "why": "버튼과 결과 문구의 말이 같아야 무엇이 실패했는지 바로 안다.",
+      "source": ["#197", "T13", "B2"],
+      "auto": "none",
+      "example": "버튼 \"현재 위치 불러오기\"가 실패하면 \"현재 위치를 불러오지 못했어요\""
+    },
+    {
+      "id": "P06",
+      "group": "위치별",
+      "rule": "입력 때문에 안 된 토스트는 왜 안 되는지만 쓴다. 고칠 방법은 붙이지 않는다.",
+      "why": "고칠 곳(이름 칸, 주소 검색 칸)이 토스트와 같은 화면에 보인다.",
+      "source": ["E1"],
+      "auto": "none",
+      "example": "이미 출발지를 추가한 참여자예요"
+    },
+    {
+      "id": "P07",
+      "group": "위치별",
+      "rule": "할 일을 알려 주려고 뜨는 토스트는 할 일만 한 문장으로 쓴다.",
+      "why": "이 토스트는 할 일을 빼면 남는 내용이 없다(예외 X9).",
+      "source": ["E2"],
+      "auto": "position",
+      "example": "가능한 시간을 선택해주세요",
+      "note": "P01과 같은 검사로 확인한다.",
+      "checkedBy": "P01"
+    },
+    {
+      "id": "P08",
+      "group": "위치별",
+      "rule": "화면 아래의 큰 버튼은 \"-하기\"나 \"-기\"로 끝낸다.",
+      "why": "버튼만 보고 누른 뒤에 생기는 일을 알 수 있어야 한다.",
+      "source": ["B1"],
+      "auto": "position",
+      "example": "모임 만들기, 일정 추가하기",
+      "note": "홈 화면에 추가 안내의 \"홈 화면에 추가\"는 기기의 메뉴 이름과 같아서 그대로 둔다.",
+      "check": {
+        "type": "mustMatch",
+        "pattern": "(기|완료|중)(\\.\\.\\.)?$",
+        "where": ["bottomButton"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "홈으로",
+            "where": "bottomButton"
+          }
+        ],
+        "good": [
+          {
+            "text": "모임 만들기",
+            "where": "bottomButton"
+          },
+          {
+            "text": "완료",
+            "where": "bottomButton"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P09",
+      "group": "위치별",
+      "rule": "추가하거나 수정하는 화면의 끝내는 버튼은 \"완료\"로 쓴다.",
+      "why": "들어가는 버튼(\"출발지 추가하기\")과 끝내는 버튼이 같은 이름이면 같은 버튼을 두 번 누르게 된다.",
+      "source": ["B2"],
+      "auto": "position",
+      "example": "완료",
+      "note": "같은 파일에 \"추가\"나 \"수정\"으로 끝나는 제목(Header의 title, h1, h2)이 있을 때, 화면 아래 버튼이 \"추가하기\", \"수정하기\", \"저장하기\"로 끝나면 위반으로 본다. 제목이 다른 파일에 있는 화면은 확인하지 못한다.",
+      "check": {
+        "type": "addEditDone",
+        "titlePattern": "(추가|수정)$",
+        "buttonPattern": "(추가|수정|저장)하기$"
+      }
+    },
+    {
+      "id": "P10",
+      "group": "위치별",
+      "rule": "모달의 확정 버튼은 제목의 동사를 받아 가장 짧은 말로 쓴다. 한자어 명사가 있으면 명사만 쓰고, 없으면 \"-기\"로 쓴다.",
+      "why": "그만두는 버튼 \"취소\"와 같은 형태가 된다.",
+      "source": ["B1"],
+      "auto": "position",
+      "example": "이동, 수정, 삭제, 초기화, 나가기",
+      "check": {
+        "type": "avoid",
+        "patterns": ["하기$"],
+        "where": ["modal.mainLabel"]
+      },
+      "fixes": [
+        {
+          "find": "하기$",
+          "replace": ""
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "이동하기",
+            "where": "modal.mainLabel"
+          }
+        ],
+        "good": [
+          {
+            "text": "이동",
+            "where": "modal.mainLabel"
+          },
+          {
+            "text": "나가기",
+            "where": "modal.mainLabel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P11",
+      "group": "위치별",
+      "rule": "모달의 그만두는 버튼은 \"취소\"로 쓴다. 나중으로 미루는 뜻일 때만 \"나중에\"로 쓴다.",
+      "why": "모여락의 \"취소\"는 모두 하려던 동작을 그만두는 버튼이다.",
+      "source": ["B3"],
+      "auto": "position",
+      "example": "취소",
+      "check": {
+        "type": "mustMatch",
+        "pattern": "^(취소|나중에)$",
+        "where": ["modal.alternativeLabel"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "닫기",
+            "where": "modal.alternativeLabel"
+          }
+        ],
+        "good": [
+          {
+            "text": "취소",
+            "where": "modal.alternativeLabel"
+          },
+          {
+            "text": "나중에",
+            "where": "modal.alternativeLabel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P12",
+      "group": "위치별",
+      "rule": "목록 안의 작은 버튼은 명사로 쓴다.",
+      "why": "자리가 좁다.",
+      "source": ["B1"],
+      "auto": "none",
+      "example": "수정, 삭제"
+    },
+    {
+      "id": "P13",
+      "group": "위치별",
+      "rule": "닫기 버튼의 화면 읽기 프로그램용 이름은 \"[대상] 닫기\"로 쓴다.",
+      "why": "무엇을 닫는 버튼인지 소리만 듣고 알 수 있다.",
+      "source": ["B4", "S2"],
+      "auto": "position",
+      "example": "공유하기 닫기",
+      "check": {
+        "type": "avoid",
+        "patterns": ["^닫기$"],
+        "where": ["ariaLabel"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "닫기",
+            "where": "ariaLabel"
+          }
+        ],
+        "good": [
+          {
+            "text": "공유하기 닫기",
+            "where": "ariaLabel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P14",
+      "group": "위치별",
+      "rule": "화면 제목은 명사로 끝낸다.",
+      "why": "화면 제목 9개가 모두 명사로 끝난다.",
+      "source": ["N2"],
+      "auto": "none",
+      "example": "출발지 관리"
+    },
+    {
+      "id": "P15",
+      "group": "위치별",
+      "rule": "불러오는 중임을 화면에 알릴 때는 \"[대상]을 불러오는 중이에요\"로 쓴다.",
+      "why": "\"로딩 중...\", \"불러오는 중...\", \"시간표를 불러오는 중이에요\"가 섞여 있었다.",
+      "source": ["P3"],
+      "auto": "partial",
+      "example": "시간표를 불러오는 중이에요",
+      "check": {
+        "type": "avoid",
+        "patterns": ["로딩"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "로딩 중...",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "시간표를 불러오는 중이에요",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P16",
+      "group": "위치별",
+      "rule": "요청하는 동안의 버튼은 글자 대신 움직이는 점 3개를 보여 준다. 디자인 시스템 Button에 이 기능이 생길 때까지는 \"[동작]하는 중\"을 글자로 쓴다.",
+      "why": "버튼의 너비가 바뀌지 않고, 어느 버튼이 일하는 중인지 그 자리에서 보인다.",
+      "source": ["P3", "B2"],
+      "auto": "partial",
+      "example": "수정하는 중",
+      "check": {
+        "type": "avoid",
+        "patterns": ["(?<!는) 중(\\.\\.\\.|…)?$"],
+        "where": ["*"]
+      },
+      "examples": {
+        "bad": [
+          {
+            "text": "저장 중...",
+            "where": "text"
+          },
+          {
+            "text": "검색 중",
+            "where": "text"
+          }
+        ],
+        "good": [
+          {
+            "text": "수정하는 중",
+            "where": "text"
+          },
+          {
+            "text": "불러오는 중",
+            "where": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P17",
+      "group": "위치별",
+      "rule": "페이지 제목은 \"모여락 | 모임 일정과 장소 조율\"로 쓴다.",
+      "why": "같은 제목이 코드 5곳에 있고 모두 가운데 점을 썼다.",
+      "source": ["P6", "S3"],
+      "auto": "position",
+      "check": {
+        "type": "mustMatch",
+        "pattern": "^모여락 \\| 모임 일정과 장소 조율$",
+        "where": ["pageTitle"]
+      },
+      "fixes": [
+        {
+          "find": "일정·장소",
+          "replace": "일정과 장소"
+        }
+      ],
+      "examples": {
+        "bad": [
+          {
+            "text": "모여락 | 모임 일정·장소 조율",
+            "where": "pageTitle"
+          }
+        ],
+        "good": [
+          {
+            "text": "모여락 | 모임 일정과 장소 조율",
+            "where": "pageTitle"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P18",
+      "group": "위치별",
+      "rule": "일정 등록 화면의 초기화 모달은 제목도 \"초기화\"를 쓴다.",
+      "why": "버튼, 본문, 토스트와 같은 말을 쓴다.",
+      "source": ["T10"],
+      "auto": "none",
+      "example": "입력한 일정을 초기화할까요?"
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "X1",
+      "text": "관리자 화면(/admin)의 문구는 검사하지 않는다.",
+      "why": "운영자만 보는 화면이고 이 규칙을 정한 사람이 만든 화면이 아니다.",
+      "source": ["S1"]
+    },
+    {
+      "id": "X2",
+      "text": "화면 읽기 프로그램만 읽는 문구와 서비스 바깥 문구(페이지 제목, 카카오톡 공유 메시지)는 검사한다.",
+      "why": "화면을 소리로 듣는 사용자에게는 그 이름이 화면 문구다.",
+      "source": ["S2", "S3"]
+    },
+    {
+      "id": "X3",
+      "text": "핵심 용어 \"일정\", \"출발지\", \"중간지점\", \"모임장\", \"참여자\"는 한자어지만 그대로 쓴다.",
+      "why": "서비스에서 이름으로 쓰는 말이다.",
+      "source": ["#198"]
+    },
+    {
+      "id": "X4",
+      "text": "느낌표는 지금 있는 3곳에만 둔다.",
+      "why": "초대 화면 제목, 중간지점 결과 화면 제목, 카카오톡 공유 메시지 제목이다.",
+      "source": ["P5"],
+      "allow": [
+        {
+          "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx",
+          "text": "가장 최적의 중간지점이에요!"
+        },
+        {
+          "file": "src/domains/meeting/components/meeting-join-invite/index.tsx",
+          "text": "{hostName}님의 모임에 초대되었어요!"
+        },
+        {
+          "file": "src/shared/utils/kakao.ts",
+          "text": "즐겁고 효율적인 모임 준비 할 사람, 여기 모여락!"
+        }
+      ]
+    },
+    {
+      "id": "X5",
+      "text": "공유 창의 \"더보기\"는 그대로 둔다.",
+      "why": "지원하는 브라우저에서는 기기의 공유 메뉴를 열고, 지원하지 않는 브라우저에서는 링크를 복사한다. 한 말로 두 동작을 가리킬 수 있어야 한다.",
+      "source": ["B5"]
+    },
+    {
+      "id": "X6",
+      "text": "결과를 알리는 문장에는 수동형을 쓸 수 있다.",
+      "why": "예: \"바꾼 시간표에 없는 시간은 일정에서 자동으로 삭제돼요\"",
+      "source": ["N3"]
+    },
+    {
+      "id": "X7",
+      "text": "할 수 없다는 것을 분명히 알려야 할 때는 부정형을 쓸 수 있다. 서비스 문제로 실패한 사실을 알리는 문장(P04의 \"[대상]을 [동작]하지 못했어요\")도 여기에 해당한다.",
+      "why": "예: \"이 브라우저에서는 현재 위치를 불러올 수 없어요\", \"시간표를 수정하지 못했어요\". 실패한 사실은 긍정형으로 바꿀 수 없다. 토스 디자인 시스템도 서버 문제를 \"시스템에 잠깐 문제가 생겨 화면을 불러오지 못했어요.\"처럼 부정형으로 쓴다(TDS Mobile Result 문서)",
+      "source": ["E1", "E2"]
+    },
+    {
+      "id": "X8",
+      "text": "연결 대기 화면의 설명 \"잠시 후 다시 시도해주세요\"는 그대로 둔다.",
+      "why": "토스트가 아니고 바로 아래에 \"다시 연결하기\" 버튼이 있다.",
+      "source": ["E2"]
+    },
+    {
+      "id": "X9",
+      "text": "할 일을 알려 주려고 뜨는 토스트는 할 일을 빼지 않는다.",
+      "why": "\"가능한 시간을 선택해주세요\", \"설정에서 위치 권한을 허용해주세요\"처럼 할 일을 빼면 남는 내용이 없는 토스트다.",
+      "source": ["E2"]
+    }
+  ]
+}
