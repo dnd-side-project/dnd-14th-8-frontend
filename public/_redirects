@@ -1,0 +1,4 @@
+# 공유 이미지 경로를 바꾸면서(#287) 옛 주소를 기억하는 카카오톡 메시지와 링크 미리보기가
+# 이미지 대신 index.html을 받지 않도록 새 주소로 영구 이동(301)한다. 코드를 적지 않으면 302다.
+/static/images/share.png /images/og-image.png 301
+/static/images/share-1.png /images/kakao-share.png 301

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -62,5 +62,22 @@ describe("SEO static configuration", () => {
     expect(headers).toContain("/meetings/*");
     expect(headers).toContain("X-Robots-Tag: noindex");
     expect(headers).toContain("X-Robots-Tag: noindex, nofollow");
+  });
+
+  it("permanently redirects the old share image URLs to existing files", () => {
+    const redirects = readProjectFile("public/_redirects");
+
+    expect(redirects).toMatch(
+      /^\/static\/images\/share\.png\s+\/images\/og-image\.png\s+301$/m,
+    );
+    expect(redirects).toMatch(
+      /^\/static\/images\/share-1\.png\s+\/images\/kakao-share\.png\s+301$/m,
+    );
+    expect(existsSync(join(process.cwd(), "public/images/og-image.png"))).toBe(
+      true,
+    );
+    expect(
+      existsSync(join(process.cwd(), "public/images/kakao-share.png")),
+    ).toBe(true);
   });
 });
