@@ -16,8 +16,10 @@ import {
   useParams,
   useSearchParams,
 } from "react-router";
-import { EmptyNotYetCharacter } from "@/assets/characters";
-import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
+import {
+  EmptyNotFoundCharacter,
+  EmptyNotYetCharacter,
+} from "@/assets/characters";
 import {
   BottomSheet,
   type SheetSnap,
@@ -1078,7 +1080,7 @@ export function LocationMainPage() {
         ) : midpoint?.noNearbyStations ? (
           <div className="flex min-h-full flex-col px-5 pb-[calc(var(--fixed-bottom-area-height,0px)+28px)]">
             <PlaceholderContent
-              graphic={<PlaceholderGraphic className="h-[90px] w-[104px]" />}
+              graphic={<EmptyNotFoundCharacter />}
               title="중간지점을 찾지 못했어요"
               description="출발지들이 서로 너무 멀리 떨어져 있어요. 출발지를 다시 확인해주세요"
             />
