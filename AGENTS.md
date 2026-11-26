@@ -35,7 +35,7 @@ pnpm build       # tsc 타입 검사와 운영 빌드
 
 - 문구를 쓰거나 고칠 때는 `.claude/skills/ux-writing/SKILL.md`의 순서를 따른다.
 - 규칙을 지켰는지는 `pnpm test:ux-writing`으로 확인한다. 커밋할 때와 CI에서도 실행된다.
-- 예전 위반 목록(`ux-writing/baseline.json`)에는 새 위반을 더하지 않는다. 문구를 고치면 목록에서도 지운다.
+- 예전 위반 목록(`ux-writing/baseline.json`)에는 새 위반을 더하지 않는다. 목록에 있는 문구를 고치면 `UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing`으로 목록을 다시 만든다.
 - 규칙을 바꾸는 것은 사람이 정한다. 정한 뒤에는 `ux-writing/rules.json`만 고친다.
 
 ## 접근성

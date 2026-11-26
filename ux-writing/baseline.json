@@ -1,5 +1,5 @@
 {
-  "about": "자동 검사를 처음 넣을 때 이미 규칙을 어기고 있던 문구다. 문구를 고치면 여기서도 지운다. 새 위반은 더하지 않는다.",
+  "about": "자동 검사를 처음 넣을 때 이미 규칙을 어기고 있던 문구다. 문구를 고치면 UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing으로 이 목록을 다시 만든다. 새 위반은 더하지 않는다.",
   "violations": [
     {
       "rule": "P01",

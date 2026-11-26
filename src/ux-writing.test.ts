@@ -29,7 +29,8 @@ import {
  * 화면 문구가 `ux-writing/rules.json`의 규칙을 지키는지 검사한다.
  *
  * - 예전 위반은 `ux-writing/baseline.json`에 적혀 있고 통과한다. 목록에 없는 위반이 나오면 실패한다.
- * - 목록에 있는 위반을 고쳤으면 목록에서도 지워야 한다. 지우지 않으면 실패한다.
+ * - 목록에 있는 위반을 고쳤으면 그 항목의 개수를 남은 위반 수로 줄이고, 남은 위반이 없으면 항목을 지운다.
+ *   그러지 않으면 실패한다.
  * - 목록을 다시 만들 때: `UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing`
  *   목록은 줄이기만 한다. 새 항목이 생기거나 개수가 늘면 파일을 쓰지 않고 실패한다.
  * - 사람이 규칙을 새로 정해 기존 문구에서 위반이 나올 때만, 그 규칙 번호를 적어 더하게 허용한다.
@@ -86,7 +87,7 @@ function toBaseline(violations: Violation[]): BaselineFile {
   );
   return {
     about:
-      "자동 검사를 처음 넣을 때 이미 규칙을 어기고 있던 문구다. 문구를 고치면 여기서도 지운다. 새 위반은 더하지 않는다.",
+      "자동 검사를 처음 넣을 때 이미 규칙을 어기고 있던 문구다. 문구를 고치면 UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing으로 이 목록을 다시 만든다. 새 위반은 더하지 않는다.",
     violations: entries,
   };
 }
