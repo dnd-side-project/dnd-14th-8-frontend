@@ -51,7 +51,8 @@ export interface Rule {
   check?: Check;
   fixes?: Fix[];
   examples?: {
-    bad: { text: string; where: Where }[];
+    /** noFix: 고칠 말이 맞지 않아 일부러 적용하지 않는 어긴 예시다. */
+    bad: { text: string; where: Where; noFix?: true }[];
     good: { text: string; where: Where }[];
   };
 }

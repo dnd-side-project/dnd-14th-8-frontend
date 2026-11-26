@@ -222,6 +222,10 @@ describe("규칙별 검사", () => {
   )("%s: 고칠 말을 적용한 어긴 예시는 그 규칙을 통과한다", (_id, rule) => {
     for (const bad of rule.examples?.bad ?? []) {
       const fixed = suggestFix(rule, bad.text);
+      if (bad.noFix) {
+        expect(fixed, `"${bad.text}"에는 고칠 말을 적용하지 않는다`).toBeNull();
+        continue;
+      }
       expect(fixed, `"${bad.text}"에 고칠 말이 적용된다`).not.toBeNull();
       const found = checkRule(
         rule,
