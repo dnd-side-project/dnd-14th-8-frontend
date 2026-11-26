@@ -38,7 +38,19 @@ export interface Scope {
 }
 
 const HANGUL = /[ㄱ-ㆎ가-힣]/;
-const PAGE_TITLE = /^모여락 \|/;
+/**
+ * 페이지 제목 자리. 내용이 아니라 위치로 정한다.
+ * - index.html: <title>과, 제목을 담는 meta(속성 이름으로 정함)
+ * - vite.config.ts: 앱 매니페스트의 name(홈 화면에 추가한 앱의 이름)
+ */
+const PAGE_TITLE_META = new Set([
+  "og:title",
+  "og:image:alt",
+  "twitter:title",
+  "apple-mobile-web-app-title",
+  "application-name",
+]);
+const APP_NAME_FILE = "vite.config.ts";
 const MODAL_PROPS: Record<string, Where> = {
   title: "modal.title",
   body: "modal.body",
@@ -144,13 +156,15 @@ function namesIn(expression: ts.Node, names: Set<string>) {
 
 /**
  * 소스 한 개에서 한글 문구와 그 위치를 읽는다.
- * 토스트에 변수로 넘긴 문구는 `toastVariables`에 이름과 토스트 종류를 적어 둔다.
+ * 토스트에 상수나 함수로 넘긴 문구는 `toastOwners`에 이름과 토스트 종류를 적어 둔다.
+ * `toastUses`를 넘기면 이름마다 쓰인 토스트 종류를 모두 모은다(이름이 겹치는지 볼 때 쓴다).
  */
 export function collectFromSource(
   file: string,
   source: string,
   scope: Pick<Scope, "bottomButtonLabelFiles" | "screenReaderProps">,
   toastOwners: Map<string, Where>,
+  toastUses?: Map<string, Set<Where>>,
 ): Found[] {
   const sourceFile = ts.createSourceFile(
     file,
@@ -230,17 +244,24 @@ export function collectFromSource(
     if (!HANGUL.test(clean)) return;
     const { where, owners } = describe(node);
     const parent = node.parent;
+    // title="..."와 title={"..."}를 같게 본다.
+    const attribute = ts.isJsxExpression(parent) ? parent.parent : parent;
     const screenTitle =
-      (ts.isJsxAttribute(parent) &&
-        parent.name.getText() === "title" &&
-        (parent.parent.parent as ts.JsxOpeningLikeElement).tagName.getText() ===
-          "Header") ||
+      (ts.isJsxAttribute(attribute) &&
+        attribute.name.getText() === "title" &&
+        (
+          attribute.parent.parent as ts.JsxOpeningLikeElement
+        ).tagName.getText() === "Header") ||
       (ts.isJsxElement(parent) && /^h[12]$/.test(tagNameOf(parent)));
+    const isAppName =
+      file === APP_NAME_FILE &&
+      ts.isPropertyAssignment(parent) &&
+      parent.name.getText().replace(/["']/g, "") === "name";
     found.push({
       text: clean,
       file,
       line: lineOf(position),
-      where: PAGE_TITLE.test(clean) ? "pageTitle" : where,
+      where: isAppName ? "pageTitle" : where,
       owners,
       start: span[0],
       end: span[1],
@@ -259,8 +280,10 @@ export function collectFromSource(
       if (match && first) {
         const names = new Set<string>();
         namesIn(first, names);
+        const kind = `toast.${match[1]}` as Where;
         for (const name of names) {
-          toastOwners.set(name, `toast.${match[1]}` as Where);
+          toastOwners.set(name, kind);
+          toastUses?.set(name, (toastUses.get(name) ?? new Set()).add(kind));
         }
       }
     }
@@ -309,29 +332,43 @@ function sourceFiles(root: string, dir: string): string[] {
   );
 }
 
-/** index.html의 제목과 meta 내용을 읽는다. */
-function collectFromHtml(file: string, source: string): Found[] {
+/**
+ * index.html의 제목과 meta 내용을 읽는다. 태그 단위로 읽어서, 여러 줄에 걸친 meta도 속성 이름으로 자리를 정한다.
+ * 줄 번호는 문구가 놓인 줄이다.
+ */
+export function collectFromHtml(file: string, source: string): Found[] {
   const found: Found[] = [];
-  const lines = source.split("\n");
-  lines.forEach((line, index) => {
-    const match =
-      /<title>([^<]+)<\/title>/.exec(line) ?? /content="([^"]+)"/.exec(line);
-    if (!match || !HANGUL.test(match[1])) return;
-    const text = normalize(match[1]);
+  const lineAt = (index: number) => source.slice(0, index).split("\n").length;
+  const push = (raw: string, index: number, where: Where) => {
+    if (!HANGUL.test(raw)) return;
     found.push({
-      text,
+      text: normalize(raw),
       file,
-      line: index + 1,
-      where: PAGE_TITLE.test(text) ? "pageTitle" : "text",
+      line: lineAt(index),
+      where,
       owners: [],
     });
-  });
-  return found;
+  };
+  for (const match of source.matchAll(/<title>([^<]+)<\/title>/g)) {
+    push(match[1], match.index + match[0].indexOf(match[1]), "pageTitle");
+  }
+  for (const match of source.matchAll(/<meta\b([^>]*)>/g)) {
+    const content = /\bcontent="([^"]+)"/.exec(match[1]);
+    if (!content) continue;
+    const key = /\b(?:property|name)="([^"]+)"/.exec(match[1])?.[1] ?? "";
+    push(
+      content[1],
+      match.index + match[0].indexOf(content[0]),
+      PAGE_TITLE_META.has(key) ? "pageTitle" : "text",
+    );
+  }
+  return found.sort((a, b) => a.line - b.line);
 }
 
-/** 검사 범위의 모든 문구를 위치와 함께 읽는다. */
-export function collectCopies(root: string, scope: Scope): Copy[] {
+/** 검사 범위의 모든 파일을 읽는다. 문구와, 토스트에 이름으로 넘긴 상수와 함수를 함께 모은다. */
+function collectAll(root: string, scope: Scope) {
   const toastOwners = new Map<string, Where>();
+  const toastUses = new Map<string, Set<Where>>();
   const found: Found[] = [];
 
   for (const entry of scope.include) {
@@ -343,11 +380,16 @@ export function collectCopies(root: string, scope: Scope): Copy[] {
       found.push(
         ...(file.endsWith(".html")
           ? collectFromHtml(file, source)
-          : collectFromSource(file, source, scope, toastOwners)),
+          : collectFromSource(file, source, scope, toastOwners, toastUses)),
       );
     }
   }
+  return { found, toastOwners, toastUses };
+}
 
+/** 검사 범위의 모든 문구를 위치와 함께 읽는다. */
+export function collectCopies(root: string, scope: Scope): Copy[] {
+  const { found, toastOwners } = collectAll(root, scope);
   return found
     .filter(
       (copy) =>
@@ -362,4 +404,39 @@ export function collectCopies(root: string, scope: Scope): Copy[] {
       const toast = owner ? toastOwners.get(owner) : undefined;
       return copy.where === "text" && toast ? { ...copy, where: toast } : copy;
     });
+}
+
+/**
+ * 토스트에 이름으로 넘긴 상수와 함수 가운데, 이름만으로는 어느 선언인지 정할 수 없는 것.
+ * 검사기는 토스트 종류를 이름으로 문구에 붙이므로, 같은 이름을 두 파일 이상에서 선언했거나
+ * 같은 이름이 서로 다른 토스트 종류로 쓰이면 다른 문구의 자리를 잘못 정할 수 있다(PR #286 리뷰).
+ * 그런 이름이 생기면 이름을 바꾸거나, 검사기가 선언을 따라가게 고친다.
+ */
+export function toastOwnerConflicts(
+  found: Pick<Found, "file" | "owners">[],
+  toastUses: Map<string, Set<Where>>,
+): string[] {
+  const declaredIn = new Map<string, Set<string>>();
+  for (const copy of found) {
+    for (const name of copy.owners) {
+      if (!toastUses.has(name)) continue;
+      declaredIn.set(name, (declaredIn.get(name) ?? new Set()).add(copy.file));
+    }
+  }
+  const conflicts: string[] = [];
+  for (const [name, kinds] of toastUses) {
+    const files = declaredIn.get(name) ?? new Set<string>();
+    if (kinds.size > 1 || files.size > 1) {
+      conflicts.push(
+        `${name}: 토스트 ${[...kinds].join(", ")} / 선언한 파일 ${[...files].join(", ")}`,
+      );
+    }
+  }
+  return conflicts;
+}
+
+/** 검사 범위에서 이름만으로 선언을 정할 수 없는 토스트 상수와 함수를 찾는다. */
+export function findToastOwnerConflicts(root: string, scope: Scope): string[] {
+  const { found, toastUses } = collectAll(root, scope);
+  return toastOwnerConflicts(found, toastUses);
 }

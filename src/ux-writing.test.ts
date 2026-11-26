@@ -13,8 +13,11 @@ import {
 import {
   type Copy,
   collectCopies,
+  collectFromHtml,
   collectFromSource,
+  findToastOwnerConflicts,
   type Scope,
+  toastOwnerConflicts,
   type Where,
 } from "./ux-writing/collect";
 import {
@@ -27,8 +30,10 @@ import {
  *
  * - 예전 위반은 `ux-writing/baseline.json`에 적혀 있고 통과한다. 목록에 없는 위반이 나오면 실패한다.
  * - 목록에 있는 위반을 고쳤으면 목록에서도 지워야 한다. 지우지 않으면 실패한다.
- * - 목록을 다시 만들 때: `UX_WRITING_UPDATE_BASELINE=1 pnpm test:unit src/ux-writing.test.ts`
- *   목록은 줄이기만 한다. 새 위반을 목록에 더하지 않는다.
+ * - 목록을 다시 만들 때: `UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing`
+ *   목록은 줄이기만 한다. 새 항목이 생기거나 개수가 늘면 파일을 쓰지 않고 실패한다.
+ * - 사람이 규칙을 새로 정해 기존 문구에서 위반이 나올 때만, 그 규칙 번호를 적어 더하게 허용한다.
+ *   `UX_WRITING_UPDATE_BASELINE=1 UX_WRITING_BASELINE_ALLOW_RULES=W22,W23 pnpm test:ux-writing`
  * - 규칙별 위반 수를 볼 때: `UX_WRITING_REPORT=1 pnpm test:unit src/ux-writing.test.ts`
  */
 const root = process.cwd();
@@ -86,6 +91,25 @@ function toBaseline(violations: Violation[]): BaselineFile {
   };
 }
 
+/**
+ * 다시 만든 예전 위반 목록에서, 예전 목록보다 새로 생기거나 개수가 늘어난 항목.
+ * allowRules에 적은 규칙의 항목은 뺀다(사람이 규칙을 새로 정한 경우).
+ */
+function baselineAdditions(
+  before: BaselineEntry[],
+  after: BaselineEntry[],
+  allowRules: Set<string>,
+): BaselineEntry[] {
+  const counts = new Map(
+    before.map((entry) => [violationKey(entry), entry.count]),
+  );
+  return after.filter(
+    (entry) =>
+      !allowRules.has(entry.rule) &&
+      entry.count > (counts.get(violationKey(entry)) ?? 0),
+  );
+}
+
 function describeViolation(violation: Violation): string {
   const rule = ruleById.get(violation.rule);
   const guide = rule?.rule ?? `"${rule?.avoid}" 대신 "${rule?.use}"`;
@@ -119,6 +143,48 @@ describe("문구 규칙 파일", () => {
       const hasCheck = Boolean(rule.check ?? rule.checkedBy);
       expect(hasCheck, rule.id).toBe(rule.auto !== "none");
     }
+  });
+});
+
+describe("예전 위반 목록 다시 만들기", () => {
+  const entry = (rule: string, text: string, count = 1): BaselineEntry => ({
+    rule,
+    file: "example.tsx",
+    text,
+    count,
+  });
+  const before = [
+    entry("W01", "모임 생성하기"),
+    entry("S06", "다시 시도해 주세요.", 2),
+  ];
+
+  it("지우거나 개수를 줄인 것은 막지 않는다", () => {
+    const after = [entry("S06", "다시 시도해 주세요.", 1)];
+    expect(baselineAdditions(before, after, new Set())).toEqual([]);
+  });
+
+  it("새 항목과 늘어난 개수는 막는다", () => {
+    const after = [
+      entry("W01", "모임 생성하기"),
+      entry("S06", "다시 시도해 주세요.", 3),
+      entry("W14", "해당 출발지"),
+    ];
+    expect(
+      baselineAdditions(before, after, new Set()).map((item) => item.rule),
+    ).toEqual(["S06", "W14"]);
+  });
+
+  it("허용한 규칙의 새 항목만 더하게 한다", () => {
+    const after = [
+      ...before,
+      entry("W22", "현재 1명"),
+      entry("W14", "해당 출발지"),
+    ];
+    expect(
+      baselineAdditions(before, after, new Set(["W22"])).map(
+        (item) => item.rule,
+      ),
+    ).toEqual(["W14"]);
   });
 });
 
@@ -196,6 +262,58 @@ describe("규칙별 검사", () => {
   });
 });
 
+describe("화면 제목과 페이지 제목의 자리", () => {
+  it('title="..."와 title={"..."}를 같은 화면 제목으로 본다', () => {
+    const read = (attribute: string) =>
+      collectFromSource(
+        "example.tsx",
+        `export const A = () => <Header ${attribute} />;`,
+        { bottomButtonLabelFiles: [], screenReaderProps: [] },
+        new Map(),
+      )[0]?.screenTitle;
+    expect(read('title="출발지 추가"')).toBe(true);
+    expect(read('title={"출발지 추가"}')).toBe(true);
+    expect(read("title={`출발지 추가`}")).toBe(true);
+  });
+
+  it("index.html은 내용이 아니라 태그로 페이지 제목을 정한다", () => {
+    const html = [
+      "<title>다른 제목</title>",
+      '<meta property="og:title" content="다른 제목" />',
+      "<meta",
+      '  name="description"',
+      '  content="모임 일정을 정해요"',
+      "/>",
+      '<meta name="twitter:title" content="모여락 | 다른 제목" />',
+    ].join("\n");
+    expect(
+      collectFromHtml("index.html", html).map((copy) => [
+        copy.line,
+        copy.where,
+      ]),
+    ).toEqual([
+      [1, "pageTitle"],
+      [2, "pageTitle"],
+      [5, "text"],
+      [7, "pageTitle"],
+    ]);
+  });
+
+  it("vite.config.ts는 앱 이름(name)만 페이지 제목으로 본다", () => {
+    const found = collectFromSource(
+      "vite.config.ts",
+      'export default { manifest: { name: "다른 앱", short_name: "모여락", description: "모여락 | 설명" } };',
+      { bottomButtonLabelFiles: [], screenReaderProps: [] },
+      new Map(),
+    );
+    expect(found.map((copy) => [copy.text, copy.where])).toEqual([
+      ["다른 앱", "pageTitle"],
+      ["모여락", "text"],
+      ["모여락 | 설명", "text"],
+    ]);
+  });
+});
+
 describe("문구의 위치 읽기", () => {
   const source = `
     const SAVE_FAILED_MESSAGE = "저장하지 못했어요";
@@ -255,6 +373,41 @@ describe("문구의 위치 읽기", () => {
     expect(whereOf("{stationName} 근처에 장소가 없어요")).toBe("text");
     // 줄을 바꿔 쓴 JSX는 화면에서 붙어 나온다.
     expect(whereOf("{name}님의 모임")).toBe("text");
+  });
+
+  it("같은 이름을 두 파일에서 선언했거나 토스트 종류가 갈리면 겹침으로 찾는다", () => {
+    const scan = (files: [string, string][]) => {
+      const owners = new Map<string, Where>();
+      const uses = new Map<string, Set<Where>>();
+      const all = files.flatMap(([file, text]) =>
+        collectFromSource(
+          file,
+          text,
+          { bottomButtonLabelFiles: [], screenReaderProps: [] },
+          owners,
+          uses,
+        ),
+      );
+      return toastOwnerConflicts(all, uses).map((line) => line.split(":")[0]);
+    };
+    const a: [string, string] = [
+      "a.ts",
+      'export const MESSAGE = "가능한 시간을 선택해주세요"; toast.error(MESSAGE);',
+    ];
+    const b: [string, string] = [
+      "b.ts",
+      'const MESSAGE = "저장했어요"; toast.success(MESSAGE);',
+    ];
+    expect(scan([a])).toEqual([]);
+    expect(scan([a, b])).toEqual(["MESSAGE"]);
+    expect(
+      scan([
+        [
+          "c.ts",
+          'const FAILED = "실패했어요"; toast.error(FAILED); toast.success(FAILED);',
+        ],
+      ]),
+    ).toEqual(["FAILED"]);
   });
 
   it("토스트에 상수나 함수로 넘긴 문구의 이름을 적어 둔다", () => {
@@ -323,11 +476,27 @@ describe("서비스 문구", () => {
   const copies = collectCopies(root, scope);
   const violations = checkCopies(rules, copies, exceptions, root);
 
+  // 목록을 다시 만들 때 새 항목이나 늘어난 개수가 있으면 파일을 쓰지 않고, 아래 테스트가 실패한다.
+  let refusedAdditions: BaselineEntry[] = [];
   if (process.env.UX_WRITING_UPDATE_BASELINE === "1") {
-    writeFileSync(
-      join(root, BASELINE_PATH),
-      `${JSON.stringify(toBaseline(violations), null, 2)}\n`,
+    const next = toBaseline(violations);
+    const allowRules = new Set(
+      (process.env.UX_WRITING_BASELINE_ALLOW_RULES ?? "")
+        .split(",")
+        .map((rule) => rule.trim())
+        .filter(Boolean),
     );
+    refusedAdditions = baselineAdditions(
+      readJson<BaselineFile>(BASELINE_PATH).violations,
+      next.violations,
+      allowRules,
+    );
+    if (refusedAdditions.length === 0) {
+      writeFileSync(
+        join(root, BASELINE_PATH),
+        `${JSON.stringify(next, null, 2)}\n`,
+      );
+    }
   }
   if (process.env.UX_WRITING_REPORT === "1") {
     const counts = new Map<string, number>();
@@ -347,6 +516,19 @@ describe("서비스 문구", () => {
     baseline.violations.map((entry) => [violationKey(entry), entry.count]),
   );
   const current = countByKey(violations);
+
+  it("예전 위반 목록을 다시 만들 때 새 위반을 더하지 않는다", () => {
+    expect(
+      refusedAdditions.map(
+        (entry) =>
+          `${entry.rule} ${entry.file} "${entry.text}" ${entry.count}개`,
+      ),
+    ).toEqual([]);
+  });
+
+  it("토스트에 이름으로 넘긴 상수와 함수는 이름만으로 어느 선언인지 정해진다", () => {
+    expect(findToastOwnerConflicts(root, scope)).toEqual([]);
+  });
 
   it("검사할 문구를 읽는다", () => {
     expect(copies.length).toBeGreaterThan(200);
