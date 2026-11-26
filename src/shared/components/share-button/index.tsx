@@ -4,9 +4,9 @@ import type {
   ReactNode,
   SVGProps,
 } from "react";
-import ShareKakaoTalkIcon from "@/assets/share/kakaotalk.svg?react";
-import ShareLinkIcon from "@/assets/share/link.svg?react";
-import ShareMoreIcon from "@/assets/share/more.svg?react";
+import ShareKakaoTalkIcon from "@/assets/share-channels/kakaotalk.svg?react";
+import ShareLinkIcon from "@/assets/share-channels/link.svg?react";
+import ShareMoreIcon from "@/assets/share-channels/more.svg?react";
 import { cn } from "@/shared/utils/cn";
 
 export type ShareChannel = "kakaotalk" | "link" | "more";

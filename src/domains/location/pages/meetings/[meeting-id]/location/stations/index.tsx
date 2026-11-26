@@ -16,7 +16,7 @@ import {
   useParams,
   useSearchParams,
 } from "react-router";
-import { Empty1Character } from "@/assets/characters";
+import { EmptyNotYetCharacter } from "@/assets/characters";
 import PlaceholderGraphic from "@/assets/graphic/placeholder.svg?react";
 import {
   BottomSheet,
@@ -1087,7 +1087,7 @@ export function LocationMainPage() {
           <div className="flex min-h-full flex-col px-5 pb-[calc(var(--fixed-bottom-area-height,0px)+28px)]">
             <ParticipantCount count={registeredCount} total={totalCount} />
             <PlaceholderContent
-              graphic={<Empty1Character />}
+              graphic={<EmptyNotYetCharacter />}
               title={insufficientDepartureCopy.title}
               description={insufficientDepartureCopy.description}
             />

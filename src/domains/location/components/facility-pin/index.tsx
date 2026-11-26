@@ -1,5 +1,5 @@
 import { Icon } from "@moyeorak/design-system";
-import { PinIcon } from "@/shared/components/icons";
+import { SelectedPlacePinBaseIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export type FacilityType = "book" | "meetingroom" | "restaurant" | "cafe";
@@ -55,7 +55,7 @@ export function FacilityPinSelected({ type, className }: FacilityPinProps) {
         className,
       )}
     >
-      <PinIcon />
+      <SelectedPlacePinBaseIcon />
       <div className="absolute inset-0 flex translate-y-[-3px] items-center justify-center">
         <Icon type={FACILITY_ICON_TYPE[type]} size="lg" variant="inverted" />
       </div>

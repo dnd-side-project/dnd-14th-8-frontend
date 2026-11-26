@@ -1,7 +1,7 @@
 import { Button } from "@moyeorak/design-system";
 import { useLocation } from "react-router";
 import {
-  InvitationMidpointCharacter,
+  InvitationLocationCharacter,
   InvitationScheduleCharacter,
 } from "@/assets/characters";
 import { MobileLayout } from "@/shared/components/mobile-layout";
@@ -41,7 +41,7 @@ export function MeetingJoinInvite({
 
         <div className="mt-30 flex items-center justify-center">
           {isLocationFlow ? (
-            <InvitationMidpointCharacter />
+            <InvitationLocationCharacter />
           ) : (
             <InvitationScheduleCharacter />
           )}

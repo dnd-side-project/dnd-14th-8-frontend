@@ -19,9 +19,9 @@ vi.mock("@/domains/location/components/map-marker", () => ({
   ),
 }));
 
-vi.mock("@/assets/icons/logo-pin.svg?react", () => ({
+vi.mock("@/assets/map-pins/midpoint-pin.svg?react", () => ({
   default: ({ className }: { className?: string }) => (
-    <svg data-icon="logo-pin" className={className} />
+    <svg data-icon="midpoint-pin" className={className} />
   ),
 }));
 
@@ -69,8 +69,8 @@ describe("LayeredMarker", () => {
   });
 
   it("이름표 층은 아이콘 자리를 비워 두고, 아이콘 층만 아이콘을 보여 준다", () => {
-    expect(labelLayer?.inner).toMatch(/data-icon="logo-pin"[^>]*invisible/);
-    expect(iconLayer?.inner).toContain('data-icon="logo-pin"');
+    expect(labelLayer?.inner).toMatch(/data-icon="midpoint-pin"[^>]*invisible/);
+    expect(iconLayer?.inner).toContain('data-icon="midpoint-pin"');
     expect(iconLayer?.inner).not.toContain("invisible");
   });
 
@@ -110,7 +110,7 @@ describe("LayeredMarker hideLabel", () => {
   });
 
   it("아이콘은 그대로 보이고, 이름은 화면 낭독기용 글자로 한 번만 남긴다", () => {
-    expect(iconLayer?.inner).toContain('data-icon="logo-pin"');
+    expect(iconLayer?.inner).toContain('data-icon="midpoint-pin"');
     expect(iconLayer?.inner).not.toContain("invisible");
     expect(iconLayer?.inner).toContain(
       '<span class="sr-only">어린이대공원역</span>',
