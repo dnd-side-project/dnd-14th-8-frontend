@@ -1,28 +1,42 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const fontCss = readFileSync(
+const require = createRequire(import.meta.url);
+const fontImport =
+  "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+const appFontCss = readFileSync(
   join(process.cwd(), "src/font-system.css"),
   "utf8",
 );
-const fontFaces = fontCss.match(/@font-face\s*{[^}]*}/g) ?? [];
+const packageCssPath = require.resolve(fontImport);
+const fontFaces =
+  readFileSync(packageCssPath, "utf8").match(/@font-face\s*{[^}]*}/g) ?? [];
 
 function designSystemFirstFamily() {
-  const stylesPath = createRequire(import.meta.url).resolve(
-    "@moyeorak/design-system/styles.css",
+  const styles = readFileSync(
+    require.resolve("@moyeorak/design-system/styles.css"),
+    "utf8",
   );
-  const styles = readFileSync(stylesPath, "utf8");
   const value = styles.match(/--fonts-sans:\s*([^;]+);/)?.[1] ?? "";
   return value.split(",")[0].trim();
 }
 
 describe("font static configuration", () => {
+  it("imports the Pretendard variable dynamic subset from the npm package", () => {
+    expect(appFontCss).toContain(`@import "${fontImport}";`);
+    expect(appFontCss).not.toMatch(/@font-face/);
+  });
+
   it("loads the font under the first family name the design system asks for", () => {
     const firstFamily = designSystemFirstFamily();
     const families = fontFaces.map((face) =>
-      face.match(/font-family:\s*([^;]+);/)?.[1].trim(),
+      face
+        .match(/font-family:\s*([^;]+);/)?.[1]
+        .trim()
+        .replaceAll("'", '"'),
     );
 
     expect(firstFamily).not.toBe("");
@@ -30,19 +44,14 @@ describe("font static configuration", () => {
     expect(new Set(families)).toEqual(new Set([firstFamily]));
   });
 
-  it("points every font source to a file in public/fonts and leaves no unused file", () => {
+  it("points every font source in the package CSS to a file in the package", () => {
     const sources = fontFaces.flatMap((face) =>
-      [...face.matchAll(/url\("([^"]+)"\)/g)].map((match) => match[1]),
-    );
-    const files = readdirSync(join(process.cwd(), "public/fonts")).filter(
-      (file) => file.endsWith(".woff2"),
+      [...face.matchAll(/url\(([^)]+)\)/g)].map((match) => match[1]),
     );
 
     expect(sources.length).toBe(fontFaces.length);
     for (const source of sources) {
-      expect(source.startsWith("/fonts/")).toBe(true);
-      expect(existsSync(join(process.cwd(), "public", source))).toBe(true);
+      expect(existsSync(join(dirname(packageCssPath), source))).toBe(true);
     }
-    expect(new Set(sources)).toEqual(new Set(files.map((f) => `/fonts/${f}`)));
   });
 });

@@ -46,7 +46,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // 설치 조건을 채우는 앱 셸만 precache 한다. 글꼴 조각(92개, 모두 2.8MB)과 OG 공유 이미지는
+        // 설치 조건을 채우는 앱 셸만 precache 한다. 글꼴 조각(woff2 92개, 모두 2.8MB)과 OG 공유 이미지는
         // 첫 방문 트래픽만 키우고 앱 구동에 필수는 아니라 HTTP 캐시에 맡긴다.
         // 글꼴은 화면에 나온 글자가 든 조각만 받으면 된다(src/font-system.css).
         globPatterns: ["**/*.{css,html,js}"],
