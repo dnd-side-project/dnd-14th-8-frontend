@@ -1,13 +1,13 @@
 {
-  "about": "토스트 문구의 글자 너비를 브라우저에서 잰 값이다(2026-11-25). 글꼴 파일로 계산한 너비(src/ux-writing/toast-width.ts)가 실제와 맞는지 확인하는 데 쓴다.",
-  "style": "500 14px Pretendard, 자간 -0.01em, 줄바꿈 없음. 글꼴은 public/fonts/Pretendard-Medium.woff2.",
-  "result": "잰 값은 모두 자간을 모두 적용한 계산값과 자간을 뺀 계산값 사이에 있다. 데스크톱 Chromium과 WebKit은 자간을 모두 적용한 값과 같고, iOS Safari는 최대 2.12px, Android Chrome은 최대 4.02px 더 넓다.",
+  "about": "토스트 문구의 글자 너비를 브라우저에서 잰 값이다(2026-11-27, #292로 글꼴을 npm pretendard 1.3.9 가변 dynamic subset으로 바꾼 뒤). 글꼴 파일로 계산한 너비(src/ux-writing/toast-width.ts)가 실제와 맞는지 확인하는 데 쓴다.",
+  "style": "500 14px \"Pretendard Variable\", Pretendard, sans-serif, 자간 -0.01em, 줄바꿈 없음. 글꼴은 npm pretendard 1.3.9의 가변 dynamic subset(서비스와 같은 CSS).",
+  "result": "잰 값은 8곳 모두 자간을 모두 적용한 계산값과 0.06px 안으로 같다. 계산은 같은 패키지의 굵기 500 일반 판(Pretendard-Medium.woff2)으로 한다. 2026-11-25에 옛 글꼴(1.0판 Medium)로 잴 때는 iOS Safari가 최대 2.12px, Android Chrome이 최대 4.02px 넓었는데, 같은 기기에서 글꼴만 바꾸니 차이가 사라졌다.",
   "notMeasured": "실제 휴대폰, 카카오톡 안 브라우저, 삼성 인터넷에서는 재지 않았다. 시뮬레이터와 에뮬레이터에서 쟀다.",
   "unit": "px",
   "browsers": [
     {
       "browser": "데스크톱 Chromium 145 (Playwright 1.58.0)",
-      "method": "main 9f98e13 운영 빌드의 실제 토스트 요소를 복제해 글자만 바꿔 잼",
+      "method": "#286에 main(33470a4)을 합친 상태의 앱 Storybook(shared/Toast)에서 실제 토스트 요소를 복제해 글자만 바꿔 잼",
       "viewport": 375,
       "devicePixelRatio": 1,
       "rows": [
@@ -573,7 +573,7 @@
     },
     {
       "browser": "데스크톱 Chromium 145 (Playwright 1.58.0)",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 375,
       "devicePixelRatio": 1,
       "rows": [
@@ -953,7 +953,7 @@
     },
     {
       "browser": "데스크톱 WebKit 26.0 (Playwright 1.58.0)",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 375,
       "devicePixelRatio": 1,
       "rows": [
@@ -1333,77 +1333,77 @@
     },
     {
       "browser": "iOS 18.5 Safari, iPhone 16 시뮬레이터",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 393,
       "devicePixelRatio": 3,
       "rows": [
         {
           "text": "PC에서는 링크 복사로 공유해주세요",
-          "textWidth": 196.172
+          "textWidth": 195.406
         },
         {
           "text": "가능한 시간을 선택해주세요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "링크가 복사되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "링크를 복사하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "링크를 복사했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "모바일에서만 카카오톡으로 공유할 수 있어요",
-          "textWidth": 241.406
+          "textWidth": 240.359
         },
         {
           "text": "모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 306.969
+          "textWidth": 304.953
         },
         {
           "text": "모임 인원을 수정하지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "모임 인원을 수정했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임 인원이 수정되었어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "모임을 만들지 못했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임을 만들지 못했어요. 다시 시도해주세요",
-          "textWidth": 233
+          "textWidth": 231.781
         },
         {
           "text": "모임인원이 수정되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "새 버전이 준비됐어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "새로고침",
@@ -1411,379 +1411,379 @@
         },
         {
           "text": "새로고침한 뒤 다시 눌러 위치를 허용해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.625
         },
         {
           "text": "서비스 지역이 아니에요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "설정에서 위치 권한을 허용해주세요",
-          "textWidth": 190.031
+          "textWidth": 189.234
         },
         {
           "text": "수정 완료되었어요!",
-          "textWidth": 102.922
+          "textWidth": 102.656
         },
         {
           "text": "수정에 실패했습니다. 다시 시도해주세요.",
-          "textWidth": 221.047
+          "textWidth": 220.078
         },
         {
           "text": "시간표 범위가 수정되었어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "시간표가 초기화되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "시간표를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "시간표를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-          "textWidth": 339.312
+          "textWidth": 337.547
         },
         {
           "text": "위치 권한이 필요해요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
-          "textWidth": 248.5
+          "textWidth": 246.906
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요. 주소를 검색해주세요",
-          "textWidth": 366.766
+          "textWidth": 364.484
         },
         {
           "text": "이 브라우저에서는 현재 위치를 불러올 수 없어요",
-          "textWidth": 260.453
+          "textWidth": 258.875
         },
         {
           "text": "이동하지 못했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "이동하지 못했어요. 다시 시도해주세요",
-          "textWidth": 205.531
+          "textWidth": 204.578
         },
         {
           "text": "이름을 입력해주세요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "이미 출발지를 등록한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요. 다른 이름을 선택해주세요",
-          "textWidth": 323.797
+          "textWidth": 322.047
         },
         {
           "text": "일정 수정에 실패했습니다.",
-          "textWidth": 142.203
+          "textWidth": 141.656
         },
         {
           "text": "일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요",
-          "textWidth": 275.953
+          "textWidth": 274.109
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 선택해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정을 수정했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 저장하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 초기화하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "일정을 초기화하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "일정을 추가하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "일정을 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 추가했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 확정하는 중 오류가 발생했어요",
-          "textWidth": 205.531
+          "textWidth": 204.469
         },
         {
           "text": "일정이 수정되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "일정이 추가되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "입력된 일정이 없어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "입력한 일정을 초기화했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "입력한 일정이 초기화되었어요",
-          "textWidth": 162.562
+          "textWidth": 162.031
         },
         {
           "text": "장소 정보를 찾을 수 없어요",
-          "textWidth": 145.734
+          "textWidth": 144.672
         },
         {
           "text": "장소 정보를 찾지 못했어요",
-          "textWidth": 142.188
+          "textWidth": 141.391
         },
         {
           "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 287.906
+          "textWidth": 286.062
         },
         {
           "text": "장소를 검색하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "중간지점 찾기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 299.875
+          "textWidth": 298.031
         },
         {
           "text": "지금 참여한 인원부터 고를 수 있어요",
-          "textWidth": 197.109
+          "textWidth": 195.797
         },
         {
           "text": "참여한 인원보다 적게는 고를 수 없어요",
-          "textWidth": 209.078
+          "textWidth": 207.75
         },
         {
           "text": "최대 4자까지 입력할 수 있어요",
-          "textWidth": 166.438
+          "textWidth": 165.391
         },
         {
           "text": "최소 2개 이상의 출발지가 필요해요",
-          "textWidth": 189.797
+          "textWidth": 188.734
         },
         {
           "text": "출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지가 삭제되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 추가되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지를 삭제하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 삭제하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 삭제했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 추가하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 추가했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "클립보드 복사에 실패했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "클립보드에 복사되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "현재 위치를 불러오지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "현재 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "현재 위치를 쓸 수 없어요. 주소를 검색해주세요",
-          "textWidth": 252.047
+          "textWidth": 250.297
         },
         {
           "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
-          "textWidth": 248.5
+          "textWidth": 247.016
         },
         {
           "text": "현재 참여 인원보다 적게 설정할 수 없어요",
-          "textWidth": 224.578
+          "textWidth": 222.984
         },
         {
           "text": "현재는 수도권 내 출발지만 선택할 수 있어요.",
-          "textWidth": 240.078
+          "textWidth": 238.5
         }
       ]
     },
     {
       "browser": "iOS 26.3 Safari, iPhone 16 시뮬레이터",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 393,
       "devicePixelRatio": 3,
       "rows": [
         {
           "text": "PC에서는 링크 복사로 공유해주세요",
-          "textWidth": 196.172
+          "textWidth": 195.406
         },
         {
           "text": "가능한 시간을 선택해주세요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "링크가 복사되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "링크를 복사하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "링크를 복사했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "모바일에서만 카카오톡으로 공유할 수 있어요",
-          "textWidth": 241.406
+          "textWidth": 240.359
         },
         {
           "text": "모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 306.969
+          "textWidth": 304.953
         },
         {
           "text": "모임 인원을 수정하지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "모임 인원을 수정했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임 인원이 수정되었어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "모임을 만들지 못했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임을 만들지 못했어요. 다시 시도해주세요",
-          "textWidth": 233
+          "textWidth": 231.781
         },
         {
           "text": "모임인원이 수정되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "새 버전이 준비됐어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "새로고침",
@@ -1791,379 +1791,379 @@
         },
         {
           "text": "새로고침한 뒤 다시 눌러 위치를 허용해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.625
         },
         {
           "text": "서비스 지역이 아니에요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "설정에서 위치 권한을 허용해주세요",
-          "textWidth": 190.031
+          "textWidth": 189.234
         },
         {
           "text": "수정 완료되었어요!",
-          "textWidth": 102.922
+          "textWidth": 102.656
         },
         {
           "text": "수정에 실패했습니다. 다시 시도해주세요.",
-          "textWidth": 221.047
+          "textWidth": 220.078
         },
         {
           "text": "시간표 범위가 수정되었어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "시간표가 초기화되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "시간표를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "시간표를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-          "textWidth": 339.312
+          "textWidth": 337.547
         },
         {
           "text": "위치 권한이 필요해요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
-          "textWidth": 248.5
+          "textWidth": 246.906
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요. 주소를 검색해주세요",
-          "textWidth": 366.766
+          "textWidth": 364.484
         },
         {
           "text": "이 브라우저에서는 현재 위치를 불러올 수 없어요",
-          "textWidth": 260.453
+          "textWidth": 258.875
         },
         {
           "text": "이동하지 못했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "이동하지 못했어요. 다시 시도해주세요",
-          "textWidth": 205.531
+          "textWidth": 204.578
         },
         {
           "text": "이름을 입력해주세요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "이미 출발지를 등록한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요. 다른 이름을 선택해주세요",
-          "textWidth": 323.797
+          "textWidth": 322.047
         },
         {
           "text": "일정 수정에 실패했습니다.",
-          "textWidth": 142.203
+          "textWidth": 141.656
         },
         {
           "text": "일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요",
-          "textWidth": 275.953
+          "textWidth": 274.109
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 선택해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정을 수정했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 저장하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 초기화하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "일정을 초기화하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "일정을 추가하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "일정을 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 추가했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 확정하는 중 오류가 발생했어요",
-          "textWidth": 205.531
+          "textWidth": 204.469
         },
         {
           "text": "일정이 수정되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "일정이 추가되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "입력된 일정이 없어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "입력한 일정을 초기화했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "입력한 일정이 초기화되었어요",
-          "textWidth": 162.562
+          "textWidth": 162.031
         },
         {
           "text": "장소 정보를 찾을 수 없어요",
-          "textWidth": 145.734
+          "textWidth": 144.672
         },
         {
           "text": "장소 정보를 찾지 못했어요",
-          "textWidth": 142.188
+          "textWidth": 141.391
         },
         {
           "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 287.906
+          "textWidth": 286.062
         },
         {
           "text": "장소를 검색하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "중간지점 찾기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 299.875
+          "textWidth": 298.031
         },
         {
           "text": "지금 참여한 인원부터 고를 수 있어요",
-          "textWidth": 197.109
+          "textWidth": 195.797
         },
         {
           "text": "참여한 인원보다 적게는 고를 수 없어요",
-          "textWidth": 209.078
+          "textWidth": 207.75
         },
         {
           "text": "최대 4자까지 입력할 수 있어요",
-          "textWidth": 166.438
+          "textWidth": 165.391
         },
         {
           "text": "최소 2개 이상의 출발지가 필요해요",
-          "textWidth": 189.797
+          "textWidth": 188.734
         },
         {
           "text": "출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지가 삭제되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 추가되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지를 삭제하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 삭제하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 삭제했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 추가하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 추가했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "클립보드 복사에 실패했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "클립보드에 복사되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "현재 위치를 불러오지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "현재 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "현재 위치를 쓸 수 없어요. 주소를 검색해주세요",
-          "textWidth": 252.047
+          "textWidth": 250.297
         },
         {
           "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
-          "textWidth": 248.5
+          "textWidth": 247.016
         },
         {
           "text": "현재 참여 인원보다 적게 설정할 수 없어요",
-          "textWidth": 224.578
+          "textWidth": 222.984
         },
         {
           "text": "현재는 수도권 내 출발지만 선택할 수 있어요.",
-          "textWidth": 240.078
+          "textWidth": 238.5
         }
       ]
     },
     {
       "browser": "Android 15 Chrome 124, Pixel 8 에뮬레이터",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 412,
       "devicePixelRatio": 2.625,
       "rows": [
         {
           "text": "PC에서는 링크 복사로 공유해주세요",
-          "textWidth": 196.887
+          "textWidth": 195.393
         },
         {
           "text": "가능한 시간을 선택해주세요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "링크가 복사되었어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "링크를 복사하지 못했어요",
-          "textWidth": 139.119
+          "textWidth": 138.113
         },
         {
           "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
-          "textWidth": 245.905
+          "textWidth": 243.732
         },
         {
           "text": "링크를 복사했어요",
-          "textWidth": 99.458
+          "textWidth": 98.958
         },
         {
           "text": "모바일에서만 카카오톡으로 공유할 수 있어요",
-          "textWidth": 242.357
+          "textWidth": 240.345
         },
         {
           "text": "모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 280.94
+          "textWidth": 277.75
         },
         {
           "text": "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 308.637
+          "textWidth": 304.946
         },
         {
           "text": "모임 인원을 수정하지 못했어요",
-          "textWidth": 166.815
+          "textWidth": 165.31
         },
         {
           "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 273.607
+          "textWidth": 270.929
         },
         {
           "text": "모임 인원을 수정했어요",
-          "textWidth": 127.161
+          "textWidth": 126.155
         },
         {
           "text": "모임 인원이 수정되었어요",
-          "textWidth": 139.119
+          "textWidth": 138.113
         },
         {
           "text": "모임을 만들지 못했어요",
-          "textWidth": 127.161
+          "textWidth": 126.155
         },
         {
           "text": "모임을 만들지 못했어요. 다시 시도해주세요",
-          "textWidth": 233.946
+          "textWidth": 231.768
         },
         {
           "text": "모임인원이 수정되었어요",
-          "textWidth": 135.339
+          "textWidth": 134.839
         },
         {
           "text": "새 버전이 준비됐어요",
-          "textWidth": 115.202
+          "textWidth": 114.196
         },
         {
           "text": "새로고침",
@@ -2171,379 +2171,379 @@
         },
         {
           "text": "새로고침한 뒤 다시 눌러 위치를 허용해주세요",
-          "textWidth": 246.137
+          "textWidth": 243.625
         },
         {
           "text": "서비스 지역이 아니에요",
-          "textWidth": 127.161
+          "textWidth": 126.155
         },
         {
           "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
-          "textWidth": 261.649
+          "textWidth": 258.964
         },
         {
           "text": "설정에서 위치 권한을 허용해주세요",
-          "textWidth": 190.738
+          "textWidth": 189.232
         },
         {
           "text": "수정 완료되었어요!",
-          "textWidth": 103.149
+          "textWidth": 102.649
         },
         {
           "text": "수정에 실패했습니다. 다시 시도해주세요.",
-          "textWidth": 221.762
+          "textWidth": 220.077
         },
         {
           "text": "시간표 범위가 수정되었어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "시간표가 수정되었어요",
-          "textWidth": 123.381
+          "textWidth": 122.875
         },
         {
           "text": "시간표가 초기화되었어요",
-          "textWidth": 135.339
+          "textWidth": 134.839
         },
         {
           "text": "시간표를 수정하지 못했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 257.869
+          "textWidth": 255.69
         },
         {
           "text": "시간표를 수정했어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-          "textWidth": 340.738
+          "textWidth": 337.548
         },
         {
           "text": "위치 권한이 필요해요",
-          "textWidth": 115.202
+          "textWidth": 114.196
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
-          "textWidth": 249.917
+          "textWidth": 246.905
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요. 주소를 검색해주세요",
-          "textWidth": 368.661
+          "textWidth": 364.476
         },
         {
           "text": "이 브라우저에서는 현재 위치를 불러올 수 없어요",
-          "textWidth": 261.875
+          "textWidth": 258.863
         },
         {
           "text": "이동하지 못했어요",
-          "textWidth": 99.458
+          "textWidth": 98.958
         },
         {
           "text": "이동하지 못했어요. 다시 시도해주세요",
-          "textWidth": 206.25
+          "textWidth": 204.571
         },
         {
           "text": "이름을 입력해주세요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "이미 출발지를 등록한 참여자예요",
-          "textWidth": 178.78
+          "textWidth": 177.274
         },
         {
           "text": "이미 출발지를 추가한 참여자예요",
-          "textWidth": 178.78
+          "textWidth": 177.274
         },
         {
           "text": "이미 출발지를 추가한 참여자예요. 다른 이름을 선택해주세요",
-          "textWidth": 325.226
+          "textWidth": 322.042
         },
         {
           "text": "일정 수정에 실패했습니다.",
-          "textWidth": 142.673
+          "textWidth": 141.661
         },
         {
           "text": "일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 280.94
+          "textWidth": 277.75
         },
         {
           "text": "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요",
-          "textWidth": 277.613
+          "textWidth": 274.101
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 선택해주세요",
-          "textWidth": 270.054
+          "textWidth": 267.542
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
-          "textWidth": 270.054
+          "textWidth": 267.542
         },
         {
           "text": "일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 280.94
+          "textWidth": 277.75
         },
         {
           "text": "일정을 수정했어요",
-          "textWidth": 99.458
+          "textWidth": 98.958
         },
         {
           "text": "일정을 저장하지 못했어요. 다시 시도해주세요",
-          "textWidth": 245.905
+          "textWidth": 243.732
         },
         {
           "text": "일정을 초기화하지 못했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "일정을 초기화하지 못했어요. 다시 시도해주세요",
-          "textWidth": 257.869
+          "textWidth": 255.69
         },
         {
           "text": "일정을 추가하지 못했어요",
-          "textWidth": 139.119
+          "textWidth": 138.113
         },
         {
           "text": "일정을 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 245.905
+          "textWidth": 243.732
         },
         {
           "text": "일정을 추가했어요",
-          "textWidth": 99.458
+          "textWidth": 98.958
         },
         {
           "text": "일정을 확정하는 중 오류가 발생했어요",
-          "textWidth": 206.476
+          "textWidth": 204.47
         },
         {
           "text": "일정이 수정되었어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "일정이 추가되었어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "입력된 일정이 없어요",
-          "textWidth": 115.202
+          "textWidth": 114.196
         },
         {
           "text": "입력한 일정을 초기화했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "입력한 일정이 초기화되었어요",
-          "textWidth": 163.036
+          "textWidth": 162.036
         },
         {
           "text": "장소 정보를 찾을 수 없어요",
-          "textWidth": 146.679
+          "textWidth": 144.673
         },
         {
           "text": "장소 정보를 찾지 못했어요",
-          "textWidth": 142.899
+          "textWidth": 141.393
         },
         {
           "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 289.577
+          "textWidth": 286.06
         },
         {
           "text": "장소를 검색하지 못했어요",
-          "textWidth": 139.119
+          "textWidth": 138.113
         },
         {
           "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
-          "textWidth": 245.905
+          "textWidth": 243.732
         },
         {
           "text": "중간지점 찾기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 301.536
+          "textWidth": 298.018
         },
         {
           "text": "지금 참여한 인원부터 고를 수 있어요",
-          "textWidth": 198.298
+          "textWidth": 195.786
         },
         {
           "text": "참여한 인원보다 적게는 고를 수 없어요",
-          "textWidth": 210.256
+          "textWidth": 207.744
         },
         {
           "text": "최대 4자까지 입력할 수 있어요",
-          "textWidth": 167.387
+          "textWidth": 165.381
         },
         {
           "text": "최소 2개 이상의 출발지가 필요해요",
-          "textWidth": 190.744
+          "textWidth": 188.738
         },
         {
           "text": "출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 292.899
+          "textWidth": 289.708
         },
         {
           "text": "출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 292.899
+          "textWidth": 289.708
         },
         {
           "text": "출발지가 삭제되었어요",
-          "textWidth": 123.381
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 수정되었어요",
-          "textWidth": 123.381
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 추가되었어요",
-          "textWidth": 123.381
+          "textWidth": 122.875
         },
         {
           "text": "출발지를 삭제하지 못했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "출발지를 삭제하지 못했어요. 다시 시도해주세요",
-          "textWidth": 257.869
+          "textWidth": 255.69
         },
         {
           "text": "출발지를 삭제했어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "출발지를 수정하지 못했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 257.869
+          "textWidth": 255.69
         },
         {
           "text": "출발지를 수정했어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "출발지를 추가하지 못했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 257.869
+          "textWidth": 255.69
         },
         {
           "text": "출발지를 추가했어요",
-          "textWidth": 111.417
+          "textWidth": 110.917
         },
         {
           "text": "클립보드 복사에 실패했어요",
-          "textWidth": 151.077
+          "textWidth": 150.071
         },
         {
           "text": "클립보드에 복사되었어요",
-          "textWidth": 135.339
+          "textWidth": 134.839
         },
         {
           "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 261.649
+          "textWidth": 258.964
         },
         {
           "text": "현재 위치를 불러오지 못했어요",
-          "textWidth": 166.815
+          "textWidth": 165.31
         },
         {
           "text": "현재 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 273.607
+          "textWidth": 270.929
         },
         {
           "text": "현재 위치를 쓸 수 없어요. 주소를 검색해주세요",
-          "textWidth": 253.464
+          "textWidth": 250.286
         },
         {
           "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
-          "textWidth": 249.685
+          "textWidth": 247.006
         },
         {
           "text": "현재 참여 인원보다 적게 설정할 수 없어요",
-          "textWidth": 225.994
+          "textWidth": 222.982
         },
         {
           "text": "현재는 수도권 내 출발지만 선택할 수 있어요.",
-          "textWidth": 241.506
+          "textWidth": 238.488
         }
       ]
     },
     {
       "browser": "iOS 18.5 Safari, iPhone SE(3세대) 시뮬레이터",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 375,
       "devicePixelRatio": 2,
       "rows": [
         {
           "text": "PC에서는 링크 복사로 공유해주세요",
-          "textWidth": 196.172
+          "textWidth": 195.406
         },
         {
           "text": "가능한 시간을 선택해주세요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "링크가 복사되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "링크를 복사하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "링크를 복사했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "모바일에서만 카카오톡으로 공유할 수 있어요",
-          "textWidth": 241.406
+          "textWidth": 240.359
         },
         {
           "text": "모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 306.969
+          "textWidth": 304.953
         },
         {
           "text": "모임 인원을 수정하지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "모임 인원을 수정했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임 인원이 수정되었어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "모임을 만들지 못했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임을 만들지 못했어요. 다시 시도해주세요",
-          "textWidth": 233
+          "textWidth": 231.781
         },
         {
           "text": "모임인원이 수정되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "새 버전이 준비됐어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "새로고침",
@@ -2551,379 +2551,379 @@
         },
         {
           "text": "새로고침한 뒤 다시 눌러 위치를 허용해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.625
         },
         {
           "text": "서비스 지역이 아니에요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "설정에서 위치 권한을 허용해주세요",
-          "textWidth": 190.031
+          "textWidth": 189.234
         },
         {
           "text": "수정 완료되었어요!",
-          "textWidth": 102.922
+          "textWidth": 102.656
         },
         {
           "text": "수정에 실패했습니다. 다시 시도해주세요.",
-          "textWidth": 221.047
+          "textWidth": 220.078
         },
         {
           "text": "시간표 범위가 수정되었어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "시간표가 초기화되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "시간표를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "시간표를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-          "textWidth": 339.312
+          "textWidth": 337.547
         },
         {
           "text": "위치 권한이 필요해요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
-          "textWidth": 248.5
+          "textWidth": 246.906
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요. 주소를 검색해주세요",
-          "textWidth": 366.766
+          "textWidth": 364.484
         },
         {
           "text": "이 브라우저에서는 현재 위치를 불러올 수 없어요",
-          "textWidth": 260.453
+          "textWidth": 258.875
         },
         {
           "text": "이동하지 못했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "이동하지 못했어요. 다시 시도해주세요",
-          "textWidth": 205.531
+          "textWidth": 204.578
         },
         {
           "text": "이름을 입력해주세요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "이미 출발지를 등록한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요. 다른 이름을 선택해주세요",
-          "textWidth": 323.797
+          "textWidth": 322.047
         },
         {
           "text": "일정 수정에 실패했습니다.",
-          "textWidth": 142.203
+          "textWidth": 141.656
         },
         {
           "text": "일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요",
-          "textWidth": 275.953
+          "textWidth": 274.109
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 선택해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정을 수정했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 저장하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 초기화하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "일정을 초기화하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "일정을 추가하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "일정을 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 추가했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 확정하는 중 오류가 발생했어요",
-          "textWidth": 205.531
+          "textWidth": 204.469
         },
         {
           "text": "일정이 수정되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "일정이 추가되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "입력된 일정이 없어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "입력한 일정을 초기화했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "입력한 일정이 초기화되었어요",
-          "textWidth": 162.562
+          "textWidth": 162.031
         },
         {
           "text": "장소 정보를 찾을 수 없어요",
-          "textWidth": 145.734
+          "textWidth": 144.672
         },
         {
           "text": "장소 정보를 찾지 못했어요",
-          "textWidth": 142.188
+          "textWidth": 141.391
         },
         {
           "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 287.906
+          "textWidth": 286.062
         },
         {
           "text": "장소를 검색하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "중간지점 찾기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 299.875
+          "textWidth": 298.031
         },
         {
           "text": "지금 참여한 인원부터 고를 수 있어요",
-          "textWidth": 197.109
+          "textWidth": 195.797
         },
         {
           "text": "참여한 인원보다 적게는 고를 수 없어요",
-          "textWidth": 209.078
+          "textWidth": 207.75
         },
         {
           "text": "최대 4자까지 입력할 수 있어요",
-          "textWidth": 166.438
+          "textWidth": 165.391
         },
         {
           "text": "최소 2개 이상의 출발지가 필요해요",
-          "textWidth": 189.797
+          "textWidth": 188.734
         },
         {
           "text": "출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지가 삭제되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 추가되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지를 삭제하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 삭제하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 삭제했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 추가하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 추가했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "클립보드 복사에 실패했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "클립보드에 복사되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "현재 위치를 불러오지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "현재 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "현재 위치를 쓸 수 없어요. 주소를 검색해주세요",
-          "textWidth": 252.047
+          "textWidth": 250.297
         },
         {
           "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
-          "textWidth": 248.5
+          "textWidth": 247.016
         },
         {
           "text": "현재 참여 인원보다 적게 설정할 수 없어요",
-          "textWidth": 224.578
+          "textWidth": 222.984
         },
         {
           "text": "현재는 수도권 내 출발지만 선택할 수 있어요.",
-          "textWidth": 240.078
+          "textWidth": 238.5
         }
       ]
     },
     {
       "browser": "iOS 18.5 Safari, iPhone 13 mini 시뮬레이터",
-      "method": "같은 스타일로 만든 재는 페이지",
+      "method": "같은 스타일로 만든 재는 페이지(서비스와 같은 pretendard 가변 dynamic subset CSS)",
       "viewport": 360,
       "devicePixelRatio": 3,
       "rows": [
         {
           "text": "PC에서는 링크 복사로 공유해주세요",
-          "textWidth": 196.172
+          "textWidth": 195.406
         },
         {
           "text": "가능한 시간을 선택해주세요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "링크가 복사되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "링크를 복사하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "링크를 복사했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "모바일에서만 카카오톡으로 공유할 수 있어요",
-          "textWidth": 241.406
+          "textWidth": 240.359
         },
         {
           "text": "모임 생성에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "모임 인원 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 306.969
+          "textWidth": 304.953
         },
         {
           "text": "모임 인원을 수정하지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "모임 인원을 수정했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임 인원이 수정되었어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "모임을 만들지 못했어요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "모임을 만들지 못했어요. 다시 시도해주세요",
-          "textWidth": 233
+          "textWidth": 231.781
         },
         {
           "text": "모임인원이 수정되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "새 버전이 준비됐어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "새로고침",
@@ -2931,303 +2931,303 @@
         },
         {
           "text": "새로고침한 뒤 다시 눌러 위치를 허용해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.625
         },
         {
           "text": "서비스 지역이 아니에요",
-          "textWidth": 126.688
+          "textWidth": 126.156
         },
         {
           "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "설정에서 위치 권한을 허용해주세요",
-          "textWidth": 190.031
+          "textWidth": 189.234
         },
         {
           "text": "수정 완료되었어요!",
-          "textWidth": 102.922
+          "textWidth": 102.656
         },
         {
           "text": "수정에 실패했습니다. 다시 시도해주세요.",
-          "textWidth": 221.047
+          "textWidth": 220.078
         },
         {
           "text": "시간표 범위가 수정되었어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "시간표가 초기화되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "시간표를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "시간표를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "아직 서비스하지 않는 지역이에요. 다른 출발지를 선택해주세요.",
-          "textWidth": 339.312
+          "textWidth": 337.547
         },
         {
           "text": "위치 권한이 필요해요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
-          "textWidth": 248.5
+          "textWidth": 246.906
         },
         {
           "text": "이 브라우저에서는 현 위치를 불러올 수 없어요. 주소를 검색해주세요",
-          "textWidth": 366.766
+          "textWidth": 364.484
         },
         {
           "text": "이 브라우저에서는 현재 위치를 불러올 수 없어요",
-          "textWidth": 260.453
+          "textWidth": 258.875
         },
         {
           "text": "이동하지 못했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "이동하지 못했어요. 다시 시도해주세요",
-          "textWidth": 205.531
+          "textWidth": 204.578
         },
         {
           "text": "이름을 입력해주세요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "이미 출발지를 등록한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요",
-          "textWidth": 178.062
+          "textWidth": 177.281
         },
         {
           "text": "이미 출발지를 추가한 참여자예요. 다른 이름을 선택해주세요",
-          "textWidth": 323.797
+          "textWidth": 322.047
         },
         {
           "text": "일정 수정에 실패했습니다.",
-          "textWidth": 142.203
+          "textWidth": 141.656
         },
         {
           "text": "일정 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정 수정하기를 눌러 가능한 시간을 바꿀 수 있어요",
-          "textWidth": 275.953
+          "textWidth": 274.109
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 선택해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
-          "textWidth": 268.875
+          "textWidth": 267.547
         },
         {
           "text": "일정 확정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 279.516
+          "textWidth": 277.75
         },
         {
           "text": "일정을 수정했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 저장하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 초기화하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "일정을 초기화하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "일정을 추가하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "일정을 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "일정을 추가했어요",
-          "textWidth": 99.234
+          "textWidth": 98.969
         },
         {
           "text": "일정을 확정하는 중 오류가 발생했어요",
-          "textWidth": 205.531
+          "textWidth": 204.469
         },
         {
           "text": "일정이 수정되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "일정이 추가되었어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "입력된 일정이 없어요",
-          "textWidth": 114.734
+          "textWidth": 114.203
         },
         {
           "text": "입력한 일정을 초기화했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "입력한 일정이 초기화되었어요",
-          "textWidth": 162.562
+          "textWidth": 162.031
         },
         {
           "text": "장소 정보를 찾을 수 없어요",
-          "textWidth": 145.734
+          "textWidth": 144.672
         },
         {
           "text": "장소 정보를 찾지 못했어요",
-          "textWidth": 142.188
+          "textWidth": 141.391
         },
         {
           "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 287.906
+          "textWidth": 286.062
         },
         {
           "text": "장소를 검색하지 못했어요",
-          "textWidth": 138.641
+          "textWidth": 138.125
         },
         {
           "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
-          "textWidth": 244.953
+          "textWidth": 243.734
         },
         {
           "text": "중간지점 찾기로 이동해서 가능한 시간을 바꿀 수 없어요",
-          "textWidth": 299.875
+          "textWidth": 298.031
         },
         {
           "text": "지금 참여한 인원부터 고를 수 있어요",
-          "textWidth": 197.109
+          "textWidth": 195.797
         },
         {
           "text": "참여한 인원보다 적게는 고를 수 없어요",
-          "textWidth": 209.078
+          "textWidth": 207.75
         },
         {
           "text": "최대 4자까지 입력할 수 있어요",
-          "textWidth": 166.438
+          "textWidth": 165.391
         },
         {
           "text": "최소 2개 이상의 출발지가 필요해요",
-          "textWidth": 189.797
+          "textWidth": 188.734
         },
         {
           "text": "출발지 수정에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지 추가에 실패했어요. 잠시 후 다시 시도해주세요.",
-          "textWidth": 291.469
+          "textWidth": 289.719
         },
         {
           "text": "출발지가 삭제되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 수정되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지가 추가되었어요",
-          "textWidth": 123.141
+          "textWidth": 122.875
         },
         {
           "text": "출발지를 삭제하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 삭제하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 삭제했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 수정하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 수정했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "출발지를 추가하지 못했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
-          "textWidth": 256.922
+          "textWidth": 255.688
         },
         {
           "text": "출발지를 추가했어요",
-          "textWidth": 111.188
+          "textWidth": 110.922
         },
         {
           "text": "클립보드 복사에 실패했어요",
-          "textWidth": 150.609
+          "textWidth": 150.078
         },
         {
           "text": "클립보드에 복사되었어요",
-          "textWidth": 135.109
+          "textWidth": 134.844
         },
         {
           "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 260.469
+          "textWidth": 258.969
         },
         {
           "text": "현재 위치를 불러오지 못했어요",
-          "textWidth": 166.109
+          "textWidth": 165.312
         },
         {
           "text": "현재 위치를 불러오지 못했어요. 다시 시도해주세요",
-          "textWidth": 272.422
+          "textWidth": 270.938
         },
         {
           "text": "현재 위치를 쓸 수 없어요. 주소를 검색해주세요",
-          "textWidth": 252.047
+          "textWidth": 250.297
         },
         {
           "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
-          "textWidth": 248.5
+          "textWidth": 247.016
         },
         {
           "text": "현재 참여 인원보다 적게 설정할 수 없어요",
-          "textWidth": 224.578
+          "textWidth": 222.984
         },
         {
           "text": "현재는 수도권 내 출발지만 선택할 수 있어요.",
-          "textWidth": 240.078
+          "textWidth": 238.5
         }
       ]
     }

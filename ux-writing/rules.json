@@ -1257,7 +1257,7 @@
       "why": "디자인 시스템 Toast는 줄을 바꾸지 않는다. 양옆 20px 여백 안에 들어가야 한다(#197).",
       "source": ["#197"],
       "auto": "position",
-      "note": "너비는 public/fonts/Pretendard-Medium.woff2의 글자 폭으로 계산한다. 브라우저마다 자간(-0.14px)을 적용하는 정도가 달라서, 어느 기기에서도 넘지 않은 값인 자간을 뺀 너비로 본다. 브라우저 8곳에서 문구 93개를 잰 값이 ux-writing/toast-width-measured.json에 있고, 자동 검사가 계산값과 대조한다. 변수 자리가 있는 문구는 계산하지 못한다.",
+      "note": "너비는 npm pretendard 패키지의 굵기 500 일반 판(Pretendard-Medium.woff2) 글자 폭으로 계산한다. 서비스는 같은 패키지의 가변 글꼴로 그린다. 브라우저 8곳에서 문구 93개를 잰 값은 자간(-0.14px)을 적용한 계산값과 0.06px 안으로 같았고, 판정은 그보다 넓은 자간을 뺀 너비로 본다. 잰 값이 ux-writing/toast-width-measured.json에 있고, 자동 검사가 계산값과 대조한다. 변수 자리가 있는 문구는 계산하지 못한다.",
       "check": {
         "type": "maxToastWidth",
         "px": 335,
