@@ -1,11 +1,23 @@
 import { Button } from "@moyeorak/design-system";
-import type { InstallPromptMode } from "@/shared/providers/install-prompt-provider/install-availability";
+import type {
+  InstallPromptMode,
+  ShareStep,
+} from "@/shared/providers/install-prompt-provider/install-availability";
 import { cn } from "@/shared/utils/cn";
+
+/** 단계 안내 1단계. 공유를 찾는 곳이 Safari 버전마다 달라 나눈다(`resolveShareStep`). */
+const SHARE_STEP_COPY: Record<ShareStep, string> = {
+  toolbar: "아래 막대의 공유 버튼을 눌러주세요",
+  more: "점 세 개 버튼을 눌러 공유를 눌러주세요",
+  pageMenu: "주소창 왼쪽 버튼을 눌러 공유를 눌러주세요",
+  other: "공유 버튼을 눌러주세요",
+};
 
 interface InstallPromptViewProps {
   isMounted: boolean;
   isOpen: boolean;
   mode: InstallPromptMode;
+  shareStep: ShareStep;
   onClose: () => void;
   onInstall: () => void;
 }
@@ -14,6 +26,7 @@ export function InstallPromptView({
   isMounted,
   isOpen,
   mode,
+  shareStep,
   onClose,
   onInstall,
 }: InstallPromptViewProps) {
@@ -57,7 +70,7 @@ export function InstallPromptView({
               <span className="text-fg-neutral-stronger text-t3 tabular-nums">
                 1.
               </span>
-              점 세 개 버튼을 눌러 공유를 눌러주세요
+              {SHARE_STEP_COPY[shareStep]}
             </li>
             <li className="textStyle_body2 flex items-center gap-2 break-keep text-fg-neutral-default">
               <span className="text-fg-neutral-stronger text-t3 tabular-nums">
