@@ -1,4 +1,4 @@
-import { PolygonIcon } from "@/shared/components/icons";
+import { NameTagTailIcon } from "@/shared/components/icons";
 import { cn } from "@/shared/utils/cn";
 
 export interface TextPinProps {
@@ -22,7 +22,7 @@ export function TextPin({ text, variant, className }: TextPinProps) {
           {text}
         </span>
       </div>
-      <PolygonIcon
+      <NameTagTailIcon
         className={cn(
           "mt-[-2px]",
           variant === "blue"
