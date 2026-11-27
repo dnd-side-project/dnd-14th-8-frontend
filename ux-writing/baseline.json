@@ -219,12 +219,6 @@
     },
     {
       "rule": "P13",
-      "file": "src/shared/providers/install-prompt-provider/install-prompt-view.tsx",
-      "text": "닫기",
-      "count": 1
-    },
-    {
-      "rule": "P13",
       "file": "src/shared/providers/share-sheet-provider/share-sheet-view.tsx",
       "text": "닫기",
       "count": 1
