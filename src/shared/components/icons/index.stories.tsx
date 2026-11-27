@@ -38,7 +38,7 @@ const meta = {
   ],
   parameters: { layout: "centered" },
   args: {
-    iconName: "ShareIcon",
+    iconName: "NameTagTailIcon",
     size: 20,
     color: "var(--colors-fg-neutral-strong)",
   },
@@ -101,7 +101,7 @@ export const ColorVariants: Story = {
       </div>
     );
   },
-  args: { iconName: "ShareIcon", size: 20 },
+  args: { iconName: "NameTagTailIcon", size: 20 },
   argTypes: {
     color: { table: { disable: true } },
   },
