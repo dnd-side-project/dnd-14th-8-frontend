@@ -1,0 +1,743 @@
+{
+  "about": "자동 검사를 처음 넣을 때 이미 규칙을 어기고 있던 문구다. 문구를 고치면 UX_WRITING_UPDATE_BASELINE=1 pnpm test:ux-writing으로 이 목록을 다시 만든다. 새 위반은 더하지 않는다.",
+  "violations": [
+    {
+      "rule": "P01",
+      "file": "src/domains/location/hooks/use-create-departure-form.ts",
+      "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/location/hooks/use-place-search.ts",
+      "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/location/hooks/use-update-departure-form.ts",
+      "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/location/utils/service-area.ts",
+      "text": "서비스 지역이 아니에요. 다른 곳을 선택해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/meeting/hooks/use-create-meeting-form.ts",
+      "text": "모임을 만들지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "이동하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P01",
+      "file": "src/shared/providers/share-sheet-provider/index.tsx",
+      "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/location/hooks/use-create-departure-form.ts",
+      "text": "출발지가 추가되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/location/hooks/use-update-departure-form.ts",
+      "text": "출발지가 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx",
+      "text": "출발지가 삭제되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "모임 인원이 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "일정이 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "일정이 추가되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "입력한 일정이 초기화되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "시간표가 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P03",
+      "file": "src/shared/providers/share-sheet-provider/index.tsx",
+      "text": "링크가 복사되었어요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/location/hooks/use-create-departure-form.ts",
+      "text": "출발지를 추가하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "현재 위치를 찾지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/location/hooks/use-place-search.ts",
+      "text": "장소를 검색하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/location/hooks/use-update-departure-form.ts",
+      "text": "출발지를 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/meeting/hooks/use-create-meeting-form.ts",
+      "text": "모임을 만들지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "모임 인원을 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "시간표를 수정하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "이동하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P04",
+      "file": "src/shared/providers/share-sheet-provider/index.tsx",
+      "text": "링크를 복사하지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "P09",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx",
+      "text": "출발지 수정하기",
+      "count": 1
+    },
+    {
+      "rule": "P09",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/index.tsx",
+      "text": "출발지 추가하기",
+      "count": 1
+    },
+    {
+      "rule": "P09",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "저장하기",
+      "count": 1
+    },
+    {
+      "rule": "P10",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "수정하기",
+      "count": 1
+    },
+    {
+      "rule": "P10",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "이동하기",
+      "count": 1
+    },
+    {
+      "rule": "P13",
+      "file": "src/domains/location/components/selected-place-card/index.tsx",
+      "text": "닫기",
+      "count": 1
+    },
+    {
+      "rule": "P13",
+      "file": "src/shared/providers/share-sheet-provider/share-sheet-view.tsx",
+      "text": "닫기",
+      "count": 1
+    },
+    {
+      "rule": "P15",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "로딩 중...",
+      "count": 1
+    },
+    {
+      "rule": "P16",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "검색 중...",
+      "count": 1
+    },
+    {
+      "rule": "P16",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "로딩 중...",
+      "count": 1
+    },
+    {
+      "rule": "P16",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "저장 중...",
+      "count": 1
+    },
+    {
+      "rule": "P17",
+      "file": "index.html",
+      "text": "모여락 | 모임 일정·장소 조율",
+      "count": 4
+    },
+    {
+      "rule": "P17",
+      "file": "vite.config.ts",
+      "text": "모여락 | 모임 일정·장소 조율",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/location/hooks/use-create-departure-form.ts",
+      "text": "출발지가 추가되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/location/hooks/use-update-departure-form.ts",
+      "text": "출발지가 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx",
+      "text": "출발지가 삭제되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/meeting/components/meeting-join-invite/index.tsx",
+      "text": "{hostName}님의 모임에 초대되었어요!",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "모임 인원이 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "일정이 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "일정이 추가되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/schedule/hooks/use-schedule-vote-form.ts",
+      "text": "입력한 일정이 초기화되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "기존에 등록된 일정 중 변경된 범위에 포함되지 않는 시간은 자동으로 삭제돼요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "시간표가 수정되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/shared/providers/backend-connection-provider/index.tsx",
+      "text": "연결이 잠시 지연되고 있어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/shared/providers/share-sheet-provider/index.tsx",
+      "text": "링크가 복사되었어요",
+      "count": 1
+    },
+    {
+      "rule": "S02",
+      "file": "src/shared/providers/update-prompt-provider/index.tsx",
+      "text": "업데이트된 버전으로 새로고침할까요?",
+      "count": 1
+    },
+    {
+      "rule": "S04",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "입력하신 내용이 모두 사라져요",
+      "count": 1
+    },
+    {
+      "rule": "S04",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "저장하지 않고 나가시겠어요?",
+      "count": 1
+    },
+    {
+      "rule": "S04",
+      "file": "src/domains/schedule/views/schedule-vote-form-view/index.tsx",
+      "text": "입력하신 내용이 모두 사라져요",
+      "count": 1
+    },
+    {
+      "rule": "S04",
+      "file": "src/domains/schedule/views/schedule-vote-form-view/index.tsx",
+      "text": "저장하지 않고 나가시겠어요?",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx",
+      "text": "수정할 출발지를 찾을 수 없어요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "검색한 지역을 다시 확인해 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/index.tsx",
+      "text": "잠시만 기다려주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "링크를 공유하거나 일정을 등록해 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "시간 범위를 넓히거나 참여자들을 기다려 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "잠시만 기다려주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/shared/providers/backend-connection-provider/index.tsx",
+      "text": "잠시 후 다시 시도해 주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S06",
+      "file": "src/shared/providers/backend-connection-provider/index.tsx",
+      "text": "첫 연결에는 몇 분 정도 걸릴 수 있어요. 잠시만 기다려 주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "검색한 지역을 다시 확인해 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/domains/location/utils/insufficient-departures.ts",
+      "text": "링크를 공유하거나 직접 출발지를 추가해 보세요",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/domains/meeting/components/meeting-join-invite/index.tsx",
+      "text": "모임에 참여해서 일정을 조율해 보세요",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "링크를 공유하거나 일정을 등록해 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "시간 범위를 넓히거나 참여자들을 기다려 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/shared/providers/backend-connection-provider/index.tsx",
+      "text": "잠시 후 다시 시도해 주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S07",
+      "file": "src/shared/providers/backend-connection-provider/index.tsx",
+      "text": "첫 연결에는 몇 분 정도 걸릴 수 있어요. 잠시만 기다려 주세요.",
+      "count": 1
+    },
+    {
+      "rule": "S08",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "검색 중...",
+      "count": 1
+    },
+    {
+      "rule": "S08",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "불러오는 중...",
+      "count": 1
+    },
+    {
+      "rule": "S08",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "로딩 중...",
+      "count": 1
+    },
+    {
+      "rule": "S08",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "저장 중...",
+      "count": 1
+    },
+    {
+      "rule": "S10",
+      "file": "index.html",
+      "text": "모여락 | 모임 일정·장소 조율",
+      "count": 4
+    },
+    {
+      "rule": "S10",
+      "file": "vite.config.ts",
+      "text": "모여락 | 모임 일정·장소 조율",
+      "count": 1
+    },
+    {
+      "rule": "W01",
+      "file": "src/domains/meeting/pages/new/index.tsx",
+      "text": "모임 생성",
+      "count": 1
+    },
+    {
+      "rule": "W01",
+      "file": "src/domains/meeting/pages/new/index.tsx",
+      "text": "모임 생성하기",
+      "count": 1
+    },
+    {
+      "rule": "W02",
+      "file": "src/domains/location/utils/create-departure-request.ts",
+      "text": "이미 출발지를 등록한 참여자예요",
+      "count": 1
+    },
+    {
+      "rule": "W02",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "링크를 공유하거나 일정을 등록해 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "W02",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "기존에 등록된 일정 중 변경된 범위에 포함되지 않는 시간은 자동으로 삭제돼요",
+      "count": 1
+    },
+    {
+      "rule": "W03",
+      "file": "src/domains/schedule/components/guide-time-selection/index.tsx",
+      "text": "클릭하거나 쓸어내려 가능 시간대를 지정해보세요",
+      "count": 1
+    },
+    {
+      "rule": "W03",
+      "file": "src/domains/schedule/views/schedule-main-view/index.tsx",
+      "text": "일정 추가하기를 눌러 가능한 시간을 입력해주세요",
+      "count": 1
+    },
+    {
+      "rule": "W04",
+      "file": "src/domains/meeting/pages/index.tsx",
+      "text": "중간 장소 찾기",
+      "count": 1
+    },
+    {
+      "rule": "W05",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx",
+      "text": "추천역 목록으로 돌아가기",
+      "count": 1
+    },
+    {
+      "rule": "W05",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "장소 정하기로 이동할까요?",
+      "count": 1
+    },
+    {
+      "rule": "W05",
+      "file": "src/domains/schedule/utils/schedule-main-action.ts",
+      "text": "장소 보러 가기",
+      "count": 1
+    },
+    {
+      "rule": "W05",
+      "file": "src/domains/schedule/utils/schedule-main-action.ts",
+      "text": "장소 정하러 가기",
+      "count": 1
+    },
+    {
+      "rule": "W05",
+      "file": "src/domains/schedule/views/schedule-main-view/index.tsx",
+      "text": "장소 정하기로 이동해서 가능한 시간을 바꿀 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W06",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "이 브라우저에서는 현 위치를 불러올 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W06",
+      "file": "src/domains/location/hooks/use-current-location.ts",
+      "text": "현 위치를 불러오지 못했어요. 다시 시도해주세요",
+      "count": 1
+    },
+    {
+      "rule": "W06",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/new/search/index.tsx",
+      "text": "현 위치 불러오기",
+      "count": 1
+    },
+    {
+      "rule": "W07",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx",
+      "text": "{personalRoute.participant.participantName}님의 루트",
+      "count": 1
+    },
+    {
+      "rule": "W07",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx",
+      "text": "루트 정보를 찾을 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W07",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx",
+      "text": "개인별 루트",
+      "count": 1
+    },
+    {
+      "rule": "W08",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/index.tsx",
+      "text": "최적일정 더보기",
+      "count": 1
+    },
+    {
+      "rule": "W08",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/index.tsx",
+      "text": "최적일정을 불러오는 중이에요",
+      "count": 1
+    },
+    {
+      "rule": "W08",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "최적일정을 불러오는 중이에요",
+      "count": 1
+    },
+    {
+      "rule": "W08",
+      "file": "src/domains/schedule/views/schedule-main-view/index.tsx",
+      "text": "최적일정",
+      "count": 1
+    },
+    {
+      "rule": "W09",
+      "file": "src/domains/schedule/components/schedule-main-optimal-content/placeholder.tsx",
+      "text": "시간 범위를 넓히거나 참여자들을 기다려 보세요.",
+      "count": 1
+    },
+    {
+      "rule": "W09",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "기존에 등록된 일정 중 변경된 범위에 포함되지 않는 시간은 자동으로 삭제돼요",
+      "count": 1
+    },
+    {
+      "rule": "W09",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "시간범위",
+      "count": 1
+    },
+    {
+      "rule": "W10",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/[station-id]/participants/[participant-id]/index.tsx",
+      "text": "루트 정보를 찾을 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W10",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx",
+      "text": "장소 정보를 찾을 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W10",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/[location-vote-id]/index.tsx",
+      "text": "수정할 출발지를 찾을 수 없어요.",
+      "count": 1
+    },
+    {
+      "rule": "W11",
+      "file": "src/domains/schedule/components/guide-time-selection/index.tsx",
+      "text": "클릭하거나 쓸어내려 가능 시간대를 지정해보세요",
+      "count": 1
+    },
+    {
+      "rule": "W12",
+      "file": "src/shared/components/share-button/index.tsx",
+      "text": "링크복사",
+      "count": 1
+    },
+    {
+      "rule": "W13",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "이동 후 일정 추가 및 수정이 불가능해요",
+      "count": 1
+    },
+    {
+      "rule": "W14",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/votes/index.tsx",
+      "text": "해당 출발지를 삭제할까요?",
+      "count": 1
+    },
+    {
+      "rule": "W15",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx",
+      "text": "가장 최적의 중간지점이에요!",
+      "count": 1
+    },
+    {
+      "rule": "W16",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/edit/dates/index.tsx",
+      "text": "최대 30일, 0 ~ 24시까지 선택 가능해요",
+      "count": 1
+    },
+    {
+      "rule": "W16",
+      "file": "src/domains/schedule/pages/meetings/[meeting-id]/schedule/index.tsx",
+      "text": "이동 후 일정 추가 및 수정이 불가능해요",
+      "count": 1
+    },
+    {
+      "rule": "W17",
+      "file": "src/shared/providers/share-sheet-provider/share-sheet-view.tsx",
+      "text": "공유 시트 배경 닫기",
+      "count": 1
+    },
+    {
+      "rule": "W18",
+      "file": "src/domains/location/pages/meetings/[meeting-id]/location/stations/index.tsx",
+      "text": "자세히 보기",
+      "count": 1
+    },
+    {
+      "rule": "W22",
+      "file": "src/domains/meeting/pages/meetings/[meeting-id]/[flow]/edit/participants/index.tsx",
+      "text": "현재 참여 인원보다 적게 설정할 수 없어요",
+      "count": 1
+    },
+    {
+      "rule": "W22",
+      "file": "src/domains/schedule/components/schedule-main-summary/index.tsx",
+      "text": "현재 {votedParticipantCount}명이 참여했어요",
+      "count": 1
+    },
+    {
+      "rule": "W23",
+      "file": "src/domains/meeting/pages/new/index.tsx",
+      "text": "{PARTICIPANT_COUNT_MIN}명부터 {PARTICIPANT_COUNT_MAX}명까지 고를 수 있어요",
+      "count": 1
+    },
+    {
+      "rule": "W23",
+      "file": "src/domains/meeting/utils/participant-count-limit.ts",
+      "text": "{from}명부터 {PARTICIPANT_COUNT_MAX}명까지 고를 수 있어요",
+      "count": 1
+    }
+  ]
+}
