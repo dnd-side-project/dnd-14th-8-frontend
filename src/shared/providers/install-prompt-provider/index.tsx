@@ -1,5 +1,6 @@
-import { type PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { resolveShareStep } from "@/shared/providers/install-prompt-provider/install-availability";
 import { InstallPromptView } from "@/shared/providers/install-prompt-provider/install-prompt-view";
 import { useInstallPromptState } from "@/shared/providers/install-prompt-provider/use-install-prompt-state";
 
@@ -19,6 +20,7 @@ export function InstallPromptProvider({
   const { close, install, isMounted, isOpen, mode } = useInstallPromptState(
     pathname === "/",
   );
+  const [shareStep] = useState(() => resolveShareStep(navigator.userAgent));
 
   const isVisible = isMounted && mode !== "hidden";
 
@@ -33,6 +35,7 @@ export function InstallPromptProvider({
         isMounted={isMounted}
         isOpen={isOpen}
         mode={mode}
+        shareStep={shareStep}
         onClose={close}
         onInstall={() => {
           void install();

@@ -1,12 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { BottomActionBarWithButtonAndShare } from "@/shared/components/bottom-action-bar-with-button-and-share";
-
-vi.mock("@/assets/icons/share.svg?react", () => ({
-  default: ({ className }: { className?: string }) => (
-    <svg aria-hidden="true" className={className} />
-  ),
-}));
 
 describe("BottomActionBarWithButtonAndShare", () => {
   it("renders the accessible icon share action before the labeled action", () => {

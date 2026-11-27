@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   parseDismissedAt,
   resolveInstallPromptMode,
+  resolveShareStep,
 } from "@/shared/providers/install-prompt-provider/install-availability";
 
 const ANDROID_CHROME =
@@ -96,5 +97,40 @@ describe("parseDismissedAt", () => {
 
   it("treats a corrupted record as never dismissed", () => {
     expect(parseDismissedAt("나중에")).toBeNull();
+  });
+});
+
+// iOS 18.5, 26.3 Safari 값은 시뮬레이터에서 기록했다(2026-11-27). iOS 26부터 OS 버전이 18.x로 고정된다.
+const IOS_18_SAFARI =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1";
+const IOS_26_SAFARI =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Mobile/15E148 Safari/604.1";
+// iOS 27 시뮬레이터가 없어 확인하지 못한 값이다. iOS 26과 같은 형식이라고 가정했다.
+const IOS_27_SAFARI =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1";
+// iOS Chrome은 Version 토큰 없이 CriOS를 붙인다. 직접 기록한 값은 아니다.
+const IOS_CHROME =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/142.0.0.0 Mobile/15E148 Safari/604.1";
+
+describe("resolveShareStep", () => {
+  it("points to the toolbar Share button up to iOS 18 Safari", () => {
+    expect(resolveShareStep(IOS_18_SAFARI)).toBe("toolbar");
+    expect(resolveShareStep(IOS_SAFARI)).toBe("toolbar");
+  });
+
+  it("reads the Safari version, not the frozen OS version, on iOS 26", () => {
+    expect(resolveShareStep(IOS_26_SAFARI)).toBe("more");
+  });
+
+  it("points to the page menu from iOS 27 Safari onward", () => {
+    expect(resolveShareStep(IOS_27_SAFARI)).toBe("pageMenu");
+    expect(
+      resolveShareStep(IOS_27_SAFARI.replace("Version/27.0", "Version/28.1")),
+    ).toBe("pageMenu");
+  });
+
+  it("falls back to a generic step on other iOS browsers", () => {
+    expect(resolveShareStep(IOS_CHROME)).toBe("other");
+    expect(resolveShareStep(KAKAOTALK_IN_APP)).toBe("other");
   });
 });
